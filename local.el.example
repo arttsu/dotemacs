@@ -1,0 +1,10 @@
+(setq my-font-height 120)
+
+(setq my-git-path "/usr/local/bin")
+
+(setq my-fish-path "/usr/local/bin/fish")
+
+(setq my-openai-username "")
+(setq my-openai-api-key "")
+
+(setq my-gpg-key-email "")
