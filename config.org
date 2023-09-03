@@ -854,7 +854,10 @@ https://stackoverflow.com/a/36189456
            `("i" "Inbox" entry (file "~/notebook/inbox.org") "* TODO %i%?")
            `("p" "Project")
            `("pp" "Project" entry (file "~/notebook/projects.org") (file ,(my-capture-template-path "project")))
-           `("pw" "Work Project" entry (file "~/work-notebook/work-projects.org") (file ,(my-capture-template-path "project"))))))
+           `("pw" "Work Project" entry (file "~/work-notebook/work-projects.org") (file ,(my-capture-template-path "project")))
+           `("s" "Someday Folder")
+           `("ss" "Someday" entry (file "~/notebook/someday.org") "* %^{Title} %^G")
+           `("sw" "Work Someday" entry (file "~/work-notebook/work-someday.org") "* %^{Title} %^G"))))
 
   (defun my-org-capture-inbox ()
     (interactive)
