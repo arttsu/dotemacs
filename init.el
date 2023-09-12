@@ -111,6 +111,7 @@
 (global-set-key (kbd "C-x C-b") #'ibuffer)
 
 (global-set-key (kbd "M-z") 'zap-up-to-char) ;; Replace zap-to-char
+(global-set-key (kbd "C-M-z") 'zap-to-char)
 
 (global-set-key (kbd "C-M-; d") 'duplicate-dwim)
 
