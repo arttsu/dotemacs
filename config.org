@@ -138,7 +138,7 @@
   sudo dnf install fish -y
 #+end_src
 
-*** ledger
+*** ledger installation
 #+begin_src shell
   sudo dnf install ledger -y
 #+end_src
@@ -1546,7 +1546,7 @@ https://github.com/ledger/ledger-mode
 #+begin_src elisp
   (use-package ledger-mode
     :init
-    (setq ledger-binary-path "eledger-mac")
+    (setq ledger-binary-path "ledger")
     (setq ledger-default-date-format "%Y-%m-%d")
     :config
     (ledger-reports-add "bal-this-month" "%(binary) -f %(ledger-file) --invert --period \"this month\" -S amount bal ^Income ^Expenses")

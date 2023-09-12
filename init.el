@@ -947,7 +947,7 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
 
 (use-package ledger-mode
   :init
-  (setq ledger-binary-path "eledger-mac")
+  (setq ledger-binary-path "ledger")
   (setq ledger-default-date-format "%Y-%m-%d")
   :config
   (ledger-reports-add "bal-this-month" "%(binary) -f %(ledger-file) --invert --period \"this month\" -S amount bal ^Income ^Expenses")
