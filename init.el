@@ -330,6 +330,7 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
   :init
   (setq org-confirm-babel-evaluate nil)
   (setq org-startup-indented t)
+  (setq org-export-with-sub-superscripts nil)
   :config
   (setq org-agenda-files '("~/notebook/tasks.org"
                            "~/notebook/calendar.org"
