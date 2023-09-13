@@ -799,6 +799,7 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
   (add-hook 'eval-expression-minibuffer-setup-hook 'smartparens-mode)
   (add-hook 'scala-mode-hook 'smartparens-mode)
   (add-hook 'js-mode-hook 'smartparens-mode)
+  (add-hook 'plantuml-mode-hook 'smartparens-mode)
   :config
   (require 'smartparens-config)
   :bind

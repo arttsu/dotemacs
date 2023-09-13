@@ -1305,6 +1305,7 @@ https://github.com/Fuco1/smartparens
     (add-hook 'eval-expression-minibuffer-setup-hook 'smartparens-mode)
     (add-hook 'scala-mode-hook 'smartparens-mode)
     (add-hook 'js-mode-hook 'smartparens-mode)
+    (add-hook 'plantuml-mode-hook 'smartparens-mode)
     :config
     (require 'smartparens-config)
     :bind
