@@ -315,6 +315,7 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
   :init
   (setq super-save-auto-save-when-idle t)
   (setq auto-save-default nil)
+  (setq super-save-exclude '(".sbt" "project/"))
   :config
   (super-save-mode +1))
 
