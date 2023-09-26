@@ -104,6 +104,7 @@
 - [[#cloc][cloc]]
 - [[#plantuml][PlantUML]]
 - [[#auto-mode][Auto-mode]]
+- [[#tree-sitter][Tree Sitter]]
 
 * Installation
 ** Fedora
@@ -1586,3 +1587,10 @@ https://github.com/skuro/plantuml-mode
   (add-to-list 'auto-mode-alist '("\\.hql\\'" . sql-mode))
 #+end_src
 
+* Tree Sitter
+#+begin_src elisp
+  (use-package treesit-auto
+    :demand t
+    :config
+    (global-treesit-auto-mode))
+#+end_src

@@ -21,3 +21,4 @@ session*
 /.org-id-locations
 /request/
 /org-roam.db
+/tree-sitter/

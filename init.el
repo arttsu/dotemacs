@@ -971,3 +971,8 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
 (add-to-list 'auto-mode-alist '("\\.puml\\'" . plantuml-mode))
 
 (add-to-list 'auto-mode-alist '("\\.hql\\'" . sql-mode))
+
+(use-package treesit-auto
+  :demand t
+  :config
+  (global-treesit-auto-mode))
