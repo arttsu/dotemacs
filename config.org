@@ -1308,6 +1308,7 @@ https://github.com/Fuco1/smartparens
     (add-hook 'scala-mode-hook 'smartparens-mode)
     (add-hook 'js-mode-hook 'smartparens-mode)
     (add-hook 'plantuml-mode-hook 'smartparens-mode)
+    (add-hook 'json-ts-mode-hook 'smartparens-mode)
     :config
     (require 'smartparens-config)
     :bind
@@ -1585,6 +1586,7 @@ https://github.com/skuro/plantuml-mode
 * Auto-mode
 #+begin_src elisp
   (add-to-list 'auto-mode-alist '("\\.hql\\'" . sql-mode))
+  (add-to-list 'auto-mode-alist '("\\.ejson\\'" . json-ts-mode))
 #+end_src
 
 * Tree Sitter

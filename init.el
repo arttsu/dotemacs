@@ -801,6 +801,7 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
   (add-hook 'scala-mode-hook 'smartparens-mode)
   (add-hook 'js-mode-hook 'smartparens-mode)
   (add-hook 'plantuml-mode-hook 'smartparens-mode)
+  (add-hook 'json-ts-mode-hook 'smartparens-mode)
   :config
   (require 'smartparens-config)
   :bind
@@ -971,6 +972,7 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
 (add-to-list 'auto-mode-alist '("\\.puml\\'" . plantuml-mode))
 
 (add-to-list 'auto-mode-alist '("\\.hql\\'" . sql-mode))
+(add-to-list 'auto-mode-alist '("\\.ejson\\'" . json-ts-mode))
 
 (use-package treesit-auto
   :demand t
