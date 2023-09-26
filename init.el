@@ -783,7 +783,8 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
   :bind
   (("C-o" . crux-smart-open-line)
    ("C-S-o" . crux-smart-open-line-above)
-   ("C-^" . crux-top-join-line)))
+   ("C-^" . crux-top-join-line)
+   ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region)))
 
 ;; https://github.com/purcell/whole-line-or-region/issues/17#issuecomment-781988534
 (defun my-whole-line-or-region-sp-kill-region (prefix)
