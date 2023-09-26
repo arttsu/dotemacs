@@ -1487,6 +1487,9 @@ https://github.com/zerolfx/copilot.el
     :config
     (add-hook 'emacs-lisp-mode-hook #'copilot-mode)
     (add-hook 'clojure-mode-hook #'copilot-mode)
+    (add-hook 'scala-mode-hook #'copilot-mode)
+    (add-hook 'conf-mode-hook #'copilot-mode)
+    (add-hook 'sql-mode-hook #'copilot-mode)
     (add-hook 'copilot-mode-hook #'my-relax-smartparens))
 #+end_src
 

@@ -922,6 +922,9 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
   :config
   (add-hook 'emacs-lisp-mode-hook #'copilot-mode)
   (add-hook 'clojure-mode-hook #'copilot-mode)
+  (add-hook 'scala-mode-hook #'copilot-mode)
+  (add-hook 'conf-mode-hook #'copilot-mode)
+  (add-hook 'sql-mode-hook #'copilot-mode)
   (add-hook 'copilot-mode-hook #'my-relax-smartparens))
 
 (with-eval-after-load 'copilot
