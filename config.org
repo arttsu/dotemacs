@@ -1494,6 +1494,7 @@ https://github.com/zerolfx/copilot.el
     (add-hook 'scala-mode-hook #'copilot-mode)
     (add-hook 'conf-mode-hook #'copilot-mode)
     (add-hook 'sql-mode-hook #'copilot-mode)
+    (add-hook 'plantuml-mode-hook #'copilot-mode)
     (add-hook 'copilot-mode-hook #'my-relax-smartparens))
 #+end_src
 
