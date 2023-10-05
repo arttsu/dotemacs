@@ -883,7 +883,8 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
   (:map lsp-mode-map
         ([M-down-mouse-1] . mouse-set-point)
         ([M-mouse-1] . lsp-find-definition)
-        ([M-mouse-3] . xref-go-back)))
+        ([M-mouse-3] . xref-go-back)
+        ("<f5> I" . lsp-metals-build-import)))
 
 (use-package lsp-metals)
 
