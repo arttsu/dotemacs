@@ -22,3 +22,4 @@ session*
 /request/
 /org-roam.db
 /tree-sitter/
+/elpa/
