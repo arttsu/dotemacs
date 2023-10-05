@@ -105,6 +105,7 @@
 - [[#plantuml][PlantUML]]
 - [[#auto-mode][Auto-mode]]
 - [[#tree-sitter][Tree Sitter]]
+- [[#formatting-json-strings][Formatting json strings]]
 
 * Installation
 ** Fedora
@@ -1599,4 +1600,21 @@ https://github.com/skuro/plantuml-mode
     :demand t
     :config
     (global-treesit-auto-mode))
+#+end_src
+
+* Formatting json strings
+#+begin_src elisp
+  (defun arttsu-format-json-string (start end)
+    "Format the JSON string between START and END and display in a temporary buffer."
+    (interactive "r")
+    (let* ((json-string (buffer-substring-no-properties start end))
+           (command (format "echo %s | jq fromjson" (shell-quote-argument json-string)))
+           (output (shell-command-to-string command))
+           (buf-name "*Formatted JSON*"))
+      (with-current-buffer (get-buffer-create buf-name)
+        (erase-buffer)
+        (insert output)
+        (json-ts-mode)
+        (goto-char (point-min))
+        (pop-to-buffer (current-buffer)))))
 #+end_src

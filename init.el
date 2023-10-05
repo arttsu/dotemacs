@@ -982,3 +982,17 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
   :demand t
   :config
   (global-treesit-auto-mode))
+
+(defun arttsu-format-json-string (start end)
+  "Format the JSON string between START and END and display in a temporary buffer."
+  (interactive "r")
+  (let* ((json-string (buffer-substring-no-properties start end))
+         (command (format "echo %s | jq fromjson" (shell-quote-argument json-string)))
+         (output (shell-command-to-string command))
+         (buf-name "*Formatted JSON*"))
+    (with-current-buffer (get-buffer-create buf-name)
+      (erase-buffer)
+      (insert output)
+      (json-ts-mode)
+      (goto-char (point-min))
+      (pop-to-buffer (current-buffer)))))
