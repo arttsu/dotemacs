@@ -330,6 +330,8 @@ https://www.gnu.org/software/emms/manual/#Introduction
   (setq initial-scratch-message nil)
   (setq initial-major-mode 'org-mode)
 
+  (setq save-interprogram-paste-before-kill t)
+
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
 #+end_src
 

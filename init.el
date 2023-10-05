@@ -70,6 +70,8 @@
 (setq initial-scratch-message nil)
 (setq initial-major-mode 'org-mode)
 
+(setq save-interprogram-paste-before-kill t)
+
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 (setq gc-cons-threshold 100000000) ;; 100mb
