@@ -106,6 +106,7 @@
 - [[#auto-mode][Auto-mode]]
 - [[#tree-sitter][Tree Sitter]]
 - [[#formatting-json-strings][Formatting json strings]]
+- [[#terraform][Terraform]]
 
 * Installation
 ** Fedora
@@ -1621,4 +1622,14 @@ https://github.com/skuro/plantuml-mode
         (json-ts-mode)
         (goto-char (point-min))
         (pop-to-buffer (current-buffer)))))
+#+end_src
+
+* Terraform
+https://github.com/hcl-emacs/terraform-mode
+
+#+begin_src elisp
+  (use-package terraform-mode
+    :bind
+    (:map terraform-mode-map
+          ("<f5> = =" . terraform-format-buffer)))
 #+end_src

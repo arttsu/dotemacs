@@ -1000,3 +1000,8 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
       (json-ts-mode)
       (goto-char (point-min))
       (pop-to-buffer (current-buffer)))))
+
+(use-package terraform-mode
+  :bind
+  (:map terraform-mode-map
+        ("<f5> = =" . terraform-format-buffer)))
