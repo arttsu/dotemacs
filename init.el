@@ -585,6 +585,11 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
   :bind
   (("C-c g" . magit-file-dispatch)))
 
+(use-package forge
+  :after magit
+  :config
+  (add-to-list 'forge-alist '("source.xing.com" "source.xing.com/api" "source.xing.com" forge-github-repository)))
+
 (use-package project
   :straight nil
   :config

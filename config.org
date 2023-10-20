@@ -65,6 +65,7 @@
   - [[#org-roam][Org Roam]]
   - [[#anki-editor][Anki Editor]]
 - [[#magit][Magit]]
+- [[#forge][Forge]]
 - [[#project][Project]]
 - [[#completion][Completion]]
   - [[#vertico][Vertico]]
@@ -1029,6 +1030,17 @@ https://magit.vc/
     (("C-c g" . magit-file-dispatch)))
 #+end_src
 
+* Forge
+https://github.com/magit/forge
+
+#+begin_src elisp
+  (use-package forge
+    :after magit
+    :config
+    (add-to-list 'forge-alist '("source.xing.com" "source.xing.com/api" "source.xing.com" forge-github-repository)))
+#+end_src
+
+
 * Project
 #+begin_src elisp
   (use-package project
@@ -1633,3 +1645,4 @@ https://github.com/hcl-emacs/terraform-mode
     (:map terraform-mode-map
           ("<f5> = =" . terraform-format-buffer)))
 #+end_src
+
