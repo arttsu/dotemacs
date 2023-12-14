@@ -66,6 +66,8 @@
   (emms-streams)
   (get-buffer "Emms Streams"))
 
+(setq disabled-command-function nil)
+
 (setq initial-buffer-choice #'my-initial-buffer)
 (setq initial-scratch-message nil)
 (setq initial-major-mode 'org-mode)
@@ -107,8 +109,8 @@
 (global-subword-mode)
 
 (global-set-key (kbd "C-c q") #'bury-buffer)
-(global-set-key (kbd "C-c Q") #'kill-current-buffer)
-(global-set-key (kbd "C-c C-q") #'kill-buffer-and-window)
+(global-set-key (kbd "C-c x") #'kill-current-buffer)
+(global-set-key (kbd "C-c X") #'kill-buffer-and-window)
 
 (global-set-key (kbd "C-x C-b") #'ibuffer)
 
@@ -116,6 +118,19 @@
 (global-set-key (kbd "C-M-z") 'zap-to-char)
 
 (global-set-key (kbd "C-M-; d") 'duplicate-dwim)
+
+(global-set-key (kbd "C-c t") 'toggle-truncate-lines)
+
+(global-set-key [C-down-mouse-1] 'mouse-set-point)
+(global-set-key [C-mouse-1] 'ffap-at-mouse)
+
+(global-set-key (kbd "C-c E") 'erase-buffer)
+
+(global-set-key (kbd "C-c f") 'forward-to-word)
+(global-set-key (kbd "C-c b") 'backward-to-word)
+
+(with-eval-after-load 'conf-mode
+  (define-key conf-mode-map (kbd "C-c SPC") nil))
 
 ;; GPT-4
 (defun my-project-name ()
@@ -189,8 +204,10 @@
   :init
   (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
   (setq vterm-shell my-fish-path)
+  (setq vterm-max-scrollback 50000)
   :config
   (add-hook 'vterm-mode-hook 'my-vterm-unbind-keys)
+  (add-hook 'vterm-mode-hook 'compilation-shell-minor-mode)
   :bind
   (("C-x v" . vterm)
    ("C-x 4 v" . vterm-other-window)
@@ -311,7 +328,9 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
   ("+" my-zoom-frame "In")
   ("-" my-zoom-frame-out "Out")
   ("0" my-zoom-frame-default "Default")
-  ("t" modus-themes-toggle "Toggle theme" :color blue))
+  ("t" modus-themes-toggle "Toggle theme" :color blue)
+  ("m" global-org-modern-mode "Toggle modern mode" :color blue)
+  ("q" nil "Quit" :color blue))
 
 (use-package super-save
   :init
@@ -335,19 +354,35 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
   (setq org-confirm-babel-evaluate nil)
   (setq org-startup-indented t)
   (setq org-export-with-sub-superscripts nil)
+  (setq org-agenda-sorting-strategy
+        '((agenda habit-down time-up urgency-down category-keep)
+          (todo urgency-down category-keep)
+          (tags urgency-down priority-down category-keep)
+          (search category-keep)))
   :config
-  (setq org-agenda-files '("~/notebook/tasks.org"
-                           "~/notebook/calendar.org"
-                           "~/notebook/projects.org"
-                           "~/notebook/someday.org"
-                           "~/work-notebook/work-tasks.org"
-                           "~/work-notebook/work-projects.org"
-                           "~/work-notebook/work-someday.org"))
+  (setq org-agenda-files '("~/org/tasks.org"
+                           "~/org/calendar.org"
+                           "~/org/projects.org"
+                           "~/org/someday.org"
+                           "~/org_work/tasks.org"
+                           "~/org_work/calendar.org"
+                           "~/org_work/projects.org"
+                           "~/org_work/someday.org"))
   :bind
   (("C-c a" . org-agenda)
    ("C-c l" . org-store-link)
    :map org-mode-map
    ("C-c C-t" . my-org-toggle-todo-and-done)))
+
+(advice-add 'org-agenda-goto :after
+            (lambda (&rest args)
+              (org-narrow-to-subtree)))
+
+(advice-add 'org-agenda-switch-to :after
+            (lambda (&rest args)
+              (org-narrow-to-subtree)))
+
+(use-package org-ql)
 
 (use-package org-auto-tangle
   :hook (org-mode . org-auto-tangle-mode))
@@ -444,19 +479,29 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
 
 (use-package impatient-mode)
 
+(defface org-checkbox-done-text
+    '((t (:inherit org-done)))
+    "Face for the text part of a checked org-mode checkbox.")
+
+(font-lock-add-keywords
+ 'org-mode
+ `(("^[ \t]*\\(?:[-+*]\\|[0-9]+[).]\\)[ \t]+\\(\\(?:\\[@\\(?:start:\\)?[0-9]+\\][ \t]*\\)?\\[\\(?:X\\|\\([0-9]+\\)/\\2\\)\\][^\n]*\n\\)" 1 'org-checkbox-done-text prepend))
+ 'append)
+
 (defun my-capture-template-path (template-name)
   (expand-file-name (format "capture-templates/%s.txt" template-name) user-emacs-directory))
 
 (with-eval-after-load 'org-capture
   (setq org-capture-templates
         (list
-         `("i" "Inbox" entry (file "~/notebook/inbox.org") "* TODO %i%?")
+         `("i" "Inbox" entry (file "~/org/inbox.org") (file ,(my-capture-template-path "inbox")))
+         `("l" "Link" entry (file "~/org/inbox.org") (file ,(my-capture-template-path "link")))
          `("p" "Project")
-         `("pp" "Project" entry (file "~/notebook/projects.org") (file ,(my-capture-template-path "project")))
-         `("pw" "Work Project" entry (file "~/work-notebook/work-projects.org") (file ,(my-capture-template-path "project")))
+         `("pp" "Project" entry (file "~/org/projects.org") (file ,(my-capture-template-path "project")))
+         `("pw" "Work Project" entry (file "~/org_work/projects.org") (file ,(my-capture-template-path "project")))
          `("s" "Someday Folder")
-         `("ss" "Someday" entry (file "~/notebook/someday.org") "* %^{Title} %^G")
-         `("sw" "Work Someday" entry (file "~/work-notebook/work-someday.org") "* %^{Title} %^G"))))
+         `("ss" "Someday" entry (file "~/org/someday.org") (file ,(my-capture-template-path "someday_folder")))
+         `("sw" "Work Someday" entry (file "~/org_work/someday.org") (file ,(my-capture-template-path "someday_folder"))))))
 
 (defun my-org-capture-inbox ()
   (interactive)
@@ -466,13 +511,14 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
 (global-set-key (kbd "C-c i") #'my-org-capture-inbox)
 
 (with-eval-after-load 'org-refile
-  (setq org-refile-targets '((("~/notebook/tasks.org"
-                               "~/notebook/calendar.org"
-                               "~/notebook/projects.org"
-                               "~/notebook/someday.org"
-                               "~/work-notebook/work-tasks.org"
-                               "~/work-notebook/work-projects.org"
-                               "~/work-notebook/work-someday.org") :level . 1)))
+  (setq org-refile-targets '((("~/org/tasks.org"
+                               "~/org/calendar.org"
+                               "~/org/projects.org"
+                               "~/org/someday.org"
+                               "~/org_work/tasks.org"
+                               "~/org_work/calendar.org"
+                               "~/org_work/projects.org"
+                               "~/org_work/someday.org") :level . 1)))
   (setq org-refile-use-outline-path t)
 
   (advice-add 'org-refile :after #'org-save-all-org-buffers))
@@ -492,8 +538,65 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
 (with-eval-after-load 'org-agenda
   (setq org-agenda-custom-commands
         (list
-         (my-day-agenda "d" "Day" '("~/notebook/tasks.org" "~/notebook/calendar.org") "~/notebook/projects.org")
-         (my-day-agenda "D" "Work Day" '("~/work-notebook/work-tasks.org") "~/work-notebook/work-projects.org"))))
+         (my-day-agenda "d" "Day" '("~/org/tasks.org" "~/org/calendar.org") "~/org/projects.org")
+         (my-day-agenda "D" "Work Day" '("~/org_work/tasks.org" "~/org_work/calendar.org") "~/org_work/projects.org"))))
+
+(defconst my/org-project-files '("~/org/projects.org" "~/org_work/projects.org"))
+
+(defun my/get-org-project-titles ()
+  (org-ql-query
+    :select '(substring-no-properties (org-get-heading t t t t))
+    :from my/org-project-files
+    :where '(level 1)))
+
+(defun my/search-org-project-tasks (project-title)
+  (org-ql-search my/org-project-files
+    `(and (level 2) (ancestors (heading ,project-title)))))
+
+(my/get-org-project-titles)
+
+(my/search-org-project-tasks "Winter cleaning")
+
+(defun my/display-org-project-subtasks ()
+  (interactive)
+  (let ((project (completing-read "Project: " (my/get-org-project-titles))))
+    (my/search-org-project-tasks project)))
+
+(defun my/org-projects-with-ids ()
+  (org-ql-query
+    :select '(cons (substring-no-properties (org-get-heading t t t t))
+                   (org-id-get-create))
+    :from my/org-project-files
+    :where '(level 1)))
+
+(defun my/org-project-map ()
+  (let ((heading-map (make-hash-table :test 'equal))
+        (headings (my/org-projects-with-ids)))
+    (dolist (heading headings)
+      (puthash (car heading) (cdr heading) heading-map))
+    heading-map))
+
+(my/org-project-map)
+
+(defun my/widen-all-org-buffers (buffer-list)
+"Widen all org buffers in the given buffer-list."
+(dolist (buffer-file buffer-list)
+  (with-current-buffer (get-file-buffer buffer-file)
+    (widen))))
+
+(defun my/display-org-project ()
+  (interactive)
+  (org-narrow-to-subtree)
+  (org-cycle '(16)))
+
+(defun my/goto-org-project ()
+  (interactive)
+  (let* ((project-map (my/org-project-map))
+         (selected-title (completing-read "Project: " (hash-table-keys project-map)))
+         (selected-id (gethash selected-title project-map)))
+    (my/widen-all-org-buffers my/org-project-files)
+    (org-id-goto selected-id)
+    (my/display-org-project)))
 
 (add-to-list 'org-modules 'org-habit)
 (setq org-habit-graph-column 51)
@@ -528,7 +631,7 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
 
 (use-package org-roam
   :custom
-  (org-roam-directory "~/notebook/zettelkasten")
+  (org-roam-directory "~/org/spark")
   :bind
   (("C-c n l" . org-roam-buffer-toggle)
    ("C-c n f" . org-roam-node-find)
@@ -740,6 +843,18 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
   (my-avy-yank)
   t)
 
+(defun my-avy-action-embark (point)
+  (unwind-protect
+    (goto-char point)
+    (embark-act))
+  t)
+
+(defun my-avy-action-embark-dwim (point)
+  (unwind-protect
+    (goto-char point)
+    (embark-dwim))
+  t)
+
 (use-package avy
   :init
   (setq avy-single-candidate-jump t)
@@ -747,6 +862,8 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
   (setf (alist-get ?n avy-dispatch-alist) #'my-avy-action-copy-charseq)
   (setf (alist-get ?y avy-dispatch-alist) #'my-avy-action-yank-charseq)
   (setf (alist-get ?Y avy-dispatch-alist) #'my-avy-action-yank-line)
+  (setf (alist-get ?. avy-dispatch-alist) #'my-avy-action-embark)
+  (setf (alist-get ?\; avy-dispatch-alist) #'my-avy-action-embark-dwim)
   :bind
   (("C-;" . avy-goto-char-timer)
    ("M-;" . avy-pop-mark)
@@ -810,6 +927,9 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
   (add-hook 'js-mode-hook 'smartparens-mode)
   (add-hook 'plantuml-mode-hook 'smartparens-mode)
   (add-hook 'json-ts-mode-hook 'smartparens-mode)
+  (add-hook 'terraform-mode-hook 'smartparens-mode)
+  (add-hook 'graphql-mode-hook 'smartparens-mode)
+  (add-hook 'yaml-mode-hook 'smartparens-mode)
   :config
   (require 'smartparens-config)
   :bind
@@ -863,6 +983,14 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
 
 (global-set-key (kbd "C-c s") 'scratch-buffer)
 
+(use-package embark
+  :bind
+  (("C-." . embark-act)
+   ("M-." . embark-dwim)))
+
+(use-package embark-consult
+  :after (embark consult))
+
 (use-package rg
   :bind
   (("M-s R" . rg-project)))
@@ -898,7 +1026,9 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
 (use-package consult-lsp
   :bind
   (:map lsp-mode-map
-        ("<f5> d" . consult-lsp-diagnostics)))
+        ("<f5> d" . consult-lsp-diagnostics)
+        ("<f5> s" . consult-lsp-file-symbols)
+        ("<f5> S" . consult-lsp-symbols)))
 
 (use-package kubel
   :after vterm
@@ -914,7 +1044,8 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
    ("N" . kubel-set-namespace)
    ("P" . kubel-port-forward-pod)
    ("s" . tabulated-list-sort)
-   ("e" . kubel-exec-ansi-term-pod)))
+   ;("e" . kubel-exec-ansi-term-pod)
+   ))
 
 (with-eval-after-load 'smerge-mode
   (global-set-key (kbd "C-c ^ N") 'smerge-vc-next-conflict))
@@ -1010,3 +1141,91 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
   :bind
   (:map terraform-mode-map
         ("<f5> = =" . terraform-format-buffer)))
+
+(use-package graphql-mode)
+
+(defun arttsu-clear-chat ()
+  (interactive)
+  (erase-buffer)
+  (insert "*** "))
+
+(defun arttsu-save-chat ()
+  (interactive)
+  (let* ((raw-chat-name (read-string "Enter chat name: "))
+         (normalized-chat-name (replace-regexp-in-string "[^[:alnum:]]+" "-" raw-chat-name))
+         (final-chat-name (if (string= normalized-chat-name "")
+                              (md5 (format-time-string "%s"))
+                            normalized-chat-name))
+         (file-path (expand-file-name (concat "~/org/chats/" final-chat-name ".org"))))
+    (if (file-exists-p file-path)
+        (message "File already exists!")
+        (progn
+          (write-region (point-min) (point-max) file-path)
+          (set-visited-file-name file-path)
+          (set-buffer-modified-p nil)
+          (message (concat "Chat saved to: " file-path))))))
+
+(defun arttsu-open-chat ()
+  (interactive)
+  (let* ((chat-dir "~/org/chats")
+         (chats (directory-files chat-dir nil "\\.org$"))
+         (chat-name (completing-read "Open chat: " chats nil t)))
+    (find-file (expand-file-name chat-name chat-dir))))
+
+(defun arttsu-open-in-gptel-mode ()
+  "Open content of the current buffer in org-mode with '*** ' inserted on first line. Cursor positioned after '*** '."
+  (interactive)
+  (let* ((content (buffer-substring-no-properties (point-min) (point-max)))
+         (buffer-name (format "ChatGPT-%s" (make-temp-name ""))))
+    (switch-to-buffer (generate-new-buffer buffer-name))
+    (insert "*** ")
+    (save-excursion
+      (insert "\n" content))
+    (org-mode)
+    (gptel-mode)))
+
+(defun arttsu-ask-chatgpt ()
+   "Ask to select a prompt and then open a new buffer in org-mode with '*** '
+    inserted on first line followed by the selected prompt.
+    Cursor positioned at the end of the buffer after content and gptel-send is executed."
+   (interactive)
+   (let* ((prompt-options '("Critique:" "Critique my Anki cards:"))
+          (selected-prompt (completing-read "Choose a prompt: " prompt-options nil t))
+          (content (buffer-substring-no-properties (point-min) (point-max)))
+          (buffer-name (format "ChatGPT-%s" (make-temp-name ""))))
+     (switch-to-buffer (generate-new-buffer buffer-name))
+     (insert "*** " selected-prompt)
+     (save-excursion
+       (insert "\n" content))
+     (org-mode)
+     (gptel-mode)
+     (goto-char (point-max))
+     (gptel-send)))
+
+(defun arttsu-gptel-send ()
+  (interactive)
+  (goto-char (point-max))
+  (gptel-send))
+
+(use-package gptel
+  :init
+  (setq-default gptel-model "gpt-4")
+  (setq gptel-default-mode 'org-mode)
+  :bind
+  (("C-c SPC" . gptel)
+   :map gptel-mode-map
+   (("C-c C-c" . arttsu-gptel-send)
+    ("C-c N" . arttsu-clear-chat)
+    ("C-c S" . arttsu-save-chat))))
+
+(use-package epresent)
+
+(use-package org-modern
+  :after org
+  :config
+  (global-org-modern-mode))
+
+(use-package link-hint
+  :bind
+  ("C-c o" . link-hint-open-link)
+  ("C-c O" . link-hint-copy-link))

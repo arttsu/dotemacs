@@ -1,0 +1,4 @@
+* %^{Title} %^g
+:PROPERTIES:
+:ARCHIVE: someday.org_archive::* %?
+:END:

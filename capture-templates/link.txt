@@ -1,0 +1,4 @@
+* [[%^{Link}][%^{Title}]]
+:PROPERTIES:
+:Captured: %U
+:END:%?
