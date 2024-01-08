@@ -33,7 +33,9 @@
   :bind
   (("C-x C-M-b" . scratch-buffer)
    ("C-x C-b" . ibuffer-other-window)
-   ("C-M-; d" . duplicate-dwim)))
+   ("C-M-; d" . duplicate-dwim)
+   ("M-g w" . forward-to-word)
+   ("M-g W" . backward-to-word)))
 
 (setq straight-fix-flycheck t)
 
@@ -212,3 +214,12 @@
 (use-package expand-region
   :bind
   (("C-=" . er/expand-region)))
+
+(use-package iy-go-to-char
+  :bind
+  (("M-g f" . iy-go-to-char)
+   ("M-g F" . iy-go-to-char-backward)
+   ("M-g t" . iy-go-up-to-char)
+   ("M-g T" . iy-go-up-to-char-backward)
+   ("M-g ;" . iy-go-to-or-up-to-continue)
+   ("M-g ," . iy-go-to-or-up-to-continue-backward)))
