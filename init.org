@@ -410,3 +410,13 @@ https://emacs-lsp.github.io/lsp-mode/
     (:map scala-mode-map
           ("<f5> I" . lsp-metals-build-import)))
 #+end_src
+** flycheck
+https://www.flycheck.org/en/latest/
+
+#+begin_src elisp
+  (use-package flycheck
+    :custom
+    (flycheck-global-modes '(not org-mode))
+    :config
+    (global-flycheck-mode))
+#+end_src

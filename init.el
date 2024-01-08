@@ -259,3 +259,9 @@
   :bind
   (:map scala-mode-map
         ("<f5> I" . lsp-metals-build-import)))
+
+(use-package flycheck
+  :custom
+  (flycheck-global-modes '(not org-mode))
+  :config
+  (global-flycheck-mode))
