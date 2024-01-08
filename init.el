@@ -200,3 +200,11 @@
    ("C-S-o" . crux-smart-open-line-above)
    ("C-^" . crux-top-join-line)
    ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region)))
+
+(use-package multiple-cursors
+  :bind
+  (("C-+" . mc/mark-next-like-this)
+   ("C-c k l" . mc/edit-lines)
+   ("C-c k m" . mc/mark-all-dwim)
+   ("C-S-<mouse-1>" . mc/add-cursor-on-click)
+   ("C-<return>" . set-rectangular-region-anchor)))

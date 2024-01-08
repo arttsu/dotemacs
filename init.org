@@ -325,3 +325,15 @@ https://github.com/bbatsov/crux
      ("C-^" . crux-top-join-line)
      ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region)))
 #+end_src
+** multiple-cursors
+https://github.com/magnars/multiple-cursors.el
+
+#+begin_src elisp
+  (use-package multiple-cursors
+    :bind
+    (("C-+" . mc/mark-next-like-this)
+     ("C-c k l" . mc/edit-lines)
+     ("C-c k m" . mc/mark-all-dwim)
+     ("C-S-<mouse-1>" . mc/add-cursor-on-click)
+     ("C-<return>" . set-rectangular-region-anchor)))
+#+end_src
