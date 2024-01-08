@@ -107,3 +107,21 @@ https://orgmode.org/
     (org-confirm-babel-evaluate nil)
     (org-startup-indented t))
 #+end_src
+** super-save
+https://github.com/bbatsov/super-save
+
+- Excluding '.sbt' and 'project/' files, as saving these files prompts
+  to reimport the sbt project.
+
+#+begin_src elisp
+  (use-package super-save
+    :custom
+    (super-save-auto-save-when-idle t)
+    (super-save-exclude '(".sbt" "project/"))
+    (super-save-silent t)
+    (super-save-delete-trailing-whitespace 'except-current-line)
+    (super-save-all-buffers t)
+    (auto-save-default nil)
+    :config
+    (super-save-mode))
+#+end_src
