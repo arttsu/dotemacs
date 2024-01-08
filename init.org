@@ -24,6 +24,15 @@ https://git.sr.ht/~protesilaos/iosevka-comfy
 #+begin_src shell
   brew install ripgrep
 #+end_src
+*** vterm
+**** Fedora
+#+begin_src shell
+  sudo dnf install libvterm -y
+#+end_src
+**** MacOS
+#+begin_src shell
+  brew install cmake libvterm libtool
+#+end_src
 ** Installation
 *** Clone the repo
 #+begin_src shell
@@ -452,4 +461,20 @@ https://github.com/dajva/rg.el
   (use-package rg
     :bind
     (("M-s R" . rg-project)))
+#+end_src
+** vterm
+https://github.com/vterm/vterm
+
+#+begin_src elisp
+  (use-package vterm
+    :when (not (my-windows-p))
+    :custom
+    (vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
+    (vterm-shell my-fish-path)
+    (vterm-max-scrollback 50000)
+    :bind
+    (("C-x v" . vterm)
+     ("C-x 4 v" . vterm-other-window)
+     :map vterm-mode-map
+     ("<f4>" . rename-buffer)))
 #+end_src

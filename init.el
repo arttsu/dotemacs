@@ -277,3 +277,15 @@
 (use-package rg
   :bind
   (("M-s R" . rg-project)))
+
+(use-package vterm
+  :when (not (my-windows-p))
+  :custom
+  (vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
+  (vterm-shell my-fish-path)
+  (vterm-max-scrollback 50000)
+  :bind
+  (("C-x v" . vterm)
+   ("C-x 4 v" . vterm-other-window)
+   :map vterm-mode-map
+   ("<f4>" . rename-buffer)))
