@@ -32,7 +32,8 @@
   (global-subword-mode)
   :bind
   (("C-x C-M-b" . scratch-buffer)
-   ("C-x C-b" . ibuffer-other-window)))
+   ("C-x C-b" . ibuffer-other-window)
+   ("C-M-; d" . duplicate-dwim)))
 
 (setq straight-fix-flycheck t)
 
@@ -192,3 +193,10 @@
   (whole-line-or-region-global-mode)
   :bind
   (("M-/" . whole-line-or-region-comment-dwim)))
+
+(use-package crux
+  :bind
+  (("C-o" . crux-smart-open-line)
+   ("C-S-o" . crux-smart-open-line-above)
+   ("C-^" . crux-top-join-line)
+   ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region)))

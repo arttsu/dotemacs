@@ -69,7 +69,8 @@ https://git.sr.ht/~protesilaos/iosevka-comfy
     (global-subword-mode)
     :bind
     (("C-x C-M-b" . scratch-buffer)
-     ("C-x C-b" . ibuffer-other-window)))
+     ("C-x C-b" . ibuffer-other-window)
+     ("C-M-; d" . duplicate-dwim)))
 #+end_src
 ** straight.el
 https://github.com/radian-software/straight.el
@@ -312,4 +313,15 @@ https://github.com/purcell/whole-line-or-region
     (whole-line-or-region-global-mode)
     :bind
     (("M-/" . whole-line-or-region-comment-dwim)))
+#+end_src
+** crux
+https://github.com/bbatsov/crux
+
+#+begin_src elisp
+  (use-package crux
+    :bind
+    (("C-o" . crux-smart-open-line)
+     ("C-S-o" . crux-smart-open-line-above)
+     ("C-^" . crux-top-join-line)
+     ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region)))
 #+end_src
