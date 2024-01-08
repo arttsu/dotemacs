@@ -302,3 +302,14 @@ https://github.com/minad/consult
      ("M-s L" . consult-line-multi)
      ("M-s K" . consult-keep-lines)))
 #+end_src
+** whole-line-or-region
+https://github.com/purcell/whole-line-or-region
+
+#+begin_src elisp
+  (use-package whole-line-or-region
+    :demand
+    :config
+    (whole-line-or-region-global-mode)
+    :bind
+    (("M-/" . whole-line-or-region-comment-dwim)))
+#+end_src

@@ -185,3 +185,10 @@
    ("M-s l" . consult-line)
    ("M-s L" . consult-line-multi)
    ("M-s K" . consult-keep-lines)))
+
+(use-package whole-line-or-region
+  :demand
+  :config
+  (whole-line-or-region-global-mode)
+  :bind
+  (("M-/" . whole-line-or-region-comment-dwim)))
