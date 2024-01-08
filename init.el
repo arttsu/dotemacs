@@ -223,3 +223,13 @@
    ("M-g T" . iy-go-up-to-char-backward)
    ("M-g ;" . iy-go-to-or-up-to-continue)
    ("M-g ," . iy-go-to-or-up-to-continue-backward)))
+
+(use-package company
+  :custom
+  (company-minimum-prefix-length 2)
+  (company-idle-delay 0.2)
+  (company-selection-wrap-around t)
+  (company-dabbrev-downcase nil)
+  (company-show-numbers t)
+  :config
+  (global-company-mode))
