@@ -172,7 +172,8 @@ https://github.com/bbatsov/super-save
     (super-save-all-buffers t)
     (auto-save-default nil)
     :config
-    (super-save-mode))
+    (super-save-mode)
+    (add-to-list 'super-save-triggers 'ace-window))
 #+end_src
 ** modus-themes
 https://protesilaos.com/emacs/modus-themes

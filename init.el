@@ -92,7 +92,8 @@
   (super-save-all-buffers t)
   (auto-save-default nil)
   :config
-  (super-save-mode))
+  (super-save-mode)
+  (add-to-list 'super-save-triggers 'ace-window))
 
 (use-package modus-themes
   :custom
