@@ -1,3 +1,11 @@
+(defun my-mac-p ()
+  (equal system-type 'darwin))
+
+(defun my-windows-p ()
+  (equal system-type 'windows-nt))
+
+(load (expand-file-name "local.el" user-emacs-directory))
+
 (use-package emacs
   :custom
   (create-lockfiles nil)
@@ -81,3 +89,7 @@
   (modus-themes-variable-pitch-ui t)
   :config
   (modus-themes-load-theme 'modus-vivendi))
+
+(unless (my-windows-p)
+  (set-face-attribute 'default nil :font "Iosevka Comfy Wide Fixed" :height my-default-font-height)
+  (set-frame-font "Iosevka Comfy Wide Fixed" nil t))

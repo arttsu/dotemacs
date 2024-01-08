@@ -3,12 +3,41 @@
 #+PROPERTY: header-args:elisp :results silent :tangle init.el
 * Documentation
 ** Dependencies
+*** iosevka-comfy font
+https://git.sr.ht/~protesilaos/iosevka-comfy
+**** Fedora
+#+begin_src shell
+  git clone --depth 1 https://git.sr.ht/~protesilaos/iosevka-comfy
+  cp -R iosevka-comfy/* ~/.local/share/fonts/
+#+end_src
+**** MacOS
+#+begin_src shell
+  git clone --depth 1 https://git.sr.ht/~protesilaos/iosevka-comfy
+  cp -R iosevka-comfy/* ~/Library/Fonts/
+#+end_src
 ** Installation
 *** Clone the repo
 #+begin_src shell
   git clone git@github.com:arttsu/dotemacs.git ~/.emacs.d
 #+end_src
+*** Set up the local init
+#+begin_src shell
+  cp ~/.emacs.d/{example_,}local.el
+#+end_src
 * Config
+** Helpers
+*** System type predicates
+#+begin_src elisp
+  (defun my-mac-p ()
+    (equal system-type 'darwin))
+
+  (defun my-windows-p ()
+    (equal system-type 'windows-nt))
+#+end_src
+** Load the local init
+#+begin_src elisp
+  (load (expand-file-name "local.el" user-emacs-directory))
+#+end_src
 ** emacs
 - Increasing  'gc-cons-threshold'   and  'read-process-output-max'  to
   improve 'lsp-mode' performance.  [[https://emacs-lsp.github.io/lsp-mode/page/performance/][Source]].
@@ -140,4 +169,12 @@ https://protesilaos.com/emacs/modus-themes
     (modus-themes-variable-pitch-ui t)
     :config
     (modus-themes-load-theme 'modus-vivendi))
+#+end_src
+** iosevka-comfy font
+https://git.sr.ht/~protesilaos/iosevka-comfy
+
+#+begin_src elisp
+  (unless (my-windows-p)
+    (set-face-attribute 'default nil :font "Iosevka Comfy Wide Fixed" :height my-default-font-height)
+    (set-frame-font "Iosevka Comfy Wide Fixed" nil t))
 #+end_src
