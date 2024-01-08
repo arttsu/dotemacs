@@ -57,6 +57,11 @@
 
 (setq straight-use-package-by-default t)
 
+(use-package exec-path-from-shell
+  :if (my-mac-p)
+  :config
+  (exec-path-from-shell-initialize))
+
 (use-package magit
   :bind
   (("C-c g" . magit-file-dispatch)))
@@ -234,3 +239,23 @@
   (company-show-numbers t)
   :config
   (global-company-mode))
+
+(use-package lsp-mode
+  :custom
+  (setq lsp-keymap-prefix "<f5>")
+  :hook
+  (scala-mode . lsp)
+  :commands lsp
+  :bind
+  (:map lsp-mode-map
+        ([M-down-mouse-1] . mouse-set-point)
+        ([M-mouse-1] . lsp-find-definition)
+        ([M-mouse-3] . xref-go-back)))
+
+(use-package lsp-ui
+  :commands lsp-ui-mode)
+
+(use-package lsp-metals
+  :bind
+  (:map scala-mode-map
+        ("<f5> I" . lsp-metals-build-import)))

@@ -8,3 +8,6 @@
 /org-persist/
 /local.el
 /history
+/.cache/
+/.lsp-session-v1
+/projects

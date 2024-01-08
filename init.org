@@ -116,6 +116,13 @@ they are re-enabled, if the buffer is modified.
 #+begin_src elisp
   (setq straight-use-package-by-default t)
 #+end_src
+** exec-path-from-shell
+#+begin_src elisp
+  (use-package exec-path-from-shell
+    :if (my-mac-p)
+    :config
+    (exec-path-from-shell-initialize))
+#+end_src
 ** magit
 https://magit.vc/
 
@@ -374,4 +381,32 @@ http://company-mode.github.io/
     (company-show-numbers t)
     :config
     (global-company-mode))
+#+end_src
+** lsp-mode
+https://emacs-lsp.github.io/lsp-mode/
+
+#+begin_src elisp
+  (use-package lsp-mode
+    :custom
+    (setq lsp-keymap-prefix "<f5>")
+    :hook
+    (scala-mode . lsp)
+    :commands lsp
+    :bind
+    (:map lsp-mode-map
+          ([M-down-mouse-1] . mouse-set-point)
+          ([M-mouse-1] . lsp-find-definition)
+          ([M-mouse-3] . xref-go-back)))
+#+end_src
+** lsp-ui
+#+begin_src elisp
+  (use-package lsp-ui
+    :commands lsp-ui-mode)
+#+end_src
+** lsp-metals
+#+begin_src elisp
+  (use-package lsp-metals
+    :bind
+    (:map scala-mode-map
+          ("<f5> I" . lsp-metals-build-import)))
 #+end_src
