@@ -208,3 +208,7 @@
    ("C-c k m" . mc/mark-all-dwim)
    ("C-S-<mouse-1>" . mc/add-cursor-on-click)
    ("C-<return>" . set-rectangular-region-anchor)))
+
+(use-package expand-region
+  :bind
+  (("C-=" . er/expand-region)))
