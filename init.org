@@ -1,0 +1,109 @@
+#+TITLE: Emacs Init
+#+STARTUP: show2levels
+#+PROPERTY: header-args:elisp :results silent :tangle init.el
+* Documentation
+** Dependencies
+** Installation
+*** Clone the repo
+#+begin_src shell
+  git clone git@github.com:arttsu/dotemacs.git ~/.emacs.d
+#+end_src
+* Config
+** emacs
+- Increasing  'gc-cons-threshold'   and  'read-process-output-max'  to
+  improve 'lsp-mode' performance.  [[https://emacs-lsp.github.io/lsp-mode/page/performance/][Source]].
+
+#+begin_src elisp
+  (use-package emacs
+    :custom
+    (create-lockfiles nil)
+    (make-backup-files nil)
+    (inhibit-splash-screen t)
+    (initial-scratch-message "All systems go!")
+    (initial-major-mode 'text-mode)
+    (global-auto-revert-non-file-buffers t)
+    (disabled-command-function nil)
+    (save-interprogram-paste-before-kill t)
+    (gc-cons-threshold 100000000)
+    (read-process-output-max (* 1024 1024))
+    (visible-bell t)
+    (require-final-newline t)
+    (indent-tabs-mode nil)
+    :config
+    (add-to-list 'default-frame-alist '(fullscreen . maximized))
+    (global-auto-revert-mode)
+    (scroll-bar-mode -1)
+    (tool-bar-mode -1)
+    (menu-bar-mode -1)
+    (fset 'yes-or-no-p 'y-or-n-p)
+    (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+    (global-subword-mode)
+    :bind
+    (("C-c v s" . scratch-buffer)
+     ("C-c v b" . bookmark-jump)
+     ("C-x C-b" . ibuffer-other-window)))
+#+end_src
+** straight.el
+https://github.com/radian-software/straight.el
+*** Disable package.el (early)
+#+begin_src elisp :tangle early-init.el
+  (setq package-enable-at-startup nil)
+#+end_src
+*** Fix Flycheck
+https://github.com/radian-software/straight.el#integration-with-flycheck
+
+Some  Flycheck checkers  create  tmp  files.  This  is  a problem  for
+straight.el, because tmp  files will make it think that  a package has
+been modified.
+
+The following  enables a workaround:  When a buffer is  first visited,
+checkers that  create tmp files are  automatically disabled.  However,
+they are re-enabled, if the buffer is modified.
+
+#+begin_src elisp
+  (setq straight-fix-flycheck t)
+#+end_src
+*** Bootstrap
+#+begin_src elisp
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+	 (expand-file-name
+	  "straight/repos/straight.el/bootstrap.el"
+	  (or (bound-and-true-p straight-base-dir)
+	      user-emacs-directory)))
+	(bootstrap-version 7))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+	  (url-retrieve-synchronously
+	   "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+	   'silent 'inhibit-cookies)
+	(goto-char (point-max))
+	(eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
+#+end_src
+*** Configure
+#+begin_src elisp
+  (setq straight-use-package-by-default t)
+#+end_src
+** magit
+https://magit.vc/
+
+#+begin_src elisp
+  (use-package magit
+    :bind
+    (("C-c g" . magit-file-dispatch)))
+#+end_src
+** org
+https://orgmode.org/
+*** Use the latest version
+#+begin_src elisp
+  (straight-use-package 'org)
+#+end_src
+*** Configure
+#+begin_src elisp
+  (use-package org
+    :defer t
+    :custom
+    (org-confirm-babel-evaluate nil)
+    (org-startup-indented t))
+#+end_src
