@@ -15,6 +15,15 @@ https://git.sr.ht/~protesilaos/iosevka-comfy
   git clone --depth 1 https://git.sr.ht/~protesilaos/iosevka-comfy
   cp -R iosevka-comfy/* ~/Library/Fonts/
 #+end_src
+*** rg
+**** Fedora
+#+begin_src shell
+  sudo dnf install ripgrep -y
+#+end_src
+**** MacOS
+#+begin_src shell
+  brew install ripgrep
+#+end_src
 ** Installation
 *** Clone the repo
 #+begin_src shell
@@ -435,4 +444,12 @@ https://www.flycheck.org/en/latest/
     (flycheck-global-modes '(not org-mode))
     :config
     (global-flycheck-mode))
+#+end_src
+** rg
+https://github.com/dajva/rg.el
+
+#+begin_src elisp
+  (use-package rg
+    :bind
+    (("M-s R" . rg-project)))
 #+end_src

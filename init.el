@@ -273,3 +273,7 @@
   (flycheck-global-modes '(not org-mode))
   :config
   (global-flycheck-mode))
+
+(use-package rg
+  :bind
+  (("M-s R" . rg-project)))
