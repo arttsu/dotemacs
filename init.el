@@ -31,8 +31,7 @@
   (add-hook 'prog-mode-hook 'display-line-numbers-mode)
   (global-subword-mode)
   :bind
-  (("C-c v s" . scratch-buffer)
-   ("C-c v b" . bookmark-jump)
+  (("C-x C-M-b" . scratch-buffer)
    ("C-x C-b" . ibuffer-other-window)))
 
 (setq straight-fix-flycheck t)
@@ -168,3 +167,21 @@
    ("C-M-; S" . avy-kill-ring-save-region)
    :map isearch-mode-map
    ("C-;" . avy-isearch)))
+
+(use-package consult
+  :custom
+  (consult-buffer-sources '(consult--source-hidden-buffer consult--source-modified-buffer consult--source-buffer consult--source-recent-file consult--source-file-register consult--source-project-buffer-hidden consult--source-project-recent-file-hidden))
+  :bind
+  (("C-x b" . consult-buffer)
+   ("C-x 4 b" . consult-buffer-other-window)
+   ("C-x 5 b" . consult-buffer-other-frame)
+   ("C-x p b" . consult-project-buffer)
+   ("C-x B" . consult-bookmark)
+   ("M-g M-g" . consult-goto-line)
+   ("M-g o" . consult-outline)
+   ("M-g m" . consult-mark)
+   ("M-g M" . consult-global-mark)
+   ("M-s r" . consult-ripgrep)
+   ("M-s l" . consult-line)
+   ("M-s L" . consult-line-multi)
+   ("M-s K" . consult-keep-lines)))
