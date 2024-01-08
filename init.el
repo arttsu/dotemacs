@@ -299,3 +299,18 @@
    ("C-x 4 v" . vterm-other-window)
    :map vterm-mode-map
    ("<f4>" . rename-buffer)))
+
+(defun my-gptel-clear ()
+  (interactive)
+  (when (y-or-n-p "Are you sure you want to clear the chat?")
+    (erase-buffer)
+    (insert "*** ")))
+
+(use-package gptel
+  :custom
+  (gptel-model "gpt-4-1106-preview")
+  (gptel-default-mode 'org-mode)
+  :bind
+  (("C-c SPC" . gptel)
+   :map gptel-mode-map
+   ("C-c N" . my-gptel-clear)))
