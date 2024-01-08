@@ -313,6 +313,22 @@ https://github.com/minad/consult
      ("M-s L" . consult-line-multi)
      ("M-s K" . consult-keep-lines)))
 #+end_src
+** embark
+https://github.com/oantolin/embark
+
+#+begin_src elisp
+  (use-package embark
+    :bind
+    (("C-." . embark-act)
+     ("M-." . embark-dwim)))
+#+end_src
+** embark-consult
+https://github.com/oantolin/embark/blob/master/embark-consult.el
+
+#+begin_src elisp
+  (use-package embark-consult
+    :after (embark consult))
+#+end_src
 ** whole-line-or-region
 https://github.com/purcell/whole-line-or-region
 

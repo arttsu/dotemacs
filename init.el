@@ -195,6 +195,14 @@
    ("M-s L" . consult-line-multi)
    ("M-s K" . consult-keep-lines)))
 
+(use-package embark
+  :bind
+  (("C-." . embark-act)
+   ("M-." . embark-dwim)))
+
+(use-package embark-consult
+  :after (embark consult))
+
 (use-package whole-line-or-region
   :demand
   :config
