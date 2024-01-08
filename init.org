@@ -222,3 +222,14 @@ https://github.com/Fuco1/smartparens
           ("C-c p (" . sp-wrap-round)
           ("C-c p r" . sp-rewrap-sexp)))
 #+end_src
+** ace-window
+https://github.com/abo-abo/ace-window
+
+#+begin_src elisp
+  (use-package ace-window
+    :custom
+    (aw-keys '(?a ?s ?d ?f ?g ?h ?k ?l))
+    (aw-scope 'frame)
+    :bind
+    (("M-o" . ace-window)))
+#+end_src
