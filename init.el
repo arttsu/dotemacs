@@ -100,6 +100,16 @@
   (super-save-mode)
   (add-to-list 'super-save-triggers 'ace-window))
 
+(use-package dired
+  :straight nil
+  :custom
+  (dired-dwim-target t)
+  :bind
+  (("<f7>" . dired-jump)
+   :map dired-mode-map
+   ("o" . crux-open-with)
+   ("<tab>" . dired-find-file-other-window)))
+
 (use-package modus-themes
   :custom
   (modus-themes-italic-constructs t)
