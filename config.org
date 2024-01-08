@@ -23,6 +23,7 @@
 - [[#org-bookmar-heading][org-bookmar-heading]]
 - [[#emms][EMMS]]
 - [[#vanilla-settings][Vanilla settings]]
+  - [[#warning-level][Warning level]]
   - [[#startup][Startup]]
   - [[#performance][Performance]]
   - [[#use-sh-as-shell][Use sh as shell]]
@@ -73,6 +74,7 @@
 - [[#project][Project]]
 - [[#completion][Completion]]
   - [[#vertico][Vertico]]
+  - [[#vertico-posframe][Vertico Posframe]]
   - [[#persist-history][Persist history]]
   - [[#orderless][Orderless]]
   - [[#consult][Consult]]
@@ -333,6 +335,11 @@ https://www.gnu.org/software/emms/manual/#Introduction
 #+end_src
 
 * Vanilla settings
+** Warning level
+#+begin_src elisp
+  (setq warning-minimum-level :error)
+#+end_src
+
 ** Startup
 #+begin_src elisp
   (defun my-initial-buffer ()
@@ -432,8 +439,8 @@ References:
 
   (global-set-key (kbd "C-c E") 'erase-buffer)
 
-  (global-set-key (kbd "C-c f") 'forward-to-word)
-  (global-set-key (kbd "C-c b") 'backward-to-word)
+  (global-set-key (kbd "M-g w") 'forward-to-word)
+  (global-set-key (kbd "M-g W") 'backward-to-word)
 #+end_src
 
 ** Unbind vanilla actions
@@ -788,9 +795,18 @@ https://github.com/alf/ob-restclient.el
   (with-eval-after-load 'org-babel-load-languages
     (org-babel-do-load-languages
      'org-babel-load-languages
-     '((restclient . t))))
+     '((restclient . t)
+       (python . t))))
 #+end_src
 
+*** tmp
+#+begin_src elisp :tangle no
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (restclient . t)
+     (python . t)))
+#+end_src
 *** Make C-c C-c on a heading execute the first src block
 #+begin_src elisp
   (defun my-execute-first-src-block-under-heading-new ()
@@ -992,7 +1008,8 @@ https://emacs.stackexchange.com/questions/45291/change-color-of-org-mode-checkbo
 
 ** Project view
 #+begin_src elisp
-  (defconst my/org-project-files '("~/org/projects.org" "~/org_work/projects.org"))
+  ;; (defconst my/org-project-files '("~/org/projects.org" "~/org_work/projects.org"))
+  (defconst my/org-project-files '("~/org_work/projects.org"))
 
   (defun my/get-org-project-titles ()
     (org-ql-query
@@ -1057,11 +1074,13 @@ https://emacs.stackexchange.com/questions/45291/change-color-of-org-mode-checkbo
   (defun my/goto-org-project ()
     (interactive)
     (let* ((project-map (my/org-project-map))
-           (selected-title (completing-read "Project: " (hash-table-keys project-map)))
+           (selected-title (completing-read "Project: " project-map))
            (selected-id (gethash selected-title project-map)))
       (my/widen-all-org-buffers my/org-project-files)
       (org-id-goto selected-id)
       (my/display-org-project)))
+
+  (global-set-key (kbd "C-c P") 'my/goto-org-project)
 #+end_src
 
 ** Habits
@@ -1208,8 +1227,10 @@ https://github.com/minad/vertico
 
 #+begin_src elisp
   (use-package vertico
+    :straight (:files (:defaults "extensions/*"))
     :config
-    (vertico-mode))
+    (vertico-mode)
+    (require 'vertico-multiform))
 
   ;; Add prompt indicator to `completing-read-multiple'.
   ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
@@ -1235,6 +1256,15 @@ https://github.com/minad/vertico
 
   ;; Enable recursive minibuffers
   (setq enable-recursive-minibuffers t)
+#+end_src
+
+** Vertico Posframe
+https://github.com/tumashu/vertico-posframe
+
+#+begin_src elisp :tangle no
+  (use-package vertico-posframe
+    :config
+    (vertico-posframe-mode))
 #+end_src
 
 ** Persist history
@@ -1475,18 +1505,12 @@ https://github.com/bbatsov/crux
 https://github.com/Fuco1/smartparens
 
 #+begin_src elisp
-  ;; https://github.com/purcell/whole-line-or-region/issues/17#issuecomment-781988534
-  (defun my-whole-line-or-region-sp-kill-region (prefix)
-    "Call `sp-kill-region' on region or PREFIX whole lines."
-    (interactive "*p")
-    (whole-line-or-region-wrap-beg-end 'sp-kill-region prefix))
-
   (use-package smartparens
     :demand
-    :after whole-line-or-region
+    ;; :after whole-line-or-region
     :init
-    (add-hook 'emacs-lisp-mode-hook 'smartparens-strict-mode)
-    (add-hook 'clojure-mode-hook 'smartparens-strict-mode)
+    (add-hook 'emacs-lisp-mode-hook 'smartparens-mode)
+    (add-hook 'clojure-mode-hook 'smartparens-mode)
     (add-hook 'eval-expression-minibuffer-setup-hook 'smartparens-mode)
     (add-hook 'scala-mode-hook 'smartparens-mode)
     (add-hook 'js-mode-hook 'smartparens-mode)
@@ -1498,38 +1522,23 @@ https://github.com/Fuco1/smartparens
     :config
     (require 'smartparens-config)
     :bind
-    (:map smartparens-strict-mode-map
-          ("C-<right>" . sp-forward-slurp-sexp)
-          ("C-<left>" . sp-backward-slurp-sexp)
-          ("M-<right>" . sp-forward-barf-sexp)
-          ("M-<left>" . sp-backward-barf-sexp)
-          ("C-c p u" . sp-unwrap-sexp)
-          ("C-c p {" . sp-wrap-curly)
-          ("C-c p (" . sp-wrap-round)
-          ("C-c p [" . sp-wrap-square)
-          ("C-c p r" . sp-rewrap-sexp)
-          ("M-a" . sp-beginning-of-sexp)
-          ("M-e" . sp-end-of-sexp)
-          ("C-M-u" . sp-up-sexp)
-          ("C-M-S-u" . sp-backward-up-sexp)
-          ("C-M-S-d" . sp-backward-down-sexp)
-          ("C-w" . my-whole-line-or-region-sp-kill-region)
-          :map smartparens-mode-map
-          ("C-<right>" . sp-forward-slurp-sexp)
-          ("C-<left>" . sp-backward-slurp-sexp)
-          ("M-<right>" . sp-forward-barf-sexp)
-          ("M-<left>" . sp-backward-barf-sexp)
-          ("C-c p u" . sp-unwrap-sexp)
-          ("C-c p u" . sp-unwrap-sexp)
-          ("C-c p {" . sp-wrap-curly)
-          ("C-c p (" . sp-wrap-round)
-          ("C-c p [" . sp-wrap-square)
-          ("C-c p r" . sp-rewrap-sexp)
-          ("M-a" . sp-beginning-of-sexp)
-          ("M-e" . sp-end-of-sexp)
-          ("C-M-u" . sp-up-sexp)
-          ("C-M-S-u" . sp-backward-up-sexp)
-          ("C-M-S-d" . sp-backward-down-sexp)))
+    ( :map smartparens-mode-map
+      ("C-<right>" . sp-forward-slurp-sexp)
+      ("C-<left>" . sp-backward-slurp-sexp)
+      ("M-<right>" . sp-forward-barf-sexp)
+      ("M-<left>" . sp-backward-barf-sexp)
+      ("C-c p u" . sp-unwrap-sexp)
+      ("C-c p u" . sp-unwrap-sexp)
+      ("C-c p {" . sp-wrap-curly)
+      ("C-c p (" . sp-wrap-round)
+      ("C-c p [" . sp-wrap-square)
+      ("C-c p r" . sp-rewrap-sexp)
+      ("M-a" . sp-beginning-of-sexp)
+      ("M-e" . sp-end-of-sexp)
+      ("C-M-u" . sp-up-sexp)
+      ("C-M-S-u" . sp-backward-up-sexp)
+      ("C-M-d" . sp-down-sexp)
+      ("C-M-S-d" . sp-backward-down-sexp)))
 #+end_src
 
 ** ace-window
@@ -1692,6 +1701,7 @@ https://github.com/zerolfx/copilot.el
 
   (use-package copilot
     :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+    :custom-face (copilot-overlay-face ((t (:background "DarkGreen" :foreground "White"))))
     :config
     (add-hook 'emacs-lisp-mode-hook #'copilot-mode)
     (add-hook 'clojure-mode-hook #'copilot-mode)
@@ -1912,7 +1922,7 @@ https://github.com/karthink/gptel
 
   (use-package gptel
     :init
-    (setq-default gptel-model "gpt-4")
+    (setq-default gptel-model "gpt-4-1106-preview")
     (setq gptel-default-mode 'org-mode)
     :bind
     (("C-c SPC" . gptel)

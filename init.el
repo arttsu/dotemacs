@@ -62,6 +62,8 @@
   ("C-c r p" . 'emms-pause)
   ("C-c r s" . 'emms-stop))
 
+(setq warning-minimum-level :error)
+
 (defun my-initial-buffer ()
   (emms-streams)
   (get-buffer "Emms Streams"))
@@ -126,8 +128,8 @@
 
 (global-set-key (kbd "C-c E") 'erase-buffer)
 
-(global-set-key (kbd "C-c f") 'forward-to-word)
-(global-set-key (kbd "C-c b") 'backward-to-word)
+(global-set-key (kbd "M-g w") 'forward-to-word)
+(global-set-key (kbd "M-g W") 'backward-to-word)
 
 (with-eval-after-load 'conf-mode
   (define-key conf-mode-map (kbd "C-c SPC") nil))
@@ -397,7 +399,8 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
 (with-eval-after-load 'org-babel-load-languages
   (org-babel-do-load-languages
    'org-babel-load-languages
-   '((restclient . t))))
+   '((restclient . t)
+     (python . t))))
 
 (defun my-execute-first-src-block-under-heading-new ()
   "Execute the first source code block within the content of the current Org heading."
@@ -541,7 +544,8 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
          (my-day-agenda "d" "Day" '("~/org/tasks.org" "~/org/calendar.org") "~/org/projects.org")
          (my-day-agenda "D" "Work Day" '("~/org_work/tasks.org" "~/org_work/calendar.org") "~/org_work/projects.org"))))
 
-(defconst my/org-project-files '("~/org/projects.org" "~/org_work/projects.org"))
+;; (defconst my/org-project-files '("~/org/projects.org" "~/org_work/projects.org"))
+(defconst my/org-project-files '("~/org_work/projects.org"))
 
 (defun my/get-org-project-titles ()
   (org-ql-query
@@ -592,11 +596,13 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
 (defun my/goto-org-project ()
   (interactive)
   (let* ((project-map (my/org-project-map))
-         (selected-title (completing-read "Project: " (hash-table-keys project-map)))
+         (selected-title (completing-read "Project: " project-map))
          (selected-id (gethash selected-title project-map)))
     (my/widen-all-org-buffers my/org-project-files)
     (org-id-goto selected-id)
     (my/display-org-project)))
+
+(global-set-key (kbd "C-c P") 'my/goto-org-project)
 
 (add-to-list 'org-modules 'org-habit)
 (setq org-habit-graph-column 51)
@@ -700,8 +706,10 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
   (add-to-list 'project-switch-commands '(my-vterm-project-root "vterm" "V") t))
 
 (use-package vertico
+  :straight (:files (:defaults "extensions/*"))
   :config
-  (vertico-mode))
+  (vertico-mode)
+  (require 'vertico-multiform))
 
 ;; Add prompt indicator to `completing-read-multiple'.
 ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
@@ -910,18 +918,12 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
    ("C-^" . crux-top-join-line)
    ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region)))
 
-;; https://github.com/purcell/whole-line-or-region/issues/17#issuecomment-781988534
-(defun my-whole-line-or-region-sp-kill-region (prefix)
-  "Call `sp-kill-region' on region or PREFIX whole lines."
-  (interactive "*p")
-  (whole-line-or-region-wrap-beg-end 'sp-kill-region prefix))
-
 (use-package smartparens
   :demand
-  :after whole-line-or-region
+  ;; :after whole-line-or-region
   :init
-  (add-hook 'emacs-lisp-mode-hook 'smartparens-strict-mode)
-  (add-hook 'clojure-mode-hook 'smartparens-strict-mode)
+  (add-hook 'emacs-lisp-mode-hook 'smartparens-mode)
+  (add-hook 'clojure-mode-hook 'smartparens-mode)
   (add-hook 'eval-expression-minibuffer-setup-hook 'smartparens-mode)
   (add-hook 'scala-mode-hook 'smartparens-mode)
   (add-hook 'js-mode-hook 'smartparens-mode)
@@ -933,38 +935,23 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
   :config
   (require 'smartparens-config)
   :bind
-  (:map smartparens-strict-mode-map
-        ("C-<right>" . sp-forward-slurp-sexp)
-        ("C-<left>" . sp-backward-slurp-sexp)
-        ("M-<right>" . sp-forward-barf-sexp)
-        ("M-<left>" . sp-backward-barf-sexp)
-        ("C-c p u" . sp-unwrap-sexp)
-        ("C-c p {" . sp-wrap-curly)
-        ("C-c p (" . sp-wrap-round)
-        ("C-c p [" . sp-wrap-square)
-        ("C-c p r" . sp-rewrap-sexp)
-        ("M-a" . sp-beginning-of-sexp)
-        ("M-e" . sp-end-of-sexp)
-        ("C-M-u" . sp-up-sexp)
-        ("C-M-S-u" . sp-backward-up-sexp)
-        ("C-M-S-d" . sp-backward-down-sexp)
-        ("C-w" . my-whole-line-or-region-sp-kill-region)
-        :map smartparens-mode-map
-        ("C-<right>" . sp-forward-slurp-sexp)
-        ("C-<left>" . sp-backward-slurp-sexp)
-        ("M-<right>" . sp-forward-barf-sexp)
-        ("M-<left>" . sp-backward-barf-sexp)
-        ("C-c p u" . sp-unwrap-sexp)
-        ("C-c p u" . sp-unwrap-sexp)
-        ("C-c p {" . sp-wrap-curly)
-        ("C-c p (" . sp-wrap-round)
-        ("C-c p [" . sp-wrap-square)
-        ("C-c p r" . sp-rewrap-sexp)
-        ("M-a" . sp-beginning-of-sexp)
-        ("M-e" . sp-end-of-sexp)
-        ("C-M-u" . sp-up-sexp)
-        ("C-M-S-u" . sp-backward-up-sexp)
-        ("C-M-S-d" . sp-backward-down-sexp)))
+  ( :map smartparens-mode-map
+    ("C-<right>" . sp-forward-slurp-sexp)
+    ("C-<left>" . sp-backward-slurp-sexp)
+    ("M-<right>" . sp-forward-barf-sexp)
+    ("M-<left>" . sp-backward-barf-sexp)
+    ("C-c p u" . sp-unwrap-sexp)
+    ("C-c p u" . sp-unwrap-sexp)
+    ("C-c p {" . sp-wrap-curly)
+    ("C-c p (" . sp-wrap-round)
+    ("C-c p [" . sp-wrap-square)
+    ("C-c p r" . sp-rewrap-sexp)
+    ("M-a" . sp-beginning-of-sexp)
+    ("M-e" . sp-end-of-sexp)
+    ("C-M-u" . sp-up-sexp)
+    ("C-M-S-u" . sp-backward-up-sexp)
+    ("C-M-d" . sp-down-sexp)
+    ("C-M-S-d" . sp-backward-down-sexp)))
 
 (use-package ace-window
   :init
@@ -1059,6 +1046,7 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
 
 (use-package copilot
   :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+  :custom-face (copilot-overlay-face ((t (:background "DarkGreen" :foreground "White"))))
   :config
   (add-hook 'emacs-lisp-mode-hook #'copilot-mode)
   (add-hook 'clojure-mode-hook #'copilot-mode)
@@ -1209,7 +1197,7 @@ With a prefix argument, prompt for a custom date and time to use in the timestam
 
 (use-package gptel
   :init
-  (setq-default gptel-model "gpt-4")
+  (setq-default gptel-model "gpt-4-1106-preview")
   (setq gptel-default-mode 'org-mode)
   :bind
   (("C-c SPC" . gptel)
