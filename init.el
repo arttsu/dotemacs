@@ -138,6 +138,7 @@
   (org-capture-templates my-gtd-capture-templates)
   (org-agenda-custom-commands (list my-day-agenda))
   (org-refile-targets my-gtd-refile-targets)
+  (org-attach-directory "~/ordo/attach")
   :bind
   (("C-c c" . org-capture)
    ("C-c i" . my-capture-to-inbox)
