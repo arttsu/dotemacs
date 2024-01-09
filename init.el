@@ -378,6 +378,23 @@
   :bind
   (("M-s R" . rg-project)))
 
+(defun my-vterm-project-root ()
+  (interactive)
+  (let* ((project-root (when-let ((project (project-current)))
+                         (project-root project)))
+         (project-name (when project-root
+                          (file-name-nondirectory
+                           (directory-file-name project-root))))
+         (vterm-buffer-name (when project-name
+                              (format "*%s: vterm*" project-name))))
+    (if project-root
+        (progn
+          (unless (get-buffer vterm-buffer-name)
+            (let ((default-directory project-root))
+              (vterm vterm-buffer-name)))
+          (switch-to-buffer vterm-buffer-name))
+      (message "Not in a project"))))
+
 (use-package vterm
   :when (not (my-windows-p))
   :custom
@@ -387,6 +404,7 @@
   :bind
   (("C-x v" . vterm)
    ("C-x 4 v" . vterm-other-window)
+   ("C-x p v" . my-vterm-project-root)
    :map vterm-mode-map
    ("<f4>" . rename-buffer)))
 

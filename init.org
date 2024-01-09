@@ -582,7 +582,26 @@ https://github.com/dajva/rg.el
 #+end_src
 ** vterm
 https://github.com/vterm/vterm
-
+*** vterm in the project root
+#+begin_src elisp
+  (defun my-vterm-project-root ()
+    (interactive)
+    (let* ((project-root (when-let ((project (project-current)))
+                           (project-root project)))
+           (project-name (when project-root
+                            (file-name-nondirectory
+                             (directory-file-name project-root))))
+           (vterm-buffer-name (when project-name
+                                (format "*%s: vterm*" project-name))))
+      (if project-root
+          (progn
+            (unless (get-buffer vterm-buffer-name)
+              (let ((default-directory project-root))
+                (vterm vterm-buffer-name)))
+            (switch-to-buffer vterm-buffer-name))
+        (message "Not in a project"))))
+#+end_src
+*** Configure
 #+begin_src elisp
   (use-package vterm
     :when (not (my-windows-p))
@@ -593,6 +612,7 @@ https://github.com/vterm/vterm
     :bind
     (("C-x v" . vterm)
      ("C-x 4 v" . vterm-other-window)
+     ("C-x p v" . my-vterm-project-root)
      :map vterm-mode-map
      ("<f4>" . rename-buffer)))
 #+end_src
