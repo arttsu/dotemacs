@@ -85,6 +85,14 @@
 (defconst my-projects-file (my-gtd-file "projects"))
 (defconst my-someday-file (my-gtd-file "someday"))
 
+(defconst my-shared-inbox-file "~/kunhavigi/inbox.org")
+
+(defconst my-gtd-agenda-files (list my-calendar-file
+                                    my-tasks-file
+                                    my-projects-file))
+
+(defconst my-inbox-files (list my-inbox-file my-shared-inbox-file))
+
 (defconst my-gtd-capture-templates
   `(("i" "Inbox" entry (file ,my-inbox-file) (file ,(my-capture-template "inbox")))
     ("p" "Project" entry (file ,my-projects-file) (file ,(my-capture-template "project")))
@@ -94,18 +102,35 @@
   (interactive)
   (org-capture nil "i"))
 
+(defconst my-day-agenda
+  `("d"
+    "Day"
+    ((agenda "" ((org-agenda-span 1)
+                 (org-agenda-skip-scheduled-if-done t)
+                 (org-agenda-skip-deadline-if-done t)
+                 (org-agenda-skip-timestamp-if-done t)
+                 (org-agenda-files ',my-gtd-agenda-files)))
+     (todo "TODO" ((org-agenda-overriding-header "Not-scheduled Tasks")
+                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))
+                   (org-agenda-files '(,my-tasks-file))))
+     (tags "NOW+LEVEL=1" ((org-agenda-overriding-header "Projects")
+                          (org-agenda-files '(,my-projects-file)))))))
+
 (straight-use-package 'org)
 
 (use-package org
   :defer t
   :custom
+  (org-agenda-files my-gtd-agenda-files)
   (org-confirm-babel-evaluate nil)
   (org-startup-indented t)
   (org-use-sub-superscripts '{})
   (org-capture-templates my-gtd-capture-templates)
+  (org-agenda-custom-commands (list my-day-agenda))
   :bind
   (("C-c c" . org-capture)
-   ("C-c i" . my-capture-to-inbox)))
+   ("C-c i" . my-capture-to-inbox)
+   ("C-c a" . org-agenda)))
 
 (use-package org-modern
   :after org
