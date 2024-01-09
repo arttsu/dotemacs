@@ -397,6 +397,7 @@
   :hook (prog-mode . copilot-mode)
   :custom-face (copilot-overlay-face ((t (:background "DarkGreen" :foreground "White"))))
   :config
+  (add-to-list 'warning-suppress-log-types '(copilot copilot-no-mode-indent))
   (defhydra my-copilot-hydra (copilot-mode-map "M-TAB")
     "Copilot"
     ("M-TAB" copilot-accept-completion "Accept" :color blue)
