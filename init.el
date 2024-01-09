@@ -116,6 +116,15 @@
      (tags "NOW+LEVEL=1" ((org-agenda-overriding-header "Projects")
                           (org-agenda-files '(,my-projects-file)))))))
 
+(defconst my-gtd-refile-targets
+  `(((,my-calendar-file
+      ,my-tasks-file
+      ,my-projects-file
+      ,my-someday-file
+      ,my-inbox-file
+      ,my-shared-inbox-file)
+     :level . 1)))
+
 (straight-use-package 'org)
 
 (use-package org
@@ -127,6 +136,7 @@
   (org-use-sub-superscripts '{})
   (org-capture-templates my-gtd-capture-templates)
   (org-agenda-custom-commands (list my-day-agenda))
+  (org-refile-targets my-gtd-refile-targets)
   :bind
   (("C-c c" . org-capture)
    ("C-c i" . my-capture-to-inbox)
