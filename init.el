@@ -372,3 +372,5 @@
    :map gptel-mode-map
    ("C-c x x" . my-gptel-clear)
    ("C-c x a" . gptel-abort)))
+
+(use-package ob-restclient)
