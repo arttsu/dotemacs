@@ -67,6 +67,15 @@
   :bind
   (("C-c g" . magit-file-dispatch)))
 
+(defun my-capture-template (name)
+  (expand-file-name (format "capture_templates/%s.txt" name) user-emacs-directory))
+
+(defvar my-capture-prompt-history nil)
+
+(defun my-capture-prompt (prompt var)
+  (make-local-variable var)
+  (set var (read-string (concat prompt ": ") nil my-capture-prompt-history)))
+
 (defun my-gtd-file (name)
   (format "~/ordo/gtd/%s.org" name))
 
@@ -76,13 +85,27 @@
 (defconst my-projects-file (my-gtd-file "projects"))
 (defconst my-someday-file (my-gtd-file "someday"))
 
+(defconst my-gtd-capture-templates
+  `(("i" "Inbox" entry (file ,my-inbox-file) (file ,(my-capture-template "inbox")))
+    ("p" "Project" entry (file ,my-projects-file) (file ,(my-capture-template "project")))
+    ("s" "Someday Area" entry (file ,my-someday-file) (file ,(my-capture-template "someday_area")))))
+
+(defun my-capture-to-inbox ()
+  (interactive)
+  (org-capture nil "i"))
+
 (straight-use-package 'org)
 
 (use-package org
   :defer t
   :custom
   (org-confirm-babel-evaluate nil)
-  (org-startup-indented t))
+  (org-startup-indented t)
+  (org-use-sub-superscripts '{})
+  (org-capture-templates my-gtd-capture-templates)
+  :bind
+  (("C-c c" . org-capture)
+   ("C-c i" . my-capture-to-inbox)))
 
 (use-package org-modern
   :after org

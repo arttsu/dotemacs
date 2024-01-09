@@ -153,6 +153,19 @@ https://magit.vc/
 #+end_src
 ** org
 https://orgmode.org/
+*** Capture template path helper
+#+begin_src elisp
+  (defun my-capture-template (name)
+    (expand-file-name (format "capture_templates/%s.txt" name) user-emacs-directory))
+#+end_src
+*** Capture prompt helper
+#+begin_src elisp
+  (defvar my-capture-prompt-history nil)
+
+  (defun my-capture-prompt (prompt var)
+    (make-local-variable var)
+    (set var (read-string (concat prompt ": ") nil my-capture-prompt-history)))
+#+end_src
 *** GTD
 **** Files
 #+begin_src elisp
@@ -165,6 +178,17 @@ https://orgmode.org/
   (defconst my-projects-file (my-gtd-file "projects"))
   (defconst my-someday-file (my-gtd-file "someday"))
 #+end_src
+**** Capture templates
+#+begin_src elisp
+  (defconst my-gtd-capture-templates
+    `(("i" "Inbox" entry (file ,my-inbox-file) (file ,(my-capture-template "inbox")))
+      ("p" "Project" entry (file ,my-projects-file) (file ,(my-capture-template "project")))
+      ("s" "Someday Area" entry (file ,my-someday-file) (file ,(my-capture-template "someday_area")))))
+
+  (defun my-capture-to-inbox ()
+    (interactive)
+    (org-capture nil "i"))
+#+end_src
 *** Use the latest version
 #+begin_src elisp
   (straight-use-package 'org)
@@ -175,7 +199,12 @@ https://orgmode.org/
     :defer t
     :custom
     (org-confirm-babel-evaluate nil)
-    (org-startup-indented t))
+    (org-startup-indented t)
+    (org-use-sub-superscripts '{})
+    (org-capture-templates my-gtd-capture-templates)
+    :bind
+    (("C-c c" . org-capture)
+     ("C-c i" . my-capture-to-inbox)))
 #+end_src
 ** org-modern
 https://github.com/minad/org-modern
