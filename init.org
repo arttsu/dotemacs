@@ -151,6 +151,18 @@ https://magit.vc/
 #+end_src
 ** org
 https://orgmode.org/
+*** GTD
+**** Files
+#+begin_src elisp
+  (defun my-gtd-file (name)
+    (format "~/ordo/gtd/%s.org" name))
+
+  (defconst my-inbox-file (my-gtd-file "inbox"))
+  (defconst my-calendar-file (my-gtd-file "calendar"))
+  (defconst my-tasks-file (my-gtd-file "tasks"))
+  (defconst my-projects-file (my-gtd-file "projects"))
+  (defconst my-someday-file (my-gtd-file "someday"))
+#+end_src
 *** Use the latest version
 #+begin_src elisp
   (straight-use-package 'org)

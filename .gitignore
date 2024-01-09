@@ -11,3 +11,4 @@
 /.cache/
 /.lsp-session-v1
 /projects
+/.mc-lists.el

@@ -66,6 +66,15 @@
   :bind
   (("C-c g" . magit-file-dispatch)))
 
+(defun my-gtd-file (name)
+  (format "~/ordo/gtd/%s.org" name))
+
+(defconst my-inbox-file (my-gtd-file "inbox"))
+(defconst my-calendar-file (my-gtd-file "calendar"))
+(defconst my-tasks-file (my-gtd-file "tasks"))
+(defconst my-projects-file (my-gtd-file "projects"))
+(defconst my-someday-file (my-gtd-file "someday"))
+
 (straight-use-package 'org)
 
 (use-package org
