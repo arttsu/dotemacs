@@ -390,7 +390,15 @@
 
 (use-package ob-restclient)
 
+(use-package hydra)
+
 (use-package copilot
   :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+  :hook (prog-mode . copilot-mode)
+  :custom-face (copilot-overlay-face ((t (:background "DarkGreen" :foreground "White"))))
   :config
-  (global-copilot-mode))
+  (defhydra my-copilot-hydra (copilot-mode-map "M-TAB")
+    "Copilot"
+    ("M-TAB" copilot-accept-completion "Accept" :color blue)
+    ("M-f" copilot-accept-completion-by-word "Word")
+    ("M-e" copilot-accept-completion-by-word "Line")))

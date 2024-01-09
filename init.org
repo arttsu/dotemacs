@@ -604,12 +604,24 @@ https://github.com/alf/ob-restclient.el
 #+begin_src elisp
   (use-package ob-restclient)
 #+end_src
+** hydra
+https://github.com/abo-abo/hydra
+
+#+begin_src elisp
+  (use-package hydra)
+#+end_src
 ** copilot
 https://github.com/zerolfx/copilot.el
 
 #+begin_src elisp
   (use-package copilot
     :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+    :hook (prog-mode . copilot-mode)
+    :custom-face (copilot-overlay-face ((t (:background "DarkGreen" :foreground "White"))))
     :config
-    (global-copilot-mode))
+    (defhydra my-copilot-hydra (copilot-mode-map "M-TAB")
+      "Copilot"
+      ("M-TAB" copilot-accept-completion "Accept" :color blue)
+      ("M-f" copilot-accept-completion-by-word "Word")
+      ("M-e" copilot-accept-completion-by-word "Line")))
 #+end_src
