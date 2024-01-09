@@ -14,3 +14,4 @@
 /.mc-lists.el
 /.dap-breakpoints
 /.org-id-locations
+/custom.el

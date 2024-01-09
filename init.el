@@ -21,6 +21,7 @@
   (visible-bell t)
   (require-final-newline t)
   (indent-tabs-mode nil)
+  (custom-file (expand-file-name "custom.el" user-emacs-directory))
   :config
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
   (global-auto-revert-mode)
@@ -30,6 +31,8 @@
   (fset 'yes-or-no-p 'y-or-n-p)
   (add-hook 'prog-mode-hook 'display-line-numbers-mode)
   (global-subword-mode)
+  (when (file-exists-p custom-file)
+    (load custom-file))
   :bind
   (("C-x C-M-b" . scratch-buffer)
    ("C-x C-b" . ibuffer-other-window)
