@@ -12,3 +12,5 @@
 /.lsp-session-v1
 /projects
 /.mc-lists.el
+/.dap-breakpoints
+/.org-id-locations
