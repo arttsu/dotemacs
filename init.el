@@ -241,9 +241,26 @@
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles partial-completion)))))
 
+(defun my-avy-action-embark (point)
+  (unwind-protect
+      (save-excursion
+        (goto-char point)
+        (embark-act))
+    (avy--done)))
+
+(defun my-avy-action-embark-dwim (point)
+  (unwind-protect
+      (save-excursion
+        (goto-char point)
+        (embark-dwim))
+    (avy--done)))
+
 (use-package avy
   :custom
   (avy-single-candidate-jump t)
+  :config
+  (setf (alist-get ?. avy-dispatch-alist) 'my-avy-action-embark)
+  (setf (alist-get ?\; avy-dispatch-alist) 'my-avy-action-embark-dwim)
   :bind
   (("C-;" . avy-goto-char-timer)
    ("M-;" . avy-pop-mark)
