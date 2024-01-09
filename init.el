@@ -330,7 +330,7 @@
 
 (use-package lsp-mode
   :custom
-  (setq lsp-keymap-prefix "<f5>")
+  (lsp-keymap-prefix "<f5>")
   :hook
   (scala-mode . lsp)
   :commands lsp
