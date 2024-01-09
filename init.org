@@ -57,6 +57,14 @@ https://git.sr.ht/~protesilaos/iosevka-comfy
   (load (expand-file-name "local.el" user-emacs-directory))
 #+end_src
 ** emacs
+*** Erase buffer with confirmation
+#+begin_src elisp
+  (defun my-erase-buffer ()
+    (interactive)
+    (when (y-or-n-p "Erase the buffer?")
+      (erase-buffer)))
+#+end_src
+*** Configure
 - Increasing  'gc-cons-threshold'   and  'read-process-output-max'  to
   improve 'lsp-mode' performance.  [[https://emacs-lsp.github.io/lsp-mode/page/performance/][Source]].
 
@@ -90,7 +98,8 @@ https://git.sr.ht/~protesilaos/iosevka-comfy
      ("C-x C-b" . ibuffer-other-window)
      ("C-M-; d" . duplicate-dwim)
      ("M-g w" . forward-to-word)
-     ("M-g W" . backward-to-word)))
+     ("M-g W" . backward-to-word)
+     ("C-c X" . my-erase-buffer)))
 #+end_src
 ** straight.el
 https://github.com/radian-software/straight.el
@@ -508,7 +517,7 @@ https://github.com/karthink/gptel
 #+begin_src elisp
   (defun my-gptel-clear ()
     (interactive)
-    (when (y-or-n-p "Are you sure you want to clear the chat?")
+    (when (y-or-n-p "Clear the chat?")
       (erase-buffer)
       (insert "*** ")))
 #+end_src
@@ -521,5 +530,5 @@ https://github.com/karthink/gptel
     :bind
     (("C-c SPC" . gptel)
      :map gptel-mode-map
-     ("C-c N" . my-gptel-clear)))
+     ("C-c X" . my-gptel-clear)))
 #+end_src
