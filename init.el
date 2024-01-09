@@ -95,6 +95,7 @@
 
 (defconst my-gtd-capture-templates
   `(("i" "Inbox" entry (file ,my-inbox-file) (file ,(my-capture-template "inbox")))
+    ("l" "Link" entry (file ,my-inbox-file) (file ,(my-capture-template "link")))
     ("p" "Project" entry (file ,my-projects-file) (file ,(my-capture-template "project")))
     ("s" "Someday Area" entry (file ,my-someday-file) (file ,(my-capture-template "someday_area")))))
 
