@@ -386,3 +386,8 @@
    ("C-c x a" . gptel-abort)))
 
 (use-package ob-restclient)
+
+(use-package copilot
+  :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+  :config
+  (global-copilot-mode))

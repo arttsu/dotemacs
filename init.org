@@ -601,3 +601,12 @@ https://github.com/alf/ob-restclient.el
 #+begin_src elisp
   (use-package ob-restclient)
 #+end_src
+** copilot
+https://github.com/zerolfx/copilot.el
+
+#+begin_src elisp
+  (use-package copilot
+    :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+    :config
+    (global-copilot-mode))
+#+end_src
