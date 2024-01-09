@@ -360,9 +360,8 @@
 
 (defun my-gptel-clear ()
   (interactive)
-  (when (y-or-n-p "Clear the chat?")
-    (erase-buffer)
-    (insert "*** ")))
+  (erase-buffer)
+  (insert "*** "))
 
 (use-package gptel
   :custom
@@ -371,4 +370,5 @@
   :bind
   (("C-c SPC" . gptel)
    :map gptel-mode-map
-   ("C-c x x" . my-gptel-clear)))
+   ("C-c x x" . my-gptel-clear)
+   ("C-c x a" . gptel-abort)))

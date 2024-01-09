@@ -566,9 +566,8 @@ https://github.com/karthink/gptel
 #+begin_src elisp
   (defun my-gptel-clear ()
     (interactive)
-    (when (y-or-n-p "Clear the chat?")
-      (erase-buffer)
-      (insert "*** ")))
+    (erase-buffer)
+    (insert "*** "))
 #+end_src
 *** Configure
 #+begin_src elisp
@@ -579,5 +578,6 @@ https://github.com/karthink/gptel
     :bind
     (("C-c SPC" . gptel)
      :map gptel-mode-map
-     ("C-c x x" . my-gptel-clear)))
+     ("C-c x x" . my-gptel-clear)
+     ("C-c x a" . gptel-abort)))
 #+end_src
