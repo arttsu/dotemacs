@@ -35,7 +35,8 @@
    ("C-x C-b" . ibuffer-other-window)
    ("C-M-; d" . duplicate-dwim)
    ("M-g w" . forward-to-word)
-   ("M-g W" . backward-to-word)))
+   ("M-g W" . backward-to-word)
+   ("C-c x x" . erase-buffer)))
 
 (setq straight-fix-flycheck t)
 
@@ -311,7 +312,7 @@
 
 (defun my-gptel-clear ()
   (interactive)
-  (when (y-or-n-p "Are you sure you want to clear the chat?")
+  (when (y-or-n-p "Clear the chat?")
     (erase-buffer)
     (insert "*** ")))
 
@@ -322,4 +323,4 @@
   :bind
   (("C-c SPC" . gptel)
    :map gptel-mode-map
-   ("C-c N" . my-gptel-clear)))
+   ("C-c x x" . my-gptel-clear)))
