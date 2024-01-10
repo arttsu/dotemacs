@@ -97,8 +97,8 @@
 (defconst my-inbox-files (list my-inbox-file my-shared-inbox-file))
 
 (defconst my-gtd-capture-templates
-  `(("i" "Inbox" entry (file ,my-inbox-file) (file ,(my-capture-template "inbox")))
-    ("l" "Link" entry (file ,my-inbox-file) (file ,(my-capture-template "link")))
+  `(("i" "Inbox" entry (file+headline ,my-inbox-file "Inbox") (file ,(my-capture-template "inbox")))
+    ("l" "Link" entry (file+headline ,my-inbox-file "Inbox") (file ,(my-capture-template "link")))
     ("p" "Project" entry (file ,my-projects-file) (file ,(my-capture-template "project")))
     ("s" "Someday Area" entry (file ,my-someday-file) (file ,(my-capture-template "someday_area")))))
 
