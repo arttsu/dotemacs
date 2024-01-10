@@ -455,7 +455,7 @@ https://github.com/minad/consult
      ("M-s r" . consult-ripgrep)
      ("M-s l" . consult-line)
      ("M-s L" . consult-line-multi)
-     ("M-s K" . consult-keep-lines)))
+     ("M-s k" . consult-keep-lines)))
 #+end_src
 ** embark
 https://github.com/oantolin/embark
@@ -692,4 +692,16 @@ https://github.com/louietan/anki-editor
 #+begin_src elisp
   (use-package anki-editor
     :hook ((anki-mode . anki-editor-mode)))
+#+end_src
+** kubel
+https://github.com/abrochard/kubel
+*** Configure
+#+begin_src elisp
+  (use-package kubel
+    :bind
+    (("C-c K" . kubel)
+     :map kubel-mode-map
+     ("n" . next-line)
+     ("p" . previous-line)
+     ("N" . kubel-set-namespace)))
 #+end_src

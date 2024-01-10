@@ -293,7 +293,7 @@
    ("M-s r" . consult-ripgrep)
    ("M-s l" . consult-line)
    ("M-s L" . consult-line-multi)
-   ("M-s K" . consult-keep-lines)))
+   ("M-s k" . consult-keep-lines)))
 
 (use-package embark
   :bind
@@ -450,3 +450,11 @@
 
 (use-package anki-editor
   :hook ((anki-mode . anki-editor-mode)))
+
+(use-package kubel
+  :bind
+  (("C-c K" . kubel)
+   :map kubel-mode-map
+   ("n" . next-line)
+   ("p" . previous-line)
+   ("N" . kubel-set-namespace)))
