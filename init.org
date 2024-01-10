@@ -38,6 +38,9 @@ https://git.sr.ht/~protesilaos/iosevka-comfy
 #+begin_src shell
   sudo dnf install anki -y
 #+end_src
+*** gptel
+It needs an entry in =~/.authinfo=:
+~machine api.openai.com login apikey password <API KEY>~
 ** Installation
 *** Clone the repo
 #+begin_src shell
