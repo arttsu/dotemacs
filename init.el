@@ -443,3 +443,10 @@
   :bind
   (:map js-json-mode-map
         ("<f5> = =" . json-pretty-print-buffer)))
+
+(define-derived-mode anki-mode org-mode "Anki")
+
+(add-to-list 'auto-mode-alist '("\\.anki\\'" . anki-mode))
+
+(use-package anki-editor
+  :hook ((anki-mode . anki-editor-mode)))

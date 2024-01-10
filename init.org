@@ -33,6 +33,11 @@ https://git.sr.ht/~protesilaos/iosevka-comfy
 #+begin_src shell
   brew install cmake libvterm libtool
 #+end_src
+*** anki
+**** Fedora
+#+begin_src shell
+  sudo dnf install anki -y
+#+end_src
 ** Installation
 *** Clone the repo
 #+begin_src shell
@@ -671,4 +676,17 @@ https://github.com/zerolfx/copilot.el
     :bind
     (:map js-json-mode-map
           ("<f5> = =" . json-pretty-print-buffer)))
+#+end_src
+** anki-editor
+https://github.com/louietan/anki-editor
+*** Anki mode
+#+begin_src elisp
+  (define-derived-mode anki-mode org-mode "Anki")
+
+  (add-to-list 'auto-mode-alist '("\\.anki\\'" . anki-mode))
+#+end_src
+*** Configure
+#+begin_src elisp
+  (use-package anki-editor
+    :hook ((anki-mode . anki-editor-mode)))
 #+end_src
