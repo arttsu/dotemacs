@@ -707,5 +707,6 @@ https://github.com/abrochard/kubel
 https://github.com/titaniumbones/ox-slack
 *** Configure
 #+begin_src elisp
-  (use-package ox-slack)
+  (use-package ox-slack
+    :commands (org-slack-export-to-clipboard-as-slack org-slack-export-as-slack org-slack-export-to-slack))
 #+end_src

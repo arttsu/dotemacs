@@ -457,4 +457,5 @@
    ("p" . previous-line)
    ("N" . kubel-set-namespace)))
 
-(use-package ox-slack)
+(use-package ox-slack
+  :commands (org-slack-export-to-clipboard-as-slack org-slack-export-as-slack org-slack-export-to-slack))
