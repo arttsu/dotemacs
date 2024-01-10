@@ -703,3 +703,9 @@ https://github.com/abrochard/kubel
      ("p" . previous-line)
      ("N" . kubel-set-namespace)))
 #+end_src
+** ox-slack
+https://github.com/titaniumbones/ox-slack
+*** Configure
+#+begin_src elisp
+  (use-package ox-slack)
+#+end_src

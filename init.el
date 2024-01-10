@@ -456,3 +456,5 @@
    ("n" . next-line)
    ("p" . previous-line)
    ("N" . kubel-set-namespace)))
+
+(use-package ox-slack)
