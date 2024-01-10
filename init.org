@@ -665,9 +665,9 @@ https://github.com/zerolfx/copilot.el
       ("M-f" copilot-accept-completion-by-word "Word")
       ("M-e" copilot-accept-completion-by-line "Line")))
 #+end_src
-** json
+** js
 #+begin_src elisp
-  (use-package json
+  (use-package js
     :bind
     (:map js-json-mode-map
           ("<f5> = =" . json-pretty-print-buffer)))

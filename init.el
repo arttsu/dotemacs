@@ -439,7 +439,7 @@
     ("M-f" copilot-accept-completion-by-word "Word")
     ("M-e" copilot-accept-completion-by-line "Line")))
 
-(use-package json
+(use-package js
   :bind
   (:map js-json-mode-map
         ("<f5> = =" . json-pretty-print-buffer)))
