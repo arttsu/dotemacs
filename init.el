@@ -459,3 +459,8 @@
 
 (use-package ox-slack
   :commands (org-slack-export-to-clipboard-as-slack org-slack-export-as-slack org-slack-export-to-slack))
+
+(use-package link-hint
+  :bind
+  (("C-c f" . link-hint-open-link)
+   ("C-c y" . link-hint-copy-link)))

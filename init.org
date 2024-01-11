@@ -710,3 +710,12 @@ https://github.com/titaniumbones/ox-slack
   (use-package ox-slack
     :commands (org-slack-export-to-clipboard-as-slack org-slack-export-as-slack org-slack-export-to-slack))
 #+end_src
+** link-hint
+https://github.com/noctuid/link-hint.el
+*** Configure
+#+begin_src elisp
+  (use-package link-hint
+    :bind
+    (("C-c f" . link-hint-open-link)
+     ("C-c y" . link-hint-copy-link)))
+#+end_src
