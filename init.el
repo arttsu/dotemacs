@@ -40,6 +40,10 @@
    ("M-g w" . forward-to-word)
    ("M-g W" . backward-to-word)
    ("C-c x x" . erase-buffer)
+   ("C-c x b" . bury-buffer)
+   ("C-c x u" . unbury-buffer)
+   ("C-c x k" . kill-current-buffer)
+   ("C-c x K" . kill-buffer-and-window)
    ("M-z" . zap-up-to-char)
    ("M-Z" . zap-to-char)))
 
