@@ -103,7 +103,9 @@ It needs an entry in =~/.authinfo=:
      ("C-M-; d" . duplicate-dwim)
      ("M-g w" . forward-to-word)
      ("M-g W" . backward-to-word)
-     ("C-c x x" . erase-buffer)))
+     ("C-c x x" . erase-buffer)
+     ("M-z" . zap-up-to-char)
+     ("M-Z" . zap-to-char)))
 #+end_src
 ** straight.el
 https://github.com/radian-software/straight.el
@@ -567,6 +569,17 @@ https://emacs-lsp.github.io/lsp-mode/
     :bind
     (:map scala-mode-map
           ("<f5> I" . lsp-metals-build-import)))
+#+end_src
+** consult-lsp
+https://github.com/gagbo/consult-lsp
+*** Configure
+#+begin_src elisp
+  (use-package consult-lsp
+    :bind
+    (:map lsp-mode-map
+          ("<f5> d" . consult-lsp-diagnostics)
+          ("<f5> s" . consult-lsp-file-symbols)
+          ("<f5> S" . consult-lsp-symbols)))
 #+end_src
 ** flycheck
 https://www.flycheck.org/en/latest/

@@ -39,7 +39,9 @@
    ("C-M-; d" . duplicate-dwim)
    ("M-g w" . forward-to-word)
    ("M-g W" . backward-to-word)
-   ("C-c x x" . erase-buffer)))
+   ("C-c x x" . erase-buffer)
+   ("M-z" . zap-up-to-char)
+   ("M-Z" . zap-to-char)))
 
 (setq straight-fix-flycheck t)
 
@@ -365,6 +367,13 @@
   :bind
   (:map scala-mode-map
         ("<f5> I" . lsp-metals-build-import)))
+
+(use-package consult-lsp
+  :bind
+  (:map lsp-mode-map
+        ("<f5> d" . consult-lsp-diagnostics)
+        ("<f5> s" . consult-lsp-file-symbols)
+        ("<f5> S" . consult-lsp-symbols)))
 
 (use-package flycheck
   :custom
