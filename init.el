@@ -34,7 +34,7 @@
   (when (file-exists-p custom-file)
     (load custom-file))
   :bind
-  (("C-x C-M-b" . scratch-buffer)
+  (("C-c j s" . scratch-buffer)
    ("C-x C-b" . ibuffer-other-window)
    ("C-M-; d" . duplicate-dwim)
    ("M-g w" . forward-to-word)
