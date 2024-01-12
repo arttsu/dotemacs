@@ -162,11 +162,6 @@
       (puthash (car heading) (cdr heading) heading-map))
     heading-map))
 
-(defun my-widen-files (files)
-  (dolist (file files)
-    (with-current-buffer (get-file-buffer file)
-      (widen))))
-
 (defun my-narrow-to-project ()
   (org-narrow-to-subtree)
   (org-cycle '(16)))
@@ -176,7 +171,10 @@
   (let* ((project-map (my-gtd-project-map))
          (selected-title (completing-read "Project: " project-map))
          (selected-id (gethash selected-title project-map)))
-    (my-widen-files (list my-projects-file))
+    (if-let (win (get-buffer-window (get-file-buffer my-projects-file) t))
+        (select-window win)
+      (switch-to-buffer-other-window my-projects-file))
+    (widen)
     (org-id-goto selected-id)
     (my-narrow-to-project)))
 
