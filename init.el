@@ -452,12 +452,18 @@
           (switch-to-buffer vterm-buffer-name))
       (message "Not in a project"))))
 
+(defun my-vterm-unbind-keys ()
+  (local-unset-key (kbd "M-s"))
+  (local-unset-key (kbd "<f8>")))
+
 (use-package vterm
   :when (not (my-windows-p))
   :custom
   (vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
   (vterm-shell my-fish-path)
   (vterm-max-scrollback 50000)
+  :config
+  (add-hook 'vterm-mode-hook 'my-vterm-unbind-keys)
   :bind
   (("C-x v" . vterm)
    ("C-x 4 v" . vterm-other-window)
