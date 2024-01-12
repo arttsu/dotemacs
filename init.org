@@ -168,6 +168,12 @@ https://magit.vc/
     :bind
     (("C-c g" . magit-file-dispatch)))
 #+end_src
+** org-ql
+https://github.com/alphapapa/org-ql
+*** Configure
+#+begin_src elisp
+  (use-package org-ql)
+#+end_src
 ** org
 https://orgmode.org/
 *** Capture template path helper
@@ -242,6 +248,40 @@ https://orgmode.org/
         ,my-shared-inbox-file)
        :level . 1)))
 #+end_src
+**** Jump to project
+#+begin_src elisp
+  (defun my-gtd-projects ()
+    (org-ql-query
+      :select '(cons (substring-no-properties (org-get-heading t t t t))
+                     (org-id-get-create))
+      :from my-projects-file
+      :where '(level 1)))
+
+  (defun my-gtd-project-map ()
+    (let ((heading-map (make-hash-table :test 'equal))
+          (headings (my-gtd-projects)))
+      (dolist (heading headings)
+        (puthash (car heading) (cdr heading) heading-map))
+      heading-map))
+
+  (defun my-widen-files (files)
+    (dolist (file files)
+      (with-current-buffer (get-file-buffer file)
+        (widen))))
+
+  (defun my-narrow-to-project ()
+    (org-narrow-to-subtree)
+    (org-cycle '(16)))
+
+  (defun my-jump-to-gtd-project ()
+    (interactive)
+    (let* ((project-map (my-gtd-project-map))
+           (selected-title (completing-read "Project: " project-map))
+           (selected-id (gethash selected-title project-map)))
+      (my-widen-files (list my-projects-file))
+      (org-id-goto selected-id)
+      (my-narrow-to-project)))
+#+end_src
 *** Use the latest version
 #+begin_src elisp
   (straight-use-package 'org)
@@ -262,7 +302,8 @@ https://orgmode.org/
     :bind
     (("C-c c" . org-capture)
      ("C-c i" . my-capture-to-inbox)
-     ("C-c a" . org-agenda)))
+     ("C-c a" . org-agenda)
+     ("C-c j p" . my-jump-to-gtd-project)))
 #+end_src
 ** org-modern
 https://github.com/minad/org-modern

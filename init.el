@@ -76,6 +76,8 @@
   :bind
   (("C-c g" . magit-file-dispatch)))
 
+(use-package org-ql)
+
 (defun my-capture-template (name)
   (expand-file-name (format "capture_templates/%s.txt" name) user-emacs-directory))
 
@@ -135,6 +137,38 @@
       ,my-shared-inbox-file)
      :level . 1)))
 
+(defun my-gtd-projects ()
+  (org-ql-query
+    :select '(cons (substring-no-properties (org-get-heading t t t t))
+                   (org-id-get-create))
+    :from my-projects-file
+    :where '(level 1)))
+
+(defun my-gtd-project-map ()
+  (let ((heading-map (make-hash-table :test 'equal))
+        (headings (my-gtd-projects)))
+    (dolist (heading headings)
+      (puthash (car heading) (cdr heading) heading-map))
+    heading-map))
+
+(defun my-widen-files (files)
+  (dolist (file files)
+    (with-current-buffer (get-file-buffer file)
+      (widen))))
+
+(defun my-narrow-to-project ()
+  (org-narrow-to-subtree)
+  (org-cycle '(16)))
+
+(defun my-jump-to-gtd-project ()
+  (interactive)
+  (let* ((project-map (my-gtd-project-map))
+         (selected-title (completing-read "Project: " project-map))
+         (selected-id (gethash selected-title project-map)))
+    (my-widen-files (list my-projects-file))
+    (org-id-goto selected-id)
+    (my-narrow-to-project)))
+
 (straight-use-package 'org)
 
 (use-package org
@@ -151,7 +185,8 @@
   :bind
   (("C-c c" . org-capture)
    ("C-c i" . my-capture-to-inbox)
-   ("C-c a" . org-agenda)))
+   ("C-c a" . org-agenda)
+   ("C-c j p" . my-jump-to-gtd-project)))
 
 (use-package org-modern
   :after org
