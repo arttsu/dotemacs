@@ -22,6 +22,11 @@
   (require-final-newline t)
   (indent-tabs-mode nil)
   (custom-file (expand-file-name "custom.el" user-emacs-directory))
+  (zoneinfo-style-world-list '(("Europe/Berlin" "Berlin")
+                               ("Europe/Kyiv" "Kyiv")
+                               ("Europe/London" "London")
+                               ("America/New_York" "NYC")
+                               ("America/Los_Angeles" "LA")))
   :config
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
   (global-auto-revert-mode)
