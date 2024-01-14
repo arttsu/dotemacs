@@ -35,9 +35,18 @@ https://git.sr.ht/~protesilaos/iosevka-comfy
 #+end_src
 *** anki
 **** Fedora
+https://docs.ankiweb.net/platform/linux/installing.html
+***** Download
+From https://apps.ankiweb.net/.
+***** Install
 #+begin_src shell
-  sudo dnf install anki -y
+  cd ~/Downloads/
+  tar xaf anki-23.12.1-linux-qt6.tar.zst
+  cd anki-23.12.1-linux-qt6/
+  sudo ./install.sh
 #+end_src
+***** Add anki-connect addon
+https://git.foosoft.net/alex/anki-connect
 *** gptel
 It needs an entry in =~/.authinfo=:
 ~machine api.openai.com login apikey password <API KEY>~
