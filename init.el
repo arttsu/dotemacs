@@ -191,7 +191,7 @@
   (org-capture-templates my-gtd-capture-templates)
   (org-agenda-custom-commands (list my-day-agenda))
   (org-refile-targets my-gtd-refile-targets)
-  (org-attach-directory "~/ordo/attach")
+  (org-attach-directory "attachments")
   (org-attach-use-inheritance t)
   :config
   (require 'org-attach)
