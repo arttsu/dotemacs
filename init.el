@@ -483,6 +483,13 @@
   (erase-buffer)
   (insert "*** "))
 
+(defconst my-gptel-ignore-list
+  '("\\:PROPERTIES\\:"
+    "\\#\\+STARTUP\\:"
+    "\\:END\\:"
+    "\\:ANKI_"
+    "\\:ID\\:"))
+
 (defun my-gptel-send ()
   (interactive)
   (let* ((directive (intern (completing-read "Select directive: " gptel-directives nil t)))
@@ -497,6 +504,9 @@
       (setq gptel--system-message system-message)
       (insert content)
       (insert "\n\n^^^^^")
+      (dolist (regexp my-gptel-ignore-list)
+        (flush-lines regexp (point-min) (point-max)))
+      (end-of-buffer)
       (gptel-send))
     (pop-to-buffer temp-buffer)))
 
