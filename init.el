@@ -482,7 +482,9 @@
   (("C-c SPC" . gptel)
    :map gptel-mode-map
    ("C-c x x" . my-gptel-clear)
-   ("C-c x a" . gptel-abort)))
+   ("C-c x a" . gptel-abort)
+   :map text-mode-map
+   ("C-c <return>" . gptel-send)))
 
 (use-package ob-restclient)
 
