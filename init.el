@@ -4,6 +4,11 @@
 (defun my-windows-p ()
   (equal system-type 'windows-nt))
 
+(defun my-current-buffer-or-region-substring ()
+  (if (use-region-p)
+      (buffer-substring-no-properties (region-beginning) (region-end))
+    (buffer-substring-no-properties (point-min) (point-max))))
+
 (load (expand-file-name "local.el" user-emacs-directory))
 
 (use-package emacs
@@ -478,10 +483,64 @@
   (erase-buffer)
   (insert "*** "))
 
+(defun my-gptel-send ()
+  (interactive)
+  (let* ((directive (intern (completing-read "Select directive: " gptel-directives nil t)))
+         (directive-text (alist-get directive gptel-directives))
+         (directive-addition (read-string "Directive addition: "))
+         (system-message (format "%s\n\n%s\n\n^^^^^\n" directive-text directive-addition))
+         (content (my-current-buffer-or-region-substring))
+         (temp-buffer (generate-new-buffer "*gptel-temp*")))
+    (with-current-buffer temp-buffer
+      (text-mode)
+      (gptel-mode)
+      (setq gptel--system-message system-message)
+      (insert content)
+      (insert "\n\n^^^^^")
+      (gptel-send))
+    (pop-to-buffer temp-buffer)))
+
+(defconst my-anki-prompt "You are an Anki expert. Please CRITIQUE the Anki cards provided between ^^^^^.
+
+Expect the cards to be in the org-mode format, similar to:
+```
+* TOPIC NAME
+** Card 1
+*** Front
+Question
+*** Back
+...
+```
+
+Check the cards for CORRECTNESS and TYPOS. Suggest if something can be REWORDED in a better way.
+
+Keep in mind the rules of formulating knowledge:
+- Build upon the basics
+- Minimum information principle
+- Use mnemonic techniques
+- Avoid sets
+- Avoid enumerations
+- Optimize wording
+- Personalize and provide examples
+- Rely on emotional states
+- Context cues simplify wording
+- Redundancy does not contradict minimum information principle
+- Provide sources
+- Provide date stamping - time stamping is useful for volatile knowledge that changes in time.
+
+Assume that the cards cover a SINGLE TOPIC. If you think that the given cards don't cover the topic in full, suggest ADDITIONS.
+
+IGNORE ATTACHMENTS.")
+
+(defconst my-prompt-eng-prompt "You are an expert in creating prompts for LARGE LANGUAGE MODELS. Please CRITIQUE the prompt provided between ^^^^^. The prompt is intended for GPT-4 as a system message. Assume that the user input is expected to be provided later.")
+
 (use-package gptel
   :custom
   (gptel-model "gpt-4-1106-preview")
   (gptel-default-mode 'org-mode)
+  :config
+  (push (cons 'anki my-anki-prompt) gptel-directives)
+  (push (cons 'prompt-eng my-prompt-eng-prompt) gptel-directives)
   :bind
   (("C-c SPC" . gptel)
    :map gptel-mode-map
