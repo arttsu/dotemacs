@@ -191,6 +191,7 @@
   (org-agenda-custom-commands (list my-day-agenda))
   (org-refile-targets my-gtd-refile-targets)
   (org-attach-directory "~/ordo/attach")
+  (org-attach-use-inheritance t)
   :bind
   (("C-c c" . org-capture)
    ("C-c i" . my-capture-to-inbox)
