@@ -512,12 +512,23 @@
 
 (add-to-list 'auto-mode-alist '("\\.anki\\'" . anki-mode))
 
+(defun my-org-attach-with-anki-editor-tag-completion-disabled ()
+  (interactive)
+  (let ((anki-editor-org-tags-as-anki-tags nil))
+    (call-interactively 'org-attach)))
+
+(defun my-org-attach-disable-inheritance ()
+  (setq-local org-attach-use-inheritance nil))
+
 (use-package anki-editor
-  :hook ((anki-mode . anki-editor-mode))
+  :hook ((anki-mode . anki-editor-mode)
+         (anki-mode . my-org-attach-disable-inheritance))
   :bind
   (:map anki-mode-map
         ("C-<return>" . anki-editor-insert-note)
-        ("C-c p" . anki-editor-push-notes)))
+        ("C-c p" . anki-editor-push-notes)
+        ("C-c r" . anki-editor-retry-failure-notes)
+        ("C-c C-a" . my-org-attach-with-anki-editor-tag-completion-disabled)))
 
 (use-package kubel
   :bind

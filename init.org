@@ -773,14 +773,27 @@ https://github.com/louietan/anki-editor
 
   (add-to-list 'auto-mode-alist '("\\.anki\\'" . anki-mode))
 #+end_src
+*** org-attach fix
+#+begin_src elisp
+  (defun my-org-attach-with-anki-editor-tag-completion-disabled ()
+    (interactive)
+    (let ((anki-editor-org-tags-as-anki-tags nil))
+      (call-interactively 'org-attach)))
+
+  (defun my-org-attach-disable-inheritance ()
+    (setq-local org-attach-use-inheritance nil))
+#+end_src
 *** Configure
 #+begin_src elisp
   (use-package anki-editor
-    :hook ((anki-mode . anki-editor-mode))
+    :hook ((anki-mode . anki-editor-mode)
+           (anki-mode . my-org-attach-disable-inheritance))
     :bind
     (:map anki-mode-map
           ("C-<return>" . anki-editor-insert-note)
-          ("C-c p" . anki-editor-push-notes)))
+          ("C-c p" . anki-editor-push-notes)
+          ("C-c r" . anki-editor-retry-failure-notes)
+          ("C-c C-a" . my-org-attach-with-anki-editor-tag-completion-disabled)))
 #+end_src
 ** kubel
 https://github.com/abrochard/kubel
