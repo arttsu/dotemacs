@@ -186,12 +186,15 @@
   (org-agenda-files my-gtd-agenda-files)
   (org-confirm-babel-evaluate nil)
   (org-startup-indented t)
+  (org-startup-with-inline-images t)
   (org-use-sub-superscripts '{})
   (org-capture-templates my-gtd-capture-templates)
   (org-agenda-custom-commands (list my-day-agenda))
   (org-refile-targets my-gtd-refile-targets)
   (org-attach-directory "~/ordo/attach")
   (org-attach-use-inheritance t)
+  :config
+  (require 'org-attach)
   :bind
   (("C-c c" . org-capture)
    ("C-c i" . my-capture-to-inbox)
