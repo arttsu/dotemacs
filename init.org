@@ -747,12 +747,18 @@ https://github.com/karthink/gptel
       "\\:ANKI_"
       "\\:ID\\:"))
 
+  (defun my-gptel-extract-prompt-boundary (directive-text)
+    (if (string-match "provided between '\\(.*\\)'" directive-text)
+        (match-string 1 directive-text)
+      "^^^^^"))
+
   (defun my-gptel-send ()
     (interactive)
     (let* ((directive (intern (completing-read "Select directive: " gptel-directives nil t)))
            (directive-text (alist-get directive gptel-directives))
+           (prompt-boundary (my-gptel-extract-prompt-boundary directive-text))
            (directive-addition (read-string "Directive addition: "))
-           (system-message (format "%s\n\n%s\n\n^^^^^\n" directive-text directive-addition))
+           (system-message (format "%s\n\n%s\n\n%s\n" directive-text directive-addition prompt-boundary))
            (content (my-current-buffer-or-region-substring))
            (temp-buffer (generate-new-buffer "*gptel-temp*")))
       (with-current-buffer temp-buffer
@@ -760,7 +766,8 @@ https://github.com/karthink/gptel
         (gptel-mode)
         (setq gptel--system-message system-message)
         (insert content)
-        (insert "\n\n^^^^^")
+        (insert "\n\n")
+        (insert prompt-boundary)
         (dolist (regexp my-gptel-ignore-list)
           (flush-lines regexp (point-min) (point-max)))
         (end-of-buffer)
@@ -769,7 +776,7 @@ https://github.com/karthink/gptel
 #+end_src
 *** Prompts
 #+begin_src elisp
-  (defconst my-anki-prompt "You are an Anki expert. Please CRITIQUE the Anki cards provided between ^^^^^.
+  (defconst my-anki-prompt "You are an Anki expert. Please CRITIQUE the Anki cards provided between '^^^^^'.
 
   Expect the cards to be in the org-mode format, similar to:
   ```
@@ -801,7 +808,7 @@ https://github.com/karthink/gptel
 
   IGNORE ATTACHMENTS.")
 
-  (defconst my-prompt-eng-prompt "You are an expert in creating prompts for LARGE LANGUAGE MODELS. Please CRITIQUE the prompt provided between ^^^^^. The prompt is intended for GPT-4 as a system message. Assume that the user input is expected to be provided later.")
+  (defconst my-prompt-eng-prompt "You are an expert in creating prompts for LARGE LANGUAGE MODELS. Please CRITIQUE the prompt provided between '$$$$$'. The prompt is intended for GPT-4 as a system message. Assume that the user input is expected to be provided later.")
 #+end_src
 *** Configure
 #+begin_src elisp
