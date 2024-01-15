@@ -11,6 +11,14 @@
 
 (load (expand-file-name "local.el" user-emacs-directory))
 
+(defun my-kill-to-end-of-buffer ()
+  (interactive)
+  (kill-region (point) (point-max)))
+
+(defun my-kill-to-beginning-of-buffer ()
+  (interactive)
+  (kill-region (point-min) (point)))
+
 (use-package emacs
   :custom
   (create-lockfiles nil)
@@ -52,6 +60,8 @@
    ("M-g w" . forward-to-word)
    ("M-g W" . backward-to-word)
    ("C-c x x" . erase-buffer)
+   ("C-c x e" . my-kill-to-end-of-buffer)
+   ("C-c x E" . my-kill-to-beginning-of-buffer)
    ("C-c x b" . bury-buffer)
    ("C-c x u" . unbury-buffer)
    ("C-c x k" . kill-current-buffer)

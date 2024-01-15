@@ -81,6 +81,16 @@ It needs an entry in =~/.authinfo=:
   (load (expand-file-name "local.el" user-emacs-directory))
 #+end_src
 ** emacs
+*** Kill to the end/beginning of buffer
+#+begin_src elisp
+  (defun my-kill-to-end-of-buffer ()
+    (interactive)
+    (kill-region (point) (point-max)))
+
+  (defun my-kill-to-beginning-of-buffer ()
+    (interactive)
+    (kill-region (point-min) (point)))
+#+end_src
 *** Configure
 - Increasing  'gc-cons-threshold'   and  'read-process-output-max'  to
   improve 'lsp-mode' performance.  [[https://emacs-lsp.github.io/lsp-mode/page/performance/][Source]].
@@ -127,6 +137,8 @@ It needs an entry in =~/.authinfo=:
      ("M-g w" . forward-to-word)
      ("M-g W" . backward-to-word)
      ("C-c x x" . erase-buffer)
+     ("C-c x e" . my-kill-to-end-of-buffer)
+     ("C-c x E" . my-kill-to-beginning-of-buffer)
      ("C-c x b" . bury-buffer)
      ("C-c x u" . unbury-buffer)
      ("C-c x k" . kill-current-buffer)
