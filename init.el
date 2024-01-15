@@ -510,7 +510,11 @@
 (add-to-list 'auto-mode-alist '("\\.anki\\'" . anki-mode))
 
 (use-package anki-editor
-  :hook ((anki-mode . anki-editor-mode)))
+  :hook ((anki-mode . anki-editor-mode))
+  :bind
+  (:map anki-mode-map
+        ("C-<return>" . anki-editor-insert-note)
+        ("C-c p" . anki-editor-push-notes)))
 
 (use-package kubel
   :bind
