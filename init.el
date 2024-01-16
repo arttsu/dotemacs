@@ -252,6 +252,11 @@
    ("o" . crux-open-with)
    ("<tab>" . dired-find-file-other-window)))
 
+(use-package project
+  :config
+  (add-to-list 'project-switch-commands '(my-vterm-project-root "vterm" "V") t)
+  (add-to-list 'project-switch-commands '(project-dired "Dired" "<return>") t))
+
 (use-package modus-themes
   :custom
   (modus-themes-italic-constructs t)

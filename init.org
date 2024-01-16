@@ -395,6 +395,14 @@ https://github.com/bbatsov/super-save
      ("o" . crux-open-with)
      ("<tab>" . dired-find-file-other-window)))
 #+end_src
+** project
+*** Configure
+#+begin_src elisp
+  (use-package project
+    :config
+    (add-to-list 'project-switch-commands '(my-vterm-project-root "vterm" "V") t)
+    (add-to-list 'project-switch-commands '(project-dired "Dired" "<return>") t))
+#+end_src
 ** modus-themes
 https://protesilaos.com/emacs/modus-themes
 
