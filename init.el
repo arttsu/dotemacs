@@ -441,6 +441,7 @@
         ("<f5> I" . lsp-metals-build-import)))
 
 (use-package consult-lsp
+  :commands (consult-lsp-diagnostics consult-lsp-file-symbols consult-lsp-symbols)
   :bind
   (:map lsp-mode-map
         ("<f5> d" . consult-lsp-diagnostics)

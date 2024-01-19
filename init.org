@@ -669,6 +669,7 @@ https://github.com/gagbo/consult-lsp
 *** Configure
 #+begin_src elisp
   (use-package consult-lsp
+    :commands (consult-lsp-diagnostics consult-lsp-file-symbols consult-lsp-symbols)
     :bind
     (:map lsp-mode-map
           ("<f5> d" . consult-lsp-diagnostics)
