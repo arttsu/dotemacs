@@ -130,6 +130,8 @@
 
 (defconst my-inbox-files (list my-inbox-file my-shared-inbox-file))
 
+(defconst my-links-file "~/ordo/links.org")
+
 (defconst my-gtd-capture-templates
   `(("i" "Inbox" entry (file+headline ,my-inbox-file "Inbox") (file ,(my-capture-template "inbox")))
     ("l" "Link" entry (file+headline ,my-inbox-file "Inbox") (file ,(my-capture-template "link")))
@@ -160,7 +162,8 @@
       ,my-projects-file
       ,my-someday-file
       ,my-inbox-file
-      ,my-shared-inbox-file)
+      ,my-shared-inbox-file
+      ,my-links-file)
      :level . 1)))
 
 (defun my-gtd-projects ()

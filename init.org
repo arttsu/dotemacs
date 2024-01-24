@@ -247,6 +247,8 @@ https://orgmode.org/
                                       my-projects-file))
 
   (defconst my-inbox-files (list my-inbox-file my-shared-inbox-file))
+
+  (defconst my-links-file "~/ordo/links.org")
 #+end_src
 **** Capture templates
 #+begin_src elisp
@@ -284,7 +286,8 @@ https://orgmode.org/
         ,my-projects-file
         ,my-someday-file
         ,my-inbox-file
-        ,my-shared-inbox-file)
+        ,my-shared-inbox-file
+        ,my-links-file)
        :level . 1)))
 #+end_src
 **** Jump to project
