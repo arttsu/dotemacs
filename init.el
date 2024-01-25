@@ -213,6 +213,7 @@
   (org-attach-use-inheritance t)
   :config
   (require 'org-attach)
+  (add-to-list 'org-export-backends 'md)
   :bind
   (("C-c c" . org-capture)
    ("C-c i" . my-capture-to-inbox)
