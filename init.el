@@ -572,6 +572,15 @@ IGNORE ATTACHMENTS.")
 
 (defconst my-prompt-eng-prompt "You are an expert in creating prompts for LARGE LANGUAGE MODELS. Please CRITIQUE the prompt provided between '$$$$$'. The prompt is intended for GPT-4 as a system message. Assume that the user input is expected to be provided later.")
 
+(define-derived-mode my-gpt-mode org-mode "GPT")
+
+(add-to-list 'auto-mode-alist '("\\.gpt\\'" . my-gpt-mode))
+
+(defun my-switch-to-gptel-mode ()
+  (interactive)
+  (org-mode)
+  (gptel-mode))
+
 (use-package gptel
   :custom
   (gptel-model "gpt-4-turbo-preview")
@@ -579,6 +588,7 @@ IGNORE ATTACHMENTS.")
   :config
   (push (cons 'anki my-anki-prompt) gptel-directives)
   (push (cons 'prompt-eng my-prompt-eng-prompt) gptel-directives)
+  :hook ((my-gpt-mode . my-switch-to-gptel-mode))
   :bind
   (("C-c SPC" . gptel)
    :map gptel-mode-map
