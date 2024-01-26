@@ -574,7 +574,7 @@ IGNORE ATTACHMENTS.")
 
 (use-package gptel
   :custom
-  (gptel-model "gpt-4-1106-preview")
+  (gptel-model "gpt-4-turbo-preview")
   (gptel-default-mode 'org-mode)
   :config
   (push (cons 'anki my-anki-prompt) gptel-directives)
@@ -584,6 +584,7 @@ IGNORE ATTACHMENTS.")
    :map gptel-mode-map
    ("C-c x x" . my-gptel-clear)
    ("C-c x a" . gptel-abort)
+   ("C-c C-c" . gptel-send)
    :map text-mode-map
    ("C-c <return>" . gptel-send)))
 
