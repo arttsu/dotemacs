@@ -218,7 +218,8 @@
   (("C-c c" . org-capture)
    ("C-c i" . my-capture-to-inbox)
    ("C-c a" . org-agenda)
-   ("C-c j p" . my-jump-to-gtd-project)))
+   ("C-c j p" . my-jump-to-gtd-project)
+   ("C-c l" . org-store-link)))
 
 (use-package org-modern
   :after org
