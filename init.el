@@ -611,7 +611,6 @@ IGNORE ATTACHMENTS.")
 
 (use-package copilot
   :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
-  ;; :custom-face (copilot-overlay-face ((t (:background "DarkGreen" :foreground "White"))))
   :custom
   (copilot-idle-delay 3600)
   :config
