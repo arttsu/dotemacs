@@ -311,6 +311,11 @@
   :config
   (vertico-mode))
 
+(use-package vertico-posframe
+  :after vertico
+  :config
+  (vertico-posframe-mode))
+
 (use-package savehist
   :config
   (savehist-mode))

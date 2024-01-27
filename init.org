@@ -477,6 +477,15 @@ https://github.com/minad/vertico
     :config
     (vertico-mode))
 #+end_src
+** vertico-posframe
+https://github.com/tumashu/vertico-posframe
+
+#+begin_src elisp
+  (use-package vertico-posframe
+    :after vertico
+    :config
+    (vertico-posframe-mode))
+#+end_src
 ** savehist
 Persist completion history.
 
