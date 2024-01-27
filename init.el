@@ -423,12 +423,14 @@
 (use-package company
   :custom
   (company-minimum-prefix-length 2)
-  (company-idle-delay 0.2)
+  (company-idle-delay nil)
   (company-selection-wrap-around t)
   (company-dabbrev-downcase nil)
   (company-show-numbers t)
   :config
-  (global-company-mode))
+  (global-company-mode)
+  :bind
+  (("M-<tab>" . company-complete)))
 
 (use-package lsp-mode
   :custom
@@ -609,7 +611,7 @@ IGNORE ATTACHMENTS.")
 
 (use-package copilot
   :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
-  :custom-face (copilot-overlay-face ((t (:background "DarkGreen" :foreground "White"))))
+  ;; :custom-face (copilot-overlay-face ((t (:background "DarkGreen" :foreground "White"))))
   :custom
   (copilot-idle-delay 3600)
   :config
