@@ -423,7 +423,7 @@
 (use-package company
   :custom
   (company-minimum-prefix-length 2)
-  (company-idle-delay nil)
+  (company-idle-delay 0.3)
   (company-selection-wrap-around t)
   (company-dabbrev-downcase nil)
   (company-show-numbers t)
@@ -612,17 +612,16 @@ IGNORE ATTACHMENTS.")
 (use-package copilot
   :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
   :custom
-  (copilot-idle-delay 3600)
+  (copilot-idle-delay 0.5)
   :config
   (add-to-list 'warning-suppress-log-types '(copilot copilot-no-mode-indent))
-  :hook (prog-mode . copilot-mode)
-  :bind
-  (:map copilot-mode-map
-        ("C-<tab>" . copilot-complete)
-        :map copilot-completion-map
-        ("C-<tab>" . copilot-accept-completion)
-        ("C-f" . copilot-accept-completion-by-word)
-        ("C-e" . copilot-accept-completion-by-line)))
+  (add-to-list 'copilot-disable-predicates 'company-tooltip-visible-p)
+  (defhydra my-copilot-hydra (copilot-mode-map "C-<tab>")
+    "Copilot"
+    ("C-<tab>" copilot-accept-completion "Accept" :color blue)
+    ("M-f" copilot-accept-completion-by-word "Word")
+    ("C-e" copilot-accept-completion-by-line "Line"))
+  :hook (prog-mode . copilot-mode))
 
 (use-package js
   :bind
