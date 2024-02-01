@@ -665,3 +665,16 @@ IGNORE ATTACHMENTS.")
   :bind
   (("C-c f" . link-hint-open-link)
    ("C-c y" . link-hint-copy-link)))
+
+(use-package emms
+  :defer t
+  :custom
+  (emms-player-list '(emms-player-mpv))
+  (emms-player-mpv-update-metadata t)
+  (emms-streams-file (expand-file-name "streams.emms" user-emacs-directory))
+  :config
+  (emms-all)
+  :bind
+  (("C-c r r" . 'emms-streams)
+   ("C-c r p" . 'emms-pause)
+   ("C-c r s" . 'emms-stop)))
