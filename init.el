@@ -134,13 +134,19 @@
 
 (defconst my-gtd-capture-templates
   `(("i" "Inbox" entry (file+headline ,my-inbox-file "Inbox") (file ,(my-capture-template "inbox")))
+    ("I" "Inbox link" entry (file+headline ,my-inbox-file "Inbox") (file ,(my-capture-template "inbox_link")))
     ("l" "Link" entry (file+headline ,my-inbox-file "Inbox") (file ,(my-capture-template "link")))
+    ("L" "Links folder" entry (file ,my-links-file) "* %^{Title}")
     ("p" "Project" entry (file ,my-projects-file) (file ,(my-capture-template "project")))
     ("s" "Someday Area" entry (file ,my-someday-file) (file ,(my-capture-template "someday_area")))))
 
 (defun my-capture-to-inbox ()
   (interactive)
   (org-capture nil "i"))
+
+(defun my-capture-link-to-inbox ()
+  (interactive)
+  (org-capture nil "I"))
 
 (defconst my-day-agenda
   `("d"
@@ -217,6 +223,7 @@
   :bind
   (("C-c c" . org-capture)
    ("C-c i" . my-capture-to-inbox)
+   ("C-c I" . my-capture-link-to-inbox)
    ("C-c a" . org-agenda)
    ("C-c j p" . my-jump-to-gtd-project)
    ("C-c l" . org-store-link)))

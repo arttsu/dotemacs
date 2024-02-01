@@ -1,0 +1,4 @@
+* TODO [[%c][%^{Description}]]
+:PROPERTIES:
+:Created: %U
+:END:%?
