@@ -382,7 +382,8 @@
    ("M-s r" . consult-ripgrep)
    ("M-s l" . consult-line)
    ("M-s L" . consult-line-multi)
-   ("M-s k" . consult-keep-lines)))
+   ("M-s k" . consult-keep-lines)
+   ("M-s f" . consult-focus-lines)))
 
 (use-package embark
   :bind

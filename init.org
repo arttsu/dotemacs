@@ -570,7 +570,8 @@ https://github.com/minad/consult
      ("M-s r" . consult-ripgrep)
      ("M-s l" . consult-line)
      ("M-s L" . consult-line-multi)
-     ("M-s k" . consult-keep-lines)))
+     ("M-s k" . consult-keep-lines)
+     ("M-s f" . consult-focus-lines)))
 #+end_src
 ** embark
 https://github.com/oantolin/embark
