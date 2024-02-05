@@ -587,6 +587,8 @@ IGNORE ATTACHMENTS.")
 
 (defconst my-prompt-eng-prompt "You are an expert in creating prompts for LARGE LANGUAGE MODELS. Please CRITIQUE the prompt provided between '$$$$$'. The prompt is intended for GPT-4 as a system message. Assume that the user input is expected to be provided later.")
 
+(defconst my-tech-team-msg-prompt "You are a data engineer in a large organization, that comunicates clearly, avoiding prentious and \"corpo-speak\". Please REVIEW and CRITIQUE the message to another team within the organization provided between '^^^^^'. The message should be clear and consise. It's a message in Slack, so it doesn't have to follow the typical email structure.")
+
 (define-derived-mode my-gpt-mode org-mode "GPT")
 
 (add-to-list 'auto-mode-alist '("\\.gpt\\'" . my-gpt-mode))
@@ -603,6 +605,7 @@ IGNORE ATTACHMENTS.")
   :config
   (push (cons 'anki my-anki-prompt) gptel-directives)
   (push (cons 'prompt-eng my-prompt-eng-prompt) gptel-directives)
+  (push (cons 'tech-team-msg my-tech-team-msg-prompt) gptel-directives)
   :hook ((my-gpt-mode . my-switch-to-gptel-mode))
   :bind
   (("C-c SPC" . gptel)
