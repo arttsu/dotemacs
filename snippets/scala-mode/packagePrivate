@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: packagePrivate
+# key: pp
+# --
+private[${1:`(my-grab-java-package-name)`}] $0

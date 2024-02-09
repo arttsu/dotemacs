@@ -689,3 +689,17 @@ IGNORE ATTACHMENTS.")
   (("C-c r r" . 'emms-streams)
    ("C-c r p" . 'emms-pause)
    ("C-c r s" . 'emms-stop)))
+
+(defun my-grab-java-package-name ()
+  (save-excursion
+    (goto-char (point-min))
+    (if (re-search-forward "^package \\(.*\\)" nil t)
+        (let* ((package-path (match-string 1))
+               (package-components (split-string package-path "\\.")))
+          (car (last package-components)))
+      (error "Package declaration not found"))))
+
+(use-package yasnippet
+  :custom
+  (yas-snippet-dirs (list (expand-file-name "snippets" user-emacs-directory)))
+  :hook (prog-mode . yas-minor-mode))

@@ -988,3 +988,24 @@ https://www.gnu.org/software/emms/manual/#Introduction
      ("C-c r p" . 'emms-pause)
      ("C-c r s" . 'emms-stop)))
 #+end_src
+** yasnippet
+https://github.com/joaotavora/yasnippet
+*** Helpers
+**** Grab Scala/Java package name
+#+begin_src elisp
+  (defun my-grab-java-package-name ()
+    (save-excursion
+      (goto-char (point-min))
+      (if (re-search-forward "^package \\(.*\\)" nil t)
+          (let* ((package-path (match-string 1))
+                 (package-components (split-string package-path "\\.")))
+            (car (last package-components)))
+        (error "Package declaration not found"))))
+#+end_src
+*** Configure
+#+begin_src elisp
+  (use-package yasnippet
+    :custom
+    (yas-snippet-dirs (list (expand-file-name "snippets" user-emacs-directory)))
+    :hook (prog-mode . yas-minor-mode))
+#+end_src
