@@ -41,14 +41,12 @@
     (make-backup-files nil))
 #+end_src
 ** [[https://magit.vc/][magit]]
-*** magit: Configure
 #+begin_src elisp
   (use-package magit
     :bind
     (("C-c g" . magit-file-dispatch)))
 #+end_src
 ** [[https://github.com/bbatsov/super-save][super-save]]
-*** super-save: Configure
 #+begin_src elisp
   (use-package super-save
     :custom
@@ -62,7 +60,6 @@
     (super-save-mode))
 #+end_src
 ** [[https://github.com/minad/vertico][vertico]]
-*** vertico: Configure
 #+begin_src elisp
   (use-package vertico
     :config
@@ -76,7 +73,6 @@
     (vertico-posframe-mode))
 #+end_src
 ** savehist
-*** savehist: Configure
 #+begin_src elisp
   (use-package savehist
     :config
