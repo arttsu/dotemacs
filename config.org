@@ -32,6 +32,10 @@
 #+begin_src elisp
   (setq straight-use-package-by-default t)
 #+end_src
+** straight.el: Load org
+#+begin_src elisp
+  (straight-use-package 'org)
+#+end_src
 * Packages
 ** [[https://protesilaos.com/emacs/modus-themes][Modus themes]]
 #+begin_src elisp
@@ -117,7 +121,28 @@
      ("M-s k" . consult-keep-lines)
      ("M-s f" . consult-focus-lines)))
 #+end_src
-** [[https://github.com/minad/org-modern][org-modern]]
+** org
+- https://orgmode.org/
+  #+begin_src elisp
+    (use-package org
+      :defer t
+      :custom
+      (org-confirm-babel-evaluate nil)
+      (org-startup-indented t)
+      (org-startup-with-inline-images t)
+      (org-use-sub-superscripts '{})
+      (org-attach-directory "~/org/attach")
+      (org-attach-use-inheritance t)
+      :config
+      (require 'org-attach)
+      (add-to-list 'org-export-backends 'md)
+      :bind
+      (("C-c a" . org-agenda)
+       ("C-c c" . org-capture)
+       ("C-c l" . org-store-link)))
+  #+end_src
+*** org-modern
+- https://github.com/minad/org-modern
 #+begin_src elisp
   (use-package org-modern
     :after org

@@ -18,6 +18,8 @@
 
 (setq straight-use-package-by-default t)
 
+(straight-use-package 'org)
+
 (use-package modus-themes
   :custom
   (modus-themes-italic-constructs t)
@@ -83,6 +85,23 @@
    ("M-s L" . consult-line-multi)
    ("M-s k" . consult-keep-lines)
    ("M-s f" . consult-focus-lines)))
+
+(use-package org
+  :defer t
+  :custom
+  (org-confirm-babel-evaluate nil)
+  (org-startup-indented t)
+  (org-startup-with-inline-images t)
+  (org-use-sub-superscripts '{})
+  (org-attach-directory "~/org/attach")
+  (org-attach-use-inheritance t)
+  :config
+  (require 'org-attach)
+  (add-to-list 'org-export-backends 'md)
+  :bind
+  (("C-c a" . org-agenda)
+   ("C-c c" . org-capture)
+   ("C-c l" . org-store-link)))
 
 (use-package org-modern
   :after org
