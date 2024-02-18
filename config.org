@@ -75,3 +75,10 @@
     :config
     (vertico-posframe-mode))
 #+end_src
+** savehist
+*** savehist: Configure
+#+begin_src elisp
+  (use-package savehist
+    :config
+    (savehist-mode))
+#+end_src
