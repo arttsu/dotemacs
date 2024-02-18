@@ -1,16 +1,24 @@
 #+TITLE: Emacs Config
 #+STARTUP: show2levels
 #+PROPERTY: header-args:elisp :tangle init.el :results silent
-* [[https://github.com/radian-software/straight.el][straight.el]]
-** straight.el: Disable package.el (early)
+
+* Setup
+** straight.el
+https://github.com/radian-software/straight.el
+
+*** straight.el: Disable package.el (early)
 #+begin_src elisp :tangle early-init.el
   (setq package-enable-at-startup nil)
 #+end_src
-** straight.el: [[https://github.com/radian-software/straight.el#integration-with-flycheck][Fix Flycheck]]
+
+*** straight.el: Fix Flycheck
+https://github.com/radian-software/straight.el#integration-with-flycheck
+
 #+begin_src elisp
   (setq straight-fix-flycheck t)
 #+end_src
-** straight.el: Bootstrap
+
+*** straight.el: Bootstrap
 #+begin_src elisp
   (defvar bootstrap-version)
   (let ((bootstrap-file
@@ -28,16 +36,21 @@
 	(eval-print-last-sexp)))
     (load bootstrap-file nil 'nomessage))
 #+end_src
-** straight.el: Configure
+
+*** straight.el: Configure
 #+begin_src elisp
   (setq straight-use-package-by-default t)
 #+end_src
-** straight.el: Load org
+
+*** straight.el: Load org
 #+begin_src elisp
   (straight-use-package 'org)
 #+end_src
+
 * Packages
-** [[https://protesilaos.com/emacs/modus-themes][Modus themes]]
+** Modus themes
+https://protesilaos.com/emacs/modus-themes
+
 #+begin_src elisp
   (use-package modus-themes
     :custom
@@ -51,20 +64,27 @@
     :config
     (modus-themes-load-theme 'modus-vivendi))
 #+end_src
-** emacs
+
+** Emacs
 #+begin_src elisp
   (use-package emacs
     :custom
     (create-lockfiles nil)
     (make-backup-files nil))
 #+end_src
-** [[https://magit.vc/][magit]]
+
+** Magit
+https://magit.vc/
+
 #+begin_src elisp
   (use-package magit
     :bind
     (("C-c g" . magit-file-dispatch)))
 #+end_src
-** [[https://github.com/bbatsov/super-save][super-save]]
+
+** super-save
+[[https://github.com/bbatsov/super-save]]
+
 #+begin_src elisp
   (use-package super-save
     :custom
@@ -77,12 +97,16 @@
     :config
     (super-save-mode))
 #+end_src
-** [[https://github.com/minad/vertico][vertico]]
+
+** Vertico
+https://github.com/minad/vertico
+
 #+begin_src elisp
   (use-package vertico
     :config
     (vertico-mode))
 #+end_src
+
 *** [[https://github.com/tumashu/vertico-posframe][vertico-posframe]]
 #+begin_src elisp
   (use-package vertico-posframe
@@ -90,20 +114,27 @@
     :config
     (vertico-posframe-mode))
 #+end_src
+
 ** savehist
 #+begin_src elisp
   (use-package savehist
     :config
     (savehist-mode))
 #+end_src
-** [[https://github.com/oantolin/orderless][orderless]]
+
+** Orderless
+https://github.com/oantolin/orderless
+
 #+begin_src elisp
   (use-package orderless
     :custom
     (completion-styles '(orderless basic))
     (completion-category-overrides '((file (styles partial-completion)))))
 #+end_src
-** [[https://github.com/minad/consult][Consult]]
+
+** Consult
+https://github.com/minad/consult
+
 #+begin_src elisp
   (use-package consult
     :bind
@@ -121,9 +152,11 @@
      ("M-s k" . consult-keep-lines)
      ("M-s f" . consult-focus-lines)))
 #+end_src
+
 ** org
-- https://orgmode.org/
-  #+begin_src elisp
+https://orgmode.org/
+
+    #+begin_src elisp
     (use-package org
       :defer t
       :custom
@@ -141,8 +174,10 @@
        ("C-c c" . org-capture)
        ("C-c l" . org-store-link)))
   #+end_src
+
 *** org-modern
-- https://github.com/minad/org-modern
+https://github.com/minad/org-modern
+
 #+begin_src elisp
   (use-package org-modern
     :after org
