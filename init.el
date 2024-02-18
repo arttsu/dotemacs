@@ -26,3 +26,14 @@
 (use-package magit
   :bind
   (("C-c g" . magit-file-dispatch)))
+
+(use-package super-save
+  :custom
+  (super-save-auto-save-when-idle t)
+  (super-save-exclude '(".sbt" "project/"))
+  (super-save-silent t)
+  (super-save-delete-trailing-whitespace 'except-current-line)
+  (super-save-all-buffers t)
+  (auto-save-default nil)
+  :config
+  (super-save-mode))
