@@ -37,3 +37,12 @@
   (auto-save-default nil)
   :config
   (super-save-mode))
+
+(use-package vertico
+  :config
+  (vertico-mode))
+
+(use-package vertico-posframe
+  :after vertico
+  :config
+  (vertico-posframe-mode))

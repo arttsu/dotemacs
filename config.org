@@ -61,3 +61,17 @@
     :config
     (super-save-mode))
 #+end_src
+** [[https://github.com/minad/vertico][vertico]]
+*** vertico: Configure
+#+begin_src elisp
+  (use-package vertico
+    :config
+    (vertico-mode))
+#+end_src
+*** [[https://github.com/tumashu/vertico-posframe][vertico-posframe]]
+#+begin_src elisp
+  (use-package vertico-posframe
+    :after vertico
+    :config
+    (vertico-posframe-mode))
+#+end_src
