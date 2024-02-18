@@ -71,3 +71,16 @@
    ("M-s L" . consult-line-multi)
    ("M-s k" . consult-keep-lines)
    ("M-s f" . consult-focus-lines)))
+
+(use-package org-modern
+  :after org
+  :custom
+  (org-auto-align-tags nil)
+  (org-tags-column 0)
+  (org-fold-catch-invisible-edits 'show-and-error)
+  (org-special-ctrl-a/e t)
+  (org-hide-emphasis-markers t)
+  (org-pretty-entities t)
+  (org-agenda-tags-column 0)
+  :config
+  (global-org-modern-mode))
