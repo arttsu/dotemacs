@@ -158,7 +158,7 @@ https://github.com/minad/consult
      ("M-s f" . consult-focus-lines)))
 #+end_src
 
-** org
+** Org mode
 https://orgmode.org/
 
     #+begin_src elisp
