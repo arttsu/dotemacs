@@ -1,3 +1,5 @@
+(load (expand-file-name "local.el" user-emacs-directory))
+
 (setq straight-fix-flycheck t)
 
 (defvar bootstrap-version)
