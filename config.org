@@ -213,3 +213,14 @@ https://github.com/abo-abo/avy
      :map isearch-mode-map
      ("C-;" . avy-isearch)))
 #+end_src
+** whole-line-or-region
+https://github.com/purcell/whole-line-or-region
+
+#+begin_src elisp
+  (use-package whole-line-or-region
+    :demand
+    :config
+    (whole-line-or-region-global-mode)
+    :bind
+    (("M-/" . whole-line-or-region-comment-dwim)))
+#+end_src

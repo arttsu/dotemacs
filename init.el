@@ -143,3 +143,10 @@
    ("C-M-; S" . avy-kill-ring-save-region)
    :map isearch-mode-map
    ("C-;" . avy-isearch)))
+
+(use-package whole-line-or-region
+  :demand
+  :config
+  (whole-line-or-region-global-mode)
+  :bind
+  (("M-/" . whole-line-or-region-comment-dwim)))
