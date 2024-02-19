@@ -224,3 +224,14 @@ https://github.com/purcell/whole-line-or-region
     :bind
     (("M-/" . whole-line-or-region-comment-dwim)))
 #+end_src
+** crux
+https://github.com/bbatsov/crux
+
+#+begin_src elisp
+  (use-package crux
+    :bind
+    (("C-o" . crux-smart-open-line)
+     ("C-S-o" . crux-smart-open-line-above)
+     ("C-^" . crux-top-join-line)
+     ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region)))
+#+end_src
