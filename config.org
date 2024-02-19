@@ -1,28 +1,23 @@
 #+TITLE: Emacs Config
 #+STARTUP: show2levels
 #+PROPERTY: header-args:elisp :tangle init.el :results silent
-
 * Setup
 ** Load local config
 #+begin_src elisp
   (load (expand-file-name "local.el" user-emacs-directory))
 #+end_src
-
 ** straight.el
 https://github.com/radian-software/straight.el
-
 *** straight.el: Disable package.el (early)
 #+begin_src elisp :tangle early-init.el
   (setq package-enable-at-startup nil)
 #+end_src
-
 *** straight.el: Fix Flycheck
 https://github.com/radian-software/straight.el#integration-with-flycheck
 
 #+begin_src elisp
   (setq straight-fix-flycheck t)
 #+end_src
-
 *** straight.el: Bootstrap
 #+begin_src elisp
   (defvar bootstrap-version)
@@ -41,17 +36,14 @@ https://github.com/radian-software/straight.el#integration-with-flycheck
         (eval-print-last-sexp)))
     (load bootstrap-file nil 'nomessage))
 #+end_src
-
 *** straight.el: Configure
 #+begin_src elisp
   (setq straight-use-package-by-default t)
 #+end_src
-
 *** straight.el: Load org
 #+begin_src elisp
   (straight-use-package 'org)
 #+end_src
-
 * Packages
 ** Modus themes
 https://protesilaos.com/emacs/modus-themes
@@ -69,7 +61,6 @@ https://protesilaos.com/emacs/modus-themes
     :config
     (modus-themes-load-theme 'modus-vivendi))
 #+end_src
-
 ** Emacs
 #+begin_src elisp
   (use-package emacs
@@ -77,7 +68,6 @@ https://protesilaos.com/emacs/modus-themes
     (create-lockfiles nil)
     (make-backup-files nil))
 #+end_src
-
 ** Magit
 https://magit.vc/
 
@@ -86,7 +76,6 @@ https://magit.vc/
     :bind
     (("C-c g" . magit-file-dispatch)))
 #+end_src
-
 ** super-save
 [[https://github.com/bbatsov/super-save]]
 
@@ -102,7 +91,6 @@ https://magit.vc/
     :config
     (super-save-mode))
 #+end_src
-
 ** Vertico
 https://github.com/minad/vertico
 
@@ -111,7 +99,6 @@ https://github.com/minad/vertico
     :config
     (vertico-mode))
 #+end_src
-
 *** [[https://github.com/tumashu/vertico-posframe][vertico-posframe]]
 #+begin_src elisp
   (use-package vertico-posframe
@@ -119,14 +106,12 @@ https://github.com/minad/vertico
     :config
     (vertico-posframe-mode))
 #+end_src
-
 ** savehist
 #+begin_src elisp
   (use-package savehist
     :config
     (savehist-mode))
 #+end_src
-
 ** Orderless
 https://github.com/oantolin/orderless
 
@@ -136,7 +121,6 @@ https://github.com/oantolin/orderless
     (completion-styles '(orderless basic))
     (completion-category-overrides '((file (styles partial-completion)))))
 #+end_src
-
 ** Consult
 https://github.com/minad/consult
 
@@ -157,7 +141,6 @@ https://github.com/minad/consult
      ("M-s k" . consult-keep-lines)
      ("M-s f" . consult-focus-lines)))
 #+end_src
-
 ** Org mode
 https://orgmode.org/
 
@@ -179,7 +162,6 @@ https://orgmode.org/
        ("C-c c" . org-capture)
        ("C-c l" . org-store-link)))
   #+end_src
-
 *** org-modern
 https://github.com/minad/org-modern
 
