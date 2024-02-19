@@ -144,24 +144,26 @@ https://github.com/minad/consult
 ** Org mode
 https://orgmode.org/
 
-    #+begin_src elisp
-    (use-package org
-      :defer t
-      :custom
-      (org-confirm-babel-evaluate nil)
-      (org-startup-indented t)
-      (org-startup-with-inline-images t)
-      (org-use-sub-superscripts '{})
-      (org-attach-directory "~/org/attach")
-      (org-attach-use-inheritance t)
-      :config
-      (require 'org-attach)
-      (add-to-list 'org-export-backends 'md)
-      :bind
-      (("C-c a" . org-agenda)
-       ("C-c c" . org-capture)
-       ("C-c l" . org-store-link)))
-  #+end_src
+#+begin_src elisp
+  (use-package org
+    :defer t
+    :custom
+    (org-confirm-babel-evaluate nil)
+    (org-startup-indented t)
+    (org-startup-with-inline-images t)
+    (org-use-sub-superscripts '{})
+    (org-attach-directory "~/org/attach")
+    (org-attach-use-inheritance t)
+    (org-fold-catch-invisible-edits 'show-and-error)
+    (org-special-ctrl-a/e t)
+    :config
+    (require 'org-attach)
+    (add-to-list 'org-export-backends 'md)
+    :bind
+    (("C-c a" . org-agenda)
+     ("C-c c" . org-capture)
+     ("C-c l" . org-store-link)))
+#+end_src
 *** org-modern
 https://github.com/minad/org-modern
 
@@ -171,8 +173,6 @@ https://github.com/minad/org-modern
     :custom
     (org-auto-align-tags nil)
     (org-tags-column 0)
-    (org-fold-catch-invisible-edits 'show-and-error)
-    (org-special-ctrl-a/e t)
     (org-hide-emphasis-markers t)
     (org-pretty-entities t)
     (org-agenda-tags-column 0)

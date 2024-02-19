@@ -97,6 +97,8 @@
   (org-use-sub-superscripts '{})
   (org-attach-directory "~/org/attach")
   (org-attach-use-inheritance t)
+  (org-fold-catch-invisible-edits 'show-and-error)
+  (org-special-ctrl-a/e t)
   :config
   (require 'org-attach)
   (add-to-list 'org-export-backends 'md)
@@ -110,8 +112,6 @@
   :custom
   (org-auto-align-tags nil)
   (org-tags-column 0)
-  (org-fold-catch-invisible-edits 'show-and-error)
-  (org-special-ctrl-a/e t)
   (org-hide-emphasis-markers t)
   (org-pretty-entities t)
   (org-agenda-tags-column 0)
