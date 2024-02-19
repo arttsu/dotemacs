@@ -117,3 +117,10 @@
   (org-agenda-tags-column 0)
   :config
   (global-org-modern-mode))
+
+(use-package ace-window
+  :custom
+  (aw-keys '(?a ?s ?d ?f ?g ?h ?k ?l))
+  (aw-scope 'frame)
+  :bind
+  (("M-o" . ace-window)))
