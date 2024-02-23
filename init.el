@@ -28,6 +28,10 @@
   (interactive)
   (kill-region (point-min) (point)))
 
+(defun my-kill-to-word ()
+  (interactive)
+  (kill-region (point) (save-excursion (forward-to-word 1) (point))))
+
 (use-package emacs
   :custom
   (create-lockfiles nil)
@@ -71,6 +75,7 @@
    ("C-c x x" . erase-buffer)
    ("C-c x e" . my-kill-to-end-of-buffer)
    ("C-c x E" . my-kill-to-beginning-of-buffer)
+   ("C-c x w" . my-kill-to-word)
    ("C-c x b" . bury-buffer)
    ("C-c x u" . unbury-buffer)
    ("C-c x k" . kill-current-buffer)

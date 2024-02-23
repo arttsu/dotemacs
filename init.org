@@ -102,6 +102,12 @@ It needs an entry in =~/.authinfo=:
     (interactive)
     (kill-region (point-min) (point)))
 #+end_src
+*** Kill to the next word
+#+begin_src elisp
+  (defun my-kill-to-word ()
+    (interactive)
+    (kill-region (point) (save-excursion (forward-to-word 1) (point))))
+#+end_src
 *** Configure
 - Increasing  'gc-cons-threshold'   and  'read-process-output-max'  to
   improve 'lsp-mode' performance.  [[https://emacs-lsp.github.io/lsp-mode/page/performance/][Source]].
@@ -150,6 +156,7 @@ It needs an entry in =~/.authinfo=:
      ("C-c x x" . erase-buffer)
      ("C-c x e" . my-kill-to-end-of-buffer)
      ("C-c x E" . my-kill-to-beginning-of-buffer)
+     ("C-c x w" . my-kill-to-word)
      ("C-c x b" . bury-buffer)
      ("C-c x u" . unbury-buffer)
      ("C-c x k" . kill-current-buffer)
