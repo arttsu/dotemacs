@@ -9,6 +9,15 @@
       (buffer-substring-no-properties (region-beginning) (region-end))
     (buffer-substring-no-properties (point-min) (point-max))))
 
+(defun my-unix-time (iso-date)
+  "Convert ISO date-time string to Unix timestamp."
+  (let ((decoded-time (parse-iso8601-time-string iso-date)))
+    (time-to-seconds decoded-time)))
+
+(defun my-iso-time (unix-timestamp)
+  "Convert Unix timestamp to ISO date-time string."
+  (format-time-string "%FT%T%z" (seconds-to-time unix-timestamp)))
+
 (load (expand-file-name "local.el" user-emacs-directory))
 
 (defun my-kill-to-end-of-buffer ()

@@ -76,6 +76,17 @@ It needs an entry in =~/.authinfo=:
         (buffer-substring-no-properties (region-beginning) (region-end))
       (buffer-substring-no-properties (point-min) (point-max))))
 #+end_src
+*** Timestamps
+#+begin_src elisp
+  (defun my-unix-time (iso-date)
+    "Convert ISO date-time string to Unix timestamp."
+    (let ((decoded-time (parse-iso8601-time-string iso-date)))
+      (time-to-seconds decoded-time)))
+
+  (defun my-iso-time (unix-timestamp)
+    "Convert Unix timestamp to ISO date-time string."
+    (format-time-string "%FT%T%z" (seconds-to-time unix-timestamp)))
+#+end_src
 ** Load the local init
 #+begin_src elisp
   (load (expand-file-name "local.el" user-emacs-directory))
