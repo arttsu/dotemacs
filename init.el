@@ -343,16 +343,14 @@
 
 (defun my-avy-action-embark (point)
   (unwind-protect
-      (save-excursion
-        (goto-char point)
-        (embark-act))
+    (goto-char point)
+    (embark-act)
     (avy--done)))
 
 (defun my-avy-action-embark-dwim (point)
   (unwind-protect
-      (save-excursion
-        (goto-char point)
-        (embark-dwim))
+    (goto-char point)
+    (embark-dwim)
     (avy--done)))
 
 (use-package avy
@@ -454,6 +452,7 @@
   (lsp-keymap-prefix "<f5>")
   :hook
   (scala-mode . lsp)
+  (ruby-mode . lsp)
   :commands lsp
   :bind
   (:map lsp-mode-map
@@ -465,6 +464,7 @@
   :commands lsp-ui-mode)
 
 (use-package lsp-metals
+  :after (lsp-mode scala)
   :bind
   (:map scala-mode-map
         ("<f5> I" . lsp-metals-build-import)))
