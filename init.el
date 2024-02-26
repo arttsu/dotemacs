@@ -34,10 +34,28 @@
   :config
   (modus-themes-load-theme 'modus-vivendi))
 
+(defun my/kill-to-end-of-buffer ()
+  (interactive)
+  (kill-region (point) (point-max)))
+
+(defun my/kill-to-beginning-of-buffer ()
+  (interactive)
+  (kill-region (point-min) (point)))
+
+(defun my/kill-to-word (&optional n)
+  (interactive "p")
+  (kill-region (point) (save-excursion (forward-to-word (or n 1)) (point))))
+
 (use-package emacs
   :custom
   (create-lockfiles nil)
-  (make-backup-files nil))
+  (make-backup-files nil)
+  (disabled-command-function nil)
+  :bind
+  (("C-c x x" . erase-buffer)
+   ("C-c x >" . my/kill-to-end-of-buffer)
+   ("C-c x <" . my/kill-to-beginning-of-buffer)
+   ("C-c x w" . my/kill-to-word)))
 
 (use-package super-save
   :custom
