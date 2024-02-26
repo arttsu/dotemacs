@@ -39,10 +39,6 @@
   (create-lockfiles nil)
   (make-backup-files nil))
 
-(use-package magit
-  :bind
-  (("C-c g" . magit-file-dispatch)))
-
 (use-package super-save
   :custom
   (super-save-auto-save-when-idle t)
@@ -53,6 +49,13 @@
   (auto-save-default nil)
   :config
   (super-save-mode))
+
+(use-package whole-line-or-region
+  :demand
+  :config
+  (whole-line-or-region-global-mode)
+  :bind
+  (("M-/" . whole-line-or-region-comment-dwim)))
 
 (use-package vertico
   :config
@@ -72,6 +75,39 @@
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles partial-completion)))))
 
+(use-package ace-window
+  :custom
+  (aw-keys '(?a ?s ?d ?f ?g ?h ?k ?l))
+  (aw-scope 'frame)
+  :bind
+  (("M-o" . ace-window)))
+
+(use-package avy
+  :custom
+  (avy-single-candidate-jump t)
+  :bind
+  (("C-;" . avy-goto-char-timer)
+   ("M-;" . avy-pop-mark)
+   ("M-g g" . avy-goto-line)
+   ("M-g G" . avy-goto-end-of-line)
+   ("C-M-; c" . avy-copy-line)
+   ("C-M-; C" . avy-copy-region)
+   ("C-M-; m" . avy-move-line)
+   ("C-M-; M" . avy-move-region)
+   ("C-M-; k" . avy-kill-whole-line)
+   ("C-M-; K" . avy-kill-region)
+   ("C-M-; s" . avy-kill-ring-save-whole-line)
+   ("C-M-; S" . avy-kill-ring-save-region)
+   :map isearch-mode-map
+   ("C-;" . avy-isearch)))
+
+(use-package crux
+  :bind
+  (("C-o" . crux-smart-open-line)
+   ("C-S-o" . crux-smart-open-line-above)
+   ("C-^" . crux-top-join-line)
+   ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region)))
+
 (use-package consult
   :bind
   (("C-x b" . consult-buffer)
@@ -87,6 +123,10 @@
    ("M-s L" . consult-line-multi)
    ("M-s k" . consult-keep-lines)
    ("M-s f" . consult-focus-lines)))
+
+(use-package magit
+  :bind
+  (("C-c g" . magit-file-dispatch)))
 
 (use-package org
   :defer t
@@ -117,43 +157,3 @@
   (org-agenda-tags-column 0)
   :config
   (global-org-modern-mode))
-
-(use-package ace-window
-  :custom
-  (aw-keys '(?a ?s ?d ?f ?g ?h ?k ?l))
-  (aw-scope 'frame)
-  :bind
-  (("M-o" . ace-window)))
-
-(use-package avy
-  :custom
-  (avy-single-candidate-jump t)
-  :bind
-  (("C-;" . avy-goto-char-timer)
-   ("M-;" . avy-pop-mark)
-   ("M-g g" . avy-goto-line)
-   ("M-g G" . avy-goto-end-of-line)
-   ("C-M-; c" . avy-copy-line)
-   ("C-M-; C" . avy-copy-region)
-   ("C-M-; m" . avy-move-line)
-   ("C-M-; M" . avy-move-region)
-   ("C-M-; k" . avy-kill-whole-line)
-   ("C-M-; K" . avy-kill-region)
-   ("C-M-; s" . avy-kill-ring-save-whole-line)
-   ("C-M-; S" . avy-kill-ring-save-region)
-   :map isearch-mode-map
-   ("C-;" . avy-isearch)))
-
-(use-package whole-line-or-region
-  :demand
-  :config
-  (whole-line-or-region-global-mode)
-  :bind
-  (("M-/" . whole-line-or-region-comment-dwim)))
-
-(use-package crux
-  :bind
-  (("C-o" . crux-smart-open-line)
-   ("C-S-o" . crux-smart-open-line-above)
-   ("C-^" . crux-top-join-line)
-   ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region)))
