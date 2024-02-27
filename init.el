@@ -51,6 +51,9 @@
   (create-lockfiles nil)
   (make-backup-files nil)
   (disabled-command-function nil)
+  (inhibit-splash-screen t)
+  (initial-scratch-message "All systems go! 🚀")
+  (initial-major-mode 'text-mode)
   :bind
   (("C-c x x" . erase-buffer)
    ("C-c x >" . my/kill-to-end-of-buffer)
