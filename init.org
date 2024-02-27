@@ -118,7 +118,7 @@ It needs an entry in =~/.authinfo=:
     (create-lockfiles nil)
     (make-backup-files nil)
     (inhibit-splash-screen t)
-    (initial-scratch-message "All systems go!")
+    (initial-scratch-message "All systems go! 🚀")
     (initial-major-mode 'text-mode)
     (global-auto-revert-non-file-buffers t)
     (disabled-command-function nil)
