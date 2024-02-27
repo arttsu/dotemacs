@@ -223,6 +223,14 @@ https://github.com/magnars/multiple-cursors.el
      ("C-S-<mouse-1>" . mc/add-cursor-on-click)
      ("C-<return>" . set-rectangular-region-anchor)))
 #+end_src
+** Expand-Region
+https://github.com/magnars/expand-region.el
+
+#+begin_src elisp
+  (use-package expand-region
+    :bind
+    (("C-=" . er/expand-region)))
+#+end_src
 ** Crux
 https://github.com/bbatsov/crux
 
