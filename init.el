@@ -144,6 +144,15 @@
 	("C-c p {" . sp-wrap-curly)
 	("C-c p (" . sp-wrap-round)))
 
+(use-package multiple-cursors
+  :bind
+  (("C-+" . mc/mark-next-like-this)
+   ("C--" . mc/mark-previous-like-this)
+   ("C-c k l" . mc/edit-lines)
+   ("C-c k m" . mc/mark-all-dwim)
+   ("C-S-<mouse-1>" . mc/add-cursor-on-click)
+   ("C-<return>" . set-rectangular-region-anchor)))
+
 (use-package crux
   :bind
   (("C-o" . crux-smart-open-line)
