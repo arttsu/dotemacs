@@ -717,6 +717,3 @@ IGNORE ATTACHMENTS.")
   :custom
   (yas-snippet-dirs (list (expand-file-name "snippets" user-emacs-directory)))
   :hook (prog-mode . yas-minor-mode))
-
-(use-package scala-ts-mode
-  :straight '(scala-ts-mode :type git :host github :repo "KaranAhlawat/scala-ts-mode"))

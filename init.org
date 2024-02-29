@@ -1027,8 +1027,3 @@ https://github.com/joaotavora/yasnippet
     (yas-snippet-dirs (list (expand-file-name "snippets" user-emacs-directory)))
     :hook (prog-mode . yas-minor-mode))
 #+end_src
-** Scala Treesitter
-#+begin_src elisp
-  (use-package scala-ts-mode
-    :straight '(scala-ts-mode :type git :host github :repo "KaranAhlawat/scala-ts-mode"))
-#+end_src
