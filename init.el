@@ -18,6 +18,48 @@
   "Convert Unix timestamp to ISO date-time string."
   (format-time-string "%FT%T%z" (seconds-to-time unix-timestamp)))
 
+(defun my/seconds-to-days (seconds)
+  (interactive
+   (list (read-number "Seconds: ")))
+  (let ((days (/ seconds 60.0 60 24)))
+    (if (interactive-p)
+        (message "%s seconds is %s days" seconds days)
+      days)))
+
+(defun my/milliseconds-to-days (millis)
+  (interactive
+   (list (read-number "Milliseconds: ")))
+  (let ((days (/ (my/seconds-to-days millis) 1000.0)))
+    (if (interactive-p)
+        (message "%s milliseconds is %s days" millis days)
+      days)))
+
+(defun my/convert-time (number unit)
+  "Convert time between milliseconds, seconds, minutes, hours, days, months, and years."
+  (interactive
+   (list (read-number "Enter number: ")
+         (completing-read "Unit (milliseconds, seconds, minutes, hours, days, months, years): "
+                          '("milliseconds" "seconds" "minutes" "hours" "days" "months" "years"))))
+  (let ((in-seconds (cond
+                     ((string= unit "milliseconds") (/ number 1000.0))
+                     ((string= unit "seconds") number)
+                     ((string= unit "minutes") (* number 60))
+                     ((string= unit "hours") (* number 60 60))
+                     ((string= unit "days") (* number 60 60 24))
+                     ((string= unit "months") (* number 60 60 24 30)) ;; Approximation
+                     ((string= unit "years") (* number 60 60 24 365))))) ;; Approximation
+    (let ((milliseconds (* in-seconds 1000))
+          (seconds in-seconds)
+          (minutes (/ in-seconds 60))
+          (hours (/ in-seconds 60 60))
+          (days (/ in-seconds 60 60 24))
+          (months (/ in-seconds 60 60 24 30)) ;; Approximation
+          (years (/ in-seconds 60 60 24 365))) ;; Approximation
+      (if (interactive-p)
+          (message "Milliseconds: %s, Seconds: %s, Minutes: %s, Hours: %s, Days: %s, Months: %s, Years: %s"
+                   milliseconds seconds minutes hours days months years)
+        (list milliseconds seconds minutes hours days months years)))))
+
 (load (expand-file-name "local.el" user-emacs-directory))
 
 (defun my-kill-to-end-of-buffer ()
