@@ -55,6 +55,13 @@
           (days (/ in-seconds 60 60 24))
           (months (/ in-seconds 60 60 24 30)) ;; Approximation
           (years (/ in-seconds 60 60 24 365))) ;; Approximation
+      (cond
+       ((member unit '("milliseconds" "seconds"))
+        (kill-new (number-to-string days))
+        (message "Copied %s days to clipboard." days))
+       (t
+        (kill-new (number-to-string milliseconds))
+        (message "Copied %s milliseconds to clipboard." milliseconds)))
       (if (interactive-p)
           (message "Milliseconds: %s, Seconds: %s, Minutes: %s, Hours: %s, Days: %s, Months: %s, Years: %s"
                    milliseconds seconds minutes hours days months years)
@@ -178,7 +185,7 @@
 (defconst my-projects-file (my-gtd-file "projects"))
 (defconst my-someday-file (my-gtd-file "someday"))
 
-(defconst my-shared-inbox-file "~/kunhavigi/inbox.org")
+(defconst my-shared-inbox-file (expand-file-name "inbox.org" my/share-directory))
 
 (defconst my-gtd-agenda-files (list my-calendar-file
                                     my-tasks-file
@@ -188,21 +195,45 @@
 
 (defconst my-links-file "~/ordo/links.org")
 
+(defun my/avy-act-on-src-block (action)
+  (save-excursion
+    (let ((start-point (point)))
+      (my/avy-jump-to-src-block)
+      (if (equal start-point (point))
+          (message "Haven't moved; doing nothing")
+        (funcall action)))))
+
+(defun my/avy-exec-src-block ()
+  (interactive)
+  (my/avy-act-on-src-block 'org-babel-execute-src-block))
+
+(defun my/avy-edit-src-block ()
+  (interactive)
+  (my/avy-act-on-src-block 'org-edit-special))
+
 (defconst my-gtd-capture-templates
-  `(("i" "Inbox" entry (file+headline ,my-inbox-file "Inbox") (file ,(my-capture-template "inbox")))
-    ("I" "Inbox link" entry (file+headline ,my-inbox-file "Inbox") (file ,(my-capture-template "inbox_link")))
-    ("l" "Link" entry (file+headline ,my-inbox-file "Inbox") (file ,(my-capture-template "link")))
-    ("L" "Links folder" entry (file ,my-links-file) "* %^{Title}")
-    ("p" "Project" entry (file ,my-projects-file) (file ,(my-capture-template "project")))
-    ("s" "Someday Area" entry (file ,my-someday-file) (file ,(my-capture-template "someday_area")))))
+  `(("i" "Inbox")
+    ("ii" "Todo" entry (file+headline ,my-inbox-file "Inbox") "* TODO %?")
+    ("il" "Link" entry (file+headline ,my-inbox-file "Inbox") "* [[%c][%^{Description}]]%?")
+    ("it" "Log" entry (file+headline ,my-inbox-file "Inbox") "* %u %?")
+    ("ia" "Annotation" entry (file+headline ,my-inbox-file "Inbox") "* %A%?")
+    ("f" "Folder")
+    ("fl" "Links" entry (file ,my-links-file) "* %^{Title}")
+    ("fp" "Project" entry (file ,my-projects-file) (file ,(my-capture-template "project")))
+    ("fs" "Someday Area" entry (file ,my-someday-file) (file ,(my-capture-template "someday_area")))))
 
-(defun my-capture-to-inbox ()
-  (interactive)
-  (org-capture nil "i"))
+(defun my/capture-to-inbox (&optional prefix)
+  (interactive "P")
+  (cond
+   ((equal prefix nil)   (org-capture nil "ii"))
+   ((equal prefix '(4))  (org-capture nil "il"))
+   ((equal prefix '(16)) (org-capture nil "it"))
+   (t (message "Prefix '%s' not supported" prefix))))
 
-(defun my-capture-link-to-inbox ()
+(defun my/annotate ()
   (interactive)
-  (org-capture nil "I"))
+  (org-store-link nil)
+  (org-capture nil "ia"))
 
 (defconst my-day-agenda
   `("d"
@@ -278,11 +309,15 @@
   (add-to-list 'org-export-backends 'md)
   :bind
   (("C-c c" . org-capture)
-   ("C-c i" . my-capture-to-inbox)
-   ("C-c I" . my-capture-link-to-inbox)
+   ("C-c i" . my/capture-to-inbox)
    ("C-c a" . org-agenda)
+   ("C-c A" . my/annotate)
    ("C-c j p" . my-jump-to-gtd-project)
-   ("C-c l" . org-store-link)))
+   ("C-c l" . org-store-link)
+   :map org-mode-map
+   ("C-c v ;" . my/avy-jump-to-src-block)
+   ("C-c v <return>" . my/avy-exec-src-block)
+   ("C-c v '" . my/avy-edit-src-block)))
 
 (use-package org-modern
   :after org
@@ -387,6 +422,17 @@
   :custom
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles partial-completion)))))
+
+(defun my/avy-jump-to-src-block ()
+  "Jump to a visible src block using Avy."
+  (interactive)
+  (require 'avy)
+  (avy-with avy-jump-to-src-block
+    (avy-jump
+     (rx (and (0+ any) "#+begin_src" (1+ (or space "\n"))))
+     :window-flip nil
+     :beg (window-start)
+     :end (window-end))))
 
 (defun my-avy-action-embark (point)
   (unwind-protect
@@ -758,4 +804,8 @@ IGNORE ATTACHMENTS.")
 (use-package yasnippet
   :custom
   (yas-snippet-dirs (list (expand-file-name "snippets" user-emacs-directory)))
-  :hook (prog-mode . yas-minor-mode))
+  :config
+  (yas-reload-all)
+  :hook
+  (prog-mode . yas-minor-mode)
+  (org-mode . yas-minor-mode))
