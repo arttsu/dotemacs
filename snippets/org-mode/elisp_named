@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: elisp_named
+# key: eln
+# --
+#+name: $1
+#+begin_src elisp $2
+$0
+#+end_src

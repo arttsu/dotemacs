@@ -176,24 +176,17 @@
   (make-local-variable var)
   (set var (read-string (concat prompt ": ") nil my-capture-prompt-history)))
 
-(defun my-gtd-file (name)
-  (format "~/ordo/gtd/%s.org" name))
+(defconst my/inbox-file  "~/org/gtd/inbox.org")
+(defconst my/calendar-file  "~/org/gtd/calendar.org")
+(defconst my/tasks-file  "~/org/gtd/tasks.org")
+(defconst my/projects-file  "~/org/gtd/projects.org")
+(defconst my/someday-file  "~/org/gtd/someday.org")
 
-(defconst my-inbox-file (my-gtd-file "inbox"))
-(defconst my-calendar-file (my-gtd-file "calendar"))
-(defconst my-tasks-file (my-gtd-file "tasks"))
-(defconst my-projects-file (my-gtd-file "projects"))
-(defconst my-someday-file (my-gtd-file "someday"))
+(defconst my/shared-inbox-file (expand-file-name "org/gtd/inbox.org" my/shared-directory))
 
-(defconst my-shared-inbox-file (expand-file-name "inbox.org" my/share-directory))
-
-(defconst my-gtd-agenda-files (list my-calendar-file
-                                    my-tasks-file
-                                    my-projects-file))
-
-(defconst my-inbox-files (list my-inbox-file my-shared-inbox-file))
-
-(defconst my-links-file "~/ordo/links.org")
+(defconst my/gtd-agenda-files (list my/calendar-file
+                                    my/tasks-file
+                                    my/projects-file))
 
 (defun my/avy-act-on-src-block (action)
   (save-excursion
@@ -213,14 +206,13 @@
 
 (defconst my-gtd-capture-templates
   `(("i" "Inbox")
-    ("ii" "Todo" entry (file+headline ,my-inbox-file "Inbox") "* TODO %?")
-    ("il" "Link" entry (file+headline ,my-inbox-file "Inbox") "* [[%c][%^{Description}]]%?")
-    ("it" "Log" entry (file+headline ,my-inbox-file "Inbox") "* %u %?")
-    ("ia" "Annotation" entry (file+headline ,my-inbox-file "Inbox") "* %A%?")
+    ("ii" "Todo" entry (file+headline ,my/inbox-file "Inbox") "* TODO %?")
+    ("il" "Link" entry (file+headline ,my/inbox-file "Inbox") "* [[%c][%^{Description}]]%?")
+    ("it" "Log" entry (file+headline ,my/inbox-file "Inbox") "* %u %?")
+    ("ia" "Annotation" entry (file+headline ,my/inbox-file "Inbox") "* %A%?")
     ("f" "Folder")
-    ("fl" "Links" entry (file ,my-links-file) "* %^{Title}")
-    ("fp" "Project" entry (file ,my-projects-file) (file ,(my-capture-template "project")))
-    ("fs" "Someday Area" entry (file ,my-someday-file) (file ,(my-capture-template "someday_area")))))
+    ("fp" "Project" entry (file ,my/projects-file) (file ,(my-capture-template "project")))
+    ("fs" "Someday Area" entry (file ,my/someday-file) (file ,(my-capture-template "someday_area")))))
 
 (defun my/capture-to-inbox (&optional prefix)
   (interactive "P")
@@ -242,28 +234,27 @@
                  (org-agenda-skip-scheduled-if-done t)
                  (org-agenda-skip-deadline-if-done t)
                  (org-agenda-skip-timestamp-if-done t)
-                 (org-agenda-files ',my-gtd-agenda-files)))
+                 (org-agenda-files ',my/gtd-agenda-files)))
      (todo "TODO" ((org-agenda-overriding-header "Not-scheduled Tasks")
                    (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))
-                   (org-agenda-files '(,my-tasks-file))))
+                   (org-agenda-files '(,my/tasks-file))))
      (tags "NOW+LEVEL=1" ((org-agenda-overriding-header "Projects")
-                          (org-agenda-files '(,my-projects-file)))))))
+                          (org-agenda-files '(,my/projects-file)))))))
 
 (defconst my-gtd-refile-targets
-  `(((,my-calendar-file
-      ,my-tasks-file
-      ,my-projects-file
-      ,my-someday-file
-      ,my-inbox-file
-      ,my-shared-inbox-file
-      ,my-links-file)
+  `(((,my/calendar-file
+      ,my/tasks-file
+      ,my/projects-file
+      ,my/someday-file
+      ,my/inbox-file
+      ,my/shared-inbox-file)
      :level . 1)))
 
 (defun my-gtd-projects ()
   (org-ql-query
     :select '(cons (substring-no-properties (org-get-heading t t t t))
                    (org-id-get-create))
-    :from my-projects-file
+    :from my/projects-file
     :where '(level 1)))
 
 (defun my-gtd-project-map ()
@@ -282,9 +273,9 @@
   (let* ((project-map (my-gtd-project-map))
          (selected-title (completing-read "Project: " project-map))
          (selected-id (gethash selected-title project-map)))
-    (if-let (win (get-buffer-window (get-file-buffer my-projects-file) t))
+    (if-let (win (get-buffer-window (get-file-buffer my/projects-file) t))
         (select-window win)
-      (switch-to-buffer-other-window my-projects-file))
+      (switch-to-buffer-other-window my/projects-file))
     (widen)
     (org-id-goto selected-id)
     (my-narrow-to-project)))
@@ -294,7 +285,7 @@
 (use-package org
   :defer t
   :custom
-  (org-agenda-files my-gtd-agenda-files)
+  (org-agenda-files my/gtd-agenda-files)
   (org-confirm-babel-evaluate nil)
   (org-startup-indented t)
   (org-startup-with-inline-images t)
@@ -302,7 +293,7 @@
   (org-capture-templates my-gtd-capture-templates)
   (org-agenda-custom-commands (list my-day-agenda))
   (org-refile-targets my-gtd-refile-targets)
-  (org-attach-directory "~/ordo/attach")
+  (org-attach-directory "~/org/attach")
   (org-attach-use-inheritance t)
   :config
   (require 'org-attach)
@@ -377,7 +368,9 @@
   (set-frame-font "Iosevka Comfy Wide Fixed" nil t))
 
 (use-package smartparens
-  :hook (prog-mode . smartparens-mode)
+  :hook
+  (prog-mode . smartparens-mode)
+  (restclient-mode . smartparens-mode)
   :config
   (require 'smartparens-config)
   :bind
@@ -745,23 +738,23 @@ IGNORE ATTACHMENTS.")
 
 (add-to-list 'auto-mode-alist '("\\.anki\\'" . anki-mode))
 
-(defun my-org-attach-with-anki-editor-tag-completion-disabled ()
+(defun my/org-attach-w/o-anki-editor-tag-completion ()
   (interactive)
   (let ((anki-editor-org-tags-as-anki-tags nil))
     (call-interactively 'org-attach)))
 
-(defun my-org-attach-disable-inheritance ()
+(defun my/org-attach-disable-inheritance ()
   (setq-local org-attach-use-inheritance nil))
 
 (use-package anki-editor
   :hook ((anki-mode . anki-editor-mode)
-         (anki-mode . my-org-attach-disable-inheritance))
+         (anki-mode . my/org-attach-disable-inheritance))
   :bind
   (:map anki-mode-map
         ("C-<return>" . anki-editor-insert-note)
         ("C-c p" . anki-editor-push-notes)
         ("C-c r" . anki-editor-retry-failure-notes)
-        ("C-c C-a" . my-org-attach-with-anki-editor-tag-completion-disabled)))
+        ("C-c C-a" . my/org-attach-w/o-anki-editor-tag-completion)))
 
 (use-package kubel
   :bind

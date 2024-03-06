@@ -1,0 +1,7 @@
+# key: restids
+# name: rest_ids
+# --
+#+name: ${1:ids}
+#+begin_src elisp :var in=${2:block}
+(json-encode-list (mapcar 'string-to-number (butlast (cdr (split-string in "\n" t)))))
+#+end_src$0

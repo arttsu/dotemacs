@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: jq_collection
+# key: jqc
+# --
+:jq .collection[].${1:id}$0

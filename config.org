@@ -3,62 +3,77 @@
 #+PROPERTY: header-args:elisp :results silent :tangle init.el
 * Documentation
 ** Dependencies
-*** iosevka-comfy font
+*** Iosevka Comfy font
 https://git.sr.ht/~protesilaos/iosevka-comfy
+
 **** Fedora
 #+begin_src shell
   git clone --depth 1 https://git.sr.ht/~protesilaos/iosevka-comfy
   cp -R iosevka-comfy/* ~/.local/share/fonts/
 #+end_src
+
 **** MacOS
 #+begin_src shell
   git clone --depth 1 https://git.sr.ht/~protesilaos/iosevka-comfy
   cp -R iosevka-comfy/* ~/Library/Fonts/
 #+end_src
-*** rg
+
+*** ripgrep
 **** Fedora
 #+begin_src shell
   sudo dnf install ripgrep -y
 #+end_src
+
 **** MacOS
 #+begin_src shell
   brew install ripgrep
 #+end_src
+
 *** vterm
 **** Fedora
 #+begin_src shell
   sudo dnf install libvterm -y
 #+end_src
+
 **** MacOS
 #+begin_src shell
   brew install cmake libvterm libtool
 #+end_src
-*** anki
+
+*** Anki
 **** Fedora
 https://docs.ankiweb.net/platform/linux/installing.html
-***** Download
-From https://apps.ankiweb.net/.
-***** Install
-#+begin_src shell
-  cd ~/Downloads/
-  tar xaf anki-23.12.1-linux-qt6.tar.zst
-  cd anki-23.12.1-linux-qt6/
-  sudo ./install.sh
-#+end_src
-***** Add anki-connect addon
-https://git.foosoft.net/alex/anki-connect
-*** gptel
+
+1. Download from https://apps.ankiweb.net/
+
+2. Install
+   #+begin_src shell
+     cd ~/Downloads/
+     tar xaf anki-23.12.1-linux-qt6.tar.zst
+     cd anki-23.12.1-linux-qt6/
+     sudo ./install.sh
+   #+end_src
+
+3. Add anki-connect addon
+   https://git.foosoft.net/alex/anki-connect
+
+*** GPTel
 It needs an entry in =~/.authinfo=:
-~machine api.openai.com login apikey password <API KEY>~
+#+begin_example
+  machine api.openai.com login apikey password <API KEY>
+#+end_example
+
 ** Installation
-*** Clone the repo
-#+begin_src shell
-  git clone git@github.com:arttsu/dotemacs.git ~/.emacs.d
-#+end_src
-*** Set up the local init
-#+begin_src shell
-  cp ~/.emacs.d/{example_,}local.el
-#+end_src
+1. Clone the repo
+   #+begin_src shell
+     git clone git@github.com:arttsu/dotemacs.git ~/.emacs.d
+   #+end_src
+
+2. Set up the local init
+   #+begin_src shell
+     cp ~/.emacs.d/{example_,}local.el
+   #+end_src
+
 * Config
 ** Helpers
 *** System type predicates
@@ -300,24 +315,17 @@ https://orgmode.org/
 *** Org Mode: GTD
 **** Org Mode: GTD: Files
 #+begin_src elisp
-  (defun my-gtd-file (name)
-    (format "~/ordo/gtd/%s.org" name))
+  (defconst my/inbox-file  "~/org/gtd/inbox.org")
+  (defconst my/calendar-file  "~/org/gtd/calendar.org")
+  (defconst my/tasks-file  "~/org/gtd/tasks.org")
+  (defconst my/projects-file  "~/org/gtd/projects.org")
+  (defconst my/someday-file  "~/org/gtd/someday.org")
 
-  (defconst my-inbox-file (my-gtd-file "inbox"))
-  (defconst my-calendar-file (my-gtd-file "calendar"))
-  (defconst my-tasks-file (my-gtd-file "tasks"))
-  (defconst my-projects-file (my-gtd-file "projects"))
-  (defconst my-someday-file (my-gtd-file "someday"))
+  (defconst my/shared-inbox-file (expand-file-name "org/gtd/inbox.org" my/shared-directory))
 
-  (defconst my-shared-inbox-file (expand-file-name "inbox.org" my/share-directory))
-
-  (defconst my-gtd-agenda-files (list my-calendar-file
-                                      my-tasks-file
-                                      my-projects-file))
-
-  (defconst my-inbox-files (list my-inbox-file my-shared-inbox-file))
-
-  (defconst my-links-file "~/ordo/links.org")
+  (defconst my/gtd-agenda-files (list my/calendar-file
+                                      my/tasks-file
+                                      my/projects-file))
 #+end_src
 **** Org Mode: Execute source block via Avy
 #+begin_src elisp
@@ -341,14 +349,13 @@ https://orgmode.org/
 #+begin_src elisp
   (defconst my-gtd-capture-templates
     `(("i" "Inbox")
-      ("ii" "Todo" entry (file+headline ,my-inbox-file "Inbox") "* TODO %?")
-      ("il" "Link" entry (file+headline ,my-inbox-file "Inbox") "* [[%c][%^{Description}]]%?")
-      ("it" "Log" entry (file+headline ,my-inbox-file "Inbox") "* %u %?")
-      ("ia" "Annotation" entry (file+headline ,my-inbox-file "Inbox") "* %A%?")
+      ("ii" "Todo" entry (file+headline ,my/inbox-file "Inbox") "* TODO %?")
+      ("il" "Link" entry (file+headline ,my/inbox-file "Inbox") "* [[%c][%^{Description}]]%?")
+      ("it" "Log" entry (file+headline ,my/inbox-file "Inbox") "* %u %?")
+      ("ia" "Annotation" entry (file+headline ,my/inbox-file "Inbox") "* %A%?")
       ("f" "Folder")
-      ("fl" "Links" entry (file ,my-links-file) "* %^{Title}")
-      ("fp" "Project" entry (file ,my-projects-file) (file ,(my-capture-template "project")))
-      ("fs" "Someday Area" entry (file ,my-someday-file) (file ,(my-capture-template "someday_area")))))
+      ("fp" "Project" entry (file ,my/projects-file) (file ,(my-capture-template "project")))
+      ("fs" "Someday Area" entry (file ,my/someday-file) (file ,(my-capture-template "someday_area")))))
 
   (defun my/capture-to-inbox (&optional prefix)
     (interactive "P")
@@ -372,23 +379,22 @@ https://orgmode.org/
                    (org-agenda-skip-scheduled-if-done t)
                    (org-agenda-skip-deadline-if-done t)
                    (org-agenda-skip-timestamp-if-done t)
-                   (org-agenda-files ',my-gtd-agenda-files)))
+                   (org-agenda-files ',my/gtd-agenda-files)))
        (todo "TODO" ((org-agenda-overriding-header "Not-scheduled Tasks")
                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))
-                     (org-agenda-files '(,my-tasks-file))))
+                     (org-agenda-files '(,my/tasks-file))))
        (tags "NOW+LEVEL=1" ((org-agenda-overriding-header "Projects")
-                            (org-agenda-files '(,my-projects-file)))))))
+                            (org-agenda-files '(,my/projects-file)))))))
 #+end_src
 **** Org Mode: GTD: Refiling
 #+begin_src elisp
   (defconst my-gtd-refile-targets
-    `(((,my-calendar-file
-        ,my-tasks-file
-        ,my-projects-file
-        ,my-someday-file
-        ,my-inbox-file
-        ,my-shared-inbox-file
-        ,my-links-file)
+    `(((,my/calendar-file
+        ,my/tasks-file
+        ,my/projects-file
+        ,my/someday-file
+        ,my/inbox-file
+        ,my/shared-inbox-file)
        :level . 1)))
 #+end_src
 **** Org Mode: GTD: Jump to project
@@ -397,7 +403,7 @@ https://orgmode.org/
     (org-ql-query
       :select '(cons (substring-no-properties (org-get-heading t t t t))
                      (org-id-get-create))
-      :from my-projects-file
+      :from my/projects-file
       :where '(level 1)))
 
   (defun my-gtd-project-map ()
@@ -416,9 +422,9 @@ https://orgmode.org/
     (let* ((project-map (my-gtd-project-map))
            (selected-title (completing-read "Project: " project-map))
            (selected-id (gethash selected-title project-map)))
-      (if-let (win (get-buffer-window (get-file-buffer my-projects-file) t))
+      (if-let (win (get-buffer-window (get-file-buffer my/projects-file) t))
           (select-window win)
-        (switch-to-buffer-other-window my-projects-file))
+        (switch-to-buffer-other-window my/projects-file))
       (widen)
       (org-id-goto selected-id)
       (my-narrow-to-project)))
@@ -432,7 +438,7 @@ https://orgmode.org/
   (use-package org
     :defer t
     :custom
-    (org-agenda-files my-gtd-agenda-files)
+    (org-agenda-files my/gtd-agenda-files)
     (org-confirm-babel-evaluate nil)
     (org-startup-indented t)
     (org-startup-with-inline-images t)
@@ -440,7 +446,7 @@ https://orgmode.org/
     (org-capture-templates my-gtd-capture-templates)
     (org-agenda-custom-commands (list my-day-agenda))
     (org-refile-targets my-gtd-refile-targets)
-    (org-attach-directory "~/ordo/attach")
+    (org-attach-directory "~/org/attach")
     (org-attach-use-inheritance t)
     :config
     (require 'org-attach)
@@ -543,7 +549,9 @@ https://github.com/Fuco1/smartparens
 
 #+begin_src elisp
   (use-package smartparens
-    :hook (prog-mode . smartparens-mode)
+    :hook
+    (prog-mode . smartparens-mode)
+    (restclient-mode . smartparens-mode)
     :config
     (require 'smartparens-config)
     :bind
@@ -1027,34 +1035,38 @@ https://github.com/zerolfx/copilot.el
 #+end_src
 ** anki-editor
 https://github.com/louietan/anki-editor
-*** Anki mode
+
+*** anki-editor: Anki mode
 #+begin_src elisp
   (define-derived-mode anki-mode org-mode "Anki")
 
   (add-to-list 'auto-mode-alist '("\\.anki\\'" . anki-mode))
 #+end_src
-*** org-attach fix
+
+*** anki-editor: org-attach fix
 #+begin_src elisp
-  (defun my-org-attach-with-anki-editor-tag-completion-disabled ()
+  (defun my/org-attach-w/o-anki-editor-tag-completion ()
     (interactive)
     (let ((anki-editor-org-tags-as-anki-tags nil))
       (call-interactively 'org-attach)))
 
-  (defun my-org-attach-disable-inheritance ()
+  (defun my/org-attach-disable-inheritance ()
     (setq-local org-attach-use-inheritance nil))
 #+end_src
-*** Configure
+
+*** anki-editor: Config
 #+begin_src elisp
   (use-package anki-editor
     :hook ((anki-mode . anki-editor-mode)
-           (anki-mode . my-org-attach-disable-inheritance))
+           (anki-mode . my/org-attach-disable-inheritance))
     :bind
     (:map anki-mode-map
           ("C-<return>" . anki-editor-insert-note)
           ("C-c p" . anki-editor-push-notes)
           ("C-c r" . anki-editor-retry-failure-notes)
-          ("C-c C-a" . my-org-attach-with-anki-editor-tag-completion-disabled)))
+          ("C-c C-a" . my/org-attach-w/o-anki-editor-tag-completion)))
 #+end_src
+
 ** kubel
 https://github.com/abrochard/kubel
 *** Configure
