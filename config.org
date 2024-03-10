@@ -347,3 +347,21 @@ https://github.com/doitian/iy-go-to-char
      ("M-g ;" . iy-go-to-or-up-to-continue)
      ("M-g ," . iy-go-to-or-up-to-continue-backward)))
 #+end_src
+
+* Company
+http://company-mode.github.io/
+
+** Use-Package
+#+begin_src elisp
+  (use-package company
+    :custom
+    (company-minimum-prefix-length 2)
+    (company-idle-delay 0.3)
+    (company-selection-wrap-around t)
+    (company-dabbrev-downcase nil)
+    (company-show-numbers t)
+    :config
+    (global-company-mode)
+    :bind
+    (("M-<tab>" . company-complete)))
+#+end_src
