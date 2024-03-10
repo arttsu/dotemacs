@@ -355,3 +355,8 @@
 (use-package rg
   :bind
   (("M-s R" . rg-project)))
+
+(use-package project
+  :config
+  (add-to-list 'project-switch-commands '(my-vterm-project "Vterm" "V") t)
+  (add-to-list 'project-switch-commands '(project-dired "Dired" "<return>") t))
