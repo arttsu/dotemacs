@@ -116,7 +116,7 @@ https://protesilaos.com/emacs/modus-themes
 * Iosevka Comfy Font
 https://git.sr.ht/~protesilaos/iosevka-comfy
 
-** How to Install the Font?
+** How to Install the Font?                                           :DEPS:
 1. Clone the repo:
    #+begin_src shell
      git clone --depth 1 https://git.sr.ht/~protesilaos/iosevka-comfy
@@ -127,6 +127,7 @@ https://git.sr.ht/~protesilaos/iosevka-comfy
    #+end_src
 
    On Fedora the fonts directory is =~/.local/share/fonts/=.
+
    On MacOS the fonts directory is =~/Library/Fonts/=.
 
 ** Set the Font
@@ -170,6 +171,7 @@ https://magit.vc/
 * Super-Save
 https://github.com/bbatsov/super-save
 
+** Use-Package
 #+begin_src elisp
   (use-package super-save
     :custom
@@ -250,7 +252,7 @@ https://github.com/abo-abo/ace-window
 * Avy
 https://github.com/abo-abo/avy
 
-** Embark Actions
+** Actions
 #+begin_src elisp
   (defun my-avy-embark (point)
     (goto-char point)
@@ -369,6 +371,7 @@ https://github.com/Fuco1/smartparens
 * Yasnippet
 https://github.com/joaotavora/yasnippet
 
+** Use-Package
 #+begin_src elisp
   (use-package yasnippet
     :custom
@@ -545,6 +548,7 @@ https://github.com/zerolfx/copilot.el
 * Restclient
 https://github.com/alf/ob-restclient.el
 
+** Use-Package
 #+begin_src elisp
   (use-package ob-restclient)
 #+end_src
