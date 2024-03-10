@@ -27,7 +27,8 @@
 (use-package org
   :defer t
   :custom
-  (org-confirm-babel-evaluate nil))
+  (org-confirm-babel-evaluate nil)
+  (org-src-window-setup 'split-window-below))
 
 (use-package magit
   :bind
