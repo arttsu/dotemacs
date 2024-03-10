@@ -1,7 +1,10 @@
 (use-package emacs
   :custom
   (create-lockfiles nil)
-  (make-backup-files nil))
+  (make-backup-files nil)
+  (inhibit-splash-screen t)
+  (initial-scratch-message "All systems go! 🚀")
+  (initial-major-mode 'text-mode))
 
 (defvar bootstrap-version)
 (let ((bootstrap-file
