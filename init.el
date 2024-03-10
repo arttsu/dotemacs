@@ -167,3 +167,11 @@
   (yas-snippet-dirs (list (expand-file-name "snippets" user-emacs-directory)))
   :config
   (yas-global-mode))
+
+(use-package multiple-cursors
+  :bind
+  (("C-+" . mc/mark-next-like-this)
+   ("C-c k l" . mc/edit-lines)
+   ("C-c k m" . mc/mark-all-dwim)
+   ("C-S-<mouse-1>" . mc/add-cursor-on-click)
+   ("C-<return>" . set-rectangular-region-anchor)))
