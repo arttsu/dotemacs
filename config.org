@@ -332,3 +332,18 @@ https://github.com/magnars/expand-region.el
     :bind
     (("C-=" . er/expand-region)))
 #+end_src
+
+* Go-to-Char
+https://github.com/doitian/iy-go-to-char
+
+** Use-Package
+#+begin_src elisp
+  (use-package iy-go-to-char
+    :bind
+    (("M-g f" . iy-go-to-char)
+     ("M-g F" . iy-go-to-char-backward)
+     ("M-g t" . iy-go-up-to-char)
+     ("M-g T" . iy-go-up-to-char-backward)
+     ("M-g ;" . iy-go-to-or-up-to-continue)
+     ("M-g ," . iy-go-to-or-up-to-continue-backward)))
+#+end_src

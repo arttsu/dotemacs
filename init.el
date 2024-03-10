@@ -179,3 +179,12 @@
 (use-package expand-region
   :bind
   (("C-=" . er/expand-region)))
+
+(use-package iy-go-to-char
+  :bind
+  (("M-g f" . iy-go-to-char)
+   ("M-g F" . iy-go-to-char-backward)
+   ("M-g t" . iy-go-up-to-char)
+   ("M-g T" . iy-go-up-to-char-backward)
+   ("M-g ;" . iy-go-to-or-up-to-continue)
+   ("M-g ," . iy-go-to-or-up-to-continue-backward)))
