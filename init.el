@@ -28,7 +28,9 @@
   :defer t
   :custom
   (org-confirm-babel-evaluate nil)
-  (org-src-window-setup 'split-window-below))
+  (org-src-window-setup 'split-window-below)
+  (org-startup-indented t)
+  (org-startup-with-inline-images t))
 
 (use-package magit
   :bind
