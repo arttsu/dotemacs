@@ -161,6 +161,22 @@ https://magit.vc/
     (("C-c g" . magit-file-dispatch)))
 #+end_src
 
+* Super-Save
+https://github.com/bbatsov/super-save
+
+#+begin_src elisp
+  (use-package super-save
+    :custom
+    (super-save-auto-save-when-idle t)
+    (super-save-exclude '(".sbt" "project/"))
+    (super-save-silent t)
+    (super-save-delete-trailing-whitespace 'except-current-line)
+    (super-save-all-buffers t)
+    (auto-save-default nil)
+    :config
+    (super-save-mode))
+#+end_src
+
 * Vertico
 https://github.com/minad/vertico
 
