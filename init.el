@@ -6,22 +6,59 @@
   (make-backup-files nil)
   (inhibit-splash-screen t)
   (initial-scratch-message "All systems go! 🚀")
-  (initial-major-mode 'text-mode))
+  (initial-major-mode 'text-mode)
+  (global-auto-revert-non-file-buffers t)
+  (disabled-command-function nil)
+  (save-interprogram-paste-before-kill t)
+  (gc-cons-threshold 100000000)
+  (read-process-output-max (* 1024 1024))
+  (visible-bell t)
+  (require-final-newline t)
+  (indent-tabs-mode nil)
+  (zoneinfo-style-world-list '(("America/Los_Angeles" "LA")
+			       ("America/New_York" "NYC")
+			       ("Europe/London" "London")
+			       ("Europe/Lisbon" "Lisbon")
+			       ("Europe/Berlin" "Berlin")
+			       ("Europe/Kyiv" "Kyiv")))
+  :config
+  (global-auto-revert-mode)
+  (add-to-list 'default-frame-alist '(fullscreen . maximized))
+  (fset 'yes-or-no-p 'y-or-n-p)
+  (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+  (scroll-bar-mode -1)
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+  (global-subword-mode)
+  (tab-bar-history-mode)
+  :bind
+  (("C-c j s" . scratch-buffer)
+   ("C-x C-b" . ibuffer-other-window)
+   ("C-M-; d" . duplicate-dwim)
+   ("M-g w" . forward-to-word)
+   ("M-g W" . backward-to-word)
+   ("C-c d h" . erase-buffer)
+   ("M-z" . zap-up-to-char)
+   ("M-Z" . zap-to-char)
+   ("<f8> h" . tab-bar-history-back)
+   ("<f8> l" . tab-bar-history-forward)
+   ("<f8> H" . previous-buffer)
+   ("<f8> L" . next-buffer)))
 
 (defvar bootstrap-version)
 (let ((bootstrap-file
-	 (expand-file-name
-	  "straight/repos/straight.el/bootstrap.el"
-	  (or (bound-and-true-p straight-base-dir)
-	      user-emacs-directory)))
-	(bootstrap-version 7))
+       (expand-file-name
+        "straight/repos/straight.el/bootstrap.el"
+        (or (bound-and-true-p straight-base-dir)
+            user-emacs-directory)))
+      (bootstrap-version 7))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
-	  (url-retrieve-synchronously
-	   "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-	   'silent 'inhibit-cookies)
-	(goto-char (point-max))
-	(eval-print-last-sexp)))
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
 (setq straight-use-package-by-default t)
@@ -109,7 +146,7 @@
    ("M-g g" . avy-goto-line)
    ("M-g G" . avy-goto-end-of-line)
    ("M-g h" . avy-org-goto-heading-timer)
-   ("M-g w" . avy-goto-word-1)
+   ("M-g s" . avy-goto-word-1)
    :map isearch-mode-map
    ("C-;" . avy-isearch)))
 
