@@ -142,3 +142,9 @@
 	("C-c p [" . sp-wrap-square)
 	("C-c p {" . sp-wrap-curly)
 	("C-c p r" . sp-rewrap-sexp)))
+
+(use-package yasnippet
+  :custom
+  (yas-snippet-dirs (list (expand-file-name "snippets" user-emacs-directory)))
+  :config
+  (yas-global-mode))

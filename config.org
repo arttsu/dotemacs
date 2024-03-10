@@ -249,3 +249,14 @@ https://github.com/Fuco1/smartparens
   	("C-c p {" . sp-wrap-curly)
   	("C-c p r" . sp-rewrap-sexp)))
 #+end_src
+
+* Yasnippet
+https://github.com/joaotavora/yasnippet
+
+#+begin_src elisp
+  (use-package yasnippet
+    :custom
+    (yas-snippet-dirs (list (expand-file-name "snippets" user-emacs-directory)))
+    :config
+    (yas-global-mode))
+#+end_src
