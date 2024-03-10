@@ -127,3 +127,20 @@ https://github.com/abo-abo/ace-window
     :bind
     (("M-o" . ace-window)))
 #+end_src
+
+* Avy
+https://github.com/abo-abo/avy
+
+** Avy: Use-Package
+#+begin_src elisp
+  (use-package avy
+    :custom
+    (avy-single-candidate-jump t)
+    :bind
+    (("C-;" . avy-goto-char-timer)
+     ("M-;" . avy-pop-mark)
+     ("M-g g" . avy-goto-line)
+     ("M-g G" . avy-goto-end-of-line)
+     :map isearch-mode-map
+     ("C-;" . avy-isearch)))
+#+end_src

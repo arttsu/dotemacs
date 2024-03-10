@@ -65,3 +65,14 @@
   (aw-scope 'global)
   :bind
   (("M-o" . ace-window)))
+
+(use-package avy
+  :custom
+  (avy-single-candidate-jump t)
+  :bind
+  (("C-;" . avy-goto-char-timer)
+   ("M-;" . avy-pop-mark)
+   ("M-g g" . avy-goto-line)
+   ("M-g G" . avy-goto-end-of-line)
+   :map isearch-mode-map
+   ("C-;" . avy-isearch)))
