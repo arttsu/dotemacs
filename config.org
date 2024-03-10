@@ -159,6 +159,15 @@ https://github.com/oantolin/embark
      ("M-." . embark-dwim)))
 #+end_src
 
+* Embark-Consult
+https://github.com/oantolin/embark/blob/master/embark-consult.el
+
+** Embark-Consult: Use-Package
+#+begin_src elisp
+  (use-package embark-consult
+    :after (embark consult))
+#+end_src
+
 * Link-Hint
 https://github.com/noctuid/link-hint.el
 

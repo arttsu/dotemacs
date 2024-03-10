@@ -85,6 +85,9 @@
   (("C-." . embark-act)
    ("M-." . embark-dwim)))
 
+(use-package embark-consult
+  :after (embark consult))
+
 (use-package link-hint
   :bind
   (("C-c f" . link-hint-open-link)
