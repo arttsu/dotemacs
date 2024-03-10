@@ -112,3 +112,10 @@
    ("C-S-o" . crux-smart-open-line-above)
    ("C-^" . crux-top-join-line)
    ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region)))
+
+(use-package whole-line-or-region
+  :demand
+  :config
+  (whole-line-or-region-global-mode)
+  :bind
+  (("M-/" . whole-line-or-region-comment-dwim)))
