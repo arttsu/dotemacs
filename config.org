@@ -194,3 +194,16 @@ https://github.com/noctuid/link-hint.el
     (("C-c f" . link-hint-open-link)
      ("C-c y" . link-hint-copy-link)))
 #+end_src
+
+* Crux
+https://github.com/bbatsov/crux
+
+** Use-Package
+#+begin_src elisp
+  (use-package crux
+    :bind
+    (("C-o" . crux-smart-open-line)
+     ("C-S-o" . crux-smart-open-line-above)
+     ("C-^" . crux-top-join-line)
+     ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region)))
+#+end_src

@@ -105,3 +105,10 @@
   :bind
   (("C-c f" . link-hint-open-link)
    ("C-c y" . link-hint-copy-link)))
+
+(use-package crux
+  :bind
+  (("C-o" . crux-smart-open-line)
+   ("C-S-o" . crux-smart-open-line-above)
+   ("C-^" . crux-top-join-line)
+   ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region)))
