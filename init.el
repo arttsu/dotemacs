@@ -91,7 +91,12 @@
   (org-confirm-babel-evaluate nil)
   (org-src-window-setup 'split-window-below)
   (org-startup-indented t)
-  (org-startup-with-inline-images t))
+  (org-startup-with-inline-images t)
+  (org-use-sub-superscripts '{})
+  (org-attach-directory "~/org/attach/")
+  :config
+  (require 'org-attach)
+  (add-to-list 'org-export-backends 'md))
 
 (use-package magit
   :bind
