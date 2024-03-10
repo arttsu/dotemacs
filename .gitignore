@@ -7,3 +7,6 @@
 /history
 /local.el
 /.mc-lists.el
+/.cache/
+/.dap-breakpoints
+/.lsp-session-v1

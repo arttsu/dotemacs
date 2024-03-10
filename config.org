@@ -153,6 +153,7 @@ https://github.com/minad/consult
 ** Use-Package
 #+begin_src elisp
   (use-package consult
+    :demand
     :bind
     (("C-x b" . consult-buffer)
      ("C-x 4 b" . consult-buffer-other-window)
@@ -365,3 +366,54 @@ http://company-mode.github.io/
     :bind
     (("M-<tab>" . company-complete)))
 #+end_src
+
+* LSP Mode
+https://emacs-lsp.github.io/lsp-mode/
+
+** Use-Package
+#+begin_src elisp
+  (use-package lsp-mode
+    :custom
+    (lsp-keymap-prefix "<f5>")
+    :hook
+    (scala-mode . lsp)
+    :commands lsp
+    :bind
+    (:map lsp-mode-map
+  	([M-down-mouse-1] . mouse-set-point)
+  	([M-mouse-1] . lsp-find-definition)
+  	([M-mouse-3] . xref-go-back)))
+#+end_src
+
+* LSP UI
+https://github.com/emacs-lsp/lsp-ui
+
+** Use-Package
+#+begin_src elisp
+  (use-package lsp-ui
+    :commands lsp-ui-mode)
+#+end_src
+
+* Consult LSP
+https://github.com/gagbo/consult-lsp
+
+** Use-Package
+#+begin_src elisp
+  (use-package consult-lsp
+    :after (consult lsp-mode)
+    :bind
+    (:map lsp-mode-map
+  	("<f5> d" . consult-lsp-diagnostics)
+  	("<f5> s" . consult-lsp-file-symbols)
+  	("<f5> S" . consult-lsp-symbols)))
+#+end_src
+
+* LSP Metals
+https://github.com/emacs-lsp/lsp-metals
+
+** Use-Package
+#+begin_src elisp
+  (use-package lsp-metals
+    :after (lsp-mode scala))
+#+end_src
+

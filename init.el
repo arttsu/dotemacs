@@ -69,6 +69,7 @@
   (completion-category-overrides '((file (styles partial-completion)))))
 
 (use-package consult
+  :demand
   :bind
   (("C-x b" . consult-buffer)
    ("C-x 4 b" . consult-buffer-other-window)
@@ -200,3 +201,29 @@
   (global-company-mode)
   :bind
   (("M-<tab>" . company-complete)))
+
+(use-package lsp-mode
+  :custom
+  (lsp-keymap-prefix "<f5>")
+  :hook
+  (scala-mode . lsp)
+  :commands lsp
+  :bind
+  (:map lsp-mode-map
+	([M-down-mouse-1] . mouse-set-point)
+	([M-mouse-1] . lsp-find-definition)
+	([M-mouse-3] . xref-go-back)))
+
+(use-package lsp-ui
+  :commands lsp-ui-mode)
+
+(use-package consult-lsp
+  :after (consult lsp-mode)
+  :bind
+  (:map lsp-mode-map
+	("<f5> d" . consult-lsp-diagnostics)
+	("<f5> s" . consult-lsp-file-symbols)
+	("<f5> S" . consult-lsp-symbols)))
+
+(use-package lsp-metals
+  :after (lsp-mode scala))
