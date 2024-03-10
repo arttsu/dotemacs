@@ -2,7 +2,7 @@
 #+PROPERTY: header-args:elisp :results silent :tangle init.el
 
 * Emacs
-** Emacs: Use-Package
+** Use-Package
 #+begin_src elisp
   (use-package emacs
     :custom
@@ -16,13 +16,13 @@
 * Straight
 https://github.com/radian-software/straight.el
 
-** Straight: Pre-Bootstrap
+** Pre-Bootstrap
 #+begin_src elisp :tangle early-init.el
   (setq package-enable-at-startup nil)
   (setq straight-fix-flycheck t)
 #+end_src
 
-** Straight: Bootstrap
+** Bootstrap
 #+begin_src elisp
   (defvar bootstrap-version)
   (let ((bootstrap-file
@@ -41,13 +41,13 @@ https://github.com/radian-software/straight.el
     (load bootstrap-file nil 'nomessage))
 #+end_src
 
-** Straight: Post-Bootstrap
+** Post-Bootstrap
 #+begin_src elisp
   (setq straight-use-package-by-default t)
 #+end_src
 
 * Org Mode
-** Org Mode: Use-Package
+** Use-Package
 #+begin_src elisp
   (use-package org
     :defer t
@@ -61,7 +61,7 @@ https://github.com/radian-software/straight.el
 * Magit
 https://magit.vc/
 
-** Magit: Use-Package
+** Use-Package
 #+begin_src elisp
   (use-package magit
     :bind
@@ -71,7 +71,7 @@ https://magit.vc/
 * Vertico
 https://github.com/minad/vertico
 
-** Vertico: Use-Package
+** Use-Package
 #+begin_src elisp
   (use-package vertico
     :config
@@ -81,7 +81,7 @@ https://github.com/minad/vertico
 * Savehist
 Persist completion history.
 
-** Savehist: Use-Package
+** Use-Package
 #+begin_src elisp
   (use-package savehist
     :config
@@ -91,7 +91,7 @@ Persist completion history.
 * Orderless
 https://github.com/oantolin/orderless
 
-** Orderless: Use-Package
+** Use-Package
 #+begin_src elisp
   (use-package orderless
     :custom
@@ -102,7 +102,7 @@ https://github.com/oantolin/orderless
 * Consult
 https://github.com/minad/consult
 
-** Consult: Use-Package
+** Use-Package
 #+begin_src elisp
   (use-package consult
     :bind
@@ -121,7 +121,7 @@ https://github.com/minad/consult
 * Ace-Window
 https://github.com/abo-abo/ace-window
 
-** Ace-Window: Use-Package
+** Use-Package
 #+begin_src elisp
   (use-package ace-window
     :custom
@@ -134,7 +134,7 @@ https://github.com/abo-abo/ace-window
 * Avy
 https://github.com/abo-abo/avy
 
-** Avy: Embark Actions
+** Embark Actions
 #+begin_src elisp
   (defun my-avy-embark (point)
     (goto-char point)
@@ -145,7 +145,7 @@ https://github.com/abo-abo/avy
     (embark-dwim))
 #+end_src
 
-** Avy: Use-Package
+** Use-Package
 #+begin_src elisp
   (use-package avy
     :custom
@@ -167,7 +167,7 @@ https://github.com/abo-abo/avy
 * Embark
 https://github.com/oantolin/embark
 
-** Embark: Use-Package
+** Use-Package
 #+begin_src elisp
   (use-package embark
     :bind
@@ -178,7 +178,7 @@ https://github.com/oantolin/embark
 * Embark-Consult
 https://github.com/oantolin/embark/blob/master/embark-consult.el
 
-** Embark-Consult: Use-Package
+** Use-Package
 #+begin_src elisp
   (use-package embark-consult
     :after (embark consult))
@@ -187,7 +187,7 @@ https://github.com/oantolin/embark/blob/master/embark-consult.el
 * Link-Hint
 https://github.com/noctuid/link-hint.el
 
-** Link-Hint: Use-Package
+** Use-Package
 #+begin_src elisp
   (use-package link-hint
     :bind
