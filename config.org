@@ -157,3 +157,14 @@ https://github.com/oantolin/embark
     (("C-." . embark-act)
      ("M-." . embark-dwim)))
 #+end_src
+
+* Link-Hint
+https://github.com/noctuid/link-hint.el
+
+** Link-Hint: Use-Package
+#+begin_src elisp
+  (use-package link-hint
+    :bind
+    (("C-c f" . link-hint-open-link)
+     ("C-c y" . link-hint-copy-link)))
+#+end_src

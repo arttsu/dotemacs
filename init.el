@@ -83,3 +83,8 @@
   :bind
   (("C-." . embark-act)
    ("M-." . embark-dwim)))
+
+(use-package link-hint
+  :bind
+  (("C-c f" . link-hint-open-link)
+   ("C-c y" . link-hint-copy-link)))
