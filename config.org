@@ -1,0 +1,63 @@
+#+TITLE: Emacs Config
+#+PROPERTY: header-args:elisp :results silent :tangle init.el
+
+* Emacs
+** Emacs: Use-Package
+#+begin_src elisp
+  (use-package emacs
+    :custom
+    (create-lockfiles nil)
+    (make-backup-files nil))
+#+end_src
+
+* Straight
+https://github.com/radian-software/straight.el
+
+** Straight: Pre-Bootstrap
+#+begin_src elisp :tangle early-init.el
+  (setq package-enable-at-startup nil)
+  (setq straight-fix-flycheck t)
+#+end_src
+
+** Straight: Bootstrap
+#+begin_src elisp
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+	 (expand-file-name
+	  "straight/repos/straight.el/bootstrap.el"
+	  (or (bound-and-true-p straight-base-dir)
+	      user-emacs-directory)))
+	(bootstrap-version 7))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+	  (url-retrieve-synchronously
+	   "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+	   'silent 'inhibit-cookies)
+	(goto-char (point-max))
+	(eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
+#+end_src
+
+** Straight: Post-Bootstrap
+#+begin_src elisp
+  (setq straight-use-package-by-default t)
+#+end_src
+
+* Org Mode
+** Org Mode: Use-Package
+#+begin_src elisp
+  (use-package org
+    :defer t
+    :custom
+    (org-confirm-babel-evaluate nil))
+#+end_src
+
+* Magit
+https://magit.vc/
+
+** Magit: Use-Package
+#+begin_src elisp
+  (use-package magit
+    :bind
+    (("C-c g" . magit-file-dispatch)))
+#+end_src
