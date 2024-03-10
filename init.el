@@ -349,3 +349,7 @@
   (("C-x v" . vterm)
    ("C-x 4 v" . vterm-other-window)
    ("C-x p v" . my-vterm-project)))
+
+(use-package rg
+  :bind
+  (("M-s R" . rg-project)))

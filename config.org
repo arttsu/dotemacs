@@ -590,3 +590,13 @@ https://github.com/vterm/vterm
      ("C-x 4 v" . vterm-other-window)
      ("C-x p v" . my-vterm-project)))
 #+end_src
+
+* Ripgrep
+https://github.com/dajva/rg.el
+
+** Use-Package
+#+begin_src elisp
+  (use-package rg
+    :bind
+    (("M-s R" . rg-project)))
+#+end_src
