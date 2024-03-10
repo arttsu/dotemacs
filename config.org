@@ -131,6 +131,14 @@ https://git.sr.ht/~protesilaos/iosevka-comfy
         (set-frame-font font nil t)))
 #+end_src
 
+* Hydra
+https://github.com/abo-abo/hydra
+
+** Use-Package
+#+begin_src elisp
+  (use-package hydra)
+#+end_src
+
 * Org Mode
 ** Use-Package
 #+begin_src elisp
@@ -466,3 +474,20 @@ https://github.com/emacs-lsp/lsp-metals
     :after (lsp-mode scala))
 #+end_src
 
+* Copilot
+https://github.com/zerolfx/copilot.el
+
+** Use-Package
+#+begin_src elisp
+  (use-package copilot
+    :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+    :custom
+    (copilot-idle-delay 0.3)
+    :config
+    (defhydra my-accept-copilot-completion-hydra (copilot-mode-map "C-<tab>")
+      "Accept Copilot completion"
+      ("C-<tab>" copilot-accept-completion "Accept" :color blue)
+      ("M-f" copilot-accept-completion-by-word "Word")
+      ("C-e" copilot-accept-completion-by-line "Line"))
+    :hook (prog-mode . copilot-mode))
+#+end_src

@@ -80,6 +80,8 @@
       (set-face-attribute 'default nil :font font :height my-iosevka-comfy-height)
       (set-frame-font font nil t)))
 
+(use-package hydra)
+
 (use-package org
   :defer t
   :custom
@@ -270,3 +272,15 @@
 
 (use-package lsp-metals
   :after (lsp-mode scala))
+
+(use-package copilot
+  :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+  :custom
+  (copilot-idle-delay 0.3)
+  :config
+  (defhydra my-accept-copilot-completion-hydra (copilot-mode-map "C-<tab>")
+    "Accept Copilot completion"
+    ("C-<tab>" copilot-accept-completion "Accept" :color blue)
+    ("M-f" copilot-accept-completion-by-word "Word")
+    ("C-e" copilot-accept-completion-by-line "Line"))
+  :hook (prog-mode . copilot-mode))
