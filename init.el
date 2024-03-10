@@ -58,3 +58,10 @@
    ("M-s l" . consult-line)
    ("M-s k" . consult-keep-lines)
    ("M-s f" . consult-focus-lines)))
+
+(use-package ace-window
+  :custom
+  (aw-keys '(?a ?s ?d ?f ?g ?h ?k ?l))
+  (aw-scope 'global)
+  :bind
+  (("M-o" . ace-window)))
