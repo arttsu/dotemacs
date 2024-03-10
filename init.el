@@ -300,3 +300,5 @@
    ("C-c C-c" . gptel-send)
    ("C-c d h" . my-gptel-clear)
    ("C-c x a" . gptel-abort)))
+
+(use-package ob-restclient)

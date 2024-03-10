@@ -516,3 +516,10 @@ https://github.com/zerolfx/copilot.el
      ("C-c d h" . my-gptel-clear)
      ("C-c x a" . gptel-abort)))
 #+end_src
+
+* Restclient
+https://github.com/alf/ob-restclient.el
+
+#+begin_src elisp
+  (use-package ob-restclient)
+#+end_src
