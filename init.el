@@ -109,7 +109,7 @@
    ("M-g g" . avy-goto-line)
    ("M-g G" . avy-goto-end-of-line)
    ("M-g h" . avy-org-goto-heading-timer)
-   ("M-g s" . avy-goto-subword-1)
+   ("M-g w" . avy-goto-word-1)
    :map isearch-mode-map
    ("C-;" . avy-isearch)))
 
