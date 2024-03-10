@@ -292,6 +292,7 @@
   :custom
   (copilot-idle-delay 0.3)
   :config
+  (add-to-list 'warning-suppress-log-types '(copilot copilot-no-mode-indent))
   (defhydra my-accept-copilot-completion-hydra (copilot-mode-map "C-<tab>")
     "Accept Copilot completion"
     ("C-<tab>" copilot-accept-completion "Accept" :color blue)
