@@ -360,3 +360,13 @@
   :config
   (add-to-list 'project-switch-commands '(my-vterm-project "Vterm" "V") t)
   (add-to-list 'project-switch-commands '(project-dired "Dired" "<return>") t))
+
+(use-package dired
+  :straight nil
+  :custom
+  (dired-dwim-target t)
+  :bind
+  (("<f7>" . dired-jump)
+   :map dired-mode-map
+   ("o" . crux-open-with)
+   ("<tab>" . dired-find-file-other-window)))
