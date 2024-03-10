@@ -78,3 +78,8 @@
    ("M-g w" . avy-goto-word-1)
    :map isearch-mode-map
    ("C-;" . avy-isearch)))
+
+(use-package embark
+  :bind
+  (("C-." . embark-act)
+   ("M-." . embark-dwim)))

@@ -146,3 +146,14 @@ https://github.com/abo-abo/avy
      :map isearch-mode-map
      ("C-;" . avy-isearch)))
 #+end_src
+
+* Embark
+https://github.com/oantolin/embark
+
+** Embark: Use-Package
+#+begin_src elisp
+  (use-package embark
+    :bind
+    (("C-." . embark-act)
+     ("M-." . embark-dwim)))
+#+end_src
