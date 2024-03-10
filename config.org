@@ -404,6 +404,18 @@ http://company-mode.github.io/
     (("M-<tab>" . company-complete)))
 #+end_src
 
+* Flycheck
+https://www.flycheck.org/en/latest/
+
+** Use-Package
+#+begin_src elisp
+  (use-package flycheck
+    :custom
+    (flycheck-global-modes '(not org-mode))
+    :config
+    (global-flycheck-mode))
+#+end_src
+
 * LSP Mode
 https://emacs-lsp.github.io/lsp-mode/
 

@@ -239,6 +239,12 @@
   :bind
   (("M-<tab>" . company-complete)))
 
+(use-package flycheck
+  :custom
+  (flycheck-global-modes '(not org-mode))
+  :config
+  (global-flycheck-mode))
+
 (use-package lsp-mode
   :custom
   (lsp-keymap-prefix "<f5>")
