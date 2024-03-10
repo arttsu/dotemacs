@@ -132,11 +132,25 @@ https://github.com/abo-abo/ace-window
 * Avy
 https://github.com/abo-abo/avy
 
+** Avy: Embark Actions
+#+begin_src elisp
+  (defun my-avy-embark (point)
+    (goto-char point)
+    (embark-act))
+
+  (defun my-avy-embark-dwim (point)
+    (goto-char point)
+    (embark-dwim))
+#+end_src
+
 ** Avy: Use-Package
 #+begin_src elisp
   (use-package avy
     :custom
     (avy-single-candidate-jump t)
+    :config
+    (setf (alist-get ?. avy-dispatch-alist) 'my-avy-embark)
+    (setf (alist-get ?\; avy-dispatch-alist) 'my-avy-embark-dwim)
     :bind
     (("C-;" . avy-goto-char-timer)
      ("M-;" . avy-pop-mark)

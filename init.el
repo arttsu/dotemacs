@@ -67,9 +67,20 @@
   :bind
   (("M-o" . ace-window)))
 
+(defun my-avy-embark (point)
+  (goto-char point)
+  (embark-act))
+
+(defun my-avy-embark-dwim (point)
+  (goto-char point)
+  (embark-dwim))
+
 (use-package avy
   :custom
   (avy-single-candidate-jump t)
+  :config
+  (setf (alist-get ?. avy-dispatch-alist) 'my-avy-embark)
+  (setf (alist-get ?\; avy-dispatch-alist) 'my-avy-embark-dwim)
   :bind
   (("C-;" . avy-goto-char-timer)
    ("M-;" . avy-pop-mark)
