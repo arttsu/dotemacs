@@ -309,6 +309,8 @@
   :custom
   (gptel-model "gpt-4-turbo-preview")
   (gptel-default-mode 'org-mode)
+  :config
+  (add-hook 'gptel-mode-hook 'toggle-truncate-lines)
   :bind
   (("C-c SPC" . gptel)
    :map gptel-mode-map
