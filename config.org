@@ -1,4 +1,5 @@
 #+TITLE: Emacs Config
+#+STARTUP: overview
 #+PROPERTY: header-args:elisp :results silent :tangle init.el
 
 * Emacs
