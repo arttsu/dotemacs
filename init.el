@@ -98,6 +98,19 @@
   (require 'org-attach)
   (add-to-list 'org-export-backends 'md))
 
+(use-package org-modern
+  :after org
+  :custom
+  (org-auto-align-tags nil)
+  (org-tags-column 0)
+  (org-agenda-tags-column 0)
+  (org-fold-catch-invisible-edits 'show-and-error)
+  (org-special-ctrl-a/e t)
+  (org-hide-emphasis-markers t)
+  (org-pretty-entities t)
+  :config
+  (global-org-modern-mode))
+
 (use-package magit
   :bind
   (("C-c g" . magit-file-dispatch)))
