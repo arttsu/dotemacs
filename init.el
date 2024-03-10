@@ -284,3 +284,19 @@
     ("M-f" copilot-accept-completion-by-word "Word")
     ("C-e" copilot-accept-completion-by-line "Line"))
   :hook (prog-mode . copilot-mode))
+
+(defun my-gptel-clear ()
+  (interactive)
+  (erase-buffer)
+  (insert "*** "))
+
+(use-package gptel
+  :custom
+  (gptel-model "gpt-4-turbo-preview")
+  (gptel-default-mode 'org-mode)
+  :bind
+  (("C-c SPC" . gptel)
+   :map gptel-mode-map
+   ("C-c C-c" . gptel-send)
+   ("C-c d h" . my-gptel-clear)
+   ("C-c x a" . gptel-abort)))

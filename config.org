@@ -491,3 +491,28 @@ https://github.com/zerolfx/copilot.el
       ("C-e" copilot-accept-completion-by-line "Line"))
     :hook (prog-mode . copilot-mode))
 #+end_src
+
+* GPTel
+https://github.com/zerolfx/copilot.el
+
+** Actions
+#+begin_src elisp
+  (defun my-gptel-clear ()
+    (interactive)
+    (erase-buffer)
+    (insert "*** "))
+#+end_src
+
+** Use-Package
+#+begin_src elisp
+  (use-package gptel
+    :custom
+    (gptel-model "gpt-4-turbo-preview")
+    (gptel-default-mode 'org-mode)
+    :bind
+    (("C-c SPC" . gptel)
+     :map gptel-mode-map
+     ("C-c C-c" . gptel-send)
+     ("C-c d h" . my-gptel-clear)
+     ("C-c x a" . gptel-abort)))
+#+end_src
