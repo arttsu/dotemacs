@@ -64,3 +64,53 @@ https://magit.vc/
     :bind
     (("C-c g" . magit-file-dispatch)))
 #+end_src
+
+* Vertico
+https://github.com/minad/vertico
+
+** Vertico: Use-Package
+#+begin_src elisp
+  (use-package vertico
+    :config
+    (vertico-mode))
+#+end_src
+
+* Savehist
+Persist completion history.
+
+** Savehist: Use-Package
+#+begin_src elisp
+  (use-package savehist
+    :config
+    (savehist-mode))
+#+end_src
+
+* Orderless
+https://github.com/oantolin/orderless
+
+** Orderless: Use-Package
+#+begin_src elisp
+  (use-package orderless
+    :custom
+    (completion-styles '(orderless basic))
+    (completion-category-overrides '((file (styles partial-completion)))))
+#+end_src
+
+* Consult
+https://github.com/minad/consult
+
+** Consult: Use-Package
+#+begin_src elisp
+  (use-package consult
+    :bind
+    (("C-x b" . consult-buffer)
+     ("C-x 4 b" . consult-buffer-other-window)
+     ("C-x 5 b" . consult-buffer-other-frame)
+     ("C-x p b" . consult-project-buffer)
+     ("M-g M-g" . consult-goto-line)
+     ("M-g o" . consult-outline)
+     ("M-s r" . consult-ripgrep)
+     ("M-s l" . consult-line)
+     ("M-s k" . consult-keep-lines)
+     ("M-s f" . consult-focus-lines)))
+#+end_src

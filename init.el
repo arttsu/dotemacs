@@ -32,3 +32,29 @@
 (use-package magit
   :bind
   (("C-c g" . magit-file-dispatch)))
+
+(use-package vertico
+  :config
+  (vertico-mode))
+
+(use-package savehist
+  :config
+  (savehist-mode))
+
+(use-package orderless
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles partial-completion)))))
+
+(use-package consult
+  :bind
+  (("C-x b" . consult-buffer)
+   ("C-x 4 b" . consult-buffer-other-window)
+   ("C-x 5 b" . consult-buffer-other-frame)
+   ("C-x p b" . consult-project-buffer)
+   ("M-g M-g" . consult-goto-line)
+   ("M-g o" . consult-outline)
+   ("M-s r" . consult-ripgrep)
+   ("M-s l" . consult-line)
+   ("M-s k" . consult-keep-lines)
+   ("M-s f" . consult-focus-lines)))
