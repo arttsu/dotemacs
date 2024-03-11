@@ -1,0 +1,4 @@
+* %(my-prompt "Title" 'title)
+:PROPERTIES:
+:ARCHIVE: %s_archive::* %(progn title)
+:END:%?

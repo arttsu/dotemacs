@@ -147,6 +147,66 @@ https://github.com/abo-abo/hydra
 #+end_src
 
 * Org Mode
+** Files
+#+begin_src elisp
+  (defconst my-inbox-path "~/org/inbox.org")
+  (defconst my-shared-inbox-path "~/org_shared/inbox.org")
+
+  (defconst my-tasks-path "~/org/tasks.org")
+  (defconst my-shared-tasks-path "~/org_shared/tasks.org")
+
+  (defconst my-projects-path "~/org/projects.org")
+  (defconst my-shared-projects-path "~/org_shared/projects.org")
+
+  (defconst my-calendar-path "~/org/calendar.org")
+  (defconst my-shared-calendar-path "~/org_shared/calendar.org")
+
+  (defconst my-someday-path "~/org/someday.org")
+  (defconst my-shared-someday-path "~/org_shared/someday.org")
+
+  (defconst my-interests-path "~/org/interests.org")
+  (defconst my-shared-interests-path "~/org_shared/interests.org")
+#+end_src
+
+** Capture Templates
+#+begin_src elisp
+  (defun my-template (name)
+    (expand-file-name (concat "templates/" name ".txt") user-emacs-directory))
+
+  (defvar my-prompt-history nil)
+
+  (defun my-prompt (prompt var)
+    (make-local-variable var)
+    (set var (read-string (concat prompt ": ") nil 'my-prompt-history)))
+
+  (defconst my-templates
+    `(("i" "Inbox")
+      ("ii" "Todo" entry (file+headline ,my-inbox-path "Inbox") "* TODO %?")
+      ("il" "Link" entry (file+headline ,my-inbox-path "Inbox") "* [[%c][%^{Description}]]%?")
+      ("it" "Log" entry (file+headline ,my-inbox-path "Inbox") "* %u %?")
+      ("ia" "Annotation" entry (file+headline ,my-inbox-path "Inbox") "* %A%?")
+      ("f" "Folder")
+      ("fp" "Project" entry (file ,my-projects-path) (file ,(my-template "project")))
+      ("fP" "Shared Project" entry (file ,my-shared-projects-path) (file ,(my-template "project")))
+      ("fs" "Someday" entry (file ,my-someday-path) (file ,(my-template "folder")))
+      ("fS" "Shared Someday" entry (file ,my-shared-someday-path) (file ,(my-template "folder")))
+      ("fi" "Interest" entry (file ,my-interests-path) (file ,(my-template "folder")))
+      ("fI" "Shared Interest" entry (file ,my-shared-interests-path) (file ,(my-template "folder")))))
+
+  (defun my-capture-to-inbox (&optional prefix)
+    (interactive "P")
+    (cond
+     ((equal prefix nil) (org-capture nil "ii"))
+     ((equal prefix '(4)) (org-capture nil "il"))
+     ((equal prefix '(16)) (org-capture nil "it"))
+     (t (message "Prefix '%s' not supported" prefix))))
+
+  (defun my-annotate ()
+    (interactive)
+    (org-store-link nil)
+    (org-capture nil "ia"))
+#+end_src
+
 ** Use-Package
 #+begin_src elisp
   (use-package org
@@ -158,9 +218,15 @@ https://github.com/abo-abo/hydra
     (org-startup-with-inline-images t)
     (org-use-sub-superscripts '{})
     (org-attach-directory "~/org/attach/")
+    (org-capture-templates my-templates)
     :config
     (require 'org-attach)
-    (add-to-list 'org-export-backends 'md))
+    (add-to-list 'org-export-backends 'md)
+    :bind
+    (("C-c c" . org-capture)
+     ("C-c l" . org-store-link)
+     ("C-c i" . my-capture-to-inbox)
+     ("C-c n" . my-annotate)))
 #+end_src
 
 * Org-Modern
