@@ -139,6 +139,21 @@
   (org-store-link nil)
   (org-capture nil "ia"))
 
+(defconst my-refile-targets
+  `(((,my-inbox-path
+      ,my-shared-inbox-path
+      ,my-projects-path
+      ,my-shared-projects-path
+      ,my-someday-path
+      ,my-shared-someday-path
+      ,my-interests-path
+      ,my-shared-interests-path
+      ,my-tasks-path
+      ,my-shared-tasks-path
+      ,my-calendar-path
+      ,my-shared-calendar-path)
+     :level . 1)))
+
 (use-package org
   :defer t
   :custom
@@ -149,6 +164,7 @@
   (org-use-sub-superscripts '{})
   (org-attach-directory "~/org/attach/")
   (org-capture-templates my-templates)
+  (org-refile-targets my-refile-targets)
   :config
   (require 'org-attach)
   (add-to-list 'org-export-backends 'md)

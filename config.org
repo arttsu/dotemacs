@@ -168,7 +168,7 @@ https://github.com/abo-abo/hydra
   (defconst my-shared-interests-path "~/org_shared/interests.org")
 #+end_src
 
-** Capture Templates
+** Capturing
 #+begin_src elisp
   (defun my-template (name)
     (expand-file-name (concat "templates/" name ".txt") user-emacs-directory))
@@ -205,6 +205,21 @@ https://github.com/abo-abo/hydra
     (interactive)
     (org-store-link nil)
     (org-capture nil "ia"))
+
+  (defconst my-refile-targets
+    `(((,my-inbox-path
+        ,my-shared-inbox-path
+        ,my-projects-path
+        ,my-shared-projects-path
+        ,my-someday-path
+        ,my-shared-someday-path
+        ,my-interests-path
+        ,my-shared-interests-path
+        ,my-tasks-path
+        ,my-shared-tasks-path
+        ,my-calendar-path
+        ,my-shared-calendar-path)
+       :level . 1)))
 #+end_src
 
 ** Use-Package
@@ -219,6 +234,7 @@ https://github.com/abo-abo/hydra
     (org-use-sub-superscripts '{})
     (org-attach-directory "~/org/attach/")
     (org-capture-templates my-templates)
+    (org-refile-targets my-refile-targets)
     :config
     (require 'org-attach)
     (add-to-list 'org-export-backends 'md)
