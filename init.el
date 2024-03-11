@@ -436,7 +436,8 @@
     (if project-path
         (progn
           (unless (get-buffer buffer-name)
-            (vterm buffer-name))
+            (let ((default-directory project-path))
+              (vterm buffer-name)))
           (switch-to-buffer buffer-name))
       (message "Not in a project"))))
 
