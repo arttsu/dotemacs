@@ -162,7 +162,6 @@
   (org-startup-indented t)
   (org-startup-with-inline-images t)
   (org-use-sub-superscripts '{})
-  (org-attach-directory "~/org/attach/")
   (org-capture-templates my-templates)
   (org-refile-targets my-refile-targets)
   :config
