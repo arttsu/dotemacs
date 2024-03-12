@@ -479,6 +479,10 @@
    ("C-x 4 v" . vterm-other-window)
    ("C-x p v" . my-vterm-project)))
 
+(use-package shell
+  :custom
+  (shell-kill-buffer-on-exit t))
+
 (use-package rg
   :bind
   (("M-s R" . rg-project)))
@@ -497,3 +501,13 @@
    :map dired-mode-map
    ("o" . crux-open-with)
    ("<tab>" . dired-find-file-other-window)))
+
+(use-package kubel
+  :bind
+  (("C-c K" . kubel)
+   :map kubel-mode-map
+   ("n" . next-line)
+   ("p" . previous-line)
+   ("N" . kubel-set-namespace)
+   ("v" . kubel-exec-shell-pod)
+   ("D" . kubel-exec-pod)))
