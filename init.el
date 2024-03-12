@@ -86,22 +86,22 @@
 (use-package hydra)
 
 (defconst my-inbox-path "~/org/inbox.org")
-(defconst my-shared-inbox-path "~/org_shared/inbox.org")
+(defconst my-shared-inbox-path "~/org_shared/shared_inbox.org")
 
 (defconst my-tasks-path "~/org/tasks.org")
-(defconst my-shared-tasks-path "~/org_shared/tasks.org")
+(defconst my-shared-tasks-path "~/org_shared/shared_tasks.org")
 
 (defconst my-projects-path "~/org/projects.org")
-(defconst my-shared-projects-path "~/org_shared/projects.org")
+(defconst my-shared-projects-path "~/org_shared/shared_projects.org")
 
 (defconst my-calendar-path "~/org/calendar.org")
-(defconst my-shared-calendar-path "~/org_shared/calendar.org")
+(defconst my-shared-calendar-path "~/org_shared/shared_calendar.org")
 
 (defconst my-someday-path "~/org/someday.org")
-(defconst my-shared-someday-path "~/org_shared/someday.org")
+(defconst my-shared-someday-path "~/org_shared/shared_someday.org")
 
 (defconst my-interests-path "~/org/interests.org")
-(defconst my-shared-interests-path "~/org_shared/interests.org")
+(defconst my-shared-interests-path "~/org_shared/shared_interests.org")
 
 (defun my-template (name)
   (expand-file-name (concat "templates/" name ".txt") user-emacs-directory))
