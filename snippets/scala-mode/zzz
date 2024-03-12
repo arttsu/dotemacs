@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: zzz
+# key: zzz
+# --
+Thread.sleep(${1:5000})$0

@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: rest_named
+# key: restn
+# --
+#+name: $1
+#+begin_src restclient :var base_url=${2:preview} $3
+${4:GET} :base_url/$0
+#+end_src
