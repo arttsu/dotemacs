@@ -115,7 +115,7 @@
 (defconst my-templates
   `(("i" "Inbox")
     ("ii" "Todo" entry (file+headline ,my-inbox-path "Inbox") "* TODO %?")
-    ("il" "Link" entry (file+headline ,my-inbox-path "Inbox") "* [[%c][%^{Description}]]%?")
+    ("il" "Link" entry (file+headline ,my-inbox-path "Inbox") "* [[%c][%^{Description}]]%? :LINK:")
     ("it" "Log" entry (file+headline ,my-inbox-path "Inbox") "* %u %?")
     ("ia" "Annotation" entry (file+headline ,my-inbox-path "Inbox") "* %A%?")
     ("f" "Folder")
