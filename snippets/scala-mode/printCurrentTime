@@ -1,0 +1,13 @@
+# key: plct
+# name: printCurrentTime
+# --
+def printCurrentTime(label: String = "test"): Unit = {
+  import java.time.LocalDateTime
+  import java.time.format.DateTimeFormatter
+
+  val currentDateTime = LocalDateTime.now()
+  val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+  val formattedDateTime = currentDateTime.format(formatter)
+
+  println(s"$formattedDateTime: $label")
+}

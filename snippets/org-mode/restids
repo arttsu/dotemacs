@@ -1,0 +1,7 @@
+# key: restids
+# name: restids
+# --
+#+name: ${1:foo}
+#+begin_src elisp :var in=$2
+(my-restclient-extract-ids-as-json in "${3:.collection[].id}")
+#+end_src
