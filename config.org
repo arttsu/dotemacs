@@ -11,6 +11,26 @@
 #+begin_src elisp
   (defun my-windows-p ()
     (eq system-type 'windows-nt))
+
+  (defun my-jq (json-string jq-filter)
+    (let ((temp-file (make-temp-file "emacs-jq")))
+      ;; Write JSON to a temporary file
+      (with-temp-file temp-file
+        (insert json-string))
+      ;; Call jq with the specified filter on the JSON file
+      ;; and return the output
+      (shell-command-to-string (format "jq '%s' %s" jq-filter temp-file))))
+
+  (defun my-restclient-extract-json (response)
+    (let* ((begin-marker "#+BEGIN_SRC js")
+           (end-marker "// ")
+           (begin-pos (string-match (regexp-quote begin-marker) response))
+           (end-pos (string-match (regexp-quote end-marker) response begin-pos)))
+      (when (and begin-pos end-pos)
+        (substring response (+ begin-pos (length begin-marker)) end-pos))))
+
+  (defun my-restclient-extract-ids-as-json (in jq-query)
+    (json-encode-list (mapcar 'string-to-number (split-string (my-jq (my-restclient-extract-json in) jq-query) "\n" t))))
 #+end_src
 
 * Emacs
