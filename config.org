@@ -847,3 +847,22 @@ https://github.com/hcl-emacs/terraform-mode
 #+begin_src elisp
   (use-package terraform-mode)
 #+end_src
+
+* EMMS
+https://www.gnu.org/software/emms/manual/#Introduction
+
+** Use-Package
+#+begin_src elisp
+  (use-package emms
+    :defer t
+    :custom
+    (emms-player-list '(emms-player-mpv))
+    (emms-player-mpv-update-metadata t)
+    (emms-streams-file (expand-file-name "streams.emms" user-emacs-directory))
+    :config
+    (emms-all)
+    :bind
+    (("C-c r r" . emms-streams)
+     ("C-c r p" . emms-pause)
+     ("C-c r s" . emms-stop)))
+#+end_src
