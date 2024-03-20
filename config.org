@@ -815,3 +815,8 @@ https://github.com/abrochard/kubel
      ("v" . kubel-exec-shell-pod)
      ("D" . kubel-exec-pod)))
 #+end_src
+
+* Terraform
+#+begin_src elisp
+  (use-package terraform-mode)
+#+end_src
