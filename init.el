@@ -32,6 +32,12 @@
           (car (last package-components)))
       (error "Package declaration not found"))))
 
+(defun my-indent-buffer ()
+  "Indent the entire buffer."
+  (interactive)
+  (save-excursion
+    (indent-region (point-min) (point-max) nil)))
+
 (use-package emacs
   :custom
   (create-lockfiles nil)
@@ -75,7 +81,10 @@
    ("<f8> h" . tab-bar-history-back)
    ("<f8> l" . tab-bar-history-forward)
    ("<f8> H" . previous-buffer)
-   ("<f8> L" . next-buffer)))
+   ("<f8> L" . next-buffer)
+   ("<f5> = =" . my-indent-buffer)
+   :map js-json-mode-map
+   ("<f5> = =" . json-pretty-print-buffer)))
 
 (defvar bootstrap-version)
 (let ((bootstrap-file
