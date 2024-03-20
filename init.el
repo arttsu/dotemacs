@@ -23,6 +23,15 @@
 (defun my-restclient-extract-ids-as-json (in jq-query)
   (json-encode-list (mapcar 'string-to-number (split-string (my-jq (my-restclient-extract-json in) jq-query) "\n" t))))
 
+(defun my-grab-java-package-name ()
+  (save-excursion
+    (goto-char (point-min))
+    (if (re-search-forward "^package \\(.*\\)" nil t)
+        (let* ((package-path (match-string 1))
+               (package-components (split-string package-path "\\.")))
+          (car (last package-components)))
+      (error "Package declaration not found"))))
+
 (use-package emacs
   :custom
   (create-lockfiles nil)

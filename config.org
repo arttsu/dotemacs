@@ -33,6 +33,17 @@
     (json-encode-list (mapcar 'string-to-number (split-string (my-jq (my-restclient-extract-json in) jq-query) "\n" t))))
 #+end_src
 
+** Snippet Helpers
+#+begin_src elisp
+  (defun my-grab-java-package-name ()
+    (save-excursion
+      (goto-char (point-min))
+      (if (re-search-forward "^package \\(.*\\)" nil t)
+          (let* ((package-path (match-string 1))
+                 (package-components (split-string package-path "\\.")))
+            (car (last package-components)))
+        (error "Package declaration not found"))))
+#+end_src
 * Emacs
 ** Use-Package
 #+begin_src elisp

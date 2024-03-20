@@ -1,0 +1,4 @@
+# key: pp
+# name: package_private
+# --
+private[${1:`(my-grab-java-package-name)`}] $0
