@@ -828,6 +828,9 @@ https://github.com/abrochard/kubel
 #+end_src
 
 * Terraform
+https://github.com/hcl-emacs/terraform-mode
+
+** Use-Package
 #+begin_src elisp
   (use-package terraform-mode)
 #+end_src
