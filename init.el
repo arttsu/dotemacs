@@ -59,7 +59,6 @@
 			       ("Europe/Lisbon" "Lisbon")
 			       ("Europe/Berlin" "Berlin")
 			       ("Europe/Kyiv" "Kyiv")))
-  (js-indent-level 2)
   :config
   (global-auto-revert-mode)
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
@@ -83,9 +82,7 @@
    ("<f8> l" . tab-bar-history-forward)
    ("<f8> H" . previous-buffer)
    ("<f8> L" . next-buffer)
-   ("<f5> = =" . my-indent-buffer)
-   :map js-json-mode-map
-   ("<f5> = =" . json-pretty-print-buffer)))
+   ("<f5> = =" . my-indent-buffer)))
 
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -552,6 +549,13 @@
    ("D" . kubel-exec-pod)))
 
 (use-package terraform-mode)
+
+(use-package js
+  :custom
+  (js-indent-level 2)
+  :bind
+  (:map js-json-mode-map
+        ("<f5> = =" . json-pretty-print-buffer)))
 
 (use-package emms
   :defer t
