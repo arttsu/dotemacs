@@ -59,6 +59,7 @@
 			       ("Europe/Lisbon" "Lisbon")
 			       ("Europe/Berlin" "Berlin")
 			       ("Europe/Kyiv" "Kyiv")))
+  (js-indent-level 2)
   :config
   (global-auto-revert-mode)
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
