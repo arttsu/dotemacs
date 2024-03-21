@@ -842,7 +842,10 @@ https://github.com/hcl-emacs/terraform-mode
 
 ** Use-Package
 #+begin_src elisp
-  (use-package terraform-mode)
+  (use-package terraform-mode
+    :bind
+    (:map terraform-mode-map
+          ("<f5> = =" . terraform-format-buffer)))
 #+end_src
 
 * JS-Mode

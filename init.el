@@ -548,7 +548,10 @@
    ("v" . kubel-exec-shell-pod)
    ("D" . kubel-exec-pod)))
 
-(use-package terraform-mode)
+(use-package terraform-mode
+  :bind
+  (:map terraform-mode-map
+        ("<f5> = =" . terraform-format-buffer)))
 
 (use-package js
   :custom
