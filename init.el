@@ -467,12 +467,22 @@
   (erase-buffer)
   (insert "*** "))
 
+(define-derived-mode my-gptel-mode org-mode "GPTel")
+
+(add-to-list 'auto-mode-alist '("\\.gptel\\'" . my-gptel-mode))
+
+(defun my-gptel-mode-setup ()
+  (interactive)
+  (org-mode)
+  (gptel-mode))
+
 (use-package gptel
   :custom
   (gptel-model "gpt-4-turbo-preview")
   (gptel-default-mode 'org-mode)
   :config
   (add-hook 'gptel-mode-hook 'toggle-truncate-lines)
+  (add-hook 'my-gptel-mode-hook 'my-gptel-mode-setup)
   :bind
   (("C-c SPC" . gptel)
    :map gptel-mode-map
