@@ -572,3 +572,8 @@
   (("C-c r r" . emms-streams)
    ("C-c r p" . emms-pause)
    ("C-c r s" . emms-stop)))
+
+(use-package casual
+  :bind
+  (:map calc-mode-map
+        ("C-o" . casual-main-menu)))

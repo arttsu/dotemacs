@@ -876,3 +876,13 @@ https://www.gnu.org/software/emms/manual/#Introduction
      ("C-c r p" . emms-pause)
      ("C-c r s" . emms-stop)))
 #+end_src
+
+* Casual
+http://yummymelon.com/devnull/announcing-casual-an-opinionated-porcelain-for-emacs-calc.html
+
+#+begin_src elisp
+  (use-package casual
+    :bind
+    (:map calc-mode-map
+          ("C-o" . casual-main-menu)))
+#+end_src
