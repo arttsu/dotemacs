@@ -710,6 +710,13 @@ On Fedora: Needed to install Node runtime:
 * GPTel
 https://github.com/zerolfx/copilot.el
 
+** Installation :DEPS:
+1. [[https://platform.openai.com/api-keys][Create a new API key]]
+2. Add an entry to =~/.authinfo=:
+   #+begin_example
+   machine api.openai.com login apikey password TOKEN
+   #+end_example
+
 ** Actions
 #+begin_src elisp
   (defun my-gptel-clear ()
