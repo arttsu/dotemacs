@@ -896,6 +896,12 @@ https://github.com/hcl-emacs/terraform-mode
 * EMMS
 https://www.gnu.org/software/emms/manual/#Introduction
 
+** Dependencies :DEPS:
+On Fedora, install =mpv=:
+#+begin_src shell
+  sudo dnf install mpv -y
+#+end_src
+
 ** Use-Package
 #+begin_src elisp
   (use-package emms
