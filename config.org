@@ -684,6 +684,13 @@ https://github.com/emacs-lsp/lsp-metals
 * Copilot
 https://github.com/zerolfx/copilot.el
 
+** Dependencies :DEPS:
+On Fedora: Needed to install Node runtime:
+
+#+begin_src shell
+  sudo dnf install nodejs -y
+#+end_src
+
 ** Use-Package
 #+begin_src elisp
   (use-package copilot
@@ -751,6 +758,13 @@ https://github.com/alf/ob-restclient.el
 
 * Vterm
 https://github.com/vterm/vterm
+
+** Dependencies :DEPS:
+On Fedora: To compile, needed to install =cmake= and =libtool=.
+
+#+begin_src shell
+  sudo dnf install cmake libtool -y
+#+end_src
 
 ** Helpers
 #+begin_src elisp
@@ -894,9 +908,16 @@ https://www.gnu.org/software/emms/manual/#Introduction
 * Casual
 http://yummymelon.com/devnull/announcing-casual-an-opinionated-porcelain-for-emacs-calc.html
 
-#+begin_src elisp
+#+begin_src elisp :tangle no
   (use-package casual
     :bind
     (:map calc-mode-map
           ("C-o" . casual-main-menu)))
 #+end_src
+
+** TODO Getting an error on load
+#+begin_example
+Symbol's function definition is void: transient-prefix
+#+end_example
+
+Fedora 39, Emacs 29.2.
