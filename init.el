@@ -277,6 +277,10 @@
 
 (use-package consult
   :demand
+  :config
+  (consult-customize
+   consult-buffer
+   :preview-key "M-.")
   :bind
   (("C-x b" . consult-buffer)
    ("C-x 4 b" . consult-buffer-other-window)
