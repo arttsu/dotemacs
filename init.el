@@ -210,6 +210,11 @@
       (tags "NOW+LEVEL=1" ((org-agenda-overriding-header "Projects")
                            (org-agenda-files '(,my-projects-path ,my-shared-projects-path))))))))
 
+(defun my-add-timestamp-to-heading ()
+  (interactive)
+  (when (org-at-heading-p)
+    (org-set-property "MY_TIMESTAMP" (format-time-string "[%Y-%m-%d %a %H:%M]"))))
+
 (use-package org
   :defer t
   :custom
@@ -232,7 +237,9 @@
    ("C-c l" . org-store-link)
    ("C-c i" . my-capture-to-inbox)
    ("C-c n" . my-annotate)
-   ("C-c a" . org-agenda)))
+   ("C-c a" . org-agenda)
+   :map org-mode-map
+   ("C-c t" . my-add-timestamp-to-heading)))
 
 (use-package org-modern
   :after org

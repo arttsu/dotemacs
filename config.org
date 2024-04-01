@@ -286,6 +286,14 @@ https://github.com/abo-abo/hydra
                              (org-agenda-files '(,my-projects-path ,my-shared-projects-path))))))))
 #+end_src
 
+** Timestamping a heading
+#+begin_src elisp
+  (defun my-add-timestamp-to-heading ()
+    (interactive)
+    (when (org-at-heading-p)
+      (org-set-property "MY_TIMESTAMP" (format-time-string "[%Y-%m-%d %a %H:%M]"))))
+#+end_src
+
 ** Use-Package
 #+begin_src elisp
   (use-package org
@@ -310,7 +318,9 @@ https://github.com/abo-abo/hydra
      ("C-c l" . org-store-link)
      ("C-c i" . my-capture-to-inbox)
      ("C-c n" . my-annotate)
-     ("C-c a" . org-agenda)))
+     ("C-c a" . org-agenda)
+     :map org-mode-map
+     ("C-c t" . my-add-timestamp-to-heading)))
 #+end_src
 
 * Org-Modern
