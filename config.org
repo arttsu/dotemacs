@@ -187,6 +187,13 @@ https://github.com/abo-abo/hydra
   (use-package hydra)
 #+end_src
 
+* Org QL
+https://github.com/alphapapa/org-ql
+
+#+begin_src elisp
+  (use-package org-ql)
+#+end_src
+
 * Org Mode
 ** Files
 #+begin_src elisp

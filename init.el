@@ -121,6 +121,8 @@
 
 (use-package hydra)
 
+(use-package org-ql)
+
 (defconst my-inbox-path "~/org/inbox.org")
 (defconst my-shared-inbox-path "~/org_shared/shared_inbox.org")
 
