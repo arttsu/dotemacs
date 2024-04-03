@@ -217,6 +217,32 @@
   (when (org-at-heading-p)
     (org-set-property "MY_TIMESTAMP" (format-time-string "[%Y-%m-%d %a %H:%M]"))))
 
+(defun my-select-projects ()
+  (org-ql-query
+    :select '(cons (substring-no-properties (org-get-heading t t t t))
+                   (org-id-get-create))
+    :from my-projects-path
+    :where '(property "MY_TYPE" "project")))
+
+(defun my-project-title-to-id ()
+  (let ((hm (make-hash-table :test 'equal)))
+    (dolist (project (my-select-projects))
+      (puthash (car project) (cdr project) hm))
+    hm))
+
+(defun my-jump-to-project ()
+  (interactive)
+  (let* ((title-to-id (my-project-title-to-id))
+         (selected-title (completing-read "Project: " title-to-id))
+         (selected-id (gethash selected-title title-to-id)))
+    (if-let (win (get-buffer-window (get-file-buffer my-projects-path) t))
+        (select-window win)
+      (switch-to-buffer-other-window my-projects-path))
+    (widen)
+    (org-id-goto selected-id)
+    (org-show-subtree)
+    (org-narrow-to-subtree)))
+
 (use-package org
   :defer t
   :custom
@@ -240,6 +266,7 @@
    ("C-c i" . my-capture-to-inbox)
    ("C-c n" . my-annotate)
    ("C-c a" . org-agenda)
+   ("C-c j p" . my-jump-to-project)
    :map org-mode-map
    ("C-c t" . my-add-timestamp-to-heading)))
 
