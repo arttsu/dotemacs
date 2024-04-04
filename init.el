@@ -209,8 +209,9 @@
       (todo "TODO" ((org-agenda-overriding-header "Not-Scheduled Tasks")
                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled 'deadline))
                     (org-agenda-files '(,my-tasks-path ,my-shared-tasks-path))))
-      (tags "NOW+LEVEL=1" ((org-agenda-overriding-header "Projects")
-                           (org-agenda-files '(,my-projects-path ,my-shared-projects-path))))))))
+      (tags "NOW+MY_TYPE=\"project\"" ((org-agenda-overriding-header "Projects")
+                                       (org-agenda-files '(,my-projects-path ,my-shared-projects-path))
+                                       (org-use-tag-inheritance nil)))))))
 
 (defun my-add-timestamp-to-heading ()
   (interactive)
