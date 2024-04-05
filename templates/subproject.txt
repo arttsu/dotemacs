@@ -1,0 +1,4 @@
+* TODO %^{Title}
+:PROPERTIES:
+:MY_TYPE: project
+:END:
