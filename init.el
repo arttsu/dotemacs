@@ -23,6 +23,10 @@
 (defun my-restclient-extract-ids-as-json (in jq-query)
   (json-encode-list (mapcar 'string-to-number (split-string (my-jq (my-restclient-extract-json in) jq-query) "\n" t))))
 
+(defun string-in-list-p (str lst)
+  (require 'cl-lib)
+  (cl-find-if (lambda (item) (string-equal str item)) lst))
+
 (defun my-grab-java-package-name ()
   (save-excursion
     (goto-char (point-min))
@@ -123,6 +127,13 @@
 
 (use-package org-ql)
 
+(defun my-select-projects ()
+  (org-ql-query
+    :select '(cons (substring-no-properties (org-get-heading t t t t))
+                   (org-id-get-create))
+    :from my-projects-path
+    :where '(property "MY_TYPE" "project")))
+
 (defconst my-inbox-path "~/org/inbox.org")
 (defconst my-shared-inbox-path "~/org_shared/shared_inbox.org")
 
@@ -180,8 +191,6 @@
 (defconst my-refile-targets
   `(((,my-inbox-path
       ,my-shared-inbox-path
-      ,my-projects-path
-      ,my-shared-projects-path
       ,my-someday-path
       ,my-shared-someday-path
       ,my-interests-path
@@ -190,7 +199,14 @@
       ,my-shared-tasks-path
       ,my-calendar-path
       ,my-shared-calendar-path)
-     :level . 1)))
+     :level . 1)
+    ((,my-projects-path ,my-shared-projects-path) :maxlevel . 2)))
+
+(defun my-verify-refile-target ()
+  (if (string-in-list-p (buffer-file-name) (mapcar 'expand-file-name (list my-projects-path my-shared-projects-path)))
+      (when-let ((type (org-element-property :MY_TYPE (org-element-at-point))))
+          (string= type "project"))
+    t))
 
 (defconst my-agenda-files (list my-tasks-path
                                 my-shared-tasks-path
@@ -217,13 +233,6 @@
   (interactive)
   (when (org-at-heading-p)
     (org-set-property "MY_TIMESTAMP" (format-time-string "[%Y-%m-%d %a %H:%M]"))))
-
-(defun my-select-projects ()
-  (org-ql-query
-    :select '(cons (substring-no-properties (org-get-heading t t t t))
-                   (org-id-get-create))
-    :from my-projects-path
-    :where '(property "MY_TYPE" "project")))
 
 (defun my-project-title-to-id ()
   (let ((hm (make-hash-table :test 'equal)))
@@ -254,6 +263,7 @@
   (org-use-sub-superscripts '{})
   (org-capture-templates my-templates)
   (org-refile-targets my-refile-targets)
+  (org-refile-target-verify-function 'my-verify-refile-target)
   (org-agenda-files my-agenda-files)
   (org-agenda-custom-commands my-custom-agendas)
   (org-habit-graph-column 60)
