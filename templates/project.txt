@@ -1,4 +1,4 @@
-* %^{Title} :NOW:
+* %^{Title} :NOW: %^{CATEGORY}p
 :PROPERTIES:
 :MY_TYPE: project
 :END:
