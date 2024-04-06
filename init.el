@@ -127,13 +127,6 @@
 
 (use-package org-ql)
 
-(defun my-select-projects ()
-  (org-ql-query
-    :select '(cons (substring-no-properties (org-get-heading t t t t))
-                   (org-id-get-create))
-    :from my-projects-path
-    :where '(property "MY_TYPE" "project")))
-
 (defconst my-inbox-path "~/org/inbox.org")
 (defconst my-shared-inbox-path "~/org_shared/shared_inbox.org")
 
@@ -142,6 +135,7 @@
 
 (defconst my-projects-path "~/org/projects.org")
 (defconst my-shared-projects-path "~/org_shared/shared_projects.org")
+(defconst my-project-files (list my-projects-path my-shared-projects-path))
 
 (defconst my-calendar-path "~/org/calendar.org")
 (defconst my-shared-calendar-path "~/org_shared/shared_calendar.org")
@@ -151,6 +145,13 @@
 
 (defconst my-interests-path "~/org/interests.org")
 (defconst my-shared-interests-path "~/org_shared/shared_interests.org")
+
+(defun my-select-projects ()
+  (org-ql-query
+    :select '(cons (substring-no-properties (org-get-heading t t t t))
+                   (org-id-get-create))
+    :from my-project-files
+    :where '(property "MY_TYPE" "project")))
 
 (defun my-template (name)
   (expand-file-name (concat "templates/" name ".txt") user-emacs-directory))

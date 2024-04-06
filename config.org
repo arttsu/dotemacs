@@ -199,15 +199,6 @@ https://github.com/alphapapa/org-ql
 #+end_src
 
 * Org Mode
-** Helpers
-#+begin_src elisp
-  (defun my-select-projects ()
-    (org-ql-query
-      :select '(cons (substring-no-properties (org-get-heading t t t t))
-                     (org-id-get-create))
-      :from my-projects-path
-      :where '(property "MY_TYPE" "project")))
-#+end_src
 ** Files
 #+begin_src elisp
   (defconst my-inbox-path "~/org/inbox.org")
@@ -218,6 +209,7 @@ https://github.com/alphapapa/org-ql
 
   (defconst my-projects-path "~/org/projects.org")
   (defconst my-shared-projects-path "~/org_shared/shared_projects.org")
+  (defconst my-project-files (list my-projects-path my-shared-projects-path))
 
   (defconst my-calendar-path "~/org/calendar.org")
   (defconst my-shared-calendar-path "~/org_shared/shared_calendar.org")
@@ -229,6 +221,15 @@ https://github.com/alphapapa/org-ql
   (defconst my-shared-interests-path "~/org_shared/shared_interests.org")
 #+end_src
 
+** Helpers
+#+begin_src elisp
+  (defun my-select-projects ()
+    (org-ql-query
+      :select '(cons (substring-no-properties (org-get-heading t t t t))
+                     (org-id-get-create))
+      :from my-project-files
+      :where '(property "MY_TYPE" "project")))
+#+end_src
 ** Capturing
 #+begin_src elisp
   (defun my-template (name)
