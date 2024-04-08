@@ -244,7 +244,9 @@ https://github.com/alphapapa/org-ql
   (defconst my-templates
     `(("i" "Inbox")
       ("ii" "Todo" entry (file+headline ,my-inbox-path "Inbox") "* TODO %?")
-      ("il" "Link" entry (file+headline ,my-inbox-path "Inbox") "* [[%c][%^{Description}]]%? :LINK:")
+      ("iI" "Note" entry (file+headline ,my-inbox-path "Inbox") "* %?")
+      ("il" "Todo Link" entry (file+headline ,my-inbox-path "Inbox") "* TODO [[%c][%^{Description}]]%? :LINK:")
+      ("iL" "Link" entry (file+headline ,my-inbox-path "Inbox") "* [[%c][%^{Description}]]%? :LINK:")
       ("it" "Log" entry (file+headline ,my-inbox-path "Inbox") "* %u %?")
       ("ia" "Annotation" entry (file+headline ,my-inbox-path "Inbox") "* %A%?")
       ("f" "Folder")
@@ -262,6 +264,13 @@ https://github.com/alphapapa/org-ql
      ((equal prefix nil) (org-capture nil "ii"))
      ((equal prefix '(4)) (org-capture nil "il"))
      ((equal prefix '(16)) (org-capture nil "it"))
+     (t (message "Prefix '%s' not supported" prefix))))
+
+  (defun my-capture-note-to-inbox (&optional prefix)
+    (interactive "P")
+    (cond
+     ((equal prefix nil) (org-capture nil "iI"))
+     ((equal prefix '(4)) (org-capture nil "iL"))
      (t (message "Prefix '%s' not supported" prefix))))
 
   (defun my-annotate ()
@@ -366,6 +375,7 @@ https://github.com/alphapapa/org-ql
     (("C-c c" . org-capture)
      ("C-c l" . org-store-link)
      ("C-c i" . my-capture-to-inbox)
+     ("C-c I" . my-capture-note-to-inbox)
      ("C-c n" . my-annotate)
      ("C-c a" . org-agenda)
      ("C-c j p" . my-jump-to-project)
