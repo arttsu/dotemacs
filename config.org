@@ -402,6 +402,12 @@ https://github.com/minad/org-modern
     (global-org-modern-mode))
 #+end_src
 
+* ox-slack
+https://github.com/titaniumbones/ox-slack
+
+#+begin_src elisp
+  (use-package ox-slack)
+#+end_src
 * Magit
 https://magit.vc/
 

@@ -305,6 +305,8 @@
   :config
   (global-org-modern-mode))
 
+(use-package ox-slack)
+
 (use-package magit
   :bind
   (("C-c g" . magit-file-dispatch)))
