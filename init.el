@@ -42,6 +42,10 @@
   (save-excursion
     (indent-region (point-min) (point-max) nil)))
 
+(when (my-windows-p)
+  (setenv "PATH" (concat my-git-path ";" (getenv "PATH")))
+  (push my-git-path exec-path))
+
 (use-package emacs
   :custom
   (create-lockfiles nil)

@@ -57,6 +57,14 @@
     (save-excursion
       (indent-region (point-min) (point-max) nil)))
 #+end_src
+
+* Windows: Add Git to path
+#+begin_src elisp
+  (when (my-windows-p)
+    (setenv "PATH" (concat my-git-path ";" (getenv "PATH")))
+    (push my-git-path exec-path))
+#+end_src
+
 * Emacs
 ** Use-Package
 #+begin_src elisp
