@@ -149,6 +149,7 @@
 
 (defconst my-interests-path "~/org/interests.org")
 (defconst my-shared-interests-path "~/org_shared/shared_interests.org")
+(defconst my-interests-files (list my-interests-path my-shared-interests-path))
 
 (defun my-select-projects ()
   (org-ql-query
@@ -180,8 +181,8 @@
     ("ft" "Subproject" entry (file ,my-inbox-path) (file ,(my-template "subproject")))
     ("fs" "Someday" entry (file ,my-someday-path) (file ,(my-template "folder")))
     ("fS" "Shared Someday" entry (file ,my-shared-someday-path) (file ,(my-template "folder")))
-    ("fi" "Interest" entry (file ,my-interests-path) (file ,(my-template "folder")))
-    ("fI" "Shared Interest" entry (file ,my-shared-interests-path) (file ,(my-template "folder")))))
+    ("fi" "Interest" entry (file ,my-interests-path) (file ,(my-template "interest")))
+    ("fI" "Shared Interest" entry (file ,my-shared-interests-path) (file ,(my-template "interest")))))
 
 (defun my-capture-to-inbox (&optional prefix)
   (interactive "P")
@@ -248,24 +249,45 @@
   (when (org-at-heading-p)
     (org-set-property "MY_TIMESTAMP" (format-time-string "[%Y-%m-%d %a %H:%M]"))))
 
-(defun my-project-title-to-id ()
+(defun my-make-heading-hash-map (headings-with-id)
   (let ((hm (make-hash-table :test 'equal)))
-    (dolist (project (my-select-projects))
-      (puthash (car project) (cdr project) hm))
+    (dolist (heading headings-with-id)
+      (puthash (car heading) (cdr heading) hm))
     hm))
 
-(defun my-jump-to-project ()
-  (interactive)
-  (let* ((title-to-id (my-project-title-to-id))
-         (selected-title (completing-read "Project: " title-to-id))
-         (selected-id (gethash selected-title title-to-id)))
-    (if-let (win (get-buffer-window (get-file-buffer my-projects-path) t))
+(defun my-jump-to-heading (hash-map-f select-prompt)
+  (let* ((title-to-id (funcall hash-map-f))
+         (selected-title (completing-read select-prompt title-to-id))
+         (selected-id (gethash selected-title title-to-id))
+         (file (org-id-find-id-file selected-id)))
+    (if-let (win (get-buffer-window (get-file-buffer file) t))
         (select-window win)
-      (switch-to-buffer-other-window my-projects-path))
+      (switch-to-buffer-other-window file))
     (widen)
     (org-id-goto selected-id)
     (org-show-subtree)
     (org-narrow-to-subtree)))
+
+(defun my-project-title-to-id ()
+  (my-make-heading-hash-map (my-select-projects)))
+
+(defun my-jump-to-project ()
+  (interactive)
+  (my-jump-to-heading 'my-project-title-to-id "Project: "))
+
+(defun my-select-interests ()
+  (org-ql-query
+    :select '(cons (substring-no-properties (org-get-heading t t t t))
+                   (org-id-get-create))
+    :from my-interests-files
+    :where '(property "MY_TYPE" "interest")))
+
+(defun my-interest-title-to-id ()
+  (my-make-heading-hash-map (my-select-interests)))
+
+(defun my-jump-to-interest ()
+  (interactive)
+  (my-jump-to-heading 'my-interest-title-to-id "Interest: "))
 
 (use-package org
   :defer t
@@ -293,6 +315,7 @@
    ("C-c n" . my-annotate)
    ("C-c a" . org-agenda)
    ("C-c j p" . my-jump-to-project)
+   ("C-c j i" . my-jump-to-interest)
    :map org-mode-map
    ("C-c t" . my-add-timestamp-to-heading)))
 

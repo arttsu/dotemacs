@@ -1,0 +1,4 @@
+* %^{Title}
+:PROPERTIES:
+:MY_TYPE: interest
+:END:
