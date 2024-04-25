@@ -224,6 +224,11 @@
           (string= type "project"))
     t))
 
+(defun my-org-after-refile-insert ()
+  (save-excursion
+    (org-back-to-heading t)
+    (org-update-parent-todo-statistics)))
+
 (defconst my-agenda-files (list my-tasks-path
                                 my-shared-tasks-path
                                 my-projects-path
@@ -307,6 +312,7 @@
   (require 'org-attach)
   (add-to-list 'org-export-backends 'md)
   (add-to-list 'org-modules 'org-habit)
+  (add-hook 'org-after-refile-insert-hook 'my-org-after-refile-insert)
   :bind
   (("C-c c" . org-capture)
    ("C-c l" . org-store-link)
