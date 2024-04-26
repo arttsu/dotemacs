@@ -3,6 +3,9 @@
 (defun my-windows-p ()
   (eq system-type 'windows-nt))
 
+(defun my-mac-p ()
+  (eq system-type 'darwin))
+
 (defun my-jq (json-string jq-filter)
   (let ((temp-file (make-temp-file "emacs-jq")))
     ;; Write JSON to a temporary file
@@ -635,10 +638,21 @@
   (add-to-list 'project-switch-commands '(my-vterm-project "Vterm" "V") t)
   (add-to-list 'project-switch-commands '(project-dired "Dired" "<return>") t))
 
+(setq my-insert-directory-program
+      (cond ((my-windows-p) insert-directory-program)
+            ((my-mac-p) "gls")
+            (t "ls")))
+
+(setq my-dired-listing-switches
+      (cond ((my-windows-p) dired-listing-switches)
+            (t "-alh --group-directories-first")))
+
 (use-package dired
   :straight nil
   :custom
   (dired-dwim-target t)
+  (insert-directory-program my-insert-directory-program)
+  (dired-listing-switches my-dired-listing-switches)
   :bind
   (("<f7>" . dired-jump)
    :map dired-mode-map
