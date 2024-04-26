@@ -389,7 +389,7 @@
 (use-package ace-window
   :custom
   (aw-keys '(?a ?s ?d ?f ?g ?h ?k ?l))
-  (aw-scope 'global)
+  (aw-scope 'frame)
   :bind
   (("M-o" . ace-window)))
 
