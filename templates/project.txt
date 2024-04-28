@@ -1,5 +1,6 @@
-* %^{Title} :NOW: %^{CATEGORY}p
+* %^{Title} :NOW:
 :PROPERTIES:
 :MY_TYPE: project
+:CATEGORY: %^{Category}
 :STARTED: %u
 :END:%?
