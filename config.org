@@ -2,6 +2,25 @@
 #+STARTUP: overview
 #+PROPERTY: header-args:elisp :results silent :tangle init.el
 
+* Installation
+** Dependencies
+*** Anki
+**** Installing on Fedora
+https://docs.ankiweb.net/platform/linux/installing.html
+
+1. Download from https://apps.ankiweb.net/
+
+2. Install:
+
+   #+begin_src shell
+     cd ~/Downloads
+     tar xaf anki-24.04.1-linux-qt6.tar.zst # might need to install zstd
+     cd anki-24.04.1-linux-qt6/
+     sudo ./install.sh
+   #+end_src
+
+3. Add [[https://git.foosoft.net/alex/anki-connect][anki-connect]] addon
+
 * Local Config
 #+begin_src elisp
   (load (expand-file-name "local.el" user-emacs-directory))
@@ -425,6 +444,29 @@ https://github.com/alphapapa/org-ql
      ("C-c j i" . my-jump-to-interest)
      :map org-mode-map
      ("C-c t" . my-add-timestamp-to-heading)))
+#+end_src
+
+* Anki-Editor
+https://github.com/louietan/anki-editor
+
+Anki mode:
+
+#+begin_src elisp
+  (define-derived-mode anki-mode org-mode "Anki")
+
+  (add-to-list 'auto-mode-alist '("\\.anki\\'" . anki-mode))
+#+end_src
+
+Configure:
+
+#+begin_src elisp
+  (use-package anki-editor
+    :hook (anki-mode . anki-editor-mode)
+    :bind
+    (:map anki-mode-map
+          ("C-<return>" . anki-editor-insert-note)
+          ("C-c p p" . anki-editor-push-notes)
+          ("C-c p r" . anki-editor-retry-failure-notes)))
 #+end_src
 
 * Org-Modern
