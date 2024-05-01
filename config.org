@@ -1117,3 +1117,29 @@ Symbol's function definition is void: transient-prefix
 #+end_example
 
 Fedora 39, Emacs 29.2.
+
+* Ledger Mode :INSTALL:
+https://github.com/ledger/ledger-mode
+
+** Ledger Mode: Installation
+On Fedora:
+
+#+begin_src shell
+  sudo dnf install ledger -y
+#+end_src
+
+** Ledger Mode: Helpers
+#+begin_src elisp
+  (defun my-ledger-bal (period)
+    (format "%%(binary) -f %%(ledger-file) --invert --period \"%s\" -S amount bal ^Income ^Expenses" period))
+#+end_src
+
+** Ledger Mode: Use package
+#+begin_src elisp
+  (use-package ledger-mode
+    :custom
+    (ledger-default-date-format "%Y-%m-%d")
+    :config
+    (ledger-reports-add "bal-this-month" (my-ledger-bal "this month"))
+    (ledger-reports-add "bal-last-month" (my-ledger-bal "last month")))
+#+end_src

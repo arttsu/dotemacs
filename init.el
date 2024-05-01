@@ -705,3 +705,13 @@
   (("C-c r r" . emms-streams)
    ("C-c r p" . emms-pause)
    ("C-c r s" . emms-stop)))
+
+(defun my-ledger-bal (period)
+  (format "%%(binary) -f %%(ledger-file) --invert --period \"%s\" -S amount bal ^Income ^Expenses" period))
+
+(use-package ledger-mode
+  :custom
+  (ledger-default-date-format "%Y-%m-%d")
+  :config
+  (ledger-reports-add "bal-this-month" (my-ledger-bal "this month"))
+  (ledger-reports-add "bal-last-month" (my-ledger-bal "last month")))
