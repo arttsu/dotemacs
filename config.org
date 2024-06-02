@@ -911,7 +911,7 @@ https://github.com/zerolfx/copilot.el
 #+begin_src elisp
   (use-package gptel
     :custom
-    (gptel-model "gpt-4-turbo-preview")
+    (gptel-model "gpt-4o")
     (gptel-default-mode 'org-mode)
     :config
     (add-hook 'gptel-mode-hook 'toggle-truncate-lines)
@@ -1142,4 +1142,21 @@ On Fedora:
     :config
     (ledger-reports-add "bal-this-month" (my-ledger-bal "this month"))
     (ledger-reports-add "bal-last-month" (my-ledger-bal "last month")))
+* GraphQL mode
+https://github.com/davazp/graphql-mode
+
+#+begin_src elisp
+  (use-package graphql-mode)
+#+end_src
+
+* Clojure mode
+https://github.com/clojure-emacs/clojure-mode
+
+#+begin_src elisp
+  (use-package clojure-mode)
+#+end_src
+
+* sbt mode
+#+begin_src elisp
+  (use-package sbt-mode)
 #+end_src

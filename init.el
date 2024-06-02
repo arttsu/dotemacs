@@ -130,6 +130,13 @@
       (set-face-attribute 'default nil :font font :height my-iosevka-comfy-height)
       (set-frame-font font nil t)))
 
+(add-to-list 'load-path (expand-file-name (concat user-emacs-directory "lisp")))
+
+(use-package my-test
+  :straight nil
+  :bind
+  (("C-c z" . my-hello-world)))
+
 (use-package hydra)
 
 (use-package org-ql)
@@ -590,7 +597,7 @@
 
 (use-package gptel
   :custom
-  (gptel-model "gpt-4-turbo-preview")
+  (gptel-model "gpt-4o")
   (gptel-default-mode 'org-mode)
   :config
   (add-hook 'gptel-mode-hook 'toggle-truncate-lines)
@@ -715,3 +722,9 @@
   :config
   (ledger-reports-add "bal-this-month" (my-ledger-bal "this month"))
   (ledger-reports-add "bal-last-month" (my-ledger-bal "last month")))
+
+(use-package graphql-mode)
+
+(use-package clojure-mode)
+
+(use-package sbt-mode)
