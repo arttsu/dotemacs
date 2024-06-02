@@ -1,6 +1,7 @@
 #+TITLE: Emacs Config
 #+STARTUP: overview
 #+PROPERTY: header-args:elisp :results silent :tangle init.el
+#+AUTO_TANGLE: t
 * Notes
 * Straight
 https://github.com/radian-software/straight.el
@@ -89,4 +90,11 @@ https://orgmode.org/
     (("C-c c" . org-capture)
      ("C-c l" . org-store-link)
      ("C-c a" . org-agenda)))
+#+end_src
+*** Auto-tangle
+https://github.com/yilkalargaw/org-auto-tangle
+
+#+begin_src elisp
+  (use-package org-auto-tangle
+    :hook (org-mode . org-auto-tangle-mode))
 #+end_src

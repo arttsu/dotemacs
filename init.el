@@ -66,3 +66,6 @@
   (("C-c c" . org-capture)
    ("C-c l" . org-store-link)
    ("C-c a" . org-agenda)))
+
+(use-package org-auto-tangle
+  :hook (org-mode . org-auto-tangle-mode))
