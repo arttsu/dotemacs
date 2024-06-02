@@ -7,10 +7,15 @@
 :VISIBILITY: showall
 :END:
 - [[#notes][Notes]]
-- [[#straight][Straight]]
+  - [[#dependencies][Dependencies]]
+    - [[#install-iosevka-comfy-font][Install Iosevka Comfy font]]
+- [[#setup][Setup]]
+  - [[#load-the-local-config][Load the local config]]
+  - [[#straight][Straight]]
 - [[#packages][Packages]]
   - [[#emacs][Emacs]]
   - [[#modus-themes][Modus Themes]]
+  - [[#iosevka-comfy-font][Iosevka Comfy font]]
   - [[#magit][Magit]]
   - [[#org-mode][Org Mode]]
     - [[#org-modern][Org Modern]]
@@ -18,8 +23,21 @@
     - [[#toc][TOC]]
 
 * Notes
+** Dependencies
+*** Install Iosevka Comfy font
+**** Fedora
+#+begin_src shell
+  git clone --depth 1 https://git.sr.ht/~protesilaos/iosevka-comfy ~/tmp/iosevka-comfy
+  mkdir ~/.local/share/fonts
+  cp -R ~/tmp/iosevka-comfy/iosevka-comfy-fixed ~/.local/share/fonts/
+#+end_src
 
-* Straight :noexport_1:
+* Setup
+** Load the local config
+#+begin_src elisp
+  (load (expand-file-name "local.el" user-emacs-directory))
+#+end_src
+** Straight :noexport_1:
 https://github.com/radian-software/straight.el
 *** Pre-bootstrap
 #+begin_src elisp
@@ -102,6 +120,16 @@ https://protesilaos.com/emacs/modus-themes
     (modus-themes-variable-pitch-ui t)
     :config
     (modus-themes-load-theme 'modus-vivendi))
+#+end_src
+
+** Iosevka Comfy font
+https://git.sr.ht/~protesilaos/iosevka-comfy
+
+#+begin_src elisp
+  (if my-use-iosevka-comfy
+      (let ((font "Iosevka Comfy Fixed"))
+        (set-face-attribute 'default nil :font font :height my-iosevka-comfy-height)
+        (set-frame-font font nil t)))
 #+end_src
 
 ** Magit

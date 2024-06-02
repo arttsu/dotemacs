@@ -1,3 +1,5 @@
+(load (expand-file-name "local.el" user-emacs-directory))
+
 (setq package-enable-at-startup nil)
 
 (defvar bootstrap-version)
@@ -62,6 +64,11 @@
   (modus-themes-variable-pitch-ui t)
   :config
   (modus-themes-load-theme 'modus-vivendi))
+
+(if my-use-iosevka-comfy
+    (let ((font "Iosevka Comfy Fixed"))
+      (set-face-attribute 'default nil :font font :height my-iosevka-comfy-height)
+      (set-frame-font font nil t)))
 
 (use-package magit
   :bind
