@@ -16,12 +16,14 @@
     - [[#toc][TOC]]
 
 * Notes
+
 * Straight                                                       :noexport_1:
 https://github.com/radian-software/straight.el
 *** Pre-bootstrap
 #+begin_src elisp
   (setq package-enable-at-startup nil)
 #+end_src
+
 *** Bootstrap
 #+begin_src elisp
   (defvar bootstrap-version)
@@ -40,10 +42,12 @@ https://github.com/radian-software/straight.el
         (eval-print-last-sexp)))
     (load bootstrap-file nil 'nomessage))
 #+end_src
+
 *** Post-bootstrap
 #+begin_src elisp
   (setq straight-use-package-by-default t)
 #+end_src
+
 * Packages
 ** Emacs
 #+begin_src elisp
@@ -80,6 +84,7 @@ https://github.com/radian-software/straight.el
      ("M-z" . zap-up-to-char)
      ("M-Z" . zap-to-char)))
 #+end_src
+
 ** Magit
 https://magit.vc/
 
@@ -88,6 +93,7 @@ https://magit.vc/
     :bind
     (("C-c g" . magit-file-dispatch)))
 #+end_src
+
 ** Org Mode
 https://orgmode.org/
 
@@ -104,6 +110,7 @@ https://orgmode.org/
      ("C-c l" . org-store-link)
      ("C-c a" . org-agenda)))
 #+end_src
+
 *** Auto-tangle
 https://github.com/yilkalargaw/org-auto-tangle
 
@@ -111,6 +118,7 @@ https://github.com/yilkalargaw/org-auto-tangle
   (use-package org-auto-tangle
     :hook (org-mode . org-auto-tangle-mode))
 #+end_src
+
 *** TOC
 https://github.com/snosov1/toc-org
 
