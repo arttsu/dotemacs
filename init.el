@@ -1,0 +1,52 @@
+(setq package-enable-at-startup nil)
+
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name
+        "straight/repos/straight.el/bootstrap.el"
+        (or (bound-and-true-p straight-base-dir)
+            user-emacs-directory)))
+      (bootstrap-version 7))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+(setq straight-use-package-by-default t)
+
+(use-package emacs
+  :custom
+  (inhibit-splash-screen t)
+  (initial-major-mode 'text-mode)
+  (initial-scratch-message "✅ All systems go! 🪐🚀✨")
+  (disabled-command-function nil)
+  (visible-bell t)
+  (save-interprogram-paste-before-kill t)
+  (global-auto-revert-non-file-buffers t)
+  (create-lockfiles nil)
+  (make-backup-files nil)
+  (require-final-newline t)
+  (indent-tabs-mode nil)
+  :config
+  (add-to-list 'default-frame-alist '(fullscreen . maximized))
+  (scroll-bar-mode -1)
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+  (fset 'yes-or-no-p 'y-or-n-p)
+  (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+  (global-auto-revert-mode)
+  (global-subword-mode)
+  (tab-bar-history-mode)
+  :bind
+  (("C-c j s" . scratch-buffer)
+   ("C-x C-b" . ibuffer-other-window)
+   ("M-g w" . forward-to-word)
+   ("M-g W" . backward-to-word)
+   ("C-M-; d" . duplicate-dwim)
+   ("C-c d h" . erase-buffer)
+   ("M-z" . zap-up-to-char)
+   ("M-Z" . zap-to-char)))
