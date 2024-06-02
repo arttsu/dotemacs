@@ -50,3 +50,19 @@
    ("C-c d h" . erase-buffer)
    ("M-z" . zap-up-to-char)
    ("M-Z" . zap-to-char)))
+
+(use-package magit
+  :bind
+  (("C-c g" . magit-file-dispatch)))
+
+(use-package org
+  :custom
+  (org-startup-indented t)
+  (org-startup-with-inline-images t)
+  (org-confirm-babel-evaluate nil)
+  (org-use-sub-superscripts '{})
+  (org-src-window-setup 'split-window-below)
+  :bind
+  (("C-c c" . org-capture)
+   ("C-c l" . org-store-link)
+   ("C-c a" . org-agenda)))

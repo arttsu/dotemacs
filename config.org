@@ -74,3 +74,19 @@ https://magit.vc/
     :bind
     (("C-c g" . magit-file-dispatch)))
 #+end_src
+** Org Mode
+https://orgmode.org/
+
+#+begin_src elisp
+  (use-package org
+    :custom
+    (org-startup-indented t)
+    (org-startup-with-inline-images t)
+    (org-confirm-babel-evaluate nil)
+    (org-use-sub-superscripts '{})
+    (org-src-window-setup 'split-window-below)
+    :bind
+    (("C-c c" . org-capture)
+     ("C-c l" . org-store-link)
+     ("C-c a" . org-agenda)))
+#+end_src
