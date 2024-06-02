@@ -51,6 +51,18 @@
    ("M-z" . zap-up-to-char)
    ("M-Z" . zap-to-char)))
 
+(use-package modus-themes
+  :custom
+  (modus-themes-italic-constructs t)
+  (modus-themes-org-blocks 'gray-background)
+  (modus-themes-headings '((0 . (ultrabold 1.3))
+                           (1 . (ultrabold 1.2))
+                           (2 . (extrabold 1.1))
+                           (t . (extrabold))))
+  (modus-themes-variable-pitch-ui t)
+  :config
+  (modus-themes-load-theme 'modus-vivendi))
+
 (use-package magit
   :bind
   (("C-c g" . magit-file-dispatch)))
