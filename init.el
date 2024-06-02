@@ -62,10 +62,23 @@
   (org-confirm-babel-evaluate nil)
   (org-use-sub-superscripts '{})
   (org-src-window-setup 'split-window-below)
+  (org-fold-catch-invisible-edits 'show-and-error)
+  (org-special-ctrl-a/e t)
+  (org-hide-emphasis-markers t)
+  (org-pretty-entities t)
   :bind
   (("C-c c" . org-capture)
    ("C-c l" . org-store-link)
    ("C-c a" . org-agenda)))
+
+(use-package org-modern
+  :after org
+  :custom
+  (org-auto-align-tags nil)
+  (org-tags-column 0)
+  (org-agenda-tags-column 0)
+  :config
+  (global-org-modern-mode))
 
 (use-package org-auto-tangle
   :hook (org-mode . org-auto-tangle-mode))

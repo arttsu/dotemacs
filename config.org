@@ -12,12 +12,13 @@
   - [[#emacs][Emacs]]
   - [[#magit][Magit]]
   - [[#org-mode][Org Mode]]
+    - [[#org-modern][Org Modern]]
     - [[#auto-tangle][Auto-tangle]]
     - [[#toc][TOC]]
 
 * Notes
 
-* Straight                                                       :noexport_1:
+* Straight :noexport_1:
 https://github.com/radian-software/straight.el
 *** Pre-bootstrap
 #+begin_src elisp
@@ -105,10 +106,28 @@ https://orgmode.org/
     (org-confirm-babel-evaluate nil)
     (org-use-sub-superscripts '{})
     (org-src-window-setup 'split-window-below)
+    (org-fold-catch-invisible-edits 'show-and-error)
+    (org-special-ctrl-a/e t)
+    (org-hide-emphasis-markers t)
+    (org-pretty-entities t)
     :bind
     (("C-c c" . org-capture)
      ("C-c l" . org-store-link)
      ("C-c a" . org-agenda)))
+#+end_src
+
+*** Org Modern
+https://github.com/minad/org-modern
+
+#+begin_src elisp
+  (use-package org-modern
+    :after org
+    :custom
+    (org-auto-align-tags nil)
+    (org-tags-column 0)
+    (org-agenda-tags-column 0)
+    :config
+    (global-org-modern-mode))
 #+end_src
 
 *** Auto-tangle
