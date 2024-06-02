@@ -2,8 +2,21 @@
 #+STARTUP: overview
 #+PROPERTY: header-args:elisp :results silent :tangle init.el
 #+AUTO_TANGLE: t
+* Table of contents :TOC_3:
+:PROPERTIES:
+:VISIBILITY: showall
+:END:
+- [[#notes][Notes]]
+- [[#straight][Straight]]
+- [[#packages][Packages]]
+  - [[#emacs][Emacs]]
+  - [[#magit][Magit]]
+  - [[#org-mode][Org Mode]]
+    - [[#auto-tangle][Auto-tangle]]
+    - [[#toc][TOC]]
+
 * Notes
-* Straight
+* Straight                                                       :noexport_1:
 https://github.com/radian-software/straight.el
 *** Pre-bootstrap
 #+begin_src elisp
@@ -97,4 +110,11 @@ https://github.com/yilkalargaw/org-auto-tangle
 #+begin_src elisp
   (use-package org-auto-tangle
     :hook (org-mode . org-auto-tangle-mode))
+#+end_src
+*** TOC
+https://github.com/snosov1/toc-org
+
+#+begin_src elisp
+  (use-package toc-org
+    :hook (org-mode . toc-org-mode))
 #+end_src

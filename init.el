@@ -69,3 +69,6 @@
 
 (use-package org-auto-tangle
   :hook (org-mode . org-auto-tangle-mode))
+
+(use-package toc-org
+  :hook (org-mode . toc-org-mode))
