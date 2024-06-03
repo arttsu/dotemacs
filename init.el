@@ -70,6 +70,17 @@
       (set-face-attribute 'default nil :font font :height my-iosevka-comfy-height)
       (set-frame-font font nil t)))
 
+(use-package super-save
+  :custom
+  (super-save-all-buffers t)
+  (super-save-auto-save-when-idle t)
+  (super-save-delete-trailing-whitespace 'except-current-line)
+  (super-save-silent t)
+  (super-save-exclude '(".sbt" "project/"))
+  (auto-save-default nil)
+  :config
+  (super-save-mode))
+
 (use-package ace-window
   :custom
   (aw-keys '(?a ?s ?d ?f ?g ?h ?k ?l))

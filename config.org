@@ -16,6 +16,7 @@
   - [[#emacs][Emacs]]
   - [[#modus-themes][Modus Themes]]
   - [[#iosevka-comfy-font][Iosevka Comfy font]]
+  - [[#super-save][Super Save]]
   - [[#ace-window][Ace Window]]
   - [[#vertico][Vertico]]
   - [[#savehist][Savehist]]
@@ -136,6 +137,22 @@ https://git.sr.ht/~protesilaos/iosevka-comfy
       (let ((font "Iosevka Comfy Fixed"))
         (set-face-attribute 'default nil :font font :height my-iosevka-comfy-height)
         (set-frame-font font nil t)))
+#+end_src
+
+** Super Save
+https://github.com/bbatsov/super-save
+
+#+begin_src elisp
+  (use-package super-save
+    :custom
+    (super-save-all-buffers t)
+    (super-save-auto-save-when-idle t)
+    (super-save-delete-trailing-whitespace 'except-current-line)
+    (super-save-silent t)
+    (super-save-exclude '(".sbt" "project/"))
+    (auto-save-default nil)
+    :config
+    (super-save-mode))
 #+end_src
 
 ** Ace Window
