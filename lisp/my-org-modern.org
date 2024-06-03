@@ -1,0 +1,22 @@
+#+TITLE: My Org Modern
+#+PROPERTY: header-args:elisp :results silent :tangle my-org-modern.el
+#+AUTO_TANGLE: t
+
+* Make checked checkboxes green
+https://emacs.stackexchange.com/questions/45291/change-color-of-org-mode-checkboxes
+
+#+begin_src elisp
+  (defface my-org-checkbox-done-text
+    '((t (:inherit org-done)))
+    "Face for the text part of a checked Org Mode checkbox.")
+
+  (font-lock-add-keywords
+   'org-mode
+   `(("^[ \t]*\\(?:[-+*]\\|[0-9]+[).]\\)[ \t]+\\(\\(?:\\[@\\(?:start:\\)?[0-9]+\\][ \t]*\\)?\\[\\(?:X\\|\\([0-9]+\\)/\\2\\)\\][^\n]*\n\\)" 1 'my-org-checkbox-done-text prepend))
+   'append)
+#+end_src
+
+* Provide
+#+begin_src elisp
+  (provide 'my-org-modern)
+#+end_src

@@ -320,6 +320,13 @@ https://github.com/minad/org-modern
     (global-org-modern-mode))
 #+end_src
 
+**** My Org Modern
+#+begin_src elisp
+    (use-package my-org-modern
+      :straight nil
+      :after org-modern)
+#+end_src
+
 *** Auto-tangle
 https://github.com/yilkalargaw/org-auto-tangle
 

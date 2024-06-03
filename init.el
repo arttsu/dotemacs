@@ -184,6 +184,10 @@
   :config
   (global-org-modern-mode))
 
+(use-package my-org-modern
+  :straight nil
+  :after org-modern)
+
 (use-package org-auto-tangle
   :hook (org-mode . org-auto-tangle-mode))
 
