@@ -1,5 +1,7 @@
 (load (expand-file-name "local.el" user-emacs-directory))
 
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+
 (setq package-enable-at-startup nil)
 
 (defvar bootstrap-version)
@@ -187,3 +189,11 @@
 
 (use-package toc-org
   :hook (org-mode . toc-org-mode))
+
+(use-package ledger-mode
+  :custom
+  (ledger-default-date-format "%Y-%m-%d"))
+
+(use-package my-ledger
+  :straight nil
+  :after ledger-mode)

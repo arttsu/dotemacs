@@ -12,6 +12,7 @@
     - [[#install-mpv-to-play-media-via-emms][Install mpv to play media via EMMS]]
 - [[#setup][Setup]]
   - [[#load-the-local-config][Load the local config]]
+  - [[#add-lisp-dir-to-load-path][Add 'lisp' dir to load path]]
   - [[#straight][Straight]]
 - [[#packages][Packages]]
   - [[#emacs][Emacs]]
@@ -30,6 +31,8 @@
     - [[#org-modern][Org Modern]]
     - [[#auto-tangle][Auto-tangle]]
     - [[#toc][TOC]]
+  - [[#ledger][Ledger]]
+    - [[#my-ledger][My Ledger]]
 
 * Notes
 ** Dependencies
@@ -52,6 +55,11 @@
 #+begin_src elisp
   (load (expand-file-name "local.el" user-emacs-directory))
 #+end_src
+** Add 'lisp' dir to load path
+#+begin_src elisp
+  (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+#+end_src
+
 ** Straight :noexport_1:
 https://github.com/radian-software/straight.el
 *** Pre-bootstrap
@@ -326,4 +334,20 @@ https://github.com/snosov1/toc-org
 #+begin_src elisp
   (use-package toc-org
     :hook (org-mode . toc-org-mode))
+#+end_src
+
+** Ledger
+https://github.com/ledger/ledger-mode
+
+#+begin_src elisp
+  (use-package ledger-mode
+    :custom
+    (ledger-default-date-format "%Y-%m-%d"))
+#+end_src
+
+*** My Ledger
+#+begin_src elisp
+  (use-package my-ledger
+    :straight nil
+    :after ledger-mode)
 #+end_src

@@ -1,0 +1,20 @@
+#+TITLE: My Ledger
+#+PROPERTY: header-args:elisp :results silent :tangle my-ledger.el
+#+AUTO_TANGLE: t
+
+* Helper: Balance for period
+#+begin_src elisp
+  (defun my-ledger--bal-period (period)
+    (format "%%(binary) -f %%(ledger-file) --invert --period \"%s\" -S amount bal ^Income ^Expenses" period))
+#+end_src
+
+* Custom reports
+#+begin_src elisp
+  (ledger-reports-add "bal-this-month" (my-ledger--bal-period "this month"))
+  (ledger-reports-add "bal-last-month" (my-ledger--bal-period "last month"))
+#+end_src
+
+* Provide
+#+begin_src elisp
+  (provide 'my-ledger)
+#+end_src
