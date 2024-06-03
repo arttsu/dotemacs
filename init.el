@@ -33,9 +33,11 @@
   (global-auto-revert-non-file-buffers t)
   (create-lockfiles nil)
   (make-backup-files nil)
+  (custom-file (expand-file-name "custom.el" user-emacs-directory))
   (require-final-newline t)
   (indent-tabs-mode nil)
-  (custom-file (expand-file-name "custom.el" user-emacs-directory))
+  (tab-always-indent 'complete)
+  (read-extended-command-predicate #'command-completion-default-include-p)
   :config
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
   (scroll-bar-mode -1)
@@ -132,6 +134,15 @@
    ("M-s l" . consult-line)
    ("M-s k" . consult-keep-lines)
    ("M-s f" . consult-focus-lines)))
+
+(use-package corfu
+  :custom
+  (corfu-cycle t)
+  (corfu-auto t)
+  (corfu-separator ?\s)
+  (corfu-quit-at-boundary nil)
+  :config
+  (global-corfu-mode))
 
 (use-package smartparens
   :hook
