@@ -11,7 +11,7 @@
     - [[#install-iosevka-comfy-font][Install Iosevka Comfy font]]
     - [[#install-mpv-to-play-media-via-emms][Install mpv to play media via EMMS]]
 - [[#setup][Setup]]
-  - [[#load-the-local-config][Load the local config]]
+  - [[#load-local-config][Load local config]]
   - [[#add-lisp-dir-to-load-path][Add 'lisp' dir to load path]]
   - [[#straight][Straight]]
 - [[#packages][Packages]]
@@ -52,7 +52,7 @@
 #+end_src
 
 * Setup
-** Load the local config
+** Load local config
 #+begin_src elisp
   (load (expand-file-name "local.el" user-emacs-directory))
 #+end_src
