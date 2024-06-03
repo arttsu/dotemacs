@@ -35,6 +35,7 @@
   (make-backup-files nil)
   (require-final-newline t)
   (indent-tabs-mode nil)
+  (custom-file (expand-file-name "custom.el" user-emacs-directory))
   :config
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
   (scroll-bar-mode -1)
