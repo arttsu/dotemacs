@@ -34,6 +34,7 @@
   - [[#whole-line-or-region][Whole Line or Region]]
   - [[#multiple-cursors][Multiple Cursors]]
   - [[#expand-region][Expand Region]]
+  - [[#go-to-char][Go to Char]]
   - [[#magit][Magit]]
   - [[#org-mode][Org Mode]]
     - [[#org-modern][Org Modern]]
@@ -389,6 +390,20 @@ https://github.com/magnars/expand-region.el
   (use-package expand-region
     :bind
     (("C-=" . er/expand-region)))
+#+end_src
+
+** Go to Char
+https://github.com/doitian/iy-go-to-char
+
+#+begin_src elisp
+  (use-package iy-go-to-char
+    :bind
+    (("M-g f" . iy-go-to-char)
+     ("M-g F" . iy-go-to-char-backward)
+     ("M-g t" . iy-go-up-to-char)
+     ("M-g T" . iy-go-up-to-char-backward)
+     ("M-g ;" . iy-go-to-or-up-to-continue)
+     ("M-g ," . iy-go-to-or-up-to-continue-backward)))
 #+end_src
 
 ** Magit
