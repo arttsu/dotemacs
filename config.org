@@ -31,6 +31,7 @@
   - [[#avy][Avy]]
   - [[#crux][Crux]]
   - [[#whole-line-or-region][Whole Line or Region]]
+  - [[#multiple-cursors][Multiple Cursors]]
   - [[#magit][Magit]]
   - [[#org-mode][Org Mode]]
     - [[#org-modern][Org Modern]]
@@ -348,6 +349,19 @@ https://github.com/purcell/whole-line-or-region
     (whole-line-or-region-global-mode)
     :bind
     (("M-/" . whole-line-or-region-comment-dwim)))
+#+end_src
+
+** Multiple Cursors
+https://github.com/magnars/multiple-cursors.el
+
+#+begin_src elisp
+  (use-package multiple-cursors
+    :bind
+    (("C-+" . mc/mark-next-like-this)
+     ("C-c k l" . mc/edit-lines)
+     ("C-c k m" . mc/mark-all-dwim)
+     ("C-S-<mouse-1>" . mc/add-cursor-on-click)
+     ("C-<return>" . set-rectangular-region-anchor)))
 #+end_src
 
 ** Magit
