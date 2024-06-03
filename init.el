@@ -127,3 +127,10 @@
         ("C-c p [" . sp-wrap-square)
         ("C-c p {" . sp-wrap-curly)
         ("C-c p r" . sp-rewrap-sexp)))
+
+(use-package ace-window
+  :custom
+  (aw-keys '(?a ?s ?d ?f ?g ?h ?k ?l))
+  (aw-scope 'frame)
+  :bind
+  (("M-o" . ace-window)))
