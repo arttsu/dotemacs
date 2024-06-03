@@ -17,6 +17,9 @@
   - [[#modus-themes][Modus Themes]]
   - [[#iosevka-comfy-font][Iosevka Comfy font]]
   - [[#ace-window][Ace Window]]
+  - [[#vertico][Vertico]]
+  - [[#savehist][Savehist]]
+  - [[#orderless][Orderless]]
   - [[#smartparens][Smartparens]]
   - [[#magit][Magit]]
   - [[#org-mode][Org Mode]]
@@ -145,6 +148,33 @@ https://github.com/abo-abo/ace-window
     :bind
     (("M-o" . ace-window)))
 #+end_src
+
+** Vertico
+https://github.com/minad/vertico
+
+#+begin_src elisp
+  (use-package vertico
+    :config
+    (vertico-mode))
+#+end_src
+
+** Savehist
+#+begin_src elisp
+  (use-package savehist
+    :config
+    (savehist-mode))
+#+end_src
+
+** Orderless
+https://github.com/oantolin/orderless
+
+#+begin_src elisp
+  (use-package orderless
+    :custom
+    (completion-styles '(orderless basic))
+    (completion-category-overrides '((file (styles partial-completion)))))
+#+end_src
+
 ** Smartparens
 https://github.com/Fuco1/smartparens
 
