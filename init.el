@@ -81,6 +81,18 @@
   :config
   (super-save-mode))
 
+(use-package emms
+  :custom
+  (emms-player-list '(emms-player-mpv))
+  (emms-player-mpv-update-metadata t)
+  (emms-streams-file (expand-file-name "streams.emms" user-emacs-directory))
+  :config
+  (emms-all)
+  :bind
+  (("C-c r r" . emms-streams)
+   ("C-c r p" . emms-pause)
+   ("C-c r s" . emms-stop)))
+
 (use-package ace-window
   :custom
   (aw-keys '(?a ?s ?d ?f ?g ?h ?k ?l))

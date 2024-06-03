@@ -9,6 +9,7 @@
 - [[#notes][Notes]]
   - [[#dependencies][Dependencies]]
     - [[#install-iosevka-comfy-font][Install Iosevka Comfy font]]
+    - [[#install-mpv-to-play-media-via-emms][Install mpv to play media via EMMS]]
 - [[#setup][Setup]]
   - [[#load-the-local-config][Load the local config]]
   - [[#straight][Straight]]
@@ -17,6 +18,7 @@
   - [[#modus-themes][Modus Themes]]
   - [[#iosevka-comfy-font][Iosevka Comfy font]]
   - [[#super-save][Super Save]]
+  - [[#emms][EMMS]]
   - [[#ace-window][Ace Window]]
   - [[#vertico][Vertico]]
   - [[#savehist][Savehist]]
@@ -37,6 +39,12 @@
   git clone --depth 1 https://git.sr.ht/~protesilaos/iosevka-comfy ~/tmp/iosevka-comfy
   mkdir ~/.local/share/fonts
   cp -R ~/tmp/iosevka-comfy/iosevka-comfy-fixed ~/.local/share/fonts/
+#+end_src
+
+*** Install mpv to play media via EMMS
+**** Fedora
+#+begin_src shell
+  sudo dnf install mpv -y
 #+end_src
 
 * Setup
@@ -153,6 +161,23 @@ https://github.com/bbatsov/super-save
     (auto-save-default nil)
     :config
     (super-save-mode))
+#+end_src
+
+** EMMS
+https://www.gnu.org/software/emms/manual/#Introduction
+
+#+begin_src elisp
+  (use-package emms
+    :custom
+    (emms-player-list '(emms-player-mpv))
+    (emms-player-mpv-update-metadata t)
+    (emms-streams-file (expand-file-name "streams.emms" user-emacs-directory))
+    :config
+    (emms-all)
+    :bind
+    (("C-c r r" . emms-streams)
+     ("C-c r p" . emms-pause)
+     ("C-c r s" . emms-stop)))
 #+end_src
 
 ** Ace Window
@@ -302,4 +327,3 @@ https://github.com/snosov1/toc-org
   (use-package toc-org
     :hook (org-mode . toc-org-mode))
 #+end_src
-
