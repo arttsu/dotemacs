@@ -10,6 +10,7 @@
   - [[#dependencies][Dependencies]]
     - [[#install-iosevka-comfy-font][Install Iosevka Comfy font]]
     - [[#install-mpv-to-play-media-via-emms][Install mpv to play media via EMMS]]
+    - [[#install-ledger][Install ledger]]
 - [[#setup][Setup]]
   - [[#load-local-config][Load local config]]
   - [[#add-lisp-dir-to-load-path][Add 'lisp' dir to load path]]
@@ -49,6 +50,12 @@
 **** Fedora
 #+begin_src shell
   sudo dnf install mpv -y
+#+end_src
+
+*** Install ledger
+**** Fedora
+#+begin_src shell
+  sudo dnf install ledger -y
 #+end_src
 
 * Setup
