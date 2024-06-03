@@ -183,6 +183,13 @@
    :map isearch-mode-map
    ("C-;" . avy-isearch)))
 
+(use-package crux
+  :bind
+  (("C-o" . crux-smart-open-line)
+   ("C-S-o" . crux-smart-open-line-above)
+   ("C-^" . crux-top-join-line)
+   ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region)))
+
 (use-package magit
   :bind
   (("C-c g" . magit-file-dispatch)))
