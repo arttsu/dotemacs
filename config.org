@@ -27,6 +27,7 @@
   - [[#orderless][Orderless]]
   - [[#consult][Consult]]
   - [[#smartparens][Smartparens]]
+  - [[#yasnippet][Yasnippet]]
   - [[#magit][Magit]]
   - [[#org-mode][Org Mode]]
     - [[#org-modern][Org Modern]]
@@ -283,6 +284,17 @@ https://github.com/Fuco1/smartparens
           ("C-c p [" . sp-wrap-square)
           ("C-c p {" . sp-wrap-curly)
           ("C-c p r" . sp-rewrap-sexp)))
+#+end_src
+
+** Yasnippet
+https://github.com/joaotavora/yasnippet
+
+#+begin_src elisp
+  (use-package yasnippet
+    :custom
+    (yas-snippet-dirs (list (expand-file-name "snippets" user-emacs-directory)))
+    :config
+    (yas-global-mode))
 #+end_src
 
 ** Magit

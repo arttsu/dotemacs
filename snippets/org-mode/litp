@@ -1,0 +1,5 @@
+# key: litp
+# name: litp
+# --
+#+PROPERTY: header-args:elisp :result silent :tangle $0.el
+#+AUTO_TANGLE: t
