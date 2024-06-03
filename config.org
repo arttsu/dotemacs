@@ -16,13 +16,13 @@
   - [[#emacs][Emacs]]
   - [[#modus-themes][Modus Themes]]
   - [[#iosevka-comfy-font][Iosevka Comfy font]]
+  - [[#ace-window][Ace Window]]
+  - [[#smartparens][Smartparens]]
   - [[#magit][Magit]]
   - [[#org-mode][Org Mode]]
     - [[#org-modern][Org Modern]]
     - [[#auto-tangle][Auto-tangle]]
     - [[#toc][TOC]]
-  - [[#smartparens][Smartparens]]
-  - [[#ace-window][Ace Window]]
 
 * Notes
 ** Dependencies
@@ -134,6 +134,45 @@ https://git.sr.ht/~protesilaos/iosevka-comfy
         (set-frame-font font nil t)))
 #+end_src
 
+** Ace Window
+https://github.com/abo-abo/ace-window
+
+#+begin_src elisp
+  (use-package ace-window
+    :custom
+    (aw-keys '(?a ?s ?d ?f ?g ?h ?k ?l))
+    (aw-scope 'frame)
+    :bind
+    (("M-o" . ace-window)))
+#+end_src
+** Smartparens
+https://github.com/Fuco1/smartparens
+
+#+begin_src elisp
+  (use-package smartparens
+    :hook
+    (prog-mode . smartparens-mode)
+    :config
+    (require 'smartparens-config)
+    :bind
+    (:map smartparens-mode-map
+          ("C-<right>" . sp-forward-slurp-sexp)
+          ("C-<left>" . sp-backward-slurp-sexp)
+          ("M-<right>" . sp-forward-barf-sexp)
+          ("M-<left>" . sp-backward-barf-sexp)
+          ("M-a" . sp-beginning-of-sexp)
+          ("M-e" . sp-end-of-sexp)
+          ("C-M-u" . sp-up-sexp)
+          ("C-M-S-u" . sp-backward-up-sexp)
+          ("C-M-d" . sp-down-sexp)
+          ("C-M-S-d" . sp-backward-down-sexp)
+          ("C-c p u" . sp-unwrap-sexp)
+          ("C-c p (" . sp-wrap-round)
+          ("C-c p [" . sp-wrap-square)
+          ("C-c p {" . sp-wrap-curly)
+          ("C-c p r" . sp-rewrap-sexp)))
+#+end_src
+
 ** Magit
 https://magit.vc/
 
@@ -194,42 +233,3 @@ https://github.com/snosov1/toc-org
     :hook (org-mode . toc-org-mode))
 #+end_src
 
-** Smartparens
-https://github.com/Fuco1/smartparens
-
-#+begin_src elisp
-  (use-package smartparens
-    :hook
-    (prog-mode . smartparens-mode)
-    :config
-    (require 'smartparens-config)
-    :bind
-    (:map smartparens-mode-map
-          ("C-<right>" . sp-forward-slurp-sexp)
-          ("C-<left>" . sp-backward-slurp-sexp)
-          ("M-<right>" . sp-forward-barf-sexp)
-          ("M-<left>" . sp-backward-barf-sexp)
-          ("M-a" . sp-beginning-of-sexp)
-          ("M-e" . sp-end-of-sexp)
-          ("C-M-u" . sp-up-sexp)
-          ("C-M-S-u" . sp-backward-up-sexp)
-          ("C-M-d" . sp-down-sexp)
-          ("C-M-S-d" . sp-backward-down-sexp)
-          ("C-c p u" . sp-unwrap-sexp)
-          ("C-c p (" . sp-wrap-round)
-          ("C-c p [" . sp-wrap-square)
-          ("C-c p {" . sp-wrap-curly)
-          ("C-c p r" . sp-rewrap-sexp)))
-#+end_src
-
-** Ace Window
-https://github.com/abo-abo/ace-window
-
-#+begin_src elisp
-  (use-package ace-window
-    :custom
-    (aw-keys '(?a ?s ?d ?f ?g ?h ?k ?l))
-    (aw-scope 'frame)
-    :bind
-    (("M-o" . ace-window)))
-#+end_src

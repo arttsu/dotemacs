@@ -70,6 +70,36 @@
       (set-face-attribute 'default nil :font font :height my-iosevka-comfy-height)
       (set-frame-font font nil t)))
 
+(use-package ace-window
+  :custom
+  (aw-keys '(?a ?s ?d ?f ?g ?h ?k ?l))
+  (aw-scope 'frame)
+  :bind
+  (("M-o" . ace-window)))
+
+(use-package smartparens
+  :hook
+  (prog-mode . smartparens-mode)
+  :config
+  (require 'smartparens-config)
+  :bind
+  (:map smartparens-mode-map
+        ("C-<right>" . sp-forward-slurp-sexp)
+        ("C-<left>" . sp-backward-slurp-sexp)
+        ("M-<right>" . sp-forward-barf-sexp)
+        ("M-<left>" . sp-backward-barf-sexp)
+        ("M-a" . sp-beginning-of-sexp)
+        ("M-e" . sp-end-of-sexp)
+        ("C-M-u" . sp-up-sexp)
+        ("C-M-S-u" . sp-backward-up-sexp)
+        ("C-M-d" . sp-down-sexp)
+        ("C-M-S-d" . sp-backward-down-sexp)
+        ("C-c p u" . sp-unwrap-sexp)
+        ("C-c p (" . sp-wrap-round)
+        ("C-c p [" . sp-wrap-square)
+        ("C-c p {" . sp-wrap-curly)
+        ("C-c p r" . sp-rewrap-sexp)))
+
 (use-package magit
   :bind
   (("C-c g" . magit-file-dispatch)))
@@ -104,33 +134,3 @@
 
 (use-package toc-org
   :hook (org-mode . toc-org-mode))
-
-(use-package smartparens
-  :hook
-  (prog-mode . smartparens-mode)
-  :config
-  (require 'smartparens-config)
-  :bind
-  (:map smartparens-mode-map
-        ("C-<right>" . sp-forward-slurp-sexp)
-        ("C-<left>" . sp-backward-slurp-sexp)
-        ("M-<right>" . sp-forward-barf-sexp)
-        ("M-<left>" . sp-backward-barf-sexp)
-        ("M-a" . sp-beginning-of-sexp)
-        ("M-e" . sp-end-of-sexp)
-        ("C-M-u" . sp-up-sexp)
-        ("C-M-S-u" . sp-backward-up-sexp)
-        ("C-M-d" . sp-down-sexp)
-        ("C-M-S-d" . sp-backward-down-sexp)
-        ("C-c p u" . sp-unwrap-sexp)
-        ("C-c p (" . sp-wrap-round)
-        ("C-c p [" . sp-wrap-square)
-        ("C-c p {" . sp-wrap-curly)
-        ("C-c p r" . sp-rewrap-sexp)))
-
-(use-package ace-window
-  :custom
-  (aw-keys '(?a ?s ?d ?f ?g ?h ?k ?l))
-  (aw-scope 'frame)
-  :bind
-  (("M-o" . ace-window)))
