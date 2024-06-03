@@ -98,7 +98,7 @@ https://github.com/radian-software/straight.el
     :custom
     (inhibit-splash-screen t)
     (initial-major-mode 'text-mode)
-    (initial-scratch-message "✅ All systems go! 🪐🚀✨")
+    (initial-scratch-message "✅ All systems go! 🚀🪐✨")
     (disabled-command-function nil)
     (visible-bell t)
     (save-interprogram-paste-before-kill t)
