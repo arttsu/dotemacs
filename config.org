@@ -20,6 +20,7 @@
   - [[#vertico][Vertico]]
   - [[#savehist][Savehist]]
   - [[#orderless][Orderless]]
+  - [[#consult][Consult]]
   - [[#smartparens][Smartparens]]
   - [[#magit][Magit]]
   - [[#org-mode][Org Mode]]
@@ -173,6 +174,28 @@ https://github.com/oantolin/orderless
     :custom
     (completion-styles '(orderless basic))
     (completion-category-overrides '((file (styles partial-completion)))))
+#+end_src
+
+** Consult
+https://github.com/minad/consult
+
+#+begin_src elisp
+  (use-package consult
+    :config
+    ;; Don't live preview buffers to avoid triggering package loading.
+    ;; See https://github.com/minad/consult#live-previews
+    (consult-customize consult-buffer :preview-key "M-.")
+    :bind
+    (("C-x b" . consult-buffer)
+     ("C-x 4 b" . consult-buffer-other-window)
+     ("C-x 5 b" . consult-buffer-other-frame)
+     ("C-x p b" . consult-project-buffer)
+     ("M-g M-g" . consult-goto-line)
+     ("M-g o" . consult-outline)
+     ("M-s r" . consult-ripgrep)
+     ("M-s l" . consult-line)
+     ("M-s k" . consult-keep-lines)
+     ("M-s f" . consult-focus-lines)))
 #+end_src
 
 ** Smartparens

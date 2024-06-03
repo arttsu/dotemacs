@@ -90,6 +90,23 @@
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles partial-completion)))))
 
+(use-package consult
+  :config
+  ;; Don't live preview buffers to avoid triggering package loading.
+  ;; See https://github.com/minad/consult#live-previews
+  (consult-customize consult-buffer :preview-key "M-.")
+  :bind
+  (("C-x b" . consult-buffer)
+   ("C-x 4 b" . consult-buffer-other-window)
+   ("C-x 5 b" . consult-buffer-other-frame)
+   ("C-x p b" . consult-project-buffer)
+   ("M-g M-g" . consult-goto-line)
+   ("M-g o" . consult-outline)
+   ("M-s r" . consult-ripgrep)
+   ("M-s l" . consult-line)
+   ("M-s k" . consult-keep-lines)
+   ("M-s f" . consult-focus-lines)))
+
 (use-package smartparens
   :hook
   (prog-mode . smartparens-mode)
