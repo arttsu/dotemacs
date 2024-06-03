@@ -321,6 +321,8 @@ https://github.com/minad/org-modern
 #+end_src
 
 **** My Org Modern
+[[file:lisp/my-org-modern.org]]
+
 #+begin_src elisp
     (use-package my-org-modern
       :straight nil
@@ -353,6 +355,8 @@ https://github.com/ledger/ledger-mode
 #+end_src
 
 *** My Ledger
+[[file:lisp/my-ledger.org]]
+
 #+begin_src elisp
   (use-package my-ledger
     :straight nil
