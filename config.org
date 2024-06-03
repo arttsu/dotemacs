@@ -30,6 +30,7 @@
   - [[#yasnippet][Yasnippet]]
   - [[#avy][Avy]]
   - [[#crux][Crux]]
+  - [[#whole-line-or-region][Whole Line or Region]]
   - [[#magit][Magit]]
   - [[#org-mode][Org Mode]]
     - [[#org-modern][Org Modern]]
@@ -335,6 +336,18 @@ https://github.com/bbatsov/crux
      ("C-S-o" . crux-smart-open-line-above)
      ("C-^" . crux-top-join-line)
      ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region)))
+#+end_src
+
+** Whole Line or Region
+https://github.com/purcell/whole-line-or-region
+
+#+begin_src elisp
+  (use-package whole-line-or-region
+    :demand
+    :config
+    (whole-line-or-region-global-mode)
+    :bind
+    (("M-/" . whole-line-or-region-comment-dwim)))
 #+end_src
 
 ** Magit
