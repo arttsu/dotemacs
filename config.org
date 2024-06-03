@@ -29,6 +29,7 @@
   - [[#magit][Magit]]
   - [[#org-mode][Org Mode]]
     - [[#org-modern][Org Modern]]
+    - [[#my-org-looks][My Org Looks]]
     - [[#auto-tangle][Auto-tangle]]
     - [[#toc][TOC]]
   - [[#ledger][Ledger]]
@@ -320,13 +321,13 @@ https://github.com/minad/org-modern
     (global-org-modern-mode))
 #+end_src
 
-**** My Org Modern
-[[file:lisp/my-org-modern.org]]
+*** My Org Looks
+[[file:lisp/my-org-looks.org]]
 
 #+begin_src elisp
-    (use-package my-org-modern
+    (use-package my-org-looks
       :straight nil
-      :after org-modern)
+      :after org)
 #+end_src
 
 *** Auto-tangle

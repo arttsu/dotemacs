@@ -1,5 +1,5 @@
-#+TITLE: My Org Modern
-#+PROPERTY: header-args:elisp :results silent :tangle my-org-modern.el
+#+TITLE: My Org Looks
+#+PROPERTY: header-args:elisp :results silent :tangle my-org-looks.el
 #+AUTO_TANGLE: t
 
 * Make checked checkboxes green
@@ -18,5 +18,5 @@ https://emacs.stackexchange.com/questions/45291/change-color-of-org-mode-checkbo
 
 * Provide
 #+begin_src elisp
-  (provide 'my-org-modern)
+  (provide 'my-org-looks)
 #+end_src
