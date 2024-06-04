@@ -268,6 +268,25 @@
 (use-package toc-org
   :hook (org-mode . toc-org-mode))
 
+(use-package gptel
+  :custom
+  (gptel-model "gpt-4o")
+  (gptel-default-mode 'org-mode)
+  :config
+  (add-hook 'gptel-mode-hook 'toggle-truncate-lines)
+  :bind
+  (("C-c SPC" . gptel)
+   :map gptel-mode-map
+   ("C-c C-c" . gptel-send)
+   ("C-c k" . gptel-abort)))
+
+(use-package my-gptel
+  :straight nil
+  :mode ("\\.gpt\\'" . my-gptel-mode)
+  :bind
+  (:map gptel-mode-map
+        ("C-c d h" . my-gptel-clear-buffer)))
+
 (use-package ledger-mode
   :custom
   (ledger-default-date-format "%Y-%m-%d"))

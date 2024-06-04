@@ -1,0 +1,33 @@
+#+TITLE: My GPTel
+#+PROPERTY: header-args:elisp :results silent :tangle my-gptel.el
+#+AUTO_TANGLE: t
+
+* Require
+#+begin_src elisp
+  (require 'gptel)
+#+end_src
+
+* Mode
+#+begin_src elisp
+  (define-derived-mode my-gptel-mode org-mode "GPTel")
+
+  (defun my-gptel-mode-setup ()
+    (interactive)
+    (org-mode)
+    (gptel-mode))
+
+  (add-hook 'my-gptel-mode-hook 'my-gptel-mode-setup)
+#+end_src
+
+* Action: Clear buffer
+#+begin_src elisp
+  (defun my-gptel-clear-buffer ()
+    (interactive)
+    (erase-buffer)
+    (insert "*** "))
+#+end_src
+
+* Provide
+#+begin_src elisp
+  (provide 'my-gptel)
+#+end_src

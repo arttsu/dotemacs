@@ -11,6 +11,7 @@
     - [[#install-iosevka-comfy-font][Install Iosevka Comfy font]]
     - [[#install-mpv-to-play-media-via-emms][Install mpv to play media via EMMS]]
     - [[#install-ledger][Install ledger]]
+    - [[#set-up-gptel][Set up GPTel]]
 - [[#setup][Setup]]
   - [[#load-local-config][Load local config]]
   - [[#add-lisp-dir-to-load-path][Add 'lisp' dir to load path]]
@@ -41,6 +42,8 @@
     - [[#my-org-looks][My Org Looks]]
     - [[#auto-tangle][Auto-tangle]]
     - [[#toc][TOC]]
+  - [[#gptel][GPTel]]
+    - [[#my-gptel][My GPTel]]
   - [[#ledger][Ledger]]
     - [[#my-ledger][My Ledger]]
 
@@ -65,6 +68,13 @@
 #+begin_src shell
   sudo dnf install ledger -y
 #+end_src
+
+*** Set up GPTel
+1) Create a new [[https://platform.openai.com/api-keys][API key]].
+2) Add an entry to =~/.authinfo=:
+   #+begin_example
+     machine api.openai.com login apikey password TOKEN
+   #+end_example
 
 * Setup
 ** Load local config
@@ -473,6 +483,35 @@ https://github.com/snosov1/toc-org
 #+begin_src elisp
   (use-package toc-org
     :hook (org-mode . toc-org-mode))
+#+end_src
+
+** GPTel
+https://github.com/karthink/gptel
+
+#+begin_src elisp
+  (use-package gptel
+    :custom
+    (gptel-model "gpt-4o")
+    (gptel-default-mode 'org-mode)
+    :config
+    (add-hook 'gptel-mode-hook 'toggle-truncate-lines)
+    :bind
+    (("C-c SPC" . gptel)
+     :map gptel-mode-map
+     ("C-c C-c" . gptel-send)
+     ("C-c k" . gptel-abort)))
+#+end_src
+
+*** My GPTel
+[[file:lisp/my-gptel.org]]
+
+#+begin_src elisp
+  (use-package my-gptel
+    :straight nil
+    :mode ("\\.gpt\\'" . my-gptel-mode)
+    :bind
+    (:map gptel-mode-map
+          ("C-c d h" . my-gptel-clear-buffer)))
 #+end_src
 
 ** Ledger
