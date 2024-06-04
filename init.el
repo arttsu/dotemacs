@@ -274,6 +274,7 @@
   (gptel-default-mode 'org-mode)
   :config
   (add-hook 'gptel-mode-hook 'toggle-truncate-lines)
+  (require 'my-gptel)
   :bind
   (("C-c SPC" . gptel)
    :map gptel-mode-map
