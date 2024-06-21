@@ -268,6 +268,15 @@
 (use-package toc-org
   :hook (org-mode . toc-org-mode))
 
+(use-package my-gtd
+  :straight nil
+  :after org
+  :init
+  (setq my-gtd-dir "~/org/gtd")
+  (setq my-gtd-shared-dir "~/org-shared/gtd")
+  :bind
+  (("C-c i" . my-gtd-capture-to-inbox)))
+
 (use-package gptel
   :custom
   (gptel-model "gpt-4o")

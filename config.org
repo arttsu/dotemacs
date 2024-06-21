@@ -42,6 +42,7 @@
     - [[#my-org-looks][My Org Looks]]
     - [[#auto-tangle][Auto-tangle]]
     - [[#toc][TOC]]
+  - [[#gtd][GTD]]
   - [[#gptel][GPTel]]
     - [[#my-gptel][My GPTel]]
   - [[#ledger][Ledger]]
@@ -483,6 +484,20 @@ https://github.com/snosov1/toc-org
 #+begin_src elisp
   (use-package toc-org
     :hook (org-mode . toc-org-mode))
+#+end_src
+
+** GTD
+[[file:lisp/my-gtd.org]]
+
+#+begin_src elisp
+  (use-package my-gtd
+    :straight nil
+    :after org
+    :init
+    (setq my-gtd-dir "~/org/gtd")
+    (setq my-gtd-shared-dir "~/org-shared/gtd")
+    :bind
+    (("C-c i" . my-gtd-capture-to-inbox)))
 #+end_src
 
 ** GPTel
