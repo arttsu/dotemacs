@@ -141,6 +141,7 @@
   :after (consult org))
 
 (use-package corfu
+  :demand
   :custom
   (corfu-cycle t)
   (corfu-auto t)
@@ -151,7 +152,10 @@
   :config
   (global-corfu-mode)
   (corfu-indexed-mode)
-  (corfu-history-mode))
+  (corfu-history-mode)
+  :bind
+  (:map corfu-map
+        ("C-SPC" . corfu-insert-separator)))
 
 (use-package smartparens
   :hook
