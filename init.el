@@ -244,6 +244,10 @@
   (org-special-ctrl-a/e t)
   (org-hide-emphasis-markers t)
   (org-pretty-entities t)
+  :config
+  (setq my-gtd-dir "~/org/gtd")
+  (setq my-gtd-shared-dir "~/org-shared/gtd")
+  (require 'my-gtd)
   :bind
   (("C-c c" . org-capture)
    ("C-c l" . org-store-link)
@@ -272,8 +276,6 @@
   :straight nil
   :after org
   :init
-  (setq my-gtd-dir "~/org/gtd")
-  (setq my-gtd-shared-dir "~/org-shared/gtd")
   :bind
   (("C-c i" . my-gtd-capture-to-inbox)
    ("C-c I" . my-gtd-capture-note-to-inbox)))

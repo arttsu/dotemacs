@@ -19,12 +19,17 @@
 (setq my-gtd-shared-projects (my-gtd--shared-path "projects"))
 (setq my-gtd-shared-someday (my-gtd--shared-path "someday"))
 
+(defun my-gtd-template (name)
+  (expand-file-name (concat "gtd-templates/" name ".txt") user-emacs-directory))
+
 (setq org-capture-templates
       `(("i" "Inbox")
         ("ii" "Todo" entry (file+headline ,my-gtd-inbox "Inbox") "* TODO %?")
         ("iI" "Note" entry (file+headline ,my-gtd-inbox "Inbox") "* %?")
         ("il" "Todo link" entry (file+headline ,my-gtd-inbox "Inbox") "* TODO [[%c][%^{Description}]]%?")
-        ("iL" "Note link" entry (file+headline ,my-gtd-inbox "Inbox") "* [[%c][%^{Description}]]%?")))
+        ("iL" "Note link" entry (file+headline ,my-gtd-inbox "Inbox") "* [[%c][%^{Description}]]%?")
+        ("p" "Project")
+        ("pp" "Project" entry (file ,my-gtd-projects) (file ,(my-gtd-template "project")))))
 
 (defun my-gtd-capture-to-inbox (&optional prefix)
   (interactive "P")

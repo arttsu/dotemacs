@@ -42,7 +42,7 @@
     - [[#my-org-looks][My Org Looks]]
     - [[#auto-tangle][Auto-tangle]]
     - [[#toc][TOC]]
-  - [[#gtd][GTD]]
+    - [[#gtd][GTD]]
   - [[#gptel][GPTel]]
     - [[#my-gptel][My GPTel]]
   - [[#ledger][Ledger]]
@@ -441,6 +441,10 @@ https://orgmode.org/
     (org-special-ctrl-a/e t)
     (org-hide-emphasis-markers t)
     (org-pretty-entities t)
+    :config
+    (setq my-gtd-dir "~/org/gtd")
+    (setq my-gtd-shared-dir "~/org-shared/gtd")
+    (require 'my-gtd)
     :bind
     (("C-c c" . org-capture)
      ("C-c l" . org-store-link)
@@ -486,7 +490,7 @@ https://github.com/snosov1/toc-org
     :hook (org-mode . toc-org-mode))
 #+end_src
 
-** GTD
+*** GTD
 [[file:lisp/my-gtd.org]]
 
 #+begin_src elisp
@@ -494,8 +498,6 @@ https://github.com/snosov1/toc-org
     :straight nil
     :after org
     :init
-    (setq my-gtd-dir "~/org/gtd")
-    (setq my-gtd-shared-dir "~/org-shared/gtd")
     :bind
     (("C-c i" . my-gtd-capture-to-inbox)
      ("C-c I" . my-gtd-capture-note-to-inbox)))
