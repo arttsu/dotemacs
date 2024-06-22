@@ -48,6 +48,7 @@
   (global-auto-revert-mode)
   (global-subword-mode)
   (tab-bar-history-mode)
+  (repeat-mode)
   :bind
   (("C-c j s" . scratch-buffer)
    ("C-x C-b" . ibuffer-other-window)
@@ -134,6 +135,10 @@
    ("M-s l" . consult-line)
    ("M-s k" . consult-keep-lines)
    ("M-s f" . consult-focus-lines)))
+
+(use-package my-consult
+  :straight nil
+  :after (consult org))
 
 (use-package corfu
   :custom

@@ -1,0 +1,21 @@
+#+TITLE: My Consult
+#+PROPERTY: header-args:elisp :results silent :tangle my-consult.el
+#+AUTO_TANGLE: t
+
+* Improve Consult outline for Org headings
+By default, the cursor ends up at the beginning of a heading title
+after a jump. I'd like it to end up at the begining of a heading
+instead, so that I could immediately use org speed commands.
+
+#+begin_src elisp
+  (defun my-consult-outline-advice (location)
+    (when (derived-mode-p 'org-mode)
+      (beginning-of-line)))
+
+  (advice-add 'consult-outline :after 'my-consult-outline-advice)
+#+end_src
+
+* Provide
+#+begin_src elisp
+  (provide 'my-consult)
+#+end_src

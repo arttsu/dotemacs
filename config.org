@@ -27,6 +27,7 @@
   - [[#savehist][Savehist]]
   - [[#orderless][Orderless]]
   - [[#consult][Consult]]
+    - [[#my-consult][My Consult]]
   - [[#corfu][Corfu]]
   - [[#smartparens][Smartparens]]
   - [[#yasnippet][Yasnippet]]
@@ -148,6 +149,7 @@ https://github.com/radian-software/straight.el
     (global-auto-revert-mode)
     (global-subword-mode)
     (tab-bar-history-mode)
+    (repeat-mode)
     :bind
     (("C-c j s" . scratch-buffer)
      ("C-x C-b" . ibuffer-other-window)
@@ -277,6 +279,13 @@ https://github.com/minad/consult
      ("M-s l" . consult-line)
      ("M-s k" . consult-keep-lines)
      ("M-s f" . consult-focus-lines)))
+#+end_src
+
+*** My Consult
+#+begin_src elisp
+  (use-package my-consult
+    :straight nil
+    :after (consult org))
 #+end_src
 
 ** Corfu
