@@ -452,6 +452,7 @@ https://orgmode.org/
     (org-special-ctrl-a/e t)
     (org-hide-emphasis-markers t)
     (org-pretty-entities t)
+    (org-use-speed-commands t)
     :config
     (setq my-gtd-dir "~/org/gtd")
     (setq my-gtd-shared-dir "~/org-shared/gtd")
