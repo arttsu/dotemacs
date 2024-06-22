@@ -275,7 +275,8 @@
   (setq my-gtd-dir "~/org/gtd")
   (setq my-gtd-shared-dir "~/org-shared/gtd")
   :bind
-  (("C-c i" . my-gtd-capture-to-inbox)))
+  (("C-c i" . my-gtd-capture-to-inbox)
+   ("C-c I" . my-gtd-capture-note-to-inbox)))
 
 (use-package gptel
   :custom

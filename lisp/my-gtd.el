@@ -21,11 +21,23 @@
 
 (setq org-capture-templates
       `(("i" "Inbox")
-        ("ii" "Todo" entry (file+headline ,my-gtd-inbox "Inbox") "* TODO %?")))
+        ("ii" "Todo" entry (file+headline ,my-gtd-inbox "Inbox") "* TODO %?")
+        ("iI" "Note" entry (file+headline ,my-gtd-inbox "Inbox") "* %?")
+        ("il" "Todo link" entry (file+headline ,my-gtd-inbox "Inbox") "* TODO [[%c][%^{Description}]]%?")
+        ("iL" "Note link" entry (file+headline ,my-gtd-inbox "Inbox") "* [[%c][%^{Description}]]%?")))
 
 (defun my-gtd-capture-to-inbox (&optional prefix)
   (interactive "P")
   (cond
-   ((equal prefix nil) (org-capture nil "ii"))))
+   ((equal prefix nil) (org-capture nil "ii"))
+   ((equal prefix '(4)) (org-capture nil "il"))
+   (t (message "Prefix '%s' not supported" prefix))))
+
+(defun my-gtd-capture-note-to-inbox (&optional prefix)
+  (interactive "P")
+  (cond
+   ((equal prefix nil) (org-capture nil "iI"))
+   ((equal prefix '(4)) (org-capture nil "iL"))
+   (t (message "Prefix '%s' not supported" prefix))))
 
 (provide 'my-gtd)

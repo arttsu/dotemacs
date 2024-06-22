@@ -497,7 +497,8 @@ https://github.com/snosov1/toc-org
     (setq my-gtd-dir "~/org/gtd")
     (setq my-gtd-shared-dir "~/org-shared/gtd")
     :bind
-    (("C-c i" . my-gtd-capture-to-inbox)))
+    (("C-c i" . my-gtd-capture-to-inbox)
+     ("C-c I" . my-gtd-capture-note-to-inbox)))
 #+end_src
 
 ** GPTel
