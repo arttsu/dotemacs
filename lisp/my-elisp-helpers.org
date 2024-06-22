@@ -1,0 +1,15 @@
+#+TITLE: My elisp helpers
+#+PROPERTY: header-args:elisp :results silent :tangle my-elisp-helpers.el
+#+AUTO_TANGLE: t
+
+* Collections
+#+begin_src elisp
+  (defun string-in-list-p (str lst)
+    (require 'cl-lib)
+    (cl-find-if (lambda (item) (string-equal str item)) lst))
+#+end_src
+
+* Provide
+#+begin_src elisp
+  (provide 'my-elisp-helpers)
+#+end_src

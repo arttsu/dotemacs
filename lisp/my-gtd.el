@@ -56,4 +56,27 @@
    ((equal prefix '(4)) (org-capture nil "iL"))
    (t (message "Prefix '%s' not supported" prefix))))
 
+(setq org-refile-targets
+      `(((,my-gtd-inbox
+          ,my-gtd-shared-inbox
+          ,my-gtd-someday
+          ,my-gtd-shared-someday
+          ,my-gtd-tasks
+          ,my-gtd-shared-tasks
+          ,my-gtd-calendar
+          ,my-gtd-shared-calendar)
+         :level . 1)
+        ((,my-gtd-projects
+          ,my-gtd-shared-projects)
+         :maxlevel . 2)))
+
+(defun my-gtd-verify-refile-target ()
+  (require 'my-elisp-helpers)
+  (if (string-in-list-p (buffer-file-name) (list my-gtd-projects my-gtd-shared-projects))
+      (when-let ((type (org-element-property :MY_GTD_TYPE (org-element-at-point))))
+        (string= type "project"))
+    t))
+
+(setq org-refile-target-verify-function 'my-gtd-verify-refile-target)
+
 (provide 'my-gtd)
