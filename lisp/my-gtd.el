@@ -24,13 +24,14 @@
 
 (setq org-capture-templates
       `(("i" "Inbox")
-        ("ii" "Todo" entry (file+headline ,my-gtd-inbox "Inbox") "* TODO %?")
-        ("iI" "Note" entry (file+headline ,my-gtd-inbox "Inbox") "* %?")
-        ("il" "Todo link" entry (file+headline ,my-gtd-inbox "Inbox") "* TODO [[%c][%^{Description}]]%?")
-        ("iL" "Note link" entry (file+headline ,my-gtd-inbox "Inbox") "* [[%c][%^{Description}]]%?")
+        ("ii" "todo" entry (file+headline ,my-gtd-inbox "Inbox") "* TODO %?")
+        ("iI" "note" entry (file+headline ,my-gtd-inbox "Inbox") "* %?")
+        ("il" "todo link" entry (file+headline ,my-gtd-inbox "Inbox") "* TODO [[%c][%^{Description}]]%?")
+        ("iL" "note link" entry (file+headline ,my-gtd-inbox "Inbox") "* [[%c][%^{Description}]]%?")
         ("p" "Project")
-        ("pp" "Project" entry (file ,my-gtd-projects) (file ,(my-gtd-template "project")))
-        ("pP" "Shared project" entry (file ,my-gtd-shared-projects) (file ,(my-gtd-template "project")))))
+        ("pp" "project" entry (file ,my-gtd-projects) (file ,(my-gtd-template "project")))
+        ("pP" "shared project" entry (file ,my-gtd-shared-projects) (file ,(my-gtd-template "project")))
+        ("ps" "sub-project" entry (file+headline ,my-gtd-inbox "Inbox") (file ,(my-gtd-template "subproject")))))
 
 (defun my-gtd-capture-to-inbox (&optional prefix)
   (interactive "P")

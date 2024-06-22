@@ -1,0 +1,4 @@
+* TODO %^{Title}
+:PROPERTIES:
+:MY_GTD_TYPE: project
+:END:
