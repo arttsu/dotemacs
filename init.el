@@ -147,6 +147,7 @@
   (corfu-auto-prefix 2)
   (corfu-quit-at-boundary 'separator)
   (corfu-quit-no-match t)
+  (corfu-indexed-start 1)
   :config
   (global-corfu-mode)
   (corfu-indexed-mode)
