@@ -194,6 +194,11 @@
    :map isearch-mode-map
    ("C-;" . avy-isearch)))
 
+(use-package link-hint
+  :bind
+  (("C-c f" . link-hint-open-link)
+   ("C-c y" . link-hint-copy-link)))
+
 (use-package crux
   :bind
   (("C-o" . crux-smart-open-line)

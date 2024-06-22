@@ -31,6 +31,7 @@
   - [[#smartparens][Smartparens]]
   - [[#yasnippet][Yasnippet]]
   - [[#avy][Avy]]
+  - [[#link-hint][Link hint]]
   - [[#crux][Crux]]
   - [[#whole-line-or-region][Whole Line or Region]]
   - [[#multiple-cursors][Multiple Cursors]]
@@ -355,6 +356,16 @@ https://github.com/abo-abo/avy
      ("C-M-; S" . avy-kill-ring-save-region)
      :map isearch-mode-map
      ("C-;" . avy-isearch)))
+#+end_src
+
+** Link hint
+https://github.com/noctuid/link-hint.el
+
+#+begin_src elisp
+  (use-package link-hint
+    :bind
+    (("C-c f" . link-hint-open-link)
+     ("C-c y" . link-hint-copy-link)))
 #+end_src
 
 ** Crux
