@@ -19,8 +19,14 @@
 (setq my-gtd-shared-projects (my-gtd--shared-path "projects"))
 (setq my-gtd-shared-someday (my-gtd--shared-path "someday"))
 
-(defun my-gtd-template (name)
+(defun my-gtd--template (name)
   (expand-file-name (concat "gtd-templates/" name ".txt") user-emacs-directory))
+
+(defvar my-gtd--prompt-history nil)
+
+(defun my-gtd--prompt (prompt var)
+  (make-local-variable var)
+  (set var (read-string (concat prompt ": ") nil 'my-gtd--prompt-history)))
 
 (setq org-capture-templates
       `(("i" "Inbox")
@@ -29,9 +35,12 @@
         ("il" "todo link" entry (file+headline ,my-gtd-inbox "Inbox") "* TODO [[%c][%^{Description}]]%?")
         ("iL" "note link" entry (file+headline ,my-gtd-inbox "Inbox") "* [[%c][%^{Description}]]%?")
         ("p" "Project")
-        ("pp" "project" entry (file ,my-gtd-projects) (file ,(my-gtd-template "project")))
-        ("pP" "shared project" entry (file ,my-gtd-shared-projects) (file ,(my-gtd-template "project")))
-        ("ps" "sub-project" entry (file+headline ,my-gtd-inbox "Inbox") (file ,(my-gtd-template "subproject")))))
+        ("pp" "project" entry (file ,my-gtd-projects) (file ,(my-gtd--template "project")))
+        ("pP" "shared project" entry (file ,my-gtd-shared-projects) (file ,(my-gtd--template "project")))
+        ("ps" "sub-project" entry (file+headline ,my-gtd-inbox "Inbox") (file ,(my-gtd--template "subproject")))
+        ("s" "Someday")
+        ("ss" "someday area" entry (file ,my-gtd-someday) (file ,(my-gtd--template "someday")))
+        ("sS" "shared someday area" entry (file ,my-gtd-shared-someday) (file ,(my-gtd--template "someday")))))
 
 (defun my-gtd-capture-to-inbox (&optional prefix)
   (interactive "P")
