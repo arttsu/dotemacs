@@ -148,7 +148,9 @@
   (corfu-quit-at-boundary 'separator)
   (corfu-quit-no-match t)
   :config
-  (global-corfu-mode))
+  (global-corfu-mode)
+  (corfu-indexed-mode)
+  (corfu-history-mode))
 
 (use-package smartparens
   :hook
