@@ -144,8 +144,9 @@
   :custom
   (corfu-cycle t)
   (corfu-auto t)
-  (corfu-separator ?\s)
-  (corfu-quit-at-boundary nil)
+  (corfu-auto-prefix 2)
+  (corfu-quit-at-boundary 'separator)
+  (corfu-quit-no-match t)
   :config
   (global-corfu-mode))
 
