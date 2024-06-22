@@ -41,7 +41,8 @@
           ("il" "Todo link" entry (file+headline ,my-gtd-inbox "Inbox") "* TODO [[%c][%^{Description}]]%?")
           ("iL" "Note link" entry (file+headline ,my-gtd-inbox "Inbox") "* [[%c][%^{Description}]]%?")
           ("p" "Project")
-          ("pp" "Project" entry (file ,my-gtd-projects) (file ,(my-gtd-template "project")))))
+          ("pp" "Project" entry (file ,my-gtd-projects) (file ,(my-gtd-template "project")))
+          ("pP" "Shared project" entry (file ,my-gtd-shared-projects) (file ,(my-gtd-template "project")))))
 
   (defun my-gtd-capture-to-inbox (&optional prefix)
     (interactive "P")
