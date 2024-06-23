@@ -50,7 +50,7 @@
   (tab-bar-history-mode)
   (repeat-mode)
   :bind
-  (("C-c j s" . scratch-buffer)
+  (("C-c j x" . scratch-buffer)
    ("C-x C-b" . ibuffer-other-window)
    ("M-g w" . forward-to-word)
    ("M-g W" . backward-to-word)
@@ -296,7 +296,9 @@
   (setq my-gtd-shared-dir "~/org-shared/gtd")
   :bind
   (("C-c i" . my-gtd-capture-to-inbox)
-   ("C-c I" . my-gtd-capture-note-to-inbox)))
+   ("C-c I" . my-gtd-capture-note-to-inbox)
+   ("C-c j p" . my-gtd-jump-to-project)
+   ("C-c j s" . my-gtd-jump-to-someday)))
 
 (use-package gptel
   :custom

@@ -102,4 +102,53 @@
           (tags "FOCUS+MY_GTD_TYPE=\"project\"-TODO=\"DONE\"" ((org-agenda-overriding-header "Projects")
                                                                (org-agenda-files '(,my-gtd-projects ,my-gtd-shared-projects))))))))
 
+(straight-use-package 'org-ql)
+
+(defun my-gtd--build-headline-map (headlines-with-ids)
+  (let ((hm (make-hash-table :test 'equal)))
+    (dolist (headline-with-id headlines-with-ids)
+      (puthash (car headline-with-id) (cdr headline-with-id) hm))
+    hm))
+
+(defun my-gtd--jump-to-headline (hash-map-f select-prompt)
+  (let* ((title-to-id (funcall hash-map-f))
+         (selected-title (completing-read select-prompt title-to-id))
+         (selected-id (gethash selected-title title-to-id))
+         (file (org-id-find-id-file selected-id)))
+    (if-let (win (get-buffer-window (get-file-buffer file) t))
+        (select-window win)
+      (switch-to-buffer-other-window file))
+    (widen)
+    (org-id-goto selected-id)
+    (org-fold-show-subtree)
+    (org-narrow-to-subtree)))
+
+(defun my-gtd--all-projects ()
+  (org-ql-query
+   :select '(cons (substring-no-properties (org-get-heading t t t t))
+                  (org-id-get-create))
+   :from (list my-gtd-projects my-gtd-shared-projects)
+   :where '(property "MY_GTD_TYPE" "project")))
+
+(defun my-gtd--all-somedays ()
+  (org-ql-query
+    :select '(cons (substring-no-properties (org-get-heading t t t t))
+                   (org-id-get-create))
+    :from (list my-gtd-someday my-gtd-shared-someday)
+    :where '(level 1)))
+
+(defun my-gtd--project-title-to-id ()
+  (my-gtd--build-headline-map (my-gtd--all-projects)))
+
+(defun my-gtd--someday-title-to-id ()
+  (my-gtd--build-headline-map (my-gtd--all-somedays)))
+
+(defun my-gtd-jump-to-project ()
+  (interactive)
+  (my-gtd--jump-to-headline 'my-gtd--project-title-to-id "Project: "))
+
+(defun my-gtd-jump-to-someday ()
+  (interactive)
+  (my-gtd--jump-to-headline 'my-gtd--someday-title-to-id "Someday: "))
+
 (provide 'my-gtd)
