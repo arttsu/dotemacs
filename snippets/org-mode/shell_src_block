@@ -1,0 +1,6 @@
+# key: sh
+# name: shell_src_block
+# --
+#+BEGIN_SRC shell
+$0
+#+END_SRC
