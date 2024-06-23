@@ -12,10 +12,12 @@
     - [[#install-mpv-to-play-media-via-emms][Install mpv to play media via EMMS]]
     - [[#install-ledger][Install ledger]]
     - [[#set-up-gptel][Set up GPTel]]
+    - [[#set-up-vterm][Set up Vterm]]
 - [[#setup][Setup]]
   - [[#load-local-config][Load local config]]
   - [[#add-lisp-dir-to-load-path][Add 'lisp' dir to load path]]
   - [[#straight][Straight]]
+  - [[#os-helpers][OS helpers]]
 - [[#packages][Packages]]
   - [[#emacs][Emacs]]
   - [[#modus-themes][Modus Themes]]
@@ -49,6 +51,7 @@
     - [[#my-gptel][My GPTel]]
   - [[#ledger][Ledger]]
     - [[#my-ledger][My Ledger]]
+  - [[#vterm][Vterm]]
 
 * Notes
 ** Dependencies
@@ -78,6 +81,30 @@
    #+begin_example
      machine api.openai.com login apikey password TOKEN
    #+end_example
+
+*** Set up Vterm
+**** Fedora
+***** Install fish
+#+BEGIN_SRC shell
+  sudo dnf install fish -y
+#+END_SRC
+
+****** Change shell
+#+BEGIN_SRC shell
+  chsh
+#+END_SRC
+
+After entering the password, enter the path to fish - =/usr/bin/fish=.
+
+Log out and back in to make this effective.
+
+***** Install dependencies for compilation
+#+BEGIN_SRC shell
+  sudo dnf install cmake libtool -y
+#+END_SRC
+
+**** All systems
+Configure fish to work w/ vterm as described in https://github.com/akermu/emacs-libvterm?tab=readme-ov-file#shell-side-configuration.
 
 * Setup
 ** Load local config
@@ -118,6 +145,15 @@ https://github.com/radian-software/straight.el
 *** Post-bootstrap
 #+begin_src elisp
   (setq straight-use-package-by-default t)
+#+end_src
+
+** OS helpers
+#+begin_src elisp
+  (defun my-windows-p ()
+    (eq system-type 'windows-nt))
+
+  (defun my-mac-p ()
+    (eq system-type 'darwin))
 #+end_src
 
 * Packages
@@ -578,4 +614,20 @@ https://github.com/ledger/ledger-mode
   (use-package my-ledger
     :straight nil
     :after ledger-mode)
+#+end_src
+
+** Vterm
+https://github.com/vterm/vterm
+
+#+begin_src elisp
+  (use-package vterm
+    :when (not (my-windows-p))
+    :custom
+    (vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
+    (vterm-shell my-fish-path)
+    (vterm-max-scrollback 50000)
+    (vterm-clear-scrollback-when-clearing t)
+    :bind
+    (("C-x v" . vterm)
+     ("C-x 4 v" . vterm-other-window)))
 #+end_src

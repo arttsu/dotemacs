@@ -22,6 +22,12 @@
 
 (setq straight-use-package-by-default t)
 
+(defun my-windows-p ()
+  (eq system-type 'windows-nt))
+
+(defun my-mac-p ()
+  (eq system-type 'darwin))
+
 (use-package emacs
   :custom
   (inhibit-splash-screen t)
@@ -326,3 +332,14 @@
 (use-package my-ledger
   :straight nil
   :after ledger-mode)
+
+(use-package vterm
+  :when (not (my-windows-p))
+  :custom
+  (vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
+  (vterm-shell my-fish-path)
+  (vterm-max-scrollback 50000)
+  (vterm-clear-scrollback-when-clearing t)
+  :bind
+  (("C-x v" . vterm)
+   ("C-x 4 v" . vterm-other-window)))
