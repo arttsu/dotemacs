@@ -111,6 +111,8 @@ https://docs.ankiweb.net/platform/linux/installing.html
   			       ("Europe/Lisbon" "Lisbon")
   			       ("Europe/Berlin" "Berlin")
   			       ("Europe/Kyiv" "Kyiv")))
+    (tab-always-indent 'complete)
+    (read-extended-command-predicate #'command-completion-default-include-p)
     :config
     (global-auto-revert-mode)
     (add-to-list 'default-frame-alist '(fullscreen . maximized))
@@ -428,11 +430,15 @@ https://github.com/alphapapa/org-ql
     (org-agenda-files my-agenda-files)
     (org-agenda-custom-commands my-custom-agendas)
     (org-habit-graph-column 60)
+    (org-use-speed-commands t)
     :config
     (require 'org-attach)
     (add-to-list 'org-export-backends 'md)
     (add-to-list 'org-modules 'org-habit)
     (add-hook 'org-after-refile-insert-hook 'my-org-after-refile-insert)
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((shell . t)))
     :bind
     (("C-c c" . org-capture)
      ("C-c l" . org-store-link)
@@ -774,7 +780,7 @@ https://github.com/doitian/iy-go-to-char
 http://company-mode.github.io/
 
 ** Use-Package
-#+begin_src elisp
+#+begin_src elisp :tangle no
   (use-package company
     :custom
     (company-minimum-prefix-length 2)
@@ -788,11 +794,29 @@ http://company-mode.github.io/
     (("M-<tab>" . company-complete)))
 #+end_src
 
+* Corfu
+#+begin_src elisp
+  (use-package corfu
+    :demand
+    :custom
+    (corfu-cycle t)
+    (corfu-auto t)
+    (corfu-quit-at-boundary 'separator)
+    (corfu-quit-no-match t)
+    (corfu-auto-prefix 2)
+    :config
+    (global-corfu-mode)
+    :bind
+    (:map corfu-map
+          (("C-SPC" . corfu-insert-separator)
+           ("C-;" . corfu-quick-insert))))
+#+end_src
+
 * Flycheck
 https://www.flycheck.org/en/latest/
 
 ** Use-Package
-#+begin_src elisp
+#+begin_src elisp :tangle no
   (use-package flycheck
     :custom
     (flycheck-global-modes '(not org-mode))
@@ -804,7 +828,7 @@ https://www.flycheck.org/en/latest/
 https://emacs-lsp.github.io/lsp-mode/
 
 ** Use-Package
-#+begin_src elisp
+#+begin_src elisp :tangle no
   (use-package lsp-mode
     :custom
     (lsp-keymap-prefix "<f5>")
@@ -822,7 +846,7 @@ https://emacs-lsp.github.io/lsp-mode/
 https://github.com/emacs-lsp/lsp-ui
 
 ** Use-Package
-#+begin_src elisp
+#+begin_src elisp :tangle no
   (use-package lsp-ui
     :commands lsp-ui-mode)
 #+end_src
@@ -831,7 +855,7 @@ https://github.com/emacs-lsp/lsp-ui
 https://github.com/gagbo/consult-lsp
 
 ** Use-Package
-#+begin_src elisp
+#+begin_src elisp :tangle no
   (use-package consult-lsp
     :after (consult lsp-mode)
     :bind
@@ -845,7 +869,7 @@ https://github.com/gagbo/consult-lsp
 https://github.com/emacs-lsp/lsp-metals
 
 ** Use-Package
-#+begin_src elisp
+#+begin_src elisp :tangle no
   (use-package lsp-metals
     :after (lsp-mode scala))
 #+end_src
@@ -1159,4 +1183,85 @@ https://github.com/clojure-emacs/clojure-mode
 * sbt mode
 #+begin_src elisp
   (use-package sbt-mode)
+#+end_src
+
+* Tree Sitter
+#+begin_src elisp
+  (use-package tree-sitter
+    :custom
+    (treesit-font-lock-level 4))
+#+end_src
+
+* Treesit Auto
+https://github.com/renzmann/treesit-auto
+
+#+begin_src elisp
+  (use-package treesit-auto
+    :custom
+    (treesit-auto-install 'prompt)
+    :config
+    (treesit-auto-add-to-auto-mode-alist 'all)
+    (global-treesit-auto-mode))
+#+end_src
+
+* Scala Mode
+https://github.com/hvesalai/emacs-scala-mode
+
+#+begin_src elisp :tangle no
+  (use-package scala-mode
+    :interpreter "scala")
+#+end_src
+
+* Scala TS Mode
+https://github.com/KaranAhlawat/scala-ts-mode
+
+#+begin_src elisp
+  (use-package scala-ts-mode)
+#+end_src
+* Eglot
+Install Metals:
+#+begin_src shell
+  coursier bootstrap \
+    --java-opt -XX:+UseG1GC \
+    --java-opt -XX:+UseStringDeduplication  \
+    --java-opt -Xss4m \
+    --java-opt -Xms100m \
+    --java-opt -Dmetals.client=emacs \
+    org.scalameta:metals_2.13:1.3.1 -o ~/bin/metals -f
+#+end_src
+
+#+begin_src elisp
+  (use-package eglot
+    :hook (scala-ts-mode . eglot-ensure)
+    :config
+    (add-to-list 'eglot-server-programs '((scala-ts-mode) . ("metals")))
+    :bind
+    (:map eglot-mode-map
+          ("C-c e a" . eglot-code-actions)
+          ("C-c e i" . eglot-code-action-organize-imports)
+          ("C-c e f" . eglot-format-buffer)
+          ("C-c e r" . eglot-rename)
+          ([M-down-mouse-1] . mouse-set-point)
+          ([M-mouse-1] . xref-find-definitions)
+          ([M-mouse-3] . xref-go-back)))
+#+end_src
+
+* Jarchive
+#+begin_src elisp
+  (use-package jarchive
+    :after eglot
+    :config
+    (jarchive-setup))
+#+end_src
+
+* Small helpers
+#+begin_src elisp
+  (defun display-string-with-newlines (str)
+    "Display the current region or prompt for a string, with `\\n` interpreted as line breaks."
+    (interactive
+     (if (use-region-p)
+         (list (buffer-substring-no-properties (region-beginning) (region-end)))
+       (list (read-string "Enter the string: "))))
+    (with-output-to-temp-buffer "*String Display*"
+      (princ (replace-regexp-in-string "\\\\n" "\n" str))))
 #+end_src

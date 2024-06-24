@@ -70,6 +70,8 @@
 			       ("Europe/Lisbon" "Lisbon")
 			       ("Europe/Berlin" "Berlin")
 			       ("Europe/Kyiv" "Kyiv")))
+  (tab-always-indent 'complete)
+  (read-extended-command-predicate #'command-completion-default-include-p)
   :config
   (global-auto-revert-mode)
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
@@ -129,13 +131,6 @@
     (let ((font "Iosevka Comfy Fixed"))
       (set-face-attribute 'default nil :font font :height my-iosevka-comfy-height)
       (set-frame-font font nil t)))
-
-(add-to-list 'load-path (expand-file-name (concat user-emacs-directory "lisp")))
-
-(use-package my-test
-  :straight nil
-  :bind
-  (("C-c z" . my-hello-world)))
 
 (use-package hydra)
 
@@ -318,11 +313,15 @@
   (org-agenda-files my-agenda-files)
   (org-agenda-custom-commands my-custom-agendas)
   (org-habit-graph-column 60)
+  (org-use-speed-commands t)
   :config
   (require 'org-attach)
   (add-to-list 'org-export-backends 'md)
   (add-to-list 'org-modules 'org-habit)
   (add-hook 'org-after-refile-insert-hook 'my-org-after-refile-insert)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((shell . t)))
   :bind
   (("C-c c" . org-capture)
    ("C-c l" . org-store-link)
@@ -524,49 +523,20 @@
    ("M-g ;" . iy-go-to-or-up-to-continue)
    ("M-g ," . iy-go-to-or-up-to-continue-backward)))
 
-(use-package company
+(use-package corfu
+  :demand
   :custom
-  (company-minimum-prefix-length 2)
-  (company-idle-delay 0.3)
-  (company-selection-wrap-around t)
-  (company-dabbrev-downcase nil)
-  (company-show-numbers t)
+  (corfu-cycle t)
+  (corfu-auto t)
+  (corfu-quit-at-boundary 'separator)
+  (corfu-quit-no-match t)
+  (corfu-auto-prefix 2)
   :config
-  (global-company-mode)
+  (global-corfu-mode)
   :bind
-  (("M-<tab>" . company-complete)))
-
-(use-package flycheck
-  :custom
-  (flycheck-global-modes '(not org-mode))
-  :config
-  (global-flycheck-mode))
-
-(use-package lsp-mode
-  :custom
-  (lsp-keymap-prefix "<f5>")
-  :hook
-  (scala-mode . lsp)
-  :commands lsp
-  :bind
-  (:map lsp-mode-map
-	([M-down-mouse-1] . mouse-set-point)
-	([M-mouse-1] . lsp-find-definition)
-	([M-mouse-3] . xref-go-back)))
-
-(use-package lsp-ui
-  :commands lsp-ui-mode)
-
-(use-package consult-lsp
-  :after (consult lsp-mode)
-  :bind
-  (:map lsp-mode-map
-	("<f5> d" . consult-lsp-diagnostics)
-	("<f5> s" . consult-lsp-file-symbols)
-	("<f5> S" . consult-lsp-symbols)))
-
-(use-package lsp-metals
-  :after (lsp-mode scala))
+  (:map corfu-map
+        (("C-SPC" . corfu-insert-separator)
+         ("C-;" . corfu-quick-insert))))
 
 (use-package copilot
   :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
@@ -716,15 +686,47 @@
 (defun my-ledger-bal (period)
   (format "%%(binary) -f %%(ledger-file) --invert --period \"%s\" -S amount bal ^Income ^Expenses" period))
 
-(use-package ledger-mode
-  :custom
-  (ledger-default-date-format "%Y-%m-%d")
-  :config
-  (ledger-reports-add "bal-this-month" (my-ledger-bal "this month"))
-  (ledger-reports-add "bal-last-month" (my-ledger-bal "last month")))
-
-(use-package graphql-mode)
-
 (use-package clojure-mode)
 
 (use-package sbt-mode)
+
+(use-package tree-sitter
+  :custom
+  (treesit-font-lock-level 4))
+
+(use-package treesit-auto
+  :custom
+  (treesit-auto-install 'prompt)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
+
+(use-package scala-ts-mode)
+
+(use-package eglot
+  :hook (scala-ts-mode . eglot-ensure)
+  :config
+  (add-to-list 'eglot-server-programs '((scala-ts-mode) . ("metals")))
+  :bind
+  (:map eglot-mode-map
+        ("C-c e a" . eglot-code-actions)
+        ("C-c e i" . eglot-code-action-organize-imports)
+        ("C-c e f" . eglot-format-buffer)
+        ("C-c e r" . eglot-rename)
+        ([M-down-mouse-1] . mouse-set-point)
+        ([M-mouse-1] . xref-find-definitions)
+        ([M-mouse-3] . xref-go-back)))
+
+(use-package jarchive
+  :after eglot
+  :config
+  (jarchive-setup))
+
+(defun display-string-with-newlines (str)
+  "Display the current region or prompt for a string, with `\\n` interpreted as line breaks."
+  (interactive
+   (if (use-region-p)
+       (list (buffer-substring-no-properties (region-beginning) (region-end)))
+     (list (read-string "Enter the string: "))))
+  (with-output-to-temp-buffer "*String Display*"
+    (princ (replace-regexp-in-string "\\\\n" "\n" str))))
