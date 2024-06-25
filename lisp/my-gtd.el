@@ -82,12 +82,12 @@
 
 (setq org-refile-target-verify-function 'my-gtd-verify-refile-target)
 
-(defconst my-gtd--agenda-files (list my-gtd-tasks
-                                     my-gtd-shared-tasks
-                                     my-gtd-projects
-                                     my-gtd-shared-projects
-                                     my-gtd-calendar
-                                     my-gtd-shared-calendar))
+(defconst org-agenda-files (list my-gtd-tasks
+                                 my-gtd-shared-tasks
+                                 my-gtd-projects
+                                 my-gtd-shared-projects
+                                 my-gtd-calendar
+                                 my-gtd-shared-calendar))
 
 (setq org-agenda-custom-commands
       `(("d" "Day"
@@ -95,7 +95,7 @@
                       (org-agenda-skip-scheduled-if-done t)
                       (org-agenda-skip-deadline-if-done t)
                       (org-agenda-skip-timestamp-if-done t)
-                      (org-agenda-files ',my-gtd--agenda-files)))
+                      (org-agenda-files ',org-agenda-files)))
           (todo "TODO" ((org-agenda-overriding-header "Not-scheduled tasks")
                         (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled 'deadline))
                         (org-agenda-files '(,my-gtd-tasks ,my-gtd-shared-tasks))))
