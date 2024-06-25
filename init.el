@@ -343,3 +343,18 @@
   :bind
   (("C-x v" . vterm)
    ("C-x 4 v" . vterm-other-window)))
+
+(use-package hydra)
+
+(use-package copilot
+  :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+  :after hydra
+  :custom
+  (copilot-idle-delay 0.3)
+  :config
+  (add-to-list 'warning-suppress-log-types '(copilot copilot-no-mode-indent))
+  :hook (prog-mode . copilot-mode))
+
+(use-package my-copilot
+  :straight nil
+  :after copilot)

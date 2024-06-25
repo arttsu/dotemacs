@@ -13,6 +13,7 @@
     - [[#install-ledger][Install ledger]]
     - [[#set-up-gptel][Set up GPTel]]
     - [[#set-up-vterm][Set up Vterm]]
+    - [[#set-up-copilot][Set up Copilot]]
 - [[#setup][Setup]]
   - [[#load-local-config][Load local config]]
   - [[#add-lisp-dir-to-load-path][Add 'lisp' dir to load path]]
@@ -52,6 +53,9 @@
   - [[#ledger][Ledger]]
     - [[#my-ledger][My Ledger]]
   - [[#vterm][Vterm]]
+  - [[#hydra][Hydra]]
+  - [[#copilot][Copilot]]
+    - [[#my-copilot][My Copilot]]
 
 * Notes
 ** Dependencies
@@ -106,6 +110,16 @@ Log out and back in to make this effective.
 **** All systems
 Configure fish to work w/ vterm as described in https://github.com/akermu/emacs-libvterm?tab=readme-ov-file#shell-side-configuration.
 
+*** Set up Copilot
+**** Install Node.js
+***** Fedora
+#+BEGIN_SRC shell
+  sudo dnf install nodejs -y
+#+END_SRC
+**** Install Copilot server
+=M-x copilot-install-server=
+**** Login to Copilot
+=M-x copilot-login=
 * Setup
 ** Load local config
 #+begin_src elisp
@@ -630,4 +644,34 @@ https://github.com/vterm/vterm
     :bind
     (("C-x v" . vterm)
      ("C-x 4 v" . vterm-other-window)))
+#+end_src
+
+** Hydra
+https://github.com/abo-abo/hydra
+
+#+begin_src elisp
+  (use-package hydra)
+#+end_src
+
+** Copilot
+https://github.com/zerolfx/copilot.el
+
+#+begin_src elisp
+  (use-package copilot
+    :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+    :after hydra
+    :custom
+    (copilot-idle-delay 0.3)
+    :config
+    (add-to-list 'warning-suppress-log-types '(copilot copilot-no-mode-indent))
+    :hook (prog-mode . copilot-mode))
+#+end_src
+
+*** My Copilot
+[[file:lisp/my-copilot.org]]
+
+#+begin_src elisp
+  (use-package my-copilot
+    :straight nil
+    :after copilot)
 #+end_src
