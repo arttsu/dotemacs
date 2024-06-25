@@ -23,6 +23,7 @@
   - [[#emacs][Emacs]]
   - [[#modus-themes][Modus Themes]]
   - [[#iosevka-comfy-font][Iosevka Comfy font]]
+  - [[#dired][Dired]]
   - [[#super-save][Super Save]]
   - [[#emms][EMMS]]
   - [[#ace-window][Ace Window]]
@@ -237,6 +238,24 @@ https://git.sr.ht/~protesilaos/iosevka-comfy
       (let ((font "Iosevka Comfy Fixed"))
         (set-face-attribute 'default nil :font font :height my-iosevka-comfy-height)
         (set-frame-font font nil t)))
+#+end_src
+
+** Dired
+#+begin_src elisp
+  (use-package dired
+    :straight nil
+    :custom
+    (dired-dwim-target t)
+    (insert-directory-program (cond ((my-windows-p) insert-directory-program)
+                                    ((my-mac-p) "gls")
+                                    (t "ls")))
+    (dired-listing-switches (cond ((my-windows-p) dired-listing-switches)
+                                  (t "-alh --group-directories-first")))
+    :bind
+    (("<f7>" . dired-jump)
+     :map dired-mode-map
+     ("o" . crux-open-with)
+     ("<tab>" . dired-find-file-other-window)))
 #+end_src
 
 ** Super Save

@@ -82,6 +82,21 @@
       (set-face-attribute 'default nil :font font :height my-iosevka-comfy-height)
       (set-frame-font font nil t)))
 
+(use-package dired
+  :straight nil
+  :custom
+  (dired-dwim-target t)
+  (insert-directory-program (cond ((my-windows-p) insert-directory-program)
+                                  ((my-mac-p) "gls")
+                                  (t "ls")))
+  (dired-listing-switches (cond ((my-windows-p) dired-listing-switches)
+                                (t "-alh --group-directories-first")))
+  :bind
+  (("<f7>" . dired-jump)
+   :map dired-mode-map
+   ("o" . crux-open-with)
+   ("<tab>" . dired-find-file-other-window)))
+
 (use-package super-save
   :custom
   (super-save-all-buffers t)
