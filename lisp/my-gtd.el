@@ -43,7 +43,7 @@
         ("sS" "shared someday area" entry (file ,my-gtd-shared-someday) (file ,(my-gtd--template "someday")))
         ("e" "Event")
         ("ee" "event" entry (file+headline ,my-gtd-calendar "Events") (file ,(my-gtd--template "event")))
-        ("eE" "shared event" entry (file+headline ,my-gtd-shared-calendar "Events") (file ,(my-gtd--template "event")))))
+        ("eE" "shared event" entry (file+headline ,my-gtd-shared-calendar "Events [shared]") (file ,(my-gtd--template "event")))))
 
 (defun my-gtd-capture-to-inbox (&optional prefix)
   (interactive "P")
