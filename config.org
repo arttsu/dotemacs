@@ -53,6 +53,7 @@
   - [[#ledger][Ledger]]
     - [[#my-ledger][My Ledger]]
   - [[#vterm][Vterm]]
+  - [[#shell][Shell]]
   - [[#hydra][Hydra]]
   - [[#copilot][Copilot]]
     - [[#my-copilot][My Copilot]]
@@ -644,6 +645,13 @@ https://github.com/vterm/vterm
     :bind
     (("C-x v" . vterm)
      ("C-x 4 v" . vterm-other-window)))
+#+end_src
+
+** Shell
+#+begin_src elisp
+  (use-package shell
+    :custom
+    (shell-kill-buffer-on-exit t))
 #+end_src
 
 ** Hydra

@@ -344,6 +344,10 @@
   (("C-x v" . vterm)
    ("C-x 4 v" . vterm-other-window)))
 
+(use-package shell
+  :custom
+  (shell-kill-buffer-on-exit t))
+
 (use-package hydra)
 
 (use-package copilot
