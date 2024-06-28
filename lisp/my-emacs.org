@@ -1,0 +1,34 @@
+#+TITLE: My Emacs
+#+PROPERTY: header-args:elisp :results silent :tangle my-emacs.el
+#+AUTO_TANGLE: t
+
+* Repeatize keymaps
+https://karthinks.com/software/it-bears-repeating/
+
+#+begin_src elisp
+  (defun repeatize (keymap)
+    "Add `repeat-mode' support to a KEYMAP."
+    (map-keymap
+     (lambda (_key cmd)
+       (when (symbolp cmd)
+         (put cmd 'repeat-map keymap)))
+     (symbol-value keymap)))
+#+end_src
+
+* Repeat-maps
+#+begin_src elisp
+  (defvar-keymap tab-bar-history-repeat-map
+    :repeat t
+    "<left>" #'tab-bar-history-back
+    "<right>" #'tab-bar-history-forward)
+#+end_src
+
+* Provide
+#+begin_src elisp
+  (provide 'my-emacs)
+#+end_src
+
+* Local variables :noexport:
+# Local Variables:
+# jinx-local-words: "Repeatize keymaps"
+# End:

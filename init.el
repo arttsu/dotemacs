@@ -65,6 +65,10 @@
    ("M-z" . zap-up-to-char)
    ("M-Z" . zap-to-char)))
 
+(use-package my-emacs
+  :straight nil
+  :after emacs)
+
 (use-package modus-themes
   :custom
   (modus-themes-italic-constructs t)

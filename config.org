@@ -22,6 +22,7 @@
   - [[#os-helpers][OS helpers]]
 - [[#packages][Packages]]
   - [[#emacs][Emacs]]
+    - [[#my-emacs][My Emacs]]
   - [[#modus-themes][Modus Themes]]
   - [[#iosevka-comfy-font][Iosevka Comfy font]]
   - [[#dired][Dired]]
@@ -220,6 +221,13 @@ https://github.com/radian-software/straight.el
      ("C-c d h" . erase-buffer)
      ("M-z" . zap-up-to-char)
      ("M-Z" . zap-to-char)))
+#+end_src
+
+*** My Emacs
+#+begin_src elisp
+  (use-package my-emacs
+    :straight nil
+    :after emacs)
 #+end_src
 
 ** Modus Themes
