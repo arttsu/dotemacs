@@ -14,6 +14,7 @@
     - [[#set-up-gptel][Set up GPTel]]
     - [[#set-up-vterm][Set up Vterm]]
     - [[#set-up-copilot][Set up Copilot]]
+    - [[#set-up-jinx][Set up Jinx]]
 - [[#setup][Setup]]
   - [[#load-local-config][Load local config]]
   - [[#add-lisp-dir-to-load-path][Add 'lisp' dir to load path]]
@@ -58,6 +59,7 @@
   - [[#hydra][Hydra]]
   - [[#copilot][Copilot]]
     - [[#my-copilot][My Copilot]]
+  - [[#jinx][Jinx]]
 
 * Notes
 ** Dependencies
@@ -122,6 +124,13 @@ Configure fish to work w/ vterm as described in https://github.com/akermu/emacs-
 =M-x copilot-install-server=
 **** Login to Copilot
 =M-x copilot-login=
+
+*** Set up Jinx
+Jinx requires =libenchant=.
+
+On Fedora, install =enchant2-devel=, =pkgconf=. Additional languages are
+available as =hunspell-*= packages, e.g. =hunspell-ru=.
+
 * Setup
 ** Load local config
 #+begin_src elisp
@@ -309,7 +318,10 @@ https://github.com/minad/vertico
 #+begin_src elisp
   (use-package vertico
     :config
-    (vertico-mode))
+    (vertico-mode)
+    (vertico-multiform-mode)
+    (add-to-list 'vertico-multiform-categories
+                 '(jinx grid (vertico-grid-annotate . 20))))
 #+end_src
 
 ** Savehist
@@ -702,3 +714,19 @@ https://github.com/zerolfx/copilot.el
     :straight nil
     :after copilot)
 #+end_src
+
+** Jinx
+https://github.com/minad/jinx
+
+#+begin_src elisp
+  (use-package jinx
+    :hook (emacs-startup . global-jinx-mode)
+    :bind
+    (("M-$" . jinx-correct)
+     ("C-M-$" . jinx-languages)))
+#+end_src
+
+* Local variables :noexport:
+# Local Variables:
+# jinx-local-words: "Avy Dired GPTel Iosevka Magit Modus Orderless Savehist Smartparens Vertico Vterm Yasnippet mpv vterm"
+# End:

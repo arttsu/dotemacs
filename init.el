@@ -129,7 +129,10 @@
 
 (use-package vertico
   :config
-  (vertico-mode))
+  (vertico-mode)
+  (vertico-multiform-mode)
+  (add-to-list 'vertico-multiform-categories
+               '(jinx grid (vertico-grid-annotate . 20))))
 
 (use-package savehist
   :config
@@ -377,3 +380,9 @@
 (use-package my-copilot
   :straight nil
   :after copilot)
+
+(use-package jinx
+  :hook (emacs-startup . global-jinx-mode)
+  :bind
+  (("M-$" . jinx-correct)
+   ("C-M-$" . jinx-languages)))
