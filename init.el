@@ -391,7 +391,9 @@
   :hook (emacs-startup . global-jinx-mode)
   :bind
   (("M-$" . jinx-correct)
-   ("C-M-$" . jinx-languages)))
+   ("C-M-$" . jinx-languages)
+   ("M-n" . jinx-next)
+   ("M-p" . jinx-previous)))
 
 (use-package rg
   :bind
