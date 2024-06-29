@@ -113,6 +113,7 @@ https://docs.ankiweb.net/platform/linux/installing.html
   			       ("Europe/Kyiv" "Kyiv")))
     (tab-always-indent 'complete)
     (read-extended-command-predicate #'command-completion-default-include-p)
+    (backward-delete-char-untabify-method 'hungry)
     :config
     (global-auto-revert-mode)
     (add-to-list 'default-frame-alist '(fullscreen . maximized))
@@ -136,7 +137,9 @@ https://docs.ankiweb.net/platform/linux/installing.html
      ("<f8> l" . tab-bar-history-forward)
      ("<f8> H" . previous-buffer)
      ("<f8> L" . next-buffer)
-     ("<f5> = =" . my-indent-buffer)))
+     ("<f5> = =" . my-indent-buffer)
+     :map prog-mode-map
+     ("DEL" . backward-delete-char-untabify)))
 #+end_src
 
 * Straight
@@ -1264,4 +1267,20 @@ Install Metals:
        (list (read-string "Enter the string: "))))
     (with-output-to-temp-buffer "*String Display*"
       (princ (replace-regexp-in-string "\\\\n" "\n" str))))
+#+end_src
+
+* Markdown
+#+begin_src elisp
+  (use-package markdown-mode)
+#+end_src
+
+* Flyspell
+#+begin_src elisp
+  (use-package flyspell
+    :hook ((text-mode . flyspell-mode)
+           (org-mode . flyspell-mode)
+           (markdown-mode . flyspell-mode)
+           (prog-mode . flyspell-prog-mode))
+    :config
+    (add-hook 'flyspell-mode-hook (lambda () (define-key flyspell-mode-map (kbd "C-;") nil))))
 #+end_src

@@ -72,6 +72,7 @@
 			       ("Europe/Kyiv" "Kyiv")))
   (tab-always-indent 'complete)
   (read-extended-command-predicate #'command-completion-default-include-p)
+  (backward-delete-char-untabify-method 'hungry)
   :config
   (global-auto-revert-mode)
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
@@ -95,7 +96,9 @@
    ("<f8> l" . tab-bar-history-forward)
    ("<f8> H" . previous-buffer)
    ("<f8> L" . next-buffer)
-   ("<f5> = =" . my-indent-buffer)))
+   ("<f5> = =" . my-indent-buffer)
+   :map prog-mode-map
+   ("DEL" . backward-delete-char-untabify)))
 
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -730,3 +733,13 @@
      (list (read-string "Enter the string: "))))
   (with-output-to-temp-buffer "*String Display*"
     (princ (replace-regexp-in-string "\\\\n" "\n" str))))
+
+(use-package markdown-mode)
+
+(use-package flyspell
+  :hook ((text-mode . flyspell-mode)
+         (org-mode . flyspell-mode)
+         (markdown-mode . flyspell-mode)
+         (prog-mode . flyspell-prog-mode))
+  :config
+  (add-hook 'flyspell-mode-hook (lambda () (define-key flyspell-mode-map (kbd "C-;") nil))))
