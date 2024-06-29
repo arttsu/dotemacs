@@ -27,6 +27,7 @@
   - [[#modus-themes][Modus Themes]]
   - [[#iosevka-comfy-font][Iosevka Comfy font]]
   - [[#dired][Dired]]
+  - [[#project][Project]]
   - [[#super-save][Super Save]]
   - [[#emms][EMMS]]
   - [[#ace-window][Ace Window]]
@@ -291,6 +292,13 @@ https://git.sr.ht/~protesilaos/iosevka-comfy
      :map dired-mode-map
      ("o" . crux-open-with)
      ("<tab>" . dired-find-file-other-window)))
+#+end_src
+
+** Project
+#+begin_src elisp
+  (use-package project
+    :config
+    (add-to-list 'project-switch-commands '(project-dired "Dired" "<return>") t))
 #+end_src
 
 ** Super Save

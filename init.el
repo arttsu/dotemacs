@@ -113,6 +113,10 @@
    ("o" . crux-open-with)
    ("<tab>" . dired-find-file-other-window)))
 
+(use-package project
+  :config
+  (add-to-list 'project-switch-commands '(project-dired "Dired" "<return>") t))
+
 (use-package super-save
   :custom
   (super-save-all-buffers t)
