@@ -52,6 +52,7 @@
     - [[#auto-tangle][Auto-tangle]]
     - [[#toc][TOC]]
     - [[#gtd][GTD]]
+    - [[#ox-slack][ox-slack]]
   - [[#gptel][GPTel]]
     - [[#my-gptel][My GPTel]]
   - [[#ledger][Ledger]]
@@ -639,6 +640,14 @@ https://github.com/snosov1/toc-org
      ("C-c I" . my-gtd-capture-note-to-inbox)
      ("C-c j p" . my-gtd-jump-to-project)
      ("C-c j s" . my-gtd-jump-to-someday)))
+#+end_src
+
+*** ox-slack
+https://github.com/titaniumbones/ox-slack
+
+#+begin_src elisp
+  (use-package ox-slack
+    :after org)
 #+end_src
 
 ** GPTel

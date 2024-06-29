@@ -341,6 +341,9 @@
    ("C-c j p" . my-gtd-jump-to-project)
    ("C-c j s" . my-gtd-jump-to-someday)))
 
+(use-package ox-slack
+  :after org)
+
 (use-package gptel
   :custom
   (gptel-model "gpt-4o")
