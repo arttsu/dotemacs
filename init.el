@@ -44,6 +44,7 @@
   (indent-tabs-mode nil)
   (tab-always-indent 'complete)
   (read-extended-command-predicate #'command-completion-default-include-p)
+  (backward-delete-char-untabify-method 'hungry)
   :config
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
   (scroll-bar-mode -1)
@@ -72,7 +73,9 @@
    ("s-t r" . tab-bar-rename-tab)
    ("s-t <left>" . tab-bar-switch-to-prev-tab)
    ("s-t <right>" . tab-bar-switch-to-next-tab)
-   ("s-t m" . tab-bar-move-tab)))
+   ("s-t m" . tab-bar-move-tab)
+   :map prog-mode-map
+   ("DEL" . backward-delete-char-untabify)))
 
 (use-package my-emacs
   :straight nil
