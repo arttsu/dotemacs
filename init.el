@@ -54,6 +54,7 @@
   (global-auto-revert-mode)
   (global-subword-mode)
   (tab-bar-history-mode)
+  (tab-bar-mode)
   (repeat-mode)
   :bind
   (("C-c j x" . scratch-buffer)
@@ -63,7 +64,15 @@
    ("C-M-; d" . duplicate-dwim)
    ("C-c d h" . erase-buffer)
    ("M-z" . zap-up-to-char)
-   ("M-Z" . zap-to-char)))
+   ("M-Z" . zap-to-char)
+   ("C-c t n" . tab-bar-new-tab)
+   ("C-c t s" . tab-bar-switch-to-tab)
+   ("C-c t c" . tab-bar-close-tab)
+   ("C-c t u" . tab-bar-undo-close-tab)
+   ("C-c t r" . tab-bar-rename-tab)
+   ("C-c t <left>" . tab-bar-switch-to-prev-tab)
+   ("C-c t <right>" . tab-bar-switch-to-next-tab)
+   ("C-c t m" . tab-bar-move-tab)))
 
 (use-package my-emacs
   :straight nil
