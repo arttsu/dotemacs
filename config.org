@@ -15,6 +15,7 @@
     - [[#set-up-vterm][Set up Vterm]]
     - [[#set-up-copilot][Set up Copilot]]
     - [[#set-up-jinx][Set up Jinx]]
+    - [[#set-up-ripgrep][Set up Ripgrep]]
 - [[#setup][Setup]]
   - [[#load-local-config][Load local config]]
   - [[#add-lisp-dir-to-load-path][Add 'lisp' dir to load path]]
@@ -61,6 +62,7 @@
   - [[#copilot][Copilot]]
     - [[#my-copilot][My Copilot]]
   - [[#jinx][Jinx]]
+  - [[#ripgrep][Ripgrep]]
 
 * Notes
 ** Dependencies
@@ -131,6 +133,9 @@ Jinx requires =libenchant=.
 
 On Fedora, install =enchant2-devel=, =pkgconf=. Additional languages are
 available as =hunspell-*= packages, e.g. =hunspell-ru=.
+
+*** Set up Ripgrep
+On Fedora, install =ripgrep= package.
 
 * Setup
 ** Load local config
@@ -329,7 +334,9 @@ https://github.com/minad/vertico
     (vertico-mode)
     (vertico-multiform-mode)
     (add-to-list 'vertico-multiform-categories
-                 '(jinx grid (vertico-grid-annotate . 20))))
+                 '(jinx grid (vertico-grid-annotate . 20)))
+    (add-to-list 'vertico-multiform-commands
+                 '(consult-ripgrep buffer indexed)))
 #+end_src
 
 ** Savehist
@@ -734,7 +741,16 @@ https://github.com/minad/jinx
      ("C-M-$" . jinx-languages)))
 #+end_src
 
+** Ripgrep
+https://github.com/dajva/rg.el
+
+#+begin_src elisp
+  (use-package rg
+    :bind
+    (("M-s R" . rg-project)))
+#+end_src
+
 * Local variables :noexport:
 # Local Variables:
-# jinx-local-words: "Avy Dired GPTel Iosevka Magit Modus Orderless Savehist Smartparens Vertico Vterm Yasnippet mpv vterm"
+# jinx-local-words: "Avy Dired GPTel Iosevka Magit Modus Orderless Ripgrep Savehist Smartparens Vertico Vterm Yasnippet mpv vterm"
 # End:

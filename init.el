@@ -136,7 +136,9 @@
   (vertico-mode)
   (vertico-multiform-mode)
   (add-to-list 'vertico-multiform-categories
-               '(jinx grid (vertico-grid-annotate . 20))))
+               '(jinx grid (vertico-grid-annotate . 20)))
+  (add-to-list 'vertico-multiform-commands
+               '(consult-ripgrep buffer indexed)))
 
 (use-package savehist
   :config
@@ -390,3 +392,7 @@
   :bind
   (("M-$" . jinx-correct)
    ("C-M-$" . jinx-languages)))
+
+(use-package rg
+  :bind
+  (("M-s R" . rg-project)))
