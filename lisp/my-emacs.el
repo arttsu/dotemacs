@@ -11,10 +11,4 @@
   "<left>" #'tab-bar-history-back
   "<right>" #'tab-bar-history-forward)
 
-(defvar-keymap tab-bar-reapeat-map
-  :repeat t
-  "<left>" #'tab-bar-switch-to-prev-tab
-  "<right>" #'tab-bar-switch-to-next-tab
-  "m" #'tab-bar-move-tab)
-
 (provide 'my-emacs)

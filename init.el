@@ -66,14 +66,6 @@
    ("C-c d h" . erase-buffer)
    ("M-z" . zap-up-to-char)
    ("M-Z" . zap-to-char)
-   ("s-t n" . tab-bar-new-tab)
-   ("s-t s" . tab-bar-switch-to-tab)
-   ("s-t c" . tab-bar-close-tab)
-   ("s-t u" . tab-bar-undo-close-tab)
-   ("s-t r" . tab-bar-rename-tab)
-   ("s-t <left>" . tab-bar-switch-to-prev-tab)
-   ("s-t <right>" . tab-bar-switch-to-next-tab)
-   ("s-t m" . tab-bar-move-tab)
    :map prog-mode-map
    ("DEL" . backward-delete-char-untabify)))
 
@@ -116,6 +108,11 @@
 (use-package project
   :config
   (add-to-list 'project-switch-commands '(project-dired "Dired" "<return>") t))
+
+(use-package my-project
+  :straight nil
+  :bind
+  (("C-x p P" . my-project-open-new-frame)))
 
 (use-package super-save
   :custom

@@ -1,0 +1,17 @@
+#+TITLE: My project
+#+PROPERTY: header-args:elisp :results silent :tangle my-project.el
+#+AUTO_TANGLE: t
+
+* Open project in new frame
+#+begin_src elisp
+  (defun my-project-open-new-frame ()
+    (interactive)
+    (other-frame-prefix)
+    (call-interactively 'project-switch-project)
+    (set-frame-name (project-name (project-current))))
+#+end_src
+
+* Provide
+#+begin_src elisp
+  (provide 'my-project)
+#+end_src

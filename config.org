@@ -28,6 +28,7 @@
   - [[#iosevka-comfy-font][Iosevka Comfy font]]
   - [[#dired][Dired]]
   - [[#project][Project]]
+    - [[#my-project][My project]]
   - [[#super-save][Super Save]]
   - [[#emms][EMMS]]
   - [[#ace-window][Ace Window]]
@@ -230,14 +231,6 @@ https://github.com/radian-software/straight.el
      ("C-c d h" . erase-buffer)
      ("M-z" . zap-up-to-char)
      ("M-Z" . zap-to-char)
-     ("s-t n" . tab-bar-new-tab)
-     ("s-t s" . tab-bar-switch-to-tab)
-     ("s-t c" . tab-bar-close-tab)
-     ("s-t u" . tab-bar-undo-close-tab)
-     ("s-t r" . tab-bar-rename-tab)
-     ("s-t <left>" . tab-bar-switch-to-prev-tab)
-     ("s-t <right>" . tab-bar-switch-to-next-tab)
-     ("s-t m" . tab-bar-move-tab)
      :map prog-mode-map
      ("DEL" . backward-delete-char-untabify)))
 #+end_src
@@ -299,6 +292,14 @@ https://git.sr.ht/~protesilaos/iosevka-comfy
   (use-package project
     :config
     (add-to-list 'project-switch-commands '(project-dired "Dired" "<return>") t))
+#+end_src
+
+*** My project
+#+begin_src elisp
+  (use-package my-project
+    :straight nil
+    :bind
+    (("C-x p P" . my-project-open-new-frame)))
 #+end_src
 
 ** Super Save
