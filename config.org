@@ -227,14 +227,14 @@ https://github.com/radian-software/straight.el
      ("C-c d h" . erase-buffer)
      ("M-z" . zap-up-to-char)
      ("M-Z" . zap-to-char)
-     ("C-c t n" . tab-bar-new-tab)
-     ("C-c t s" . tab-bar-switch-to-tab)
-     ("C-c t c" . tab-bar-close-tab)
-     ("C-c t u" . tab-bar-undo-close-tab)
-     ("C-c t r" . tab-bar-rename-tab)
-     ("C-c t <left>" . tab-bar-switch-to-prev-tab)
-     ("C-c t <right>" . tab-bar-switch-to-next-tab)
-     ("C-c t m" . tab-bar-move-tab)))
+     ("s-t n" . tab-bar-new-tab)
+     ("s-t s" . tab-bar-switch-to-tab)
+     ("s-t c" . tab-bar-close-tab)
+     ("s-t u" . tab-bar-undo-close-tab)
+     ("s-t r" . tab-bar-rename-tab)
+     ("s-t <left>" . tab-bar-switch-to-prev-tab)
+     ("s-t <right>" . tab-bar-switch-to-next-tab)
+     ("s-t m" . tab-bar-move-tab)))
 #+end_src
 
 *** My Emacs
