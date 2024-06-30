@@ -302,8 +302,11 @@ https://git.sr.ht/~protesilaos/iosevka-comfy
 #+begin_src elisp
   (use-package my-project
     :straight nil
+    :after project
+    :demand
     :bind
-    (("C-x p P" . my-project-open-new-frame)))
+    (("C-x p P" . my-project-open-new-frame)
+     ("C-x p v" . my-project-vterm)))
 #+end_src
 
 ** Super Save

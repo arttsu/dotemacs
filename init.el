@@ -111,8 +111,11 @@
 
 (use-package my-project
   :straight nil
+  :after project
+  :demand
   :bind
-  (("C-x p P" . my-project-open-new-frame)))
+  (("C-x p P" . my-project-open-new-frame)
+   ("C-x p v" . my-project-vterm)))
 
 (use-package super-save
   :custom

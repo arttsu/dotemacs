@@ -4,7 +4,7 @@
 
 * Improve Consult outline for Org headings
 By default, the cursor ends up at the beginning of a heading title
-after a jump. I'd like it to end up at the begining of a heading
+after a jump. I'd like it to end up at the beginning of a heading
 instead, so that I could immediately use org speed commands.
 
 #+begin_src elisp
