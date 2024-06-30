@@ -1,5 +1,15 @@
 # key: litp
 # name: litp
 # --
-#+PROPERTY: header-args:elisp :results silent :tangle $0.el
+#+TITLE: $1
+#+PROPERTY: header-args:elisp :results silent :tangle $2.el
 #+AUTO_TANGLE: t
+
+$0
+
+* Provide
+#+BEGIN_SRC elisp
+  (provide '$2)
+#+END_SRC
+
+* Local variables
