@@ -61,7 +61,6 @@
     - [[#my-ledger][My Ledger]]
   - [[#vterm][Vterm]]
   - [[#shell][Shell]]
-  - [[#hydra][Hydra]]
   - [[#copilot][Copilot]]
     - [[#my-copilot][My Copilot]]
   - [[#jinx][Jinx]]
@@ -739,20 +738,12 @@ https://github.com/vterm/vterm
     (shell-kill-buffer-on-exit t))
 #+end_src
 
-** Hydra
-https://github.com/abo-abo/hydra
-
-#+begin_src elisp
-  (use-package hydra)
-#+end_src
-
 ** Copilot
 https://github.com/zerolfx/copilot.el
 
 #+begin_src elisp
   (use-package copilot
     :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
-    :after hydra
     :custom
     (copilot-idle-delay 0.3)
     :config

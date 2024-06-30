@@ -1,3 +1,5 @@
+(straight-use-package 'hydra)
+
 (defhydra my-copilot-accept-completion (copilot-mode-map "C-<tab>")
   "Accept Copilot completion"
   ("C-<tab>" copilot-accept-completion "Accept" :color blue)

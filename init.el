@@ -391,11 +391,8 @@
   :custom
   (shell-kill-buffer-on-exit t))
 
-(use-package hydra)
-
 (use-package copilot
   :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
-  :after hydra
   :custom
   (copilot-idle-delay 0.3)
   :config
