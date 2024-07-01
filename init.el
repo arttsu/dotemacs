@@ -46,6 +46,7 @@
   (read-extended-command-predicate #'command-completion-default-include-p)
   (backward-delete-char-untabify-method 'hungry)
   :config
+  (set-frame-name "Main")
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
   (scroll-bar-mode -1)
   (tool-bar-mode -1)
