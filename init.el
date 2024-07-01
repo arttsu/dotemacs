@@ -352,6 +352,9 @@
    ("C-c j p" . my-gtd-jump-to-project)
    ("C-c j s" . my-gtd-jump-to-someday)))
 
+(use-package ob-restclient
+  :after org)
+
 (use-package ox-slack
   :after org)
 

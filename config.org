@@ -56,6 +56,7 @@
     - [[#auto-tangle][Auto-tangle]]
     - [[#toc][TOC]]
     - [[#gtd][GTD]]
+    - [[#restclient][Restclient]]
     - [[#ox-slack][ox-slack]]
   - [[#gptel][GPTel]]
     - [[#my-gptel][My GPTel]]
@@ -686,6 +687,14 @@ https://github.com/snosov1/toc-org
      ("C-c j s" . my-gtd-jump-to-someday)))
 #+end_src
 
+*** Restclient
+https://github.com/alf/ob-restclient.el
+
+#+begin_src elisp
+  (use-package ob-restclient
+    :after org)
+#+end_src
+
 *** ox-slack
 https://github.com/titaniumbones/ox-slack
 
@@ -851,5 +860,5 @@ https://github.com/KaranAhlawat/scala-ts-mode
 
 * Local variables :noexport:
 # Local Variables:
-# jinx-local-words: "Avy Dired Eglot GPTel Iosevka Jarchive Magit Modus Orderless Ripgrep Savehist Smartparens Vertico Vterm Yasnippet mpv vterm"
+# jinx-local-words: "Avy Dired Eglot GPTel Iosevka Jarchive Magit Modus Orderless Restclient Ripgrep Savehist Smartparens Vertico Vterm Yasnippet mpv vterm"
 # End:
