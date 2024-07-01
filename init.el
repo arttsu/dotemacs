@@ -421,3 +421,29 @@
 (use-package rg
   :bind
   (("M-s R" . rg-project)))
+
+(use-package tree-sitter
+  :custom
+  (treesit-font-lock-level 4))
+
+(use-package scala-ts-mode
+  :interpreter "scala")
+
+(use-package eglot
+  :hook (scala-ts-mode . eglot-ensure)
+  :config
+  (add-to-list 'eglot-server-programs '((scala-ts-mode) . ("metals")))
+  :bind
+  (:map eglot-mode-map
+        ("C-c e a" . eglot-code-actions)
+        ("C-c e i" . eglot-code-actions-organize-imports)
+        ("C-c e f" . eglot-format-buffer)
+        ("C-c e r" . eglot-rename)
+        ([M-down-mouse-1] . mouse-set-point)
+        ([M-mouse-1] . xref-find-definitions)
+        ([M-mouse-3] . xref-go-back)))
+
+(use-package jarchive
+  :after eglot
+  :config
+  (jarchive-setup))

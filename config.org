@@ -16,6 +16,7 @@
     - [[#set-up-copilot][Set up Copilot]]
     - [[#set-up-jinx][Set up Jinx]]
     - [[#set-up-ripgrep][Set up Ripgrep]]
+    - [[#eglot-metals][Eglot: Metals]]
 - [[#setup][Setup]]
   - [[#load-local-config][Load local config]]
   - [[#add-lisp-dir-to-load-path][Add 'lisp' dir to load path]]
@@ -66,6 +67,10 @@
     - [[#my-copilot][My Copilot]]
   - [[#jinx][Jinx]]
   - [[#ripgrep][Ripgrep]]
+  - [[#tree-sitter][Tree Sitter]]
+  - [[#scala-ts-mode][Scala TS mode]]
+  - [[#eglot][Eglot]]
+  - [[#jarchive][Jarchive]]
 
 * Notes
 ** Dependencies
@@ -139,6 +144,17 @@ available as =hunspell-*= packages, e.g. =hunspell-ru=.
 
 *** Set up Ripgrep
 On Fedora, install =ripgrep= package.
+
+*** Eglot: Metals
+#+BEGIN_SRC shell
+  coursier bootstrap \
+    --java-opt -XX:+UseG1GC \
+    --java-opt -XX:+UseStringDeduplication  \
+    --java-opt -Xss4m \
+    --java-opt -Xms100m \
+    --java-opt -Dmetals.client=emacs \
+    org.scalameta:metals_2.13:1.3.1 -o ~/bin/metals -f
+#+END_SRC
 
 * Setup
 ** Load local config
@@ -793,7 +809,47 @@ https://github.com/dajva/rg.el
     (("M-s R" . rg-project)))
 #+end_src
 
+** Tree Sitter
+#+begin_src elisp
+  (use-package tree-sitter
+    :custom
+    (treesit-font-lock-level 4))
+#+end_src
+
+** Scala TS mode
+https://github.com/KaranAhlawat/scala-ts-mode
+
+#+begin_src elisp
+  (use-package scala-ts-mode
+    :interpreter "scala")
+#+end_src
+
+** Eglot
+#+begin_src elisp
+  (use-package eglot
+    :hook (scala-ts-mode . eglot-ensure)
+    :config
+    (add-to-list 'eglot-server-programs '((scala-ts-mode) . ("metals")))
+    :bind
+    (:map eglot-mode-map
+          ("C-c e a" . eglot-code-actions)
+          ("C-c e i" . eglot-code-actions-organize-imports)
+          ("C-c e f" . eglot-format-buffer)
+          ("C-c e r" . eglot-rename)
+          ([M-down-mouse-1] . mouse-set-point)
+          ([M-mouse-1] . xref-find-definitions)
+          ([M-mouse-3] . xref-go-back)))
+#+end_src
+
+** Jarchive
+#+begin_src elisp
+  (use-package jarchive
+    :after eglot
+    :config
+    (jarchive-setup))
+#+end_src
+
 * Local variables :noexport:
 # Local Variables:
-# jinx-local-words: "Avy Dired GPTel Iosevka Magit Modus Orderless Ripgrep Savehist Smartparens Vertico Vterm Yasnippet mpv vterm"
+# jinx-local-words: "Avy Dired Eglot GPTel Iosevka Jarchive Magit Modus Orderless Ripgrep Savehist Smartparens Vertico Vterm Yasnippet mpv vterm"
 # End:
