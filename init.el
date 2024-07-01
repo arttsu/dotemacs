@@ -450,3 +450,13 @@
   :after eglot
   :config
   (jarchive-setup))
+
+(use-package kubel
+  :bind
+  (("C-c K" . kubel)
+   :map kubel-mode-map
+   ("n" . next-line)
+   ("p" . previous-line)
+   ("N" . kubel-set-namespace)
+   ("v" . kubel-exec-shell-pod)
+   ("D" . kubel-exec-pod)))

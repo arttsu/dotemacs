@@ -72,6 +72,7 @@
   - [[#scala-ts-mode][Scala TS mode]]
   - [[#eglot][Eglot]]
   - [[#jarchive][Jarchive]]
+  - [[#kubel][Kubel]]
 
 * Notes
 ** Dependencies
@@ -858,7 +859,22 @@ https://github.com/KaranAhlawat/scala-ts-mode
     (jarchive-setup))
 #+end_src
 
+** Kubel
+https://github.com/abrochard/kubel
+
+#+begin_src elisp
+  (use-package kubel
+    :bind
+    (("C-c K" . kubel)
+     :map kubel-mode-map
+     ("n" . next-line)
+     ("p" . previous-line)
+     ("N" . kubel-set-namespace)
+     ("v" . kubel-exec-shell-pod)
+     ("D" . kubel-exec-pod)))
+#+end_src
+
 * Local variables :noexport:
 # Local Variables:
-# jinx-local-words: "Avy Dired Eglot GPTel Iosevka Jarchive Magit Modus Orderless Restclient Ripgrep Savehist Smartparens Vertico Vterm Yasnippet mpv vterm"
+# jinx-local-words: "Avy Dired Eglot GPTel Iosevka Jarchive Kubel Magit Modus Orderless Restclient Ripgrep Savehist Smartparens Vertico Vterm Yasnippet mpv vterm"
 # End:
