@@ -10,3 +10,5 @@
 /custom.el
 /.org-id-locations
 /.cache/
+/tramp
+/tree-sitter/
