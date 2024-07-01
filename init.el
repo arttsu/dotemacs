@@ -313,6 +313,13 @@
    ("C-c l" . org-store-link)
    ("C-c a" . org-agenda)))
 
+(use-package my-org
+  :straight nil
+  :after org
+  :bind
+  (:map org-mode-map
+        ("M-g e" . my-org-end-of-subtree)))
+
 (use-package org-modern
   :after org
   :custom

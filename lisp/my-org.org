@@ -1,0 +1,22 @@
+#+TITLE: My Org
+#+PROPERTY: header-args:elisp :results silent :tangle my-org.el
+#+AUTO_TANGLE: t
+
+* Go to the last item of a subtree
+#+begin_src elisp
+  (defun my-org-end-of-subtree ()
+    (interactive)
+    (org-end-of-subtree)
+    (org-back-to-heading))
+#+end_src
+
+* Provide
+#+BEGIN_SRC elisp
+  (provide 'my-org)
+  #+END_SRC
+
+* Local variables
+
+# Local Variables:
+# jinx-local-words: "subtree"
+# End:

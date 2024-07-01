@@ -49,6 +49,7 @@
   - [[#go-to-char][Go to Char]]
   - [[#magit][Magit]]
   - [[#org-mode][Org Mode]]
+    - [[#my-org][My Org]]
     - [[#org-modern][Org Modern]]
     - [[#my-org-looks][My Org Looks]]
     - [[#auto-tangle][Auto-tangle]]
@@ -600,6 +601,16 @@ https://orgmode.org/
     (("C-c c" . org-capture)
      ("C-c l" . org-store-link)
      ("C-c a" . org-agenda)))
+#+end_src
+
+*** My Org
+#+begin_src elisp
+  (use-package my-org
+    :straight nil
+    :after org
+    :bind
+    (:map org-mode-map
+          ("M-g e" . my-org-end-of-subtree)))
 #+end_src
 
 *** Org Modern
