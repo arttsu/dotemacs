@@ -806,9 +806,7 @@ https://github.com/minad/jinx
     :hook (emacs-startup . global-jinx-mode)
     :bind
     (("M-$" . jinx-correct)
-     ("C-M-$" . jinx-languages)
-     ("M-n" . jinx-next)
-     ("M-p" . jinx-previous)))
+     ("C-M-$" . jinx-languages)))
 #+end_src
 
 ** Ripgrep
