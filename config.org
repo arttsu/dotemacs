@@ -73,6 +73,7 @@
   - [[#eglot][Eglot]]
   - [[#jarchive][Jarchive]]
   - [[#kubel][Kubel]]
+  - [[#markdown][Markdown]]
 
 * Notes
 ** Dependencies
@@ -871,6 +872,12 @@ https://github.com/abrochard/kubel
      ("N" . kubel-set-namespace)
      ("v" . kubel-exec-shell-pod)
      ("D" . kubel-exec-pod)))
+#+end_src
+
+** Markdown
+#+begin_src elisp
+  (use-package markdown-mode
+    :interpreter "markdown")
 #+end_src
 
 * Local variables :noexport:

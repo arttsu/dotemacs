@@ -459,3 +459,6 @@
    ("N" . kubel-set-namespace)
    ("v" . kubel-exec-shell-pod)
    ("D" . kubel-exec-pod)))
+
+(use-package markdown-mode
+  :interpreter "markdown")
