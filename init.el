@@ -316,6 +316,7 @@
 
 (use-package my-org
   :straight nil
+  :demand t
   :after org
   :bind
   (:map org-mode-map

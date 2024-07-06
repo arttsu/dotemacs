@@ -3,4 +3,10 @@
   (org-end-of-subtree)
   (org-back-to-heading))
 
+(defun my-org-setup ()
+  (setq-local fill-column 105)
+  (auto-fill-mode 1))
+
+(add-hook 'org-mode-hook 'my-org-setup)
+
 (provide 'my-org)

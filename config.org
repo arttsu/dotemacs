@@ -627,6 +627,7 @@ https://orgmode.org/
 #+begin_src elisp
   (use-package my-org
     :straight nil
+    :demand t
     :after org
     :bind
     (:map org-mode-map
