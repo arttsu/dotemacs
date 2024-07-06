@@ -1,4 +1,5 @@
 (require 'gptel)
+(require 'my-org-helpers)
 
 (define-derived-mode my-gptel-mode org-mode "GPTel")
 
@@ -22,19 +23,7 @@
   (recenter-top-bottom 0))
 
 (defun my-gptel-post-response (&rest args)
-  (save-excursion
-    (goto-char (point-min))
-    (while (not (eobp))
-      (org-forward-paragraph)
-      (let ((elem (org-element-at-point)))
-        (when (member (org-element-type elem) '(paragraph item))
-          (save-excursion
-            (goto-char (org-element-property :begin elem))
-            (fill-paragraph)))
-        (when (string= (org-element-type elem) 'plain-list)
-          (save-excursion
-            (org-backward-paragraph)
-            (fill-paragraph)))))))
+  (my-org-auto-fill-buffer))
 
 (add-hook 'gptel-post-response-hook 'my-gptel-post-response)
 
