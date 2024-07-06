@@ -14,6 +14,13 @@
   (erase-buffer)
   (insert "*** "))
 
+(defun my-gptel-send ()
+  (interactive)
+  (goto-char (point-max))
+  (gptel-send)
+  (org-back-to-heading)
+  (recenter-top-bottom 0))
+
 (defun my-gptel-post-response (&rest args)
   (save-excursion
     (goto-char (point-min))

@@ -370,7 +370,6 @@
   :bind
   (("C-c SPC" . gptel)
    :map gptel-mode-map
-   ("C-c C-c" . gptel-send)
    ("C-c k" . gptel-abort)))
 
 (use-package my-gptel
@@ -378,7 +377,8 @@
   :mode ("\\.gpt\\'" . my-gptel-mode)
   :bind
   (:map gptel-mode-map
-        ("C-c d h" . my-gptel-clear-buffer)))
+        ("C-c d h" . my-gptel-clear-buffer)
+        ("C-c C-c" . my-gptel-send)))
 
 (use-package ledger-mode
   :custom
