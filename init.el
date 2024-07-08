@@ -463,3 +463,15 @@
 
 (use-package markdown-mode
   :interpreter "markdown")
+
+(define-derived-mode anki-mode org-mode "Anki")
+
+(add-to-list 'auto-mode-alist '("\\.anki\\'" . anki-mode))
+
+(use-package anki-editor
+  :hook (anki-mode . anki-editor-mode)
+  :bind
+  (:map anki-mode-map
+        ("C-<return>" . anki-editor-insert-note)
+        ("C-c p p" . anki-editor-push-notes)
+        ("C-c p r" . anki-editor-retry-failure-notes)))
