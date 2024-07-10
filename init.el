@@ -69,6 +69,7 @@
    ("C-c d h" . erase-buffer)
    ("M-z" . zap-up-to-char)
    ("M-Z" . zap-to-char)
+   ("C-x K" . kill-this-buffer)
    :map prog-mode-map
    ("DEL" . backward-delete-char-untabify)
    ("M-g N" . flymake-goto-next-error)
