@@ -68,7 +68,9 @@
    ("M-z" . zap-up-to-char)
    ("M-Z" . zap-to-char)
    :map prog-mode-map
-   ("DEL" . backward-delete-char-untabify)))
+   ("DEL" . backward-delete-char-untabify)
+   ("M-g N" . flymake-goto-next-error)
+   ("M-g P" . flymake-goto-prev-error)))
 
 (use-package my-emacs
   :straight nil

@@ -257,7 +257,9 @@ https://github.com/radian-software/straight.el
      ("M-z" . zap-up-to-char)
      ("M-Z" . zap-to-char)
      :map prog-mode-map
-     ("DEL" . backward-delete-char-untabify)))
+     ("DEL" . backward-delete-char-untabify)
+     ("M-g N" . flymake-goto-next-error)
+     ("M-g P" . flymake-goto-prev-error)))
 #+end_src
 
 *** My Emacs
