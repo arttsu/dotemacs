@@ -24,6 +24,26 @@ https://karthinks.com/software/it-bears-repeating/
     "<right>" #'tab-bar-history-forward)
 #+end_src
 
+* Split windows sensibly
+=split-window-sensibly= first tries to split window vertically (one above the other), and if it can't, then
+horizontally. I want to have it the other way around - first horizontally, then vertically.
+
+Copied from https://emacs.stackexchange.com/a/33756
+
+#+begin_src elisp
+  (defun my-split-window-sensibly (&optional window)
+      (interactive)
+      (let ((window (or window (selected-window))))
+          (or (and (window-splittable-p window t)
+                   (with-selected-window window
+                       (split-window-right)))
+              (and (window-splittable-p window)
+                   (with-selected-window window
+                       (split-window-below))))))
+
+  (setq split-window-preferred-function #'my-split-window-sensibly)
+#+end_src
+
 * Provide
 #+begin_src elisp
   (provide 'my-emacs)

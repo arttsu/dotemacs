@@ -234,6 +234,8 @@ https://github.com/radian-software/straight.el
     (tab-always-indent 'complete)
     (read-extended-command-predicate #'command-completion-default-include-p)
     (backward-delete-char-untabify-method 'hungry)
+    (split-width-threshold 200)
+    (split-height-threshold 60)
     :config
     (set-frame-name "Main")
     (add-to-list 'default-frame-alist '(fullscreen . maximized))
