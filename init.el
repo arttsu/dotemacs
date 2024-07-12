@@ -252,7 +252,7 @@
    ("C-M-; m" . avy-move-line)
    ("C-M-; M" . avy-move-region)
    ("C-M-; k" . avy-kill-whole-line)
-   ("C-M-; M" . avy-kill-region)
+   ("C-M-; K" . avy-kill-region)
    ("C-M-; s" . avy-kill-ring-save-whole-line)
    ("C-M-; S" . avy-kill-ring-save-region)
    :map isearch-mode-map
