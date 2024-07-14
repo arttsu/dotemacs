@@ -20,9 +20,10 @@
     - [[#anki][Anki]]
 - [[#setup][Setup]]
   - [[#load-local-config][Load local config]]
-  - [[#add-lisp-dir-to-load-path][Add 'lisp' dir to load path]]
-  - [[#straight][Straight]]
   - [[#os-helpers][OS helpers]]
+  - [[#add-lisp-dir-to-load-path][Add 'lisp' dir to load path]]
+  - [[#windows-add-git-to-path][Windows: Add Git to path]]
+  - [[#straight][Straight]]
 - [[#packages][Packages]]
   - [[#emacs][Emacs]]
     - [[#my-emacs][My Emacs]]
@@ -169,9 +170,25 @@ On Fedora, install =ripgrep= package.
 #+begin_src elisp
   (load (expand-file-name "local.el" user-emacs-directory))
 #+end_src
+** OS helpers
+#+begin_src elisp
+  (defun my-windows-p ()
+    (eq system-type 'windows-nt))
+
+  (defun my-mac-p ()
+    (eq system-type 'darwin))
+#+end_src
+
 ** Add 'lisp' dir to load path
 #+begin_src elisp
   (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+#+end_src
+
+** Windows: Add Git to path
+#+begin_src elisp
+  (when (my-windows-p)
+    (setenv "PATH" (concat my-git-path ";" (getenv "PATH")))
+    (push my-git-path exec-path))
 #+end_src
 
 ** Straight :noexport_1:
@@ -203,15 +220,6 @@ https://github.com/radian-software/straight.el
 *** Post-bootstrap
 #+begin_src elisp
   (setq straight-use-package-by-default t)
-#+end_src
-
-** OS helpers
-#+begin_src elisp
-  (defun my-windows-p ()
-    (eq system-type 'windows-nt))
-
-  (defun my-mac-p ()
-    (eq system-type 'darwin))
 #+end_src
 
 * Packages
@@ -360,6 +368,7 @@ https://www.gnu.org/software/emms/manual/#Introduction
 
 #+begin_src elisp
   (use-package emms
+    :unless (my-windows-p)
     :custom
     (emms-player-list '(emms-player-mpv))
     (emms-player-mpv-update-metadata t)
@@ -752,6 +761,7 @@ https://github.com/ledger/ledger-mode
 
 #+begin_src elisp
   (use-package ledger-mode
+    :unless (my-windows-p)
     :custom
     (ledger-default-date-format "%Y-%m-%d"))
 #+end_src
@@ -770,7 +780,7 @@ https://github.com/vterm/vterm
 
 #+begin_src elisp
   (use-package vterm
-    :when (not (my-windows-p))
+    :unless (my-windows-p)
     :custom
     (vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
     (vterm-shell my-fish-path)
@@ -793,6 +803,7 @@ https://github.com/zerolfx/copilot.el
 
 #+begin_src elisp
   (use-package copilot
+    :unless (my-windows-p)
     :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
     :custom
     (copilot-idle-delay 0.3)
@@ -815,6 +826,7 @@ https://github.com/minad/jinx
 
 #+begin_src elisp
   (use-package jinx
+    :unless (my-windows-p)
     :hook (emacs-startup . global-jinx-mode)
     :bind
     (("M-$" . jinx-correct)
@@ -826,6 +838,7 @@ https://github.com/dajva/rg.el
 
 #+begin_src elisp
   (use-package rg
+    :unless (my-windows-p)
     :bind
     (("M-s R" . rg-project)))
 #+end_src
@@ -833,6 +846,7 @@ https://github.com/dajva/rg.el
 ** Tree Sitter
 #+begin_src elisp
   (use-package tree-sitter
+    :unless (my-windows-p)
     :custom
     (treesit-font-lock-level 4))
 #+end_src
@@ -842,12 +856,14 @@ https://github.com/KaranAhlawat/scala-ts-mode
 
 #+begin_src elisp
   (use-package scala-ts-mode
+    :unless (my-windows-p)
     :interpreter "scala")
 #+end_src
 
 ** Eglot
 #+begin_src elisp
   (use-package eglot
+    :unless (my-windows-p)
     :hook (scala-ts-mode . eglot-ensure)
     :config
     (add-to-list 'eglot-server-programs '((scala-ts-mode) . ("metals")))
@@ -865,6 +881,7 @@ https://github.com/KaranAhlawat/scala-ts-mode
 ** Jarchive
 #+begin_src elisp
   (use-package jarchive
+    :unless (my-windows-p)
     :after eglot
     :config
     (jarchive-setup))
@@ -875,6 +892,7 @@ https://github.com/abrochard/kubel
 
 #+begin_src elisp
   (use-package kubel
+    :unless (my-windows-p)
     :bind
     (("C-c K" . kubel)
      :map kubel-mode-map
@@ -900,6 +918,7 @@ https://github.com/louietan/anki-editor
   (add-to-list 'auto-mode-alist '("\\.anki\\'" . anki-mode))
 
   (use-package anki-editor
+    :unless (my-windows-p)
     :hook (anki-mode . anki-editor-mode)
     :bind
     (:map anki-mode-map

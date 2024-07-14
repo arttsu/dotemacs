@@ -1,6 +1,16 @@
 (load (expand-file-name "local.el" user-emacs-directory))
 
+(defun my-windows-p ()
+  (eq system-type 'windows-nt))
+
+(defun my-mac-p ()
+  (eq system-type 'darwin))
+
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+
+(when (my-windows-p)
+  (setenv "PATH" (concat my-git-path ";" (getenv "PATH")))
+  (push my-git-path exec-path))
 
 (setq package-enable-at-startup nil)
 
@@ -21,12 +31,6 @@
   (load bootstrap-file nil 'nomessage))
 
 (setq straight-use-package-by-default t)
-
-(defun my-windows-p ()
-  (eq system-type 'windows-nt))
-
-(defun my-mac-p ()
-  (eq system-type 'darwin))
 
 (use-package emacs
   :custom
@@ -135,6 +139,7 @@
   (super-save-mode))
 
 (use-package emms
+  :unless (my-windows-p)
   :custom
   (emms-player-list '(emms-player-mpv))
   (emms-player-mpv-update-metadata t)
@@ -386,6 +391,7 @@
         ("C-c C-c" . my-gptel-send)))
 
 (use-package ledger-mode
+  :unless (my-windows-p)
   :custom
   (ledger-default-date-format "%Y-%m-%d"))
 
@@ -394,7 +400,7 @@
   :after ledger-mode)
 
 (use-package vterm
-  :when (not (my-windows-p))
+  :unless (my-windows-p)
   :custom
   (vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
   (vterm-shell my-fish-path)
@@ -409,6 +415,7 @@
   (shell-kill-buffer-on-exit t))
 
 (use-package copilot
+  :unless (my-windows-p)
   :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
   :custom
   (copilot-idle-delay 0.3)
@@ -421,23 +428,28 @@
   :after copilot)
 
 (use-package jinx
+  :unless (my-windows-p)
   :hook (emacs-startup . global-jinx-mode)
   :bind
   (("M-$" . jinx-correct)
    ("C-M-$" . jinx-languages)))
 
 (use-package rg
+  :unless (my-windows-p)
   :bind
   (("M-s R" . rg-project)))
 
 (use-package tree-sitter
+  :unless (my-windows-p)
   :custom
   (treesit-font-lock-level 4))
 
 (use-package scala-ts-mode
+  :unless (my-windows-p)
   :interpreter "scala")
 
 (use-package eglot
+  :unless (my-windows-p)
   :hook (scala-ts-mode . eglot-ensure)
   :config
   (add-to-list 'eglot-server-programs '((scala-ts-mode) . ("metals")))
@@ -452,11 +464,13 @@
         ([M-mouse-3] . xref-go-back)))
 
 (use-package jarchive
+  :unless (my-windows-p)
   :after eglot
   :config
   (jarchive-setup))
 
 (use-package kubel
+  :unless (my-windows-p)
   :bind
   (("C-c K" . kubel)
    :map kubel-mode-map
@@ -474,6 +488,7 @@
 (add-to-list 'auto-mode-alist '("\\.anki\\'" . anki-mode))
 
 (use-package anki-editor
+  :unless (my-windows-p)
   :hook (anki-mode . anki-editor-mode)
   :bind
   (:map anki-mode-map
