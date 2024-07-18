@@ -11,6 +11,11 @@
   "<left>" #'tab-bar-history-back
   "<right>" #'tab-bar-history-forward)
 
+(defvar-keymap horizontal-scroll-repeat-map
+  :repeat t
+  ">" #'scroll-right
+  "<" #'scroll-left)
+
 (defun my-split-window-sensibly (&optional window)
     (interactive)
     (let ((window (or window (selected-window))))

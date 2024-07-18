@@ -24,6 +24,14 @@ https://karthinks.com/software/it-bears-repeating/
     "<right>" #'tab-bar-history-forward)
 #+end_src
 
+** Horizontal scroll
+#+begin_src elisp
+  (defvar-keymap horizontal-scroll-repeat-map
+    :repeat t
+    ">" #'scroll-right
+    "<" #'scroll-left)
+#+end_src
+
 * Split windows sensibly
 =split-window-sensibly= first tries to split window vertically (one above the other), and if it can't, then
 horizontally. I want to have it the other way around - first horizontally, then vertically.
