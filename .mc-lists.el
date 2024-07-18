@@ -3,13 +3,20 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        backward-sexp
+        crux-smart-open-line-above
         forward-sexp
+        iy-go-to-char--command
         kill-sexp
+        mc--insert-number-and-increase
         org-self-insert-command
         sp-down-sexp
         sp-end-of-sexp
         sp-forward-slurp-sexp
         sp-unwrap-sexp
+        sp-up-sexp
+        whole-line-or-region-kill-region
+        zap-up-to-char
         ))
 
 (setq mc/cmds-to-run-once
