@@ -319,6 +319,10 @@
   (org-hide-emphasis-markers t)
   (org-pretty-entities t)
   (org-use-speed-commands t)
+  :config
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((shell . t)))
   :bind
   (("C-c c" . org-capture)
    ("C-c l" . org-store-link)
