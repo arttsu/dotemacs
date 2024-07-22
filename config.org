@@ -77,6 +77,7 @@
   - [[#kubel][Kubel]]
   - [[#markdown][Markdown]]
   - [[#anki-editor][Anki editor]]
+  - [[#plantuml][PlantUML]]
 
 * Notes
 ** Dependencies
@@ -930,6 +931,11 @@ https://github.com/louietan/anki-editor
           ("C-<return>" . anki-editor-insert-note)
           ("C-c p p" . anki-editor-push-notes)
           ("C-c p r" . anki-editor-retry-failure-notes)))
+#+end_src
+
+** PlantUML
+#+begin_src elisp
+  (use-package plantuml-mode)
 #+end_src
 
 * Local variables :noexport:
