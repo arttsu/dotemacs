@@ -46,6 +46,7 @@
           ("iI" "note" entry (file+headline ,my-gtd-inbox "Inbox") "* %?")
           ("il" "todo link" entry (file+headline ,my-gtd-inbox "Inbox") "* TODO [[%c][%^{Description}]]%?")
           ("iL" "note link" entry (file+headline ,my-gtd-inbox "Inbox") "* [[%c][%^{Description}]]%?")
+          ("ia" "annotation" entry (file+headline ,my-gtd-inbox "Inbox") "* %A%?")
           ("p" "Project")
           ("pp" "project" entry (file ,my-gtd-projects) (file ,(my-gtd--template "project")))
           ("pP" "shared project" entry (file ,my-gtd-shared-projects) (file ,(my-gtd--template "project")))
@@ -69,6 +70,7 @@
     (cond
      ((equal prefix nil) (org-capture nil "iI"))
      ((equal prefix '(4)) (org-capture nil "iL"))
+     ((equal prefix '(16)) (org-capture nil "ia"))
      (t (message "Prefix '%s' not supported" prefix))))
 #+end_src
 
