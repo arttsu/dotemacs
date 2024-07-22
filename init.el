@@ -74,6 +74,7 @@
    ("M-z" . zap-up-to-char)
    ("M-Z" . zap-to-char)
    ("C-x K" . kill-this-buffer)
+   ("s-t" . tab-switch)
    :map prog-mode-map
    ("DEL" . backward-delete-char-untabify)
    ("M-g N" . flymake-goto-next-error)
