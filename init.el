@@ -84,7 +84,11 @@
 
 (use-package my-emacs
   :straight nil
-  :after emacs)
+  :demand
+  :after emacs
+  :bind
+  (("C-c d w" . my/kill-forward-to-word)
+   ("C-c d W" . my/kill-backward-to-word)))
 
 (use-package modus-themes
   :custom

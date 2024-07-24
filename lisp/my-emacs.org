@@ -52,6 +52,17 @@ Copied from https://emacs.stackexchange.com/a/33756
   (setq split-window-preferred-function #'my-split-window-sensibly)
 #+end_src
 
+* Kill to word (and backward)
+#+begin_src elisp
+  (defun my/kill-forward-to-word ()
+    (interactive)
+    (kill-region (point) (progn (forward-to-word 1) (point))))
+
+  (defun my/kill-backward-to-word ()
+    (interactive)
+    (kill-region (point) (progn (backward-to-word 1) (point))))
+#+end_src
+
 * Provide
 #+begin_src elisp
   (provide 'my-emacs)

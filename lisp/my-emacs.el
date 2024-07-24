@@ -28,4 +28,12 @@
 
 (setq split-window-preferred-function #'my-split-window-sensibly)
 
+(defun my/kill-forward-to-word ()
+  (interactive)
+  (kill-region (point) (progn (forward-to-word 1) (point))))
+
+(defun my/kill-backward-to-word ()
+  (interactive)
+  (kill-region (point) (progn (backward-to-word 1) (point))))
+
 (provide 'my-emacs)
