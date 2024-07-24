@@ -269,6 +269,8 @@ https://github.com/radian-software/straight.el
      ("M-Z" . zap-to-char)
      ("C-x K" . kill-this-buffer)
      ("s-t" . tab-switch)
+     ([down-mouse-2] . mouse-set-point)
+     ([mouse-2] . delete-window)
      :map prog-mode-map
      ("DEL" . backward-delete-char-untabify)
      ("M-g N" . flymake-goto-next-error)
@@ -281,7 +283,11 @@ https://github.com/radian-software/straight.el
 #+begin_src elisp
   (use-package my-emacs
     :straight nil
-    :after emacs)
+    :demand
+    :after emacs
+    :bind
+    (("C-c d w" . my/kill-forward-to-word)
+     ("C-c d W" . my/kill-backward-to-word)))
 #+end_src
 
 ** Modus Themes
