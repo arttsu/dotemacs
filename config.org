@@ -78,6 +78,7 @@
   - [[#markdown][Markdown]]
   - [[#anki-editor][Anki editor]]
   - [[#plantuml][PlantUML]]
+  - [[#clojure-mode][Clojure mode]]
 
 * Notes
 ** Dependencies
@@ -942,6 +943,11 @@ https://github.com/louietan/anki-editor
 ** PlantUML
 #+begin_src elisp
   (use-package plantuml-mode)
+#+end_src
+
+** Clojure mode
+#+begin_src elisp
+  (use-package clojure-mode)
 #+end_src
 
 * Local variables :noexport:

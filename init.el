@@ -508,3 +508,5 @@
         ("C-c p r" . anki-editor-retry-failure-notes)))
 
 (use-package plantuml-mode)
+
+(use-package clojure-mode)
