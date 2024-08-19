@@ -10,6 +10,8 @@
         kill-sexp
         mc--insert-number-and-increase
         org-self-insert-command
+        sp-backward-up-sexp
+        sp-beginning-of-sexp
         sp-down-sexp
         sp-end-of-sexp
         sp-forward-slurp-sexp
