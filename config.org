@@ -79,6 +79,7 @@
   - [[#anki-editor][Anki editor]]
   - [[#plantuml][PlantUML]]
   - [[#clojure-mode][Clojure mode]]
+  - [[#openai-tools][OpenAI tools]]
 
 * Notes
 ** Dependencies
@@ -951,6 +952,12 @@ https://github.com/louietan/anki-editor
 ** Clojure mode
 #+begin_src elisp
   (use-package clojure-mode)
+#+end_src
+
+** OpenAI tools
+#+begin_src elisp
+    (use-package my-openai-tools
+      :straight nil)
 #+end_src
 
 * Local variables :noexport:

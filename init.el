@@ -513,3 +513,6 @@
 (use-package plantuml-mode)
 
 (use-package clojure-mode)
+
+(use-package my-openai-tools
+  :straight nil)
