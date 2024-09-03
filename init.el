@@ -520,3 +520,5 @@
 
 (use-package my-openai-tools
   :straight nil)
+
+(use-package terraform-mode)

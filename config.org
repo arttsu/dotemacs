@@ -80,6 +80,7 @@
   - [[#plantuml][PlantUML]]
   - [[#clojure-mode][Clojure mode]]
   - [[#openai-tools][OpenAI tools]]
+  - [[#terraform][Terraform]]
 
 * Notes
 ** Dependencies
@@ -962,6 +963,11 @@ https://github.com/louietan/anki-editor
 #+begin_src elisp
     (use-package my-openai-tools
       :straight nil)
+#+end_src
+
+** Terraform
+#+begin_src elisp
+  (use-package terraform-mode)
 #+end_src
 
 * Local variables :noexport:
