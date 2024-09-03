@@ -36,4 +36,18 @@
   (interactive)
   (kill-region (point) (progn (backward-to-word 1) (point))))
 
+(defun my/kill-to-beginning-of-buffer ()
+  "Kill from point to beginning of buffer."
+  (interactive)
+  (kill-region (point) (point-min)))
+
+(defun my/kill-to-end-of-buffer ()
+  "Kill from point to end of buffer."
+  (interactive)
+  (kill-region (point) (point-max)))
+
+(defun my/jump-home ()
+  (interactive)
+  (find-file "~/"))
+
 (provide 'my-emacs)

@@ -88,7 +88,10 @@
   :after emacs
   :bind
   (("C-c d w" . my/kill-forward-to-word)
-   ("C-c d W" . my/kill-backward-to-word)))
+   ("C-c d W" . my/kill-backward-to-word)
+   ("C-c d <" . my/kill-to-beginning-of-buffer)
+   ("C-c d >" . my/kill-to-end-of-buffer)
+   ("C-c j h" . my/jump-home)))
 
 (use-package modus-themes
   :custom
@@ -166,6 +169,7 @@
   (("M-o" . ace-window)))
 
 (use-package vertico
+  :demand
   :config
   (vertico-mode)
   (vertico-multiform-mode)

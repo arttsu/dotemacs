@@ -63,6 +63,26 @@ Copied from https://emacs.stackexchange.com/a/33756
     (kill-region (point) (progn (backward-to-word 1) (point))))
 #+end_src
 
+* Kill to the beginning/end of the buffer
+#+begin_src elisp
+  (defun my/kill-to-beginning-of-buffer ()
+    "Kill from point to beginning of buffer."
+    (interactive)
+    (kill-region (point) (point-min)))
+
+  (defun my/kill-to-end-of-buffer ()
+    "Kill from point to end of buffer."
+    (interactive)
+    (kill-region (point) (point-max)))
+#+end_src
+
+* Jump to home directory
+#+begin_src elisp
+  (defun my/jump-home ()
+    (interactive)
+    (find-file "~/"))
+#+end_src
+
 * Provide
 #+begin_src elisp
   (provide 'my-emacs)
