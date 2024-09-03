@@ -5,6 +5,7 @@
       '(
         backward-sexp
         crux-smart-open-line-above
+        electric-newline-and-maybe-indent
         forward-sexp
         iy-go-to-char--command
         kill-sexp
@@ -15,6 +16,7 @@
         sp-down-sexp
         sp-end-of-sexp
         sp-forward-slurp-sexp
+        sp-rewrap-sexp
         sp-unwrap-sexp
         sp-up-sexp
         whole-line-or-region-kill-region
