@@ -522,3 +522,5 @@
   :straight nil)
 
 (use-package terraform-mode)
+
+(use-package graphql-mode)

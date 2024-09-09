@@ -81,6 +81,7 @@
   - [[#clojure-mode][Clojure mode]]
   - [[#openai-tools][OpenAI tools]]
   - [[#terraform][Terraform]]
+  - [[#graphql][GraphQL]]
 
 * Notes
 ** Dependencies
@@ -968,6 +969,11 @@ https://github.com/louietan/anki-editor
 ** Terraform
 #+begin_src elisp
   (use-package terraform-mode)
+#+end_src
+
+** GraphQL
+#+begin_src elisp
+  (use-package graphql-mode)
 #+end_src
 
 * Local variables :noexport:
