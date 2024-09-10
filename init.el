@@ -474,7 +474,7 @@
   :bind
   (:map eglot-mode-map
         ("C-c e a" . eglot-code-actions)
-        ("C-c e i" . eglot-code-actions-organize-imports)
+        ("C-c e i" . eglot-code-action-organize-imports)
         ("C-c e f" . eglot-format-buffer)
         ("C-c e r" . eglot-rename)
         ([M-down-mouse-1] . mouse-set-point)
