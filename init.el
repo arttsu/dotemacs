@@ -524,3 +524,5 @@
 (use-package terraform-mode)
 
 (use-package graphql-mode)
+
+(use-package decide)

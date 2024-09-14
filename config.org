@@ -82,6 +82,7 @@
   - [[#openai-tools][OpenAI tools]]
   - [[#terraform][Terraform]]
   - [[#graphql][GraphQL]]
+  - [[#decide-mode][decide-mode]]
 
 * Notes
 ** Dependencies
@@ -974,6 +975,10 @@ https://github.com/louietan/anki-editor
 ** GraphQL
 #+begin_src elisp
   (use-package graphql-mode)
+
+** decide-mode
+#+begin_src elisp
+  (use-package decide)
 #+end_src
 
 * Local variables :noexport:
