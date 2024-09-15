@@ -1,0 +1,17 @@
+#+TITLE: My Avy-Embark
+#+PROPERTY: header-args:elisp :results silent :tangle my-avy-embark.el
+#+AUTO_TANGLE: t
+* Embark actions
+#+begin_src elisp
+  (defun my-avy-embark (point)
+    (goto-char point)
+    (embark-act))
+
+  (defun my-avy-embark-dwim (point)
+    (goto-char point)
+    (embark-dwim))
+#+end_src
+* Provide
+#+begin_src elisp
+  (provide 'my-avy-embark)
+#+end_src

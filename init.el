@@ -277,6 +277,13 @@
    :map isearch-mode-map
    ("C-;" . avy-isearch)))
 
+(use-package my-avy-embark
+  :straight nil
+  :after avy
+  :config
+  (setf (alist-get ?. avy-dispatch-alist) 'my-avy-embark)
+  (setf (alist-get ?\; avy-dispatch-alist) 'my-avy-embark-dwim))
+
 (use-package link-hint
   :bind
   (("C-c f" . link-hint-open-link)
@@ -526,3 +533,11 @@
 (use-package graphql-mode)
 
 (use-package decide)
+
+(use-package embark
+  :bind
+  (("C-." . embark-act)
+   ("M-." . embark-dwim)))
+
+(use-package embark-consult
+  :after (embark consult))

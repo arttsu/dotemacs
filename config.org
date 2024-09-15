@@ -44,6 +44,7 @@
   - [[#smartparens][Smartparens]]
   - [[#yasnippet][Yasnippet]]
   - [[#avy][Avy]]
+    - [[#my-avy-embark][My Avy-Embark]]
   - [[#link-hint][Link hint]]
   - [[#crux][Crux]]
   - [[#whole-line-or-region][Whole Line or Region]]
@@ -83,6 +84,8 @@
   - [[#terraform][Terraform]]
   - [[#graphql][GraphQL]]
   - [[#decide-mode][decide-mode]]
+  - [[#embark][Embark]]
+  - [[#emabrk-consult][Emabrk-Consult]]
 
 * Notes
 ** Dependencies
@@ -561,6 +564,18 @@ https://github.com/abo-abo/avy
      ("C-;" . avy-isearch)))
 #+end_src
 
+*** My Avy-Embark
+[[file:lisp/my-avy-embark.org]]
+
+#+begin_src elisp
+  (use-package my-avy-embark
+    :straight nil
+    :after avy
+    :config
+    (setf (alist-get ?. avy-dispatch-alist) 'my-avy-embark)
+    (setf (alist-get ?\; avy-dispatch-alist) 'my-avy-embark-dwim))
+#+end_src
+
 ** Link hint
 https://github.com/noctuid/link-hint.el
 
@@ -979,6 +994,20 @@ https://github.com/louietan/anki-editor
 ** decide-mode
 #+begin_src elisp
   (use-package decide)
+#+end_src
+
+** Embark
+#+begin_src elisp
+  (use-package embark
+    :bind
+    (("C-." . embark-act)
+     ("M-." . embark-dwim)))
+#+end_src
+
+** Emabrk-Consult
+#+begin_src elisp
+  (use-package embark-consult
+    :after (embark consult))
 #+end_src
 
 * Local variables :noexport:
