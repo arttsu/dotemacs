@@ -990,6 +990,7 @@ https://github.com/louietan/anki-editor
 ** GraphQL
 #+begin_src elisp
   (use-package graphql-mode)
+#+END_SRC
 
 ** decide-mode
 #+begin_src elisp
