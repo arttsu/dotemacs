@@ -7,6 +7,7 @@
         crux-smart-open-line-above
         electric-newline-and-maybe-indent
         forward-sexp
+        forward-to-word
         iy-go-to-char--command
         kill-sexp
         mc--insert-number-and-increase

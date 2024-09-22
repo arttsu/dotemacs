@@ -72,8 +72,11 @@
   - [[#jinx][Jinx]]
   - [[#ripgrep][Ripgrep]]
   - [[#tree-sitter][Tree Sitter]]
-  - [[#scala-ts-mode][Scala TS mode]]
   - [[#eglot][Eglot]]
+  - [[#lsp][LSP]]
+  - [[#consult-lsp][Consult-LSP]]
+  - [[#flycheck][Flycheck]]
+  - [[#scala-ts-mode][Scala TS mode]]
   - [[#jarchive][Jarchive]]
   - [[#kubel][Kubel]]
   - [[#markdown][Markdown]]
@@ -890,17 +893,8 @@ https://github.com/dajva/rg.el
     (treesit-font-lock-level 4))
 #+end_src
 
-** Scala TS mode
-https://github.com/KaranAhlawat/scala-ts-mode
-
-#+begin_src elisp
-  (use-package scala-ts-mode
-    :unless (my-windows-p)
-    :interpreter "scala")
-#+end_src
-
 ** Eglot
-#+begin_src elisp
+#+begin_src elisp :tangle no
   (use-package eglot
     :unless (my-windows-p)
     :hook (scala-ts-mode . eglot-ensure)
@@ -915,6 +909,62 @@ https://github.com/KaranAhlawat/scala-ts-mode
           ([M-down-mouse-1] . mouse-set-point)
           ([M-mouse-1] . xref-find-definitions)
           ([M-mouse-3] . xref-go-back)))
+#+end_src
+
+** LSP
+#+begin_src elisp
+  (use-package lsp-mode
+    :custom
+    (lsp-keymap-prefix "<f5>")
+    :hook
+    (scala-ts-mode . lsp)
+    :commands lsp
+    :bind
+    (:map lsp-mode-map
+          ([M-down-mouse-1] . mouse-set-point)
+          ([M-mouse-1] . lsp-find-definition)
+          ([M-mouse-3] . xref-go-back)
+          ("<f5> I" . lsp-metals-build-import)))
+
+  (use-package lsp-metals)
+
+  (use-package lsp-ui :commands lsp-ui-mode)
+
+  (setq lsp-completion-provider :none)
+
+  (defun corfu-lsp-setup ()
+    (setq-local completion-styles '(orderless)
+                completion-category-defaults nil))
+
+  (add-hook 'lsp-mode-hook #'corfu-lsp-setup)
+#+end_src
+
+** Consult-LSP
+#+begin_src elisp
+  (use-package consult-lsp
+    :bind
+    (:map lsp-mode-map
+          ("<f5> d" . consult-lsp-diagnostics)
+          ("<f5> s" . consult-lsp-file-symbols)
+          ("<f5> S" . consult-lsp-symbols)))
+#+end_src
+
+** Flycheck
+#+begin_src elisp
+  (use-package flycheck
+    :init
+    (setq flycheck-global-modes '(not org-mode))
+    :config
+    (global-flycheck-mode))
+#+end_src
+
+** Scala TS mode
+https://github.com/KaranAhlawat/scala-ts-mode
+
+#+begin_src elisp
+  (use-package scala-ts-mode
+    :unless (my-windows-p)
+    :interpreter "scala")
 #+end_src
 
 ** Jarchive

@@ -469,24 +469,47 @@
   :custom
   (treesit-font-lock-level 4))
 
+(use-package lsp-mode
+  :custom
+  (lsp-keymap-prefix "<f5>")
+  :hook
+  (scala-ts-mode . lsp)
+  :commands lsp
+  :bind
+  (:map lsp-mode-map
+        ([M-down-mouse-1] . mouse-set-point)
+        ([M-mouse-1] . lsp-find-definition)
+        ([M-mouse-3] . xref-go-back)
+        ("<f5> I" . lsp-metals-build-import)))
+
+(use-package lsp-metals)
+
+(use-package lsp-ui :commands lsp-ui-mode)
+
+(setq lsp-completion-provider :none)
+
+(defun corfu-lsp-setup ()
+  (setq-local completion-styles '(orderless)
+              completion-category-defaults nil))
+
+(add-hook 'lsp-mode-hook #'corfu-lsp-setup)
+
+(use-package consult-lsp
+  :bind
+  (:map lsp-mode-map
+        ("<f5> d" . consult-lsp-diagnostics)
+        ("<f5> s" . consult-lsp-file-symbols)
+        ("<f5> S" . consult-lsp-symbols)))
+
+(use-package flycheck
+  :init
+  (setq flycheck-global-modes '(not org-mode))
+  :config
+  (global-flycheck-mode))
+
 (use-package scala-ts-mode
   :unless (my-windows-p)
   :interpreter "scala")
-
-(use-package eglot
-  :unless (my-windows-p)
-  :hook (scala-ts-mode . eglot-ensure)
-  :config
-  (add-to-list 'eglot-server-programs '((scala-ts-mode) . ("metals")))
-  :bind
-  (:map eglot-mode-map
-        ("C-c e a" . eglot-code-actions)
-        ("C-c e i" . eglot-code-action-organize-imports)
-        ("C-c e f" . eglot-format-buffer)
-        ("C-c e r" . eglot-rename)
-        ([M-down-mouse-1] . mouse-set-point)
-        ([M-mouse-1] . xref-find-definitions)
-        ([M-mouse-3] . xref-go-back)))
 
 (use-package jarchive
   :unless (my-windows-p)
