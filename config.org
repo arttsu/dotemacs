@@ -41,6 +41,7 @@
   - [[#consult][Consult]]
     - [[#my-consult][My Consult]]
   - [[#corfu][Corfu]]
+  - [[#company][Company]]
   - [[#smartparens][Smartparens]]
   - [[#yasnippet][Yasnippet]]
   - [[#avy][Avy]]
@@ -484,7 +485,7 @@ https://github.com/minad/consult
 ** Corfu
 https://github.com/minad/corfu
 
-#+begin_src elisp
+#+begin_src elisp :tangle no
   (use-package corfu
     :demand
     :custom
@@ -500,6 +501,19 @@ https://github.com/minad/corfu
     (:map corfu-map
           ("C-SPC" . corfu-insert-separator)
           ("C-;" . corfu-quick-insert)))
+#+end_src
+
+** Company
+#+begin_src elisp
+  (use-package company
+    :init
+    (setq company-minimum-prefix-length 2)
+    (setq company-idle-delay 0.2)
+    (setq company-selection-wrap-around t)
+    (setq company-dabbrev-downcase nil)
+    (setq company-show-numbers t)
+    :config
+    (global-company-mode))
 #+end_src
 
 ** Smartparens
