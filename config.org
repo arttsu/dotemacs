@@ -90,6 +90,7 @@
   - [[#decide-mode][decide-mode]]
   - [[#embark][Embark]]
   - [[#emabrk-consult][Emabrk-Consult]]
+  - [[#org-roam][Org-roam]]
 
 * Notes
 ** Dependencies
@@ -1073,6 +1074,26 @@ https://github.com/louietan/anki-editor
 #+begin_src elisp
   (use-package embark-consult
     :after (embark consult))
+#+end_src
+
+** Org-roam
+https://www.orgroam.com/
+
+#+begin_src elisp
+  (use-package org-roam
+    :custom
+    (org-roam-directory "~/roam")
+    (org-roam-database-connector 'sqlite-builtin)
+    (org-roam-db-gc-threshold most-positive-fixnum)
+    :config
+    (add-to-list 'display-buffer-alist
+               '("\\*org-roam\\*"
+                 (display-buffer-in-direction)
+                 (direction . right)
+                 (window-width . 0.33)
+                 (window-height . fit-window-to-buffer)))
+    (org-roam-db-autosync-mode)
+    (require 'org-roam-dailies))
 #+end_src
 
 * Local variables :noexport:
