@@ -573,3 +573,5 @@
                (window-height . fit-window-to-buffer)))
   (org-roam-db-autosync-mode)
   (require 'org-roam-dailies))
+
+(use-package org-roam-ui)

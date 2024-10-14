@@ -91,6 +91,7 @@
   - [[#embark][Embark]]
   - [[#emabrk-consult][Emabrk-Consult]]
   - [[#org-roam][Org-roam]]
+  - [[#org-roam-ui][Org-roam UI]]
 
 * Notes
 ** Dependencies
@@ -1094,6 +1095,13 @@ https://www.orgroam.com/
                  (window-height . fit-window-to-buffer)))
     (org-roam-db-autosync-mode)
     (require 'org-roam-dailies))
+#+end_src
+
+** Org-roam UI
+https://github.com/org-roam/org-roam-ui
+
+#+begin_src elisp
+  (use-package org-roam-ui)
 #+end_src
 
 * Local variables :noexport:
