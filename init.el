@@ -572,6 +572,9 @@
                (window-width . 0.33)
                (window-height . fit-window-to-buffer)))
   (org-roam-db-autosync-mode)
-  (require 'org-roam-dailies))
+  (require 'org-roam-dailies)
+  :bind
+  (("C-c n f" . org-roam-node-find)
+   ("C-c n i" . org-roam-node-insert)))
 
 (use-package org-roam-ui)
