@@ -51,6 +51,7 @@
   (backward-delete-char-untabify-method 'hungry)
   (split-width-threshold 200)
   (split-height-threshold 60)
+  (epa-file-encrypt-to (list my-gpg-key-id))
   :config
   (set-frame-name "Main")
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
