@@ -576,6 +576,10 @@
   (require 'org-roam-dailies)
   :bind
   (("C-c n f" . org-roam-node-find)
-   ("C-c n i" . org-roam-node-insert)))
+   ("C-c n i" . org-roam-node-insert)
+   ("C-c n d t" . org-roam-dailies-capture-today)
+   ("C-c n d y" . org-roam-dailies-capture-yesterday)
+   ("C-c n d T" . org-roam-dailies-goto-today)
+   ("C-c n d Y" . org-roam-dailies-goto-yesterday)))
 
 (use-package org-roam-ui)
