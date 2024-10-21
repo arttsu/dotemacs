@@ -84,6 +84,8 @@
   - [[#anki-editor][Anki editor]]
   - [[#plantuml][PlantUML]]
   - [[#clojure-mode][Clojure mode]]
+  - [[#cider][CIDER]]
+  - [[#clerk][Clerk]]
   - [[#openai-tools][OpenAI tools]]
   - [[#terraform][Terraform]]
   - [[#graphql][GraphQL]]
@@ -1041,6 +1043,25 @@ https://github.com/louietan/anki-editor
 ** Clojure mode
 #+begin_src elisp
   (use-package clojure-mode)
+#+end_src
+
+** CIDER
+#+begin_src elisp
+  (use-package cider)
+#+end_src
+
+** Clerk
+#+begin_src elisp
+  (defun clerk-show ()
+    (interactive)
+    (when-let
+        ((filename
+          (buffer-file-name)))
+      (save-buffer)
+      (cider-interactive-eval
+       (concat "(nextjournal.clerk/show! \"" filename "\")"))))
+
+  (define-key clojure-mode-map (kbd "<M-return>") 'clerk-show)
 #+end_src
 
 ** OpenAI tools
