@@ -347,7 +347,9 @@
   :bind
   (("C-c c" . org-capture)
    ("C-c l" . org-store-link)
-   ("C-c a" . org-agenda)))
+   ("C-c a" . org-agenda)
+   :map org-mode-map
+   ("C-c P i" . org-id-get-create)))
 
 (use-package my-org
   :straight nil
