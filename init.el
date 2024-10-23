@@ -603,3 +603,14 @@
    ("C-c n d Y" . org-roam-dailies-goto-yesterday)))
 
 (use-package org-roam-ui)
+
+(use-package notdeft
+  :straight (notdeft :type git :host github :repo "hasu/notdeft" :files ("*.el" "xapian"))
+  :custom
+  (notdeft-directory "~/roam")
+  (notdeft-directories '("~/roam"))
+  (notdeft-xapian-program (expand-file-name "straight/build/notdeft/xapian/notdeft-xapian" user-emacs-directory))
+  :config
+  (notdeft-install)
+  :bind
+  (("C-c n n" . notdeft)))

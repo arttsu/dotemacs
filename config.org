@@ -18,6 +18,7 @@
     - [[#set-up-ripgrep][Set up Ripgrep]]
     - [[#eglot-metals][Eglot: Metals]]
     - [[#anki][Anki]]
+    - [[#notdeft][Notdeft]]
 - [[#setup][Setup]]
   - [[#load-local-config][Load local config]]
   - [[#os-helpers][OS helpers]]
@@ -95,6 +96,7 @@
   - [[#emabrk-consult][Emabrk-Consult]]
   - [[#org-roam][Org-roam]]
   - [[#org-roam-ui][Org-roam UI]]
+  - [[#notdeft-1][Notdeft]]
 
 * Notes
 ** Dependencies
@@ -183,6 +185,13 @@ On Fedora, install =ripgrep= package.
 *** Anki
 1. Install Anki ([[https://docs.ankiweb.net/platform/linux/installing.html][Instructions for Linux]])
 2. Add [[https://git.foosoft.net/alex/anki-connect][anki-connect]] addon
+
+*** Notdeft
+**** Build Xapian Backend
+1. Go to =~/$EMACS_HOME/straight/build/notdeft/xapian=
+2. Run =make=
+***** Fedora
+Need to install =tclap= and =xapian-core-devel= packages.
 * Setup
 ** Load local config
 #+begin_src elisp
@@ -1142,6 +1151,22 @@ https://github.com/org-roam/org-roam-ui
 
 #+begin_src elisp
   (use-package org-roam-ui)
+#+end_src
+
+** Notdeft
+https://github.com/hasu/notdeft
+
+#+begin_src elisp
+  (use-package notdeft
+    :straight (notdeft :type git :host github :repo "hasu/notdeft" :files ("*.el" "xapian"))
+    :custom
+    (notdeft-directory "~/roam")
+    (notdeft-directories '("~/roam"))
+    (notdeft-xapian-program (expand-file-name "straight/build/notdeft/xapian/notdeft-xapian" user-emacs-directory))
+    :config
+    (notdeft-install)
+    :bind
+    (("C-c n n" . notdeft)))
 #+end_src
 
 * Local variables :noexport:
