@@ -32,6 +32,11 @@
 
 (setq straight-use-package-by-default t)
 
+(use-package exec-path-from-shell
+  :when (my-mac-p)
+  :config
+  (exec-path-from-shell-initialize))
+
 (use-package emacs
   :custom
   (inhibit-splash-screen t)

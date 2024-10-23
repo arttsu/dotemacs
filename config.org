@@ -24,6 +24,7 @@
   - [[#add-lisp-dir-to-load-path][Add 'lisp' dir to load path]]
   - [[#windows-add-git-to-path][Windows: Add Git to path]]
   - [[#straight][Straight]]
+  - [[#macos-exec-path-from-shell][MacOS: Exec path from shell]]
 - [[#packages][Packages]]
   - [[#emacs][Emacs]]
     - [[#my-emacs][My Emacs]]
@@ -237,6 +238,14 @@ https://github.com/radian-software/straight.el
 *** Post-bootstrap
 #+begin_src elisp
   (setq straight-use-package-by-default t)
+#+end_src
+
+** MacOS: Exec path from shell
+#+begin_src elisp
+(use-package exec-path-from-shell
+  :when (my-mac-p)
+  :config
+  (exec-path-from-shell-initialize))
 #+end_src
 
 * Packages
