@@ -529,7 +529,8 @@
    ("p" . previous-line)
    ("N" . kubel-set-namespace)
    ("v" . kubel-exec-shell-pod)
-   ("D" . kubel-exec-pod)))
+   ("D" . kubel-exec-pod)
+   ("P" . kubel-port-forward-pod)))
 
 (use-package markdown-mode
   :interpreter "markdown")
