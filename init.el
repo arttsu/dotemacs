@@ -602,7 +602,10 @@
    ("C-c n d t" . org-roam-dailies-capture-today)
    ("C-c n d y" . org-roam-dailies-capture-yesterday)
    ("C-c n d T" . org-roam-dailies-goto-today)
-   ("C-c n d Y" . org-roam-dailies-goto-yesterday)))
+   ("C-c n d Y" . org-roam-dailies-goto-yesterday)
+   :map org-mode-map
+   ("C-c n t a" . org-roam-tag-add)
+   ("C-c n t r" . org-roam-tag-remove)))
 
 (use-package org-roam-ui)
 
