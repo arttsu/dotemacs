@@ -522,13 +522,16 @@
 
 (use-package kubel
   :unless (my-windows-p)
+  :config
+  (with-eval-after-load 'vterm
+    (add-to-list 'vterm-tramp-shells '("kubectl" "/bin/bash")))
   :bind
   (("C-c K" . kubel)
    :map kubel-mode-map
    ("n" . next-line)
    ("p" . previous-line)
    ("N" . kubel-set-namespace)
-   ("v" . kubel-exec-shell-pod)
+   ("v" . kubel-exec-vterm-pod)
    ("D" . kubel-exec-pod)
    ("P" . kubel-port-forward-pod)))
 
