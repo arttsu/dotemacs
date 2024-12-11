@@ -623,3 +623,5 @@
   (notdeft-install)
   :bind
   (("C-c n n" . notdeft)))
+
+(use-package dash)

@@ -97,6 +97,7 @@
   - [[#org-roam][Org-roam]]
   - [[#org-roam-ui][Org-roam UI]]
   - [[#notdeft-1][Notdeft]]
+  - [[#dash][dash]]
 
 * Notes
 ** Dependencies
@@ -1176,6 +1177,13 @@ https://github.com/hasu/notdeft
     (notdeft-install)
     :bind
     (("C-c n n" . notdeft)))
+#+end_src
+
+** dash
+https://github.com/magnars/dash.el
+
+#+begin_src elisp
+  (use-package dash)
 #+end_src
 
 * Local variables :noexport:
