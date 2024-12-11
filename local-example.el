@@ -14,3 +14,5 @@
 ;;; (setq my-git-path "C:\\Users\\<user>\\AppData\\Local\\GitHubDesktop\\app-<version>\\resources\\app\\git\\cmd")
 
 (setq my-gpg-key-id "foo@example.com")
+
+(setq my-roam-encrypt-dailies? nil)

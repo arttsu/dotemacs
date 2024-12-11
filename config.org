@@ -1133,6 +1133,10 @@ https://github.com/louietan/anki-editor
 https://www.orgroam.com/
 
 #+begin_src elisp
+  (defconst my-roam-dailies-file-template
+    (let ((base "%<%Y-%m-%d>.org"))
+      (if my-roam-encrypt-dailies? (concat base ".gpg") base)))
+
   (use-package org-roam
     :custom
     (org-roam-directory "~/roam")
@@ -1140,13 +1144,16 @@ https://www.orgroam.com/
     (org-roam-db-gc-threshold most-positive-fixnum)
     :config
     (add-to-list 'display-buffer-alist
-               '("\\*org-roam\\*"
-                 (display-buffer-in-direction)
-                 (direction . right)
-                 (window-width . 0.33)
-                 (window-height . fit-window-to-buffer)))
+                 '("\\*org-roam\\*"
+                   (display-buffer-in-direction)
+                   (direction . right)
+                   (window-width . 0.33)
+                   (window-height . fit-window-to-buffer)))
     (org-roam-db-autosync-mode)
     (require 'org-roam-dailies)
+    (setq org-roam-dailies-capture-templates `(("d" "default" entry "* %?" :target
+                                                (file+head ,my-roam-dailies-file-template "#+title: %<%Y-%m-%d>
+  "))))
     :bind
     (("C-c n f" . org-roam-node-find)
      ("C-c n i" . org-roam-node-insert)
