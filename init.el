@@ -477,6 +477,7 @@
   (lsp-keymap-prefix "<f5>")
   :hook
   (scala-ts-mode . lsp)
+  (python-mode . lsp)
   :commands lsp
   :bind
   (:map lsp-mode-map
