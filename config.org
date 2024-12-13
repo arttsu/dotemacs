@@ -98,6 +98,8 @@
   - [[#org-roam-ui][Org-roam UI]]
   - [[#notdeft-1][Notdeft]]
   - [[#dash][dash]]
+  - [[#envrc][envrc]]
+  - [[#emacs-pet][emacs-pet]]
 
 * Notes
 ** Dependencies
@@ -1184,6 +1186,21 @@ https://github.com/magnars/dash.el
 
 #+begin_src elisp
   (use-package dash)
+#+end_src
+
+** envrc
+#+begin_src elisp
+  (use-package envrc
+    :hook (after-init . envrc-global-mode))
+#+end_src
+
+** emacs-pet
+#+begin_src elisp
+  (use-package pet
+    :config
+    (add-hook 'python-base-mode-hook 'pet-mode -10)
+    (require 'envrc)
+    (add-hook 'change-major-mode-after-body-hook 'envrc-mode))
 #+end_src
 
 * Local variables :noexport:

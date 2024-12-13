@@ -625,3 +625,12 @@
   (("C-c n n" . notdeft)))
 
 (use-package dash)
+
+(use-package envrc
+  :hook (after-init . envrc-global-mode))
+
+(use-package pet
+  :config
+  (add-hook 'python-base-mode-hook 'pet-mode -10)
+  (require 'envrc)
+  (add-hook 'change-major-mode-after-body-hook 'envrc-mode))
