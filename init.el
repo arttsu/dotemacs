@@ -476,6 +476,7 @@
 (use-package lsp-mode
   :custom
   (lsp-keymap-prefix "<f5>")
+  (lsp-pylsp-plugins-black-enabled t)
   :hook
   (scala-ts-mode . lsp)
   (python-mode . lsp)
