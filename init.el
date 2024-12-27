@@ -340,6 +340,8 @@
   (org-hide-emphasis-markers t)
   (org-pretty-entities t)
   (org-use-speed-commands t)
+  (org-attach-dir "~/org/attachments")
+  (org-attach-use-inheritance t)
   :config
   (org-babel-do-load-languages
    'org-babel-load-languages
