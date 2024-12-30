@@ -344,6 +344,7 @@
   (org-use-speed-commands t)
   (org-attach-directory "~/org/attachments")
   (org-attach-use-inheritance t)
+  (org-startup-folded 'showall)
   :config
   (org-babel-do-load-languages
    'org-babel-load-languages
