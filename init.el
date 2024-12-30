@@ -57,6 +57,7 @@
   (split-width-threshold 200)
   (split-height-threshold 60)
   (epa-file-encrypt-to (list my-gpg-key-id))
+  (epa-pinentry-mode 'loopback)
   :config
   (set-frame-name "Main")
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
@@ -151,7 +152,7 @@
   (super-save-auto-save-when-idle t)
   (super-save-delete-trailing-whitespace 'except-current-line)
   (super-save-silent t)
-  (super-save-exclude '(".sbt" "project/"))
+  (super-save-exclude '(".sbt" "project/" ".gpg"))
   (auto-save-default nil)
   :config
   (super-save-mode))
