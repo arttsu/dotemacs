@@ -355,7 +355,9 @@ https://git.sr.ht/~protesilaos/iosevka-comfy
   (if my-use-iosevka-comfy
       (let ((font "Iosevka Comfy Fixed"))
         (set-face-attribute 'default nil :font font :height my-iosevka-comfy-height)
-        (set-frame-font font nil t)))
+        (set-frame-font font nil t))
+    (if (member "Segoe UI Emoji" (font-family-list))
+        (set-fontset-font t 'unicode "Segoe UI Emoji" nil 'append)))
 #+end_src
 
 ** Dired
