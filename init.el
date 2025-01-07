@@ -594,40 +594,6 @@
 (use-package embark-consult
   :after (embark consult))
 
-(defconst my-roam-dailies-file-template
-  (let ((base "%<%Y-%m-%d>.org"))
-    (if my-roam-encrypt-dailies? (concat base ".gpg") base)))
-
-(use-package org-roam
-  :custom
-  (org-roam-directory "~/roam")
-  (org-roam-database-connector 'sqlite-builtin)
-  (org-roam-db-gc-threshold most-positive-fixnum)
-  :config
-  (add-to-list 'display-buffer-alist
-               '("\\*org-roam\\*"
-                 (display-buffer-in-direction)
-                 (direction . right)
-                 (window-width . 0.33)
-                 (window-height . fit-window-to-buffer)))
-  (org-roam-db-autosync-mode)
-  (require 'org-roam-dailies)
-  (setq org-roam-dailies-capture-templates `(("d" "default" entry "* %?" :target
-                                              (file+head ,my-roam-dailies-file-template "#+title: %<%Y-%m-%d>
-"))))
-  :bind
-  (("C-c n f" . org-roam-node-find)
-   ("C-c n i" . org-roam-node-insert)
-   ("C-c n d t" . org-roam-dailies-capture-today)
-   ("C-c n d y" . org-roam-dailies-capture-yesterday)
-   ("C-c n d T" . org-roam-dailies-goto-today)
-   ("C-c n d Y" . org-roam-dailies-goto-yesterday)
-   :map org-mode-map
-   ("C-c n t a" . org-roam-tag-add)
-   ("C-c n t r" . org-roam-tag-remove)))
-
-(use-package org-roam-ui)
-
 (use-package notdeft
   :straight (notdeft :type git :host github :repo "hasu/notdeft" :files ("*.el" "xapian"))
   :custom

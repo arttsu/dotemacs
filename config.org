@@ -1139,7 +1139,7 @@ https://github.com/louietan/anki-editor
 ** Org-roam
 https://www.orgroam.com/
 
-#+begin_src elisp
+#+begin_src elisp :tangle no
   (defconst my-roam-dailies-file-template
     (let ((base "%<%Y-%m-%d>.org"))
       (if my-roam-encrypt-dailies? (concat base ".gpg") base)))
@@ -1176,7 +1176,7 @@ https://www.orgroam.com/
 ** Org-roam UI
 https://github.com/org-roam/org-roam-ui
 
-#+begin_src elisp
+#+begin_src elisp :tangle no
   (use-package org-roam-ui)
 #+end_src
 
