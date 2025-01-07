@@ -347,6 +347,7 @@
   (org-attach-use-inheritance t)
   (org-startup-folded 'showall)
   :config
+  (require 'org-attach)
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((shell . t)))
