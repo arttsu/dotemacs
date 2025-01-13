@@ -11,6 +11,9 @@
         iy-go-to-char--command
         kill-sexp
         mc--insert-number-and-increase
+        org-delete-char
+        org-end-of-line
+        org-kill-line
         org-self-insert-command
         sp-backward-up-sexp
         sp-beginning-of-sexp
