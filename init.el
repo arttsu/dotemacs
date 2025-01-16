@@ -104,9 +104,11 @@
   :custom
   (modus-themes-italic-constructs t)
   (modus-themes-org-blocks 'gray-background)
-  (modus-themes-headings '((0 . (ultrabold 1.3))
-                           (1 . (ultrabold 1.2))
-                           (2 . (extrabold 1.1))
+  (modus-themes-headings '((0 . (ultrabold 1.7))
+                           (1 . (ultrabold 1.7))
+                           (2 . (extrabold 1.5))
+                           (3 . (extrabold 1.3))
+                           (4 . (extrabold 1.1))
                            (t . (extrabold))))
   (modus-themes-variable-pitch-ui t)
   :config
@@ -331,6 +333,16 @@
   :bind
   (("C-c g" . magit-file-dispatch)))
 
+(defun my-org-order-todos ()
+  (interactive)
+  ;; If not at a heading error out
+  (unless (org-at-heading-p)
+    (error "Not at a heading"))
+  ;; First order by priority, then order by todo state
+  ;; Done items should be at the very end. After least prio items that are still in todo
+  (org-sort-entries nil ?p)
+  (org-sort-entries nil ?o))
+
 (use-package org
   :custom
   (org-startup-indented t)
@@ -355,6 +367,7 @@
   (("C-c c" . org-capture)
    ("C-c l" . org-store-link)
    ("C-c a" . org-agenda)
+   ("C-c S" . my-org-order-todos)
    :map org-mode-map
    ("C-c P i" . org-id-get-create)))
 
