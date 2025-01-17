@@ -469,8 +469,7 @@
   :custom-face (copilot-overlay-face ((t (:foreground "LightGreen"))))
   :config
   (add-to-list 'warning-suppress-log-types '(copilot copilot-no-mode-indent))
-  ;; :hook (prog-mode . copilot-mode)
-  )
+  :hook (prog-mode . copilot-mode))
 
 (use-package my-copilot
   :straight nil
