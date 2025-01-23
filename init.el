@@ -466,7 +466,7 @@
   :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
   :custom
   (copilot-idle-delay 0.3)
-  :custom-face (copilot-overlay-face ((t (:foreground "LightGreen"))))
+  :custom-face (copilot-overlay-face ((t (:foreground "#708090" :slant italic))))
   :config
   (add-to-list 'warning-suppress-log-types '(copilot copilot-no-mode-indent))
   :hook (prog-mode . copilot-mode))
