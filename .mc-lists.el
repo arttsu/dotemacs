@@ -8,6 +8,7 @@
         electric-newline-and-maybe-indent
         forward-sexp
         forward-to-word
+        indent-for-tab-command
         iy-go-to-char--command
         kill-sexp
         mc--insert-number-and-increase
