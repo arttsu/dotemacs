@@ -11,6 +11,7 @@
         indent-for-tab-command
         iy-go-to-char--command
         kill-sexp
+        markdown-outdent-or-delete
         mc--insert-number-and-increase
         org-delete-char
         org-end-of-line
