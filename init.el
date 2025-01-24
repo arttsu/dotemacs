@@ -363,6 +363,7 @@
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((shell . t)))
+  (add-to-list 'org-modules 'org-id)
   :bind
   (("C-c c" . org-capture)
    ("C-c l" . org-store-link)
@@ -416,6 +417,12 @@
 
 (use-package ox-slack
   :after org)
+
+(use-package org-super-links
+  :straight (org-super-links :type git :host github :repo "toshism/org-super-links" :branch "develop")
+  :bind (("C-c s s" . org-super-links-link)
+         ("C-c s l" . org-super-links-store-link)
+         ("C-c s C-l" . org-super-links-insert-link)))
 
 (use-package gptel
   :custom

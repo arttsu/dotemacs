@@ -64,6 +64,7 @@
     - [[#gtd][GTD]]
     - [[#restclient][Restclient]]
     - [[#ox-slack][ox-slack]]
+  - [[#org-super-links][Org super links]]
   - [[#gptel][GPTel]]
     - [[#my-gptel][My GPTel]]
   - [[#ledger][Ledger]]
@@ -737,6 +738,7 @@ https://orgmode.org/
     (org-babel-do-load-languages
      'org-babel-load-languages
      '((shell . t)))
+    (add-to-list 'org-modules 'org-id)
     :bind
     (("C-c c" . org-capture)
      ("C-c l" . org-store-link)
@@ -828,6 +830,17 @@ https://github.com/titaniumbones/ox-slack
 #+begin_src elisp
   (use-package ox-slack
     :after org)
+#+end_src
+
+** Org super links
+https://github.com/toshism/org-super-links
+
+#+begin_src elisp
+  (use-package org-super-links
+    :straight (org-super-links :type git :host github :repo "toshism/org-super-links" :branch "develop")
+    :bind (("C-c s s" . org-super-links-link)
+           ("C-c s l" . org-super-links-store-link)
+           ("C-c s C-l" . org-super-links-insert-link)))
 #+end_src
 
 ** GPTel
