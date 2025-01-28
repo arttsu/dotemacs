@@ -368,14 +368,14 @@
 
 (defconst my-gtd-capture-templates
   `(("i" "Inbox")
-    ("ii" "todo" entry ,my-gtd-inbox-target (file ,(my-org-capture-template-path "gtd-todo")))
-    ("iI" "note" entry ,my-gtd-inbox-target (file ,(my-org-capture-template-path "gtd-note")))))
+    ("ii" "note" entry ,my-gtd-inbox-target (file ,(my-org-capture-template-path "gtd-note")))
+    ("iI" "todo" entry ,my-gtd-inbox-target (file ,(my-org-capture-template-path "gtd-todo")))))
 
-(defun my-gtd-capture-todo ()
+(defun my-gtd-capture-note ()
   (interactive)
   (org-capture nil "ii"))
 
-(defun my-gtd-capture-note ()
+(defun my-gtd-capture-todo ()
   (interactive)
   (org-capture nil "iI"))
 
@@ -418,8 +418,8 @@
    ("C-c a" . org-agenda)
    ("C-c S" . my-org-sort-todos)
    ("M-g e" . my-org-end-of-subtree)
-   ("C-c i" . my-gtd-capture-todo)
-   ("C-c I" . my-gtd-capture-note)
+   ("C-c i" . my-gtd-capture-note)
+   ("C-c I" . my-gtd-capture-todo)
    :map org-mode-map
    ("C-c P i" . org-id-get-create)))
 
