@@ -834,6 +834,7 @@ green to help with that.
     (org-auto-align-tags nil)
     (org-tags-column 0)
     (org-agenda-tags-column 0)
+    :custom-face (org-modern-tag ((t (:foreground "white" :background "#9575cd" :slant italic))))
     :config
     (global-org-modern-mode)
     (my-org-set-checked-checkbox-face))
