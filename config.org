@@ -56,12 +56,12 @@
   - [[#go-to-char][Go to Char]]
   - [[#magit][Magit]]
   - [[#org-mode][Org Mode]]
-    - [[#my-org][My Org]]
+    - [[#mode-setup-hook][Mode setup hook]]
+    - [[#helpers][Helpers]]
+    - [[#configure][Configure]]
     - [[#org-modern][Org Modern]]
-    - [[#my-org-looks][My Org Looks]]
     - [[#auto-tangle][Auto-tangle]]
     - [[#toc][TOC]]
-    - [[#gtd][GTD]]
     - [[#restclient][Restclient]]
     - [[#ox-slack][ox-slack]]
   - [[#org-super-links][Org super links]]
@@ -706,18 +706,33 @@ https://magit.vc/
 
 ** Org Mode
 https://orgmode.org/
-
+*** Mode setup hook
 #+begin_src elisp
-  (defun my-org-order-todos ()
+  (defun my-org-setup ()
+    (setq-local fill-column 120)
+    (auto-fill-mode 1))
+#+end_src
+*** Helpers
+**** Sort TODOs
+#+begin_src elisp
+  (defun my-org-sort-todos ()
+    "Sort the current subtree: first 'open' items by priority, then 'done' items by priority."
     (interactive)
-    ;; If not at a heading error out
     (unless (org-at-heading-p)
       (error "Not at a heading"))
-    ;; First order by priority, then order by todo state
-    ;; Done items should be at the very end. After least prio items that are still in todo
     (org-sort-entries nil ?p)
     (org-sort-entries nil ?o))
-
+#+end_src
+**** Jump to the last item of a subtree
+#+begin_src elisp
+  (defun my-org-end-of-subtree ()
+    "Jump to the last item of the current subtree."
+    (interactive)
+    (org-end-of-subtree)
+    (org-back-to-heading))
+#+end_src
+*** Configure
+#+begin_src elisp
   (use-package org
     :custom
     (org-startup-indented t)
@@ -741,17 +756,22 @@ https://orgmode.org/
      'org-babel-load-languages
      '((shell . t)))
     (add-to-list 'org-modules 'org-id)
+    (add-hook 'org-mode-hook 'my-org-setup)
     :bind
     (("C-c c" . org-capture)
      ("C-c l" . org-store-link)
      ("C-c a" . org-agenda)
-     ("C-c S" . my-org-order-todos)
+     ("C-c S" . my-org-sort-todos)
+     ("M-g e" . my-org-end-of-subtree)
      :map org-mode-map
      ("C-c P i" . org-id-get-create)))
 #+end_src
 
-*** My Org
-#+begin_src elisp
+*** COMMENT My Org
+:PROPERTIES:
+:VISIBILITY: folded
+:END:
+#+begin_src elisp :tangle no
   (use-package my-org
     :straight nil
     :demand t
@@ -763,7 +783,19 @@ https://orgmode.org/
 
 *** Org Modern
 https://github.com/minad/org-modern
+**** Make checked checkboxes green
+#+begin_src elisp
+  (defface my-org-checkbox-done-text
+    '((t (:inherit org-done)))
+    "Face for the text part of a checked Org mode checkbox.")
 
+  (defun my-org-set-checkbox-done-text-face ()
+    (font-lock-add-keywords
+     'org-mode
+     `(("^[ \t]*\\(?:[-+*]\\|[0-9]+[).]\\)[ \t]+\\(\\(?:\\[@\\(?:start:\\)?[0-9]+\\][ \t]*\\)?\\[\\(?:X\\|\\([0-9]+\\)/\\2\\)\\][^\n]*\n\\)" 1 'my-org-checkbox-done-text prepend))
+     'append))
+#+end_src
+**** Configure
 #+begin_src elisp
   (use-package org-modern
     :after org
@@ -772,13 +804,16 @@ https://github.com/minad/org-modern
     (org-tags-column 0)
     (org-agenda-tags-column 0)
     :config
-    (global-org-modern-mode))
+    (global-org-modern-mode)
+    (my-org-set-checkbox-done-text-face))
 #+end_src
-
-*** My Org Looks
+*** COMMENT My Org Looks
+:PROPERTIES:
+:VISIBILITY: folded
+:END:
 [[file:lisp/my-org-looks.org]]
 
-#+begin_src elisp
+#+begin_src elisp :tangle no
     (use-package my-org-looks
       :straight nil
       :after org)
@@ -800,10 +835,13 @@ https://github.com/snosov1/toc-org
     :hook (org-mode . toc-org-mode))
 #+end_src
 
-*** GTD
+*** COMMENT GTD
+:PROPERTIES:
+:VISIBILITY: folded
+:END:
 [[file:lisp/my-gtd.org]]
 
-#+begin_src elisp
+#+begin_src elisp :tangle no
   (use-package my-gtd
     :straight nil
     :demand

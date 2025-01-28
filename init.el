@@ -333,15 +333,23 @@
   :bind
   (("C-c g" . magit-file-dispatch)))
 
-(defun my-org-order-todos ()
+(defun my-org-setup ()
+  (setq-local fill-column 120)
+  (auto-fill-mode 1))
+
+(defun my-org-sort-todos ()
+  "Sort the current subtree: first 'open' items by priority, then 'done' items by priority."
   (interactive)
-  ;; If not at a heading error out
   (unless (org-at-heading-p)
     (error "Not at a heading"))
-  ;; First order by priority, then order by todo state
-  ;; Done items should be at the very end. After least prio items that are still in todo
   (org-sort-entries nil ?p)
   (org-sort-entries nil ?o))
+
+(defun my-org-end-of-subtree ()
+  "Jump to the last item of the current subtree."
+  (interactive)
+  (org-end-of-subtree)
+  (org-back-to-heading))
 
 (use-package org
   :custom
@@ -366,21 +374,25 @@
    'org-babel-load-languages
    '((shell . t)))
   (add-to-list 'org-modules 'org-id)
+  (add-hook 'org-mode-hook 'my-org-setup)
   :bind
   (("C-c c" . org-capture)
    ("C-c l" . org-store-link)
    ("C-c a" . org-agenda)
-   ("C-c S" . my-org-order-todos)
+   ("C-c S" . my-org-sort-todos)
+   ("M-g e" . my-org-end-of-subtree)
    :map org-mode-map
    ("C-c P i" . org-id-get-create)))
 
-(use-package my-org
-  :straight nil
-  :demand t
-  :after org
-  :bind
-  (:map org-mode-map
-        ("M-g e" . my-org-end-of-subtree)))
+(defface my-org-checkbox-done-text
+  '((t (:inherit org-done)))
+  "Face for the text part of a checked Org mode checkbox.")
+
+(defun my-org-set-checkbox-done-text-face ()
+  (font-lock-add-keywords
+   'org-mode
+   `(("^[ \t]*\\(?:[-+*]\\|[0-9]+[).]\\)[ \t]+\\(\\(?:\\[@\\(?:start:\\)?[0-9]+\\][ \t]*\\)?\\[\\(?:X\\|\\([0-9]+\\)/\\2\\)\\][^\n]*\n\\)" 1 'my-org-checkbox-done-text prepend))
+   'append))
 
 (use-package org-modern
   :after org
@@ -389,30 +401,14 @@
   (org-tags-column 0)
   (org-agenda-tags-column 0)
   :config
-  (global-org-modern-mode))
-
-(use-package my-org-looks
-  :straight nil
-  :after org)
+  (global-org-modern-mode)
+  (my-org-set-checkbox-done-text-face))
 
 (use-package org-auto-tangle
   :hook (org-mode . org-auto-tangle-mode))
 
 (use-package toc-org
   :hook (org-mode . toc-org-mode))
-
-(use-package my-gtd
-  :straight nil
-  :demand
-  :after org
-  :init
-  (setq my-gtd-dir "~/org/gtd")
-  (setq my-gtd-shared-dir "~/org-shared/gtd")
-  :bind
-  (("C-c i" . my-gtd-capture-to-inbox)
-   ("C-c I" . my-gtd-capture-note-to-inbox)
-   ("C-c j p" . my-gtd-jump-to-project)
-   ("C-c j s" . my-gtd-jump-to-someday)))
 
 (use-package ob-restclient
   :after org)

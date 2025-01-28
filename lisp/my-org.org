@@ -1,4 +1,4 @@
-#+TITLE: My Org
+#+TITLE: My Org [DONE]
 #+PROPERTY: header-args:elisp :results silent :tangle my-org.el
 #+AUTO_TANGLE: t
 
