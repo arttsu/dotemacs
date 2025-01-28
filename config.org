@@ -736,7 +736,6 @@ https://orgmode.org/
 #+end_src
 *** Org files
 #+begin_src elisp
-  (defconst my-local-org-dir "~/org-work")
   (defconst my-open-org-dir "~/org-open")
 
   (defconst my-local-gtd-dir (concat my-local-org-dir "/gtd"))
@@ -745,7 +744,7 @@ https://orgmode.org/
   (defun my-gtd-path (name)
     (expand-file-name (concat my-local-gtd-dir name ".org")))
 
-  (defconst my-gtd-inbox (my-gtd-path "inbox"))
+  (defconst my-gtd-inbox (my-gtd-path "/inbox"))
 #+end_src
 *** Capturing
 #+begin_src elisp

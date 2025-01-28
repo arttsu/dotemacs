@@ -351,7 +351,6 @@
   (org-end-of-subtree)
   (org-back-to-heading))
 
-(defconst my-local-org-dir "~/org-work")
 (defconst my-open-org-dir "~/org-open")
 
 (defconst my-local-gtd-dir (concat my-local-org-dir "/gtd"))
@@ -360,7 +359,7 @@
 (defun my-gtd-path (name)
   (expand-file-name (concat my-local-gtd-dir name ".org")))
 
-(defconst my-gtd-inbox (my-gtd-path "inbox"))
+(defconst my-gtd-inbox (my-gtd-path "/inbox"))
 
 (defun my-org-capture-template-path (name)
   (expand-file-name (concat "capture-templates/" name ".txt") user-emacs-directory))
