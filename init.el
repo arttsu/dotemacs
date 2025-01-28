@@ -397,7 +397,12 @@
   (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
   (org-log-done 'time)
   (org-capture-templates my-gtd-capture-templates)
-  (org-agenda-files `(,my-local-gtd-dir ,(expand-file-name "projects" my-local-gtd-dir) ,(expand-file-name "areas" my-local-gtd-dir) ,my-open-gtd-dir))
+  (org-agenda-files `(,my-local-gtd-dir
+                      ,(expand-file-name "projects" my-local-gtd-dir)
+                      ,(expand-file-name "areas" my-local-gtd-dir)
+                      ,my-open-gtd-dir
+                      ,(expand-file-name "projects" my-open-gtd-dir)
+                      ,(expand-file-name "areas" my-open-gtd-dir)))
   (org-refile-targets '((org-agenda-files :level . 2)))
   :config
   (require 'org-attach)
