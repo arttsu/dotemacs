@@ -16,3 +16,5 @@
 (setq my-gpg-key-id "foo@example.com")
 
 (setq my-roam-encrypt-dailies? nil)
+
+(setq my-local-org-dir "/path/to/local/org")

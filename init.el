@@ -337,10 +337,6 @@
   (setq-local fill-column 120)
   (auto-fill-mode 1))
 
-(defun my-org-add-font-lock-keywords ()
-  (font-lock-add-keywords 'org-mode
-   '(("\\<\\(CREATED:\\)" 1 'org-special-keyword prepend))))
-
 (defun my-org-sort-todos ()
   "Sort the current subtree: first 'open' items by priority, then 'done' items by priority."
   (interactive)
@@ -355,6 +351,35 @@
   (org-end-of-subtree)
   (org-back-to-heading))
 
+(defconst my-local-org-dir "~/org-work")
+(defconst my-open-org-dir "~/org-open")
+
+(defconst my-local-gtd-dir (concat my-local-org-dir "/gtd"))
+(defconst my-open-gtd-dir (concat my-open-org-dir "/gtd"))
+
+(defun my-gtd-path (name)
+  (expand-file-name (concat my-local-gtd-dir name ".org")))
+
+(defconst my-gtd-inbox (my-gtd-path "inbox"))
+
+(defun my-org-capture-template-path (name)
+  (expand-file-name (concat "capture-templates/" name ".txt") user-emacs-directory))
+
+(defconst my-gtd-inbox-target `(file+headline ,my-gtd-inbox "Inbox items"))
+
+(defconst my-gtd-capture-templates
+  `(("i" "Inbox")
+    ("ii" "todo" entry ,my-gtd-inbox-target (file ,(my-org-capture-template-path "gtd-todo")))
+    ("iI" "note" entry ,my-gtd-inbox-target (file ,(my-org-capture-template-path "gtd-note")))))
+
+(defun my-gtd-capture-todo ()
+  (interactive)
+  (org-capture nil "ii"))
+
+(defun my-gtd-capture-note ()
+  (interactive)
+  (org-capture nil "iI"))
+
 (use-package org
   :custom
   (org-startup-indented t)
@@ -367,11 +392,14 @@
   (org-hide-emphasis-markers t)
   (org-pretty-entities t)
   (org-use-speed-commands t)
-  (org-attach-directory "~/org/attachments")
+  (org-attach-id-dir (concat my-local-gtd-dir "/attachments/"))
   (org-attach-use-inheritance t)
   (org-startup-folded 'showall)
   (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
   (org-log-done 'time)
+  (org-capture-templates my-gtd-capture-templates)
+  (org-agenda-files `(,my-local-gtd-dir ,(expand-file-name "projects" my-local-gtd-dir) ,(expand-file-name "areas" my-local-gtd-dir) ,my-open-gtd-dir))
+  (org-refile-targets '((org-agenda-files :level . 2)))
   :config
   (require 'org-attach)
   (require 'org-id)
@@ -379,7 +407,6 @@
    'org-babel-load-languages
    '((shell . t)))
   (add-to-list 'org-modules 'org-id)
-  (my-org-add-font-lock-keywords)
   (add-hook 'org-mode-hook 'my-org-setup)
   :bind
   (("C-c c" . org-capture)
@@ -387,6 +414,8 @@
    ("C-c a" . org-agenda)
    ("C-c S" . my-org-sort-todos)
    ("M-g e" . my-org-end-of-subtree)
+   ("C-c i" . my-gtd-capture-todo)
+   ("C-c I" . my-gtd-capture-note)
    :map org-mode-map
    ("C-c P i" . org-id-get-create)))
 
