@@ -337,6 +337,10 @@
   (setq-local fill-column 120)
   (auto-fill-mode 1))
 
+(defun my-org-add-font-lock-keywords ()
+  (font-lock-add-keywords 'org-mode
+   '(("\\<\\(CREATED:\\)" 1 'org-special-keyword prepend))))
+
 (defun my-org-sort-todos ()
   "Sort the current subtree: first 'open' items by priority, then 'done' items by priority."
   (interactive)
@@ -367,6 +371,7 @@
   (org-attach-use-inheritance t)
   (org-startup-folded 'showall)
   (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+  (org-log-done 'time)
   :config
   (require 'org-attach)
   (require 'org-id)
@@ -374,6 +379,7 @@
    'org-babel-load-languages
    '((shell . t)))
   (add-to-list 'org-modules 'org-id)
+  (my-org-add-font-lock-keywords)
   (add-hook 'org-mode-hook 'my-org-setup)
   :bind
   (("C-c c" . org-capture)
@@ -384,14 +390,14 @@
    :map org-mode-map
    ("C-c P i" . org-id-get-create)))
 
-(defface my-org-checkbox-done-text
+(defface my-org-checked-checkbox-face
   '((t (:inherit org-done)))
-  "Face for the text part of a checked Org mode checkbox.")
+  "Face for a checked Org mode checkbox.")
 
-(defun my-org-set-checkbox-done-text-face ()
+(defun my-org-set-checked-checkbox-face ()
   (font-lock-add-keywords
    'org-mode
-   `(("^[ \t]*\\(?:[-+*]\\|[0-9]+[).]\\)[ \t]+\\(\\(?:\\[@\\(?:start:\\)?[0-9]+\\][ \t]*\\)?\\[\\(?:X\\|\\([0-9]+\\)/\\2\\)\\][^\n]*\n\\)" 1 'my-org-checkbox-done-text prepend))
+   `(("^[ \t]*\\(?:[-+*]\\|[0-9]+[).]\\)[ \t]+\\(\\(?:\\[@\\(?:start:\\)?[0-9]+\\][ \t]*\\)?\\[\\(?:X\\|\\([0-9]+\\)/\\2\\)\\][^\n]*\n\\)" 1 'my-org-checked-checkbox-face prepend))
    'append))
 
 (use-package org-modern
@@ -402,7 +408,7 @@
   (org-agenda-tags-column 0)
   :config
   (global-org-modern-mode)
-  (my-org-set-checkbox-done-text-face))
+  (my-org-set-checked-checkbox-face))
 
 (use-package org-auto-tangle
   :hook (org-mode . org-auto-tangle-mode))

@@ -56,7 +56,7 @@
   - [[#go-to-char][Go to Char]]
   - [[#magit][Magit]]
   - [[#org-mode][Org Mode]]
-    - [[#mode-setup-hook][Mode setup hook]]
+    - [[#setup-helpers][Setup helpers]]
     - [[#helpers][Helpers]]
     - [[#configure][Configure]]
     - [[#org-modern][Org Modern]]
@@ -706,11 +706,18 @@ https://magit.vc/
 
 ** Org Mode
 https://orgmode.org/
-*** Mode setup hook
+*** Setup helpers
+**** To run on the mode hook
 #+begin_src elisp
   (defun my-org-setup ()
     (setq-local fill-column 120)
     (auto-fill-mode 1))
+#+end_src
+**** Add font lock keywords
+#+begin_src elisp
+  (defun my-org-add-font-lock-keywords ()
+    (font-lock-add-keywords 'org-mode
+     '(("\\<\\(CREATED:\\)" 1 'org-special-keyword prepend))))
 #+end_src
 *** Helpers
 **** Sort TODOs
@@ -749,6 +756,7 @@ https://orgmode.org/
     (org-attach-use-inheritance t)
     (org-startup-folded 'showall)
     (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+    (org-log-done 'time)
     :config
     (require 'org-attach)
     (require 'org-id)
@@ -756,6 +764,7 @@ https://orgmode.org/
      'org-babel-load-languages
      '((shell . t)))
     (add-to-list 'org-modules 'org-id)
+    (my-org-add-font-lock-keywords)
     (add-hook 'org-mode-hook 'my-org-setup)
     :bind
     (("C-c c" . org-capture)
@@ -783,16 +792,20 @@ https://orgmode.org/
 
 *** Org Modern
 https://github.com/minad/org-modern
-**** Make checked checkboxes green
-#+begin_src elisp
-  (defface my-org-checkbox-done-text
-    '((t (:inherit org-done)))
-    "Face for the text part of a checked Org mode checkbox.")
+**** Setup helpers
+***** Make checked checkboxes green
+Org Modern makes checkboxes very small and it's hard to distinguish checked from unchecked. This makes checked ones
+green to help with that.
 
-  (defun my-org-set-checkbox-done-text-face ()
+#+begin_src elisp
+  (defface my-org-checked-checkbox-face
+    '((t (:inherit org-done)))
+    "Face for a checked Org mode checkbox.")
+
+  (defun my-org-set-checked-checkbox-face ()
     (font-lock-add-keywords
      'org-mode
-     `(("^[ \t]*\\(?:[-+*]\\|[0-9]+[).]\\)[ \t]+\\(\\(?:\\[@\\(?:start:\\)?[0-9]+\\][ \t]*\\)?\\[\\(?:X\\|\\([0-9]+\\)/\\2\\)\\][^\n]*\n\\)" 1 'my-org-checkbox-done-text prepend))
+     `(("^[ \t]*\\(?:[-+*]\\|[0-9]+[).]\\)[ \t]+\\(\\(?:\\[@\\(?:start:\\)?[0-9]+\\][ \t]*\\)?\\[\\(?:X\\|\\([0-9]+\\)/\\2\\)\\][^\n]*\n\\)" 1 'my-org-checked-checkbox-face prepend))
      'append))
 #+end_src
 **** Configure
@@ -805,7 +818,7 @@ https://github.com/minad/org-modern
     (org-agenda-tags-column 0)
     :config
     (global-org-modern-mode)
-    (my-org-set-checkbox-done-text-face))
+    (my-org-set-checked-checkbox-face))
 #+end_src
 *** COMMENT My Org Looks
 :PROPERTIES:
