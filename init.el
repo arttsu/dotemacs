@@ -358,8 +358,10 @@
   (org-attach-directory "~/org/attachments")
   (org-attach-use-inheritance t)
   (org-startup-folded 'showall)
+  (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
   :config
   (require 'org-attach)
+  (require 'org-id)
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((shell . t)))
