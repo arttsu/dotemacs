@@ -379,6 +379,28 @@
   (interactive)
   (org-capture nil "iI"))
 
+(defun my-org-day-agenda-skip-todo-if ()
+  (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+        (scheduled (org-get-scheduled-time (point)))
+        (deadline (org-get-deadline-time (point)))
+        (priority (org-get-priority (thing-at-point 'line t)))
+        (tags (org-get-tags)))
+    (if (or scheduled
+            deadline
+            (and (or (member "PROJECT" tags) (member "AREA" tags))
+                 (< priority 3000)))
+        subtree-end)))
+
+(defconst my-org-day-agenda
+  `("d" "Day" ((agenda "" ((org-agenda-span 1)
+                           (org-agenda-skip-scheduled-if-done t)
+                           (org-agenda-skip-deadline-if-done t)
+                           (org-agenda-skip-timestamp-if-done t)))
+               (todo "TODO" ((org-agenda-overriding-header "Ad-hoc tasks and high-prio project tasks")
+                             (org-agenda-skip-function 'my-org-day-agenda-skip-todo-if)))
+               (tags "+PROJECT" ((org-agenda-overriding-header "Projects")
+                                 (org-tags-match-list-sublevels nil))))))
+
 (use-package org
   :custom
   (org-startup-indented t)
@@ -404,6 +426,9 @@
                       ,(expand-file-name "projects" my-open-gtd-dir)
                       ,(expand-file-name "areas" my-open-gtd-dir)))
   (org-refile-targets '((org-agenda-files :level . 2)))
+  (org-priority-lowest 68)
+  (org-priority-default 67)
+  (org-agenda-custom-commands `(,my-org-day-agenda))
   :config
   (require 'org-attach)
   (require 'org-id)
