@@ -387,6 +387,7 @@
         (tags (org-get-tags)))
     (if (or scheduled
             deadline
+            (< priority 1000)
             (and (or (member "PROJECT" tags) (member "AREA" tags))
                  (< priority 3000)))
         subtree-end)))
