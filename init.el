@@ -389,7 +389,7 @@
             deadline
             (< priority 1000)
             (and (or (member "PROJECT" tags) (member "AREA" tags))
-                 (< priority 3000)))
+                 (< priority 2000)))
         subtree-end)))
 
 (defconst my-org-day-agenda
