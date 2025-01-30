@@ -392,6 +392,12 @@
                  (< priority 2000)))
         subtree-end)))
 
+(defun my-org-day-agenda-skip-project-if ()
+  (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+        (priority (org-get-priority (thing-at-point 'line t))))
+    (if (< priority 1000)
+        subtree-end)))
+
 (defconst my-org-day-agenda
   `("d" "Day" ((agenda "" ((org-agenda-span 1)
                            (org-agenda-skip-scheduled-if-done t)
@@ -400,7 +406,9 @@
                (todo "TODO" ((org-agenda-overriding-header "Ad-hoc tasks and high-prio project tasks")
                              (org-agenda-skip-function 'my-org-day-agenda-skip-todo-if)))
                (tags "+PROJECT" ((org-agenda-overriding-header "Projects")
-                                 (org-tags-match-list-sublevels nil))))))
+                                 (org-tags-match-list-sublevels nil)
+                                 (org-agenda-sorting-strategy '(priority-down))
+                                 (org-agenda-skip-function 'my-org-day-agenda-skip-project-if))))))
 
 (use-package org
   :custom
