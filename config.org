@@ -774,9 +774,11 @@ https://orgmode.org/
           (scheduled (org-get-scheduled-time (point)))
           (deadline (org-get-deadline-time (point)))
           (priority (org-get-priority (thing-at-point 'line t)))
-          (tags (org-get-tags)))
+          (tags (org-get-tags))
+          (category (org-get-category)))
       (if (or scheduled
               deadline
+              (string= category "OPENINBOX")
               (< priority 1000)
               (and (or (member "PROJECT" tags) (member "AREA" tags))
                    (< priority 2000)))
