@@ -568,6 +568,7 @@
 
 (use-package jinx
   :unless (my-windows-p)
+  :custom (jinx-languages "en_US de_DE ru")
   :hook (emacs-startup . global-jinx-mode)
   :bind
   (("M-$" . jinx-correct)
