@@ -351,6 +351,15 @@
   (org-end-of-subtree)
   (org-back-to-heading))
 
+(defun my-org-add-update ()
+  "Add an update entry with a timestamp to the current Org heading."
+  (interactive)
+  (org-end-of-subtree)
+  (end-of-line)
+  (newline-and-indent)
+  (insert (format "# Upd. %s" (format-time-string "<%Y-%m-%d %H:%M>")))
+  (newline-and-indent))
+
 (defconst my-open-org-dir "~/org-open")
 
 (defconst my-local-gtd-dir (concat my-local-org-dir "/gtd"))
@@ -456,6 +465,7 @@
    ("M-g e" . my-org-end-of-subtree)
    ("C-c i" . my-gtd-capture-note)
    ("C-c I" . my-gtd-capture-todo)
+   ("C-c u" . my-org-add-update)
    :map org-mode-map
    ("C-c P i" . org-id-get-create)))
 

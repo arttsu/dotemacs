@@ -735,6 +735,17 @@ https://orgmode.org/
     (org-end-of-subtree)
     (org-back-to-heading))
 #+end_src
+**** Add an update
+#+begin_src elisp
+  (defun my-org-add-update ()
+    "Add an update entry with a timestamp to the current Org heading."
+    (interactive)
+    (org-end-of-subtree)
+    (end-of-line)
+    (newline-and-indent)
+    (insert (format "# Upd. %s" (format-time-string "<%Y-%m-%d %H:%M>")))
+    (newline-and-indent))
+#+end_src
 *** Org files
 #+begin_src elisp
   (defconst my-open-org-dir "~/org-open")
@@ -848,6 +859,7 @@ https://orgmode.org/
      ("M-g e" . my-org-end-of-subtree)
      ("C-c i" . my-gtd-capture-note)
      ("C-c I" . my-gtd-capture-todo)
+     ("C-c u" . my-org-add-update)
      :map org-mode-map
      ("C-c P i" . org-id-get-create)))
 #+end_src
