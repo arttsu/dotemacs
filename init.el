@@ -485,7 +485,9 @@
   (org-auto-align-tags nil)
   (org-tags-column 0)
   (org-agenda-tags-column 0)
-  :custom-face (org-modern-tag ((t (:foreground "white" :background "#9575cd" :slant italic))))
+  :custom-face
+  (org-modern-tag ((t (:foreground "white" :background "#9575cd" :slant italic))))
+  (org-checkbox ((t (:height 1.3))))
   :config
   (global-org-modern-mode)
   (my-org-set-checked-checkbox-face))
