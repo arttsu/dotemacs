@@ -843,9 +843,11 @@ https://orgmode.org/
     (org-priority-lowest 68)
     (org-priority-default 67)
     (org-agenda-custom-commands `(,my-org-day-agenda))
+    (org-habit-graph-column 80)
     :config
     (require 'org-attach)
     (require 'org-id)
+    (require 'org-habit)
     (org-babel-do-load-languages
      'org-babel-load-languages
      '((shell . t)))
