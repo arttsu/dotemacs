@@ -360,6 +360,16 @@
   (insert (format "# Upd. %s" (format-time-string "<%Y-%m-%d %H:%M>")))
   (newline-and-indent))
 
+(defun my-org-insert-timestamped-heading ()
+  (interactive)
+  (org-insert-heading-respect-content)
+  (forward-line)
+  (insert "# CREATED: ")
+  (org-insert-timestamp (current-time) t t)
+  (insert "\n")
+  (forward-line -2)
+  (end-of-line))
+
 (defconst my-open-org-dir "~/org-open")
 
 (defconst my-local-gtd-dir (concat my-local-org-dir "/gtd"))
@@ -467,7 +477,8 @@
    ("M-g e" . my-org-end-of-subtree)
    ("C-c i" . my-gtd-capture-note)
    ("C-c I" . my-gtd-capture-todo)
-   ("C-c u" . my-org-add-update)
+   ("C-c o u" . my-org-add-update)
+   ("C-c o l" . my-org-insert-timestamped-heading)
    :map org-mode-map
    ("C-c P i" . org-id-get-create)))
 
