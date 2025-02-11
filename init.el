@@ -443,7 +443,7 @@
   (org-hide-emphasis-markers t)
   (org-pretty-entities t)
   (org-use-speed-commands t)
-  (org-attach-id-dir (concat my-local-gtd-dir "/attachments/"))
+  (org-attach-id-dir (concat my-local-org-dir "/attachments/"))
   (org-attach-use-inheritance nil)
   (org-startup-folded 'showall)
   (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
