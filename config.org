@@ -104,6 +104,7 @@
   - [[#dash][dash]]
   - [[#envrc][envrc]]
   - [[#emacs-pet][emacs-pet]]
+  - [[#just][just]]
 
 * Notes
 ** Dependencies
@@ -1355,6 +1356,13 @@ https://github.com/magnars/dash.el
     (add-hook 'python-base-mode-hook 'pet-mode -10)
     (require 'envrc)
     (add-hook 'change-major-mode-after-body-hook 'envrc-mode))
+#+end_src
+
+** just
+https://github.com/leon-barrett/just-mode.el
+
+#+begin_src elisp
+  (use-package just-mode)
 #+end_src
 
 * Local variables :noexport:

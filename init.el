@@ -735,3 +735,5 @@
   (add-hook 'python-base-mode-hook 'pet-mode -10)
   (require 'envrc)
   (add-hook 'change-major-mode-after-body-hook 'envrc-mode))
+
+(use-package just-mode)
