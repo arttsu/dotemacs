@@ -810,6 +810,7 @@ https://orgmode.org/
     (org-capture nil "iI"))
 #+end_src
 *** Agendas
+**** "Day" agenda
 #+begin_src elisp
   (defun my-org-day-agenda-skip-todo-if ()
     (let ((subtree-end (save-excursion (org-end-of-subtree t)))
