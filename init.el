@@ -510,6 +510,10 @@
   (org-auto-align-tags nil)
   (org-tags-column 0)
   (org-agenda-tags-column 0)
+  (org-modern-priority-faces '((?A :background "IndianRed" :foreground "white")
+                               (?B :background "Goldenrod" :foreground "white")
+                               (?C :background "DarkOliveGreen" :foreground "white")
+                               (?D :background "SteelBlue" :foreground "white")))
   :custom-face
   (org-modern-tag ((t (:foreground "white" :background "#9575cd" :slant italic))))
   (org-checkbox ((t (:height 1.3))))
