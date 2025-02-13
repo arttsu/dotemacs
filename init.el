@@ -121,6 +121,17 @@
   (if (member "Segoe UI Emoji" (font-family-list))
       (set-fontset-font t 'unicode "Segoe UI Emoji" nil 'append)))
 
+(defun my-dired-rename-to-timestamp ()
+  (interactive)
+  (let ((files (dired-get-marked-files)))
+    (dolist (file files)
+      (let* ((attributes (file-attributes file))
+             (mod-time (file-attribute-modification-time attributes))
+             (timestamp (format-time-string "%Y%m%d%H%M%S" mod-time))
+             (new-name (concat timestamp (file-name-extension file t)))
+             (new-path (concat (file-name-directory file) new-name)))
+        (dired-rename-file file new-path nil)))))
+
 (use-package dired
   :straight nil
   :custom
@@ -134,7 +145,8 @@
   (("<f7>" . dired-jump)
    :map dired-mode-map
    ("o" . crux-open-with)
-   ("<tab>" . dired-find-file-other-window)))
+   ("<tab>" . dired-find-file-other-window)
+   ("C-c D t" . my-dired-rename-to-timestamp)))
 
 (use-package project
   :config

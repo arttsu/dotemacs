@@ -32,6 +32,8 @@
   - [[#modus-themes][Modus Themes]]
   - [[#iosevka-comfy-font][Iosevka Comfy font]]
   - [[#dired][Dired]]
+    - [[#dired-interactive-functions][Dired interactive functions]]
+    - [[#configure-dired][Configure Dired]]
   - [[#project][Project]]
     - [[#my-project][My project]]
   - [[#super-save][Super Save]]
@@ -369,6 +371,21 @@ https://git.sr.ht/~protesilaos/iosevka-comfy
 #+end_src
 
 ** Dired
+*** Dired interactive functions
+**** Dired: Rename files to their modification time timestamp
+#+begin_src elisp
+  (defun my-dired-rename-to-timestamp ()
+    (interactive)
+    (let ((files (dired-get-marked-files)))
+      (dolist (file files)
+        (let* ((attributes (file-attributes file))
+               (mod-time (file-attribute-modification-time attributes))
+               (timestamp (format-time-string "%Y%m%d%H%M%S" mod-time))
+               (new-name (concat timestamp (file-name-extension file t)))
+               (new-path (concat (file-name-directory file) new-name)))
+          (dired-rename-file file new-path nil)))))
+#+end_src
+*** Configure Dired
 #+begin_src elisp
   (use-package dired
     :straight nil
@@ -383,7 +400,8 @@ https://git.sr.ht/~protesilaos/iosevka-comfy
     (("<f7>" . dired-jump)
      :map dired-mode-map
      ("o" . crux-open-with)
-     ("<tab>" . dired-find-file-other-window)))
+     ("<tab>" . dired-find-file-other-window)
+     ("C-c D t" . my-dired-rename-to-timestamp)))
 #+end_src
 
 ** Project
