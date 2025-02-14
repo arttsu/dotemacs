@@ -392,6 +392,15 @@
 
 (defconst my-gtd-inbox (my-gtd-path "/inbox"))
 
+(defconst my-local-gtd-projects-dir (expand-file-name "projects" my-local-gtd-dir))
+(defconst my-local-gtd-areas-dir (expand-file-name "areas" my-local-gtd-dir))
+(defconst my-open-gtd-projects-dir (expand-file-name "projects" my-open-gtd-dir))
+(defconst my-open-gtd-areas-dir (expand-file-name "areas" my-open-gtd-dir))
+
+(defconst my-local-gtd-files `(,my-local-gtd-dir ,my-local-gtd-projects-dir ,my-local-gtd-areas-dir))
+(defconst my-open-gtd-files `(,my-open-gtd-dir ,my-open-gtd-projects-dir ,my-open-gtd-areas-dir))
+(defconst my-all-gtd-files (append my-local-gtd-files my-open-gtd-files))
+
 (defun my-org-capture-template-path (name)
   (expand-file-name (concat "capture-templates/" name ".txt") user-emacs-directory))
 
@@ -437,11 +446,21 @@
                            (org-agenda-skip-deadline-if-done t)
                            (org-agenda-skip-timestamp-if-done t)))
                (todo "TODO" ((org-agenda-overriding-header "Ad-hoc tasks and high-prio project tasks")
-                             (org-agenda-skip-function 'my-org-day-agenda-skip-todo-if)))
+                             (org-agenda-skip-function 'my-org-day-agenda-skip-todo-if)
+                             (org-agenda-files ',my-local-gtd-files)))
                (tags "+PROJECT" ((org-agenda-overriding-header "Projects")
                                  (org-tags-match-list-sublevels nil)
                                  (org-agenda-sorting-strategy '(priority-down))
-                                 (org-agenda-skip-function 'my-org-day-agenda-skip-project-if))))))
+                                 (org-agenda-skip-function 'my-org-day-agenda-skip-project-if)
+                                 (org-agenda-files '(,my-local-gtd-projects-dir))))
+               (todo "TODO" ((org-agenda-overriding-header "Open ad-hoc tasks and high-prio project tasks")
+                             (org-agenda-skip-function 'my-org-day-agenda-skip-todo-if)
+                             (org-agenda-files ',my-open-gtd-files)))
+               (tags "+PROJECT" ((org-agenda-overriding-header "Open projects")
+                                 (org-tags-match-list-sublevels nil)
+                                 (org-agenda-sorting-strategy '(priority-down))
+                                 (org-agenda-skip-function 'my-org-day-agenda-skip-project-if)
+                                 (org-agenda-files '(,my-open-gtd-projects-dir)))))))
 
 (use-package org
   :custom
