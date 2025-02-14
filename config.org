@@ -891,8 +891,8 @@ https://orgmode.org/
                         ,(expand-file-name "projects" my-open-gtd-dir)
                         ,(expand-file-name "areas" my-open-gtd-dir)))
     (org-refile-targets '((org-agenda-files :level . 2)))
-    (org-priority-lowest 68)
-    (org-priority-default 67)
+    (org-priority-lowest 69)
+    (org-priority-default 68)
     (org-agenda-custom-commands `(,my-org-day-agenda))
     (org-habit-graph-column 80)
     :config
@@ -947,7 +947,8 @@ green to help with that.
     (org-modern-priority-faces '((?A :background "IndianRed" :foreground "white")
                                  (?B :background "Goldenrod" :foreground "white")
                                  (?C :background "DarkOliveGreen" :foreground "white")
-                                 (?D :background "SteelBlue" :foreground "white")))
+                                 (?D :background "SteelBlue" :foreground "white")
+                                 (?E :background "DarkOrchid" :foreground "white")))
     :custom-face
     (org-modern-tag ((t (:foreground "white" :background "#9575cd" :slant italic))))
     (org-checkbox ((t (:height 1.3))))
