@@ -431,7 +431,7 @@
             (string= category "OPENINBOX")
             (< priority 1000)
             (and (or (member "PROJECT" tags) (member "AREA" tags))
-                 (< priority 2000)))
+                 (< priority 3000)))
         subtree-end)))
 
 (defun my-org-day-agenda-skip-project-if ()
