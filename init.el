@@ -382,6 +382,14 @@
   (forward-line -2)
   (end-of-line))
 
+(defun my-org-duplicate-subtree ()
+  (interactive)
+  (when (org-at-heading-p)
+    (beginning-of-line)
+    (org-copy-subtree)
+    (org-paste-subtree)
+    (org-delete-property "ID")))
+
 (defconst my-open-org-dir "~/org-open")
 
 (defconst my-local-gtd-dir (concat my-local-org-dir "/gtd"))
@@ -510,6 +518,7 @@
    ("C-c I" . my-gtd-capture-todo)
    ("C-c o u" . my-org-add-update)
    ("C-c o l" . my-org-insert-timestamped-heading)
+   ("C-c o D" . my-org-duplicate-subtree)
    :map org-mode-map
    ("C-c P i" . org-id-get-create)))
 
