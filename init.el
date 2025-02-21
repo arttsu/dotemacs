@@ -499,6 +499,7 @@
   (org-priority-default 68)
   (org-agenda-custom-commands `(,my-org-day-agenda))
   (org-habit-graph-column 80)
+  (org-habit-show-done-always-green t)
   :config
   (require 'org-attach)
   (require 'org-id)
