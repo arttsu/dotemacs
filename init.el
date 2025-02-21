@@ -372,7 +372,7 @@
   (auto-fill-mode 1))
 
 (defun my-org-files-in-dir (dir)
-  (directory-files-recursively dir "\\.org$"))
+  (directory-files dir t "\\.org$"))
 
 (defun my-org-sort-todos ()
   "Sort the current subtree: first 'open' items by priority, then 'done' items by priority."

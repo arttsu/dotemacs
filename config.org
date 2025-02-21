@@ -763,7 +763,7 @@ https://orgmode.org/
 *** Helpers
 #+begin_src elisp
   (defun my-org-files-in-dir (dir)
-    (directory-files-recursively dir "\\.org$"))
+    (directory-files dir t "\\.org$"))
 #+end_src
 *** Interactive Helpers
 **** Sort TODOs
