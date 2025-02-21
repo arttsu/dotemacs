@@ -345,9 +345,34 @@
   :bind
   (("C-c g" . magit-file-dispatch)))
 
+(defconst my-open-org-dir "~/org-open")
+
+(defconst my-local-gtd-dir (concat my-local-org-dir "/gtd"))
+(defconst my-open-gtd-dir (concat my-open-org-dir "/gtd"))
+
+(defun my-gtd-path (name)
+  (expand-file-name (concat my-local-gtd-dir name ".org")))
+
+(defconst my-gtd-inbox (my-gtd-path "/inbox"))
+
+(defconst my-local-gtd-projects-dir (expand-file-name "projects" my-local-gtd-dir))
+(defconst my-local-gtd-areas-dir (expand-file-name "areas" my-local-gtd-dir))
+(defconst my-open-gtd-projects-dir (expand-file-name "projects" my-open-gtd-dir))
+(defconst my-open-gtd-areas-dir (expand-file-name "areas" my-open-gtd-dir))
+
+(defconst my-local-gtd-files `(,my-local-gtd-dir ,my-local-gtd-projects-dir ,my-local-gtd-areas-dir))
+(defconst my-open-gtd-files `(,my-open-gtd-dir ,my-open-gtd-projects-dir ,my-open-gtd-areas-dir))
+(defconst my-all-gtd-files (append my-local-gtd-files my-open-gtd-files))
+
+(defconst my-local-notes (expand-file-name "notes" my-local-org-dir))
+(defconst my-open-notes (expand-file-name "notes" my-open-org-dir))
+
 (defun my-org-setup ()
   (setq-local fill-column 120)
   (auto-fill-mode 1))
+
+(defun my-org-files-in-dir (dir)
+  (directory-files-recursively dir "\\.org$"))
 
 (defun my-org-sort-todos ()
   "Sort the current subtree: first 'open' items by priority, then 'done' items by priority."
@@ -392,24 +417,14 @@
     (org-paste-subtree)
     (org-delete-property "ID")))
 
-(defconst my-open-org-dir "~/org-open")
-
-(defconst my-local-gtd-dir (concat my-local-org-dir "/gtd"))
-(defconst my-open-gtd-dir (concat my-open-org-dir "/gtd"))
-
-(defun my-gtd-path (name)
-  (expand-file-name (concat my-local-gtd-dir name ".org")))
-
-(defconst my-gtd-inbox (my-gtd-path "/inbox"))
-
-(defconst my-local-gtd-projects-dir (expand-file-name "projects" my-local-gtd-dir))
-(defconst my-local-gtd-areas-dir (expand-file-name "areas" my-local-gtd-dir))
-(defconst my-open-gtd-projects-dir (expand-file-name "projects" my-open-gtd-dir))
-(defconst my-open-gtd-areas-dir (expand-file-name "areas" my-open-gtd-dir))
-
-(defconst my-local-gtd-files `(,my-local-gtd-dir ,my-local-gtd-projects-dir ,my-local-gtd-areas-dir))
-(defconst my-open-gtd-files `(,my-open-gtd-dir ,my-open-gtd-projects-dir ,my-open-gtd-areas-dir))
-(defconst my-all-gtd-files (append my-local-gtd-files my-open-gtd-files))
+(defun my-org-refile-note ()
+  (interactive)
+  (let ((original-targets org-refile-targets))
+    (unwind-protect
+        (progn
+          (setq org-refile-targets `((,(append (my-org-files-in-dir my-local-notes) (my-org-files-in-dir my-open-notes)) :level 2)))
+          (org-refile))
+      (setq org-refile-targets original-targets))))
 
 (defun my-org-capture-template-path (name)
   (expand-file-name (concat "capture-templates/" name ".txt") user-emacs-directory))
@@ -522,6 +537,7 @@
    ("C-c o u" . my-org-add-update)
    ("C-c o l" . my-org-insert-timestamped-heading)
    ("C-c o D" . my-org-duplicate-subtree)
+   ("C-c o w" . my-org-refile-note)
    :map org-mode-map
    ("C-c P i" . org-id-get-create)))
 

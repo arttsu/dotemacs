@@ -58,9 +58,10 @@
   - [[#go-to-char][Go to Char]]
   - [[#magit][Magit]]
   - [[#org-mode][Org mode]]
+    - [[#org-files][Org files]]
     - [[#setup-helpers][Setup helpers]]
     - [[#helpers][Helpers]]
-    - [[#org-files][Org files]]
+    - [[#interactive-helpers][Interactive Helpers]]
     - [[#capturing][Capturing]]
     - [[#agendas][Agendas]]
     - [[#configure][Configure]]
@@ -728,6 +729,30 @@ https://magit.vc/
 
 ** Org mode
 https://orgmode.org/
+*** Org files
+#+begin_src elisp
+  (defconst my-open-org-dir "~/org-open")
+
+  (defconst my-local-gtd-dir (concat my-local-org-dir "/gtd"))
+  (defconst my-open-gtd-dir (concat my-open-org-dir "/gtd"))
+
+  (defun my-gtd-path (name)
+    (expand-file-name (concat my-local-gtd-dir name ".org")))
+
+  (defconst my-gtd-inbox (my-gtd-path "/inbox"))
+
+  (defconst my-local-gtd-projects-dir (expand-file-name "projects" my-local-gtd-dir))
+  (defconst my-local-gtd-areas-dir (expand-file-name "areas" my-local-gtd-dir))
+  (defconst my-open-gtd-projects-dir (expand-file-name "projects" my-open-gtd-dir))
+  (defconst my-open-gtd-areas-dir (expand-file-name "areas" my-open-gtd-dir))
+
+  (defconst my-local-gtd-files `(,my-local-gtd-dir ,my-local-gtd-projects-dir ,my-local-gtd-areas-dir))
+  (defconst my-open-gtd-files `(,my-open-gtd-dir ,my-open-gtd-projects-dir ,my-open-gtd-areas-dir))
+  (defconst my-all-gtd-files (append my-local-gtd-files my-open-gtd-files))
+
+  (defconst my-local-notes (expand-file-name "notes" my-local-org-dir))
+  (defconst my-open-notes (expand-file-name "notes" my-open-org-dir))
+#+end_src
 *** Setup helpers
 **** To run on the mode hook
 #+begin_src elisp
@@ -736,6 +761,11 @@ https://orgmode.org/
     (auto-fill-mode 1))
 #+end_src
 *** Helpers
+#+begin_src elisp
+  (defun my-org-files-in-dir (dir)
+    (directory-files-recursively dir "\\.org$"))
+#+end_src
+*** Interactive Helpers
 **** Sort TODOs
 #+begin_src elisp
   (defun my-org-sort-todos ()
@@ -789,26 +819,16 @@ https://orgmode.org/
       (org-paste-subtree)
       (org-delete-property "ID")))
 #+end_src
-*** Org files
+**** Refile a note
 #+begin_src elisp
-  (defconst my-open-org-dir "~/org-open")
-
-  (defconst my-local-gtd-dir (concat my-local-org-dir "/gtd"))
-  (defconst my-open-gtd-dir (concat my-open-org-dir "/gtd"))
-
-  (defun my-gtd-path (name)
-    (expand-file-name (concat my-local-gtd-dir name ".org")))
-
-  (defconst my-gtd-inbox (my-gtd-path "/inbox"))
-
-  (defconst my-local-gtd-projects-dir (expand-file-name "projects" my-local-gtd-dir))
-  (defconst my-local-gtd-areas-dir (expand-file-name "areas" my-local-gtd-dir))
-  (defconst my-open-gtd-projects-dir (expand-file-name "projects" my-open-gtd-dir))
-  (defconst my-open-gtd-areas-dir (expand-file-name "areas" my-open-gtd-dir))
-
-  (defconst my-local-gtd-files `(,my-local-gtd-dir ,my-local-gtd-projects-dir ,my-local-gtd-areas-dir))
-  (defconst my-open-gtd-files `(,my-open-gtd-dir ,my-open-gtd-projects-dir ,my-open-gtd-areas-dir))
-  (defconst my-all-gtd-files (append my-local-gtd-files my-open-gtd-files))
+  (defun my-org-refile-note ()
+    (interactive)
+    (let ((original-targets org-refile-targets))
+      (unwind-protect
+          (progn
+            (setq org-refile-targets `((,(append (my-org-files-in-dir my-local-notes) (my-org-files-in-dir my-open-notes)) :level 2)))
+            (org-refile))
+        (setq org-refile-targets original-targets))))
 #+end_src
 *** Capturing
 #+begin_src elisp
@@ -928,6 +948,7 @@ https://orgmode.org/
      ("C-c o u" . my-org-add-update)
      ("C-c o l" . my-org-insert-timestamped-heading)
      ("C-c o D" . my-org-duplicate-subtree)
+     ("C-c o w" . my-org-refile-note)
      :map org-mode-map
      ("C-c P i" . org-id-get-create)))
 #+end_src
