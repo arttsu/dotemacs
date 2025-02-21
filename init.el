@@ -355,7 +355,9 @@
   (unless (org-at-heading-p)
     (error "Not at a heading"))
   (org-sort-entries nil ?p)
-  (org-sort-entries nil ?o))
+  (org-sort-entries nil ?o)
+  (org-cycle)
+  (org-cycle))
 
 (defun my-org-end-of-subtree ()
   "Jump to the last item of the current subtree."

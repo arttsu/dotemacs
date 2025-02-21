@@ -744,7 +744,9 @@ https://orgmode.org/
     (unless (org-at-heading-p)
       (error "Not at a heading"))
     (org-sort-entries nil ?p)
-    (org-sort-entries nil ?o))
+    (org-sort-entries nil ?o)
+    (org-cycle)
+    (org-cycle))
 #+end_src
 **** Jump to the last item of a subtree
 #+begin_src elisp
