@@ -801,3 +801,7 @@
   (add-hook 'change-major-mode-after-body-hook 'envrc-mode))
 
 (use-package just-mode)
+
+(use-package elfeed
+  :custom
+  (elfeed-feeds my-elfeed-feeds))

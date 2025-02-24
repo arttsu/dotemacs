@@ -17,4 +17,6 @@
 
 (setq my-roam-encrypt-dailies? nil)
 
+(setq my-elfeed-feeds ())
+
 (setq my-local-org-dir "/path/to/local/org")

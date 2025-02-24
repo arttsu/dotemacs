@@ -108,6 +108,7 @@
   - [[#envrc][envrc]]
   - [[#emacs-pet][emacs-pet]]
   - [[#just][just]]
+  - [[#elfeed][elfeed]]
 
 * Notes
 ** Dependencies
@@ -1441,6 +1442,15 @@ https://github.com/leon-barrett/just-mode.el
 
 #+begin_src elisp
   (use-package just-mode)
+#+end_src
+
+** elfeed
+https://github.com/skeeto/elfeed
+
+#+begin_src elisp
+  (use-package elfeed
+    :custom
+    (elfeed-feeds my-elfeed-feeds))
 #+end_src
 
 * Local variables :noexport:
