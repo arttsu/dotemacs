@@ -589,7 +589,7 @@
 
 (use-package gptel
   :custom
-  (gptel-model "gpt-4o")
+  (gptel-model 'gpt-4o)
   (gptel-default-mode 'org-mode)
   :config
   (add-hook 'gptel-mode-hook 'toggle-truncate-lines)
