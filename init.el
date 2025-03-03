@@ -434,15 +434,21 @@
 (defconst my-gtd-capture-templates
   `(("i" "Inbox")
     ("ii" "note" entry ,my-gtd-inbox-target (file ,(my-org-capture-template-path "gtd-note")))
-    ("iI" "todo" entry ,my-gtd-inbox-target (file ,(my-org-capture-template-path "gtd-todo")))))
+    ("iI" "todo" entry ,my-gtd-inbox-target (file ,(my-org-capture-template-path "gtd-todo")))
+    ("il" "note link" entry ,my-gtd-inbox-target (file ,(my-org-capture-template-path "gtd-note-link")))
+    ("iL" "todo link" entry ,my-gtd-inbox-target (file ,(my-org-capture-template-path "gtd-todo-link")))))
 
-(defun my-gtd-capture-note ()
-  (interactive)
-  (org-capture nil "ii"))
+(defun my-gtd-capture-note (&optional prefix)
+  (interactive "P")
+  (cond ((equal prefix nil) (org-capture nil "ii"))
+        ((equal prefix '(4)) (org-capture nil "il"))
+        (t (error "Invalid prefix argument: %s" prefix))))
 
-(defun my-gtd-capture-todo ()
-  (interactive)
-  (org-capture nil "iI"))
+(defun my-gtd-capture-todo (&optional prefix)
+  (interactive "P")
+  (cond ((equal prefix nil) (org-capture nil "iI"))
+        ((equal prefix '(4)) (org-capture nil "iL"))
+        (t (error "Invalid prefix argument: %s" prefix))))
 
 (defun my-org-day-agenda-skip-todo-if ()
   (let ((subtree-end (save-excursion (org-end-of-subtree t)))
