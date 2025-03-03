@@ -811,3 +811,10 @@
 (use-package elfeed
   :custom
   (elfeed-feeds my-elfeed-feeds))
+
+(use-package aider
+  :straight (:host github :repo "tninja/aider.el" :files ("aider.el"))
+  :config
+  ;; For latest claude sonnet model
+  (setq aider-args '("--model" "o3-mini"))
+  (global-set-key (kbd "C-c b") 'aider-transient-menu))
