@@ -5,6 +5,7 @@
       '(
         backward-sexp
         crux-smart-open-line-above
+        crux-top-join-line
         electric-newline-and-maybe-indent
         forward-sexp
         forward-to-word
