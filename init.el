@@ -813,6 +813,7 @@
   (elfeed-feeds my-elfeed-feeds))
 
 (use-package aider
+  :unless (my-windows-p)
   :straight (:host github :repo "tninja/aider.el" :files ("aider.el"))
   :config
   ;; For latest claude sonnet model
