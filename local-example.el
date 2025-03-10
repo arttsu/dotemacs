@@ -1,5 +1,15 @@
-(setq my-use-iosevka-comfy nil)
-(setq my-iosevka-comfy-height 125)
+(setq my-font "Iosevka Comfy Fixed")
+(setq my-font-height 125)
+
+;; # Iosevka Comfy Font
+;; https://git.sr.ht/~protesilaos/iosevka-comfy
+;;
+;; ## Installation on Fedora
+;; ```sh
+;; git clone --depth 1 https://git.sr.ht/~protesilaos/iosevka-comfy ~/tmp/iosevka-comfy
+;; mkdir ~/.local/share/fonts
+;; cp -R ~/tmp/iosevka-comfy/iosevka-comfy-fixed ~/.local/share/fonts/
+;; ```
 
 ;; Fish path
 ;;

@@ -30,7 +30,7 @@
   - [[#emacs][Emacs]]
     - [[#my-emacs][My Emacs]]
   - [[#modus-themes][Modus Themes]]
-  - [[#iosevka-comfy-font][Iosevka Comfy font]]
+  - [[#font][Font]]
   - [[#dired][Dired]]
     - [[#dired-interactive-functions][Dired interactive functions]]
     - [[#configure-dired][Configure Dired]]
@@ -361,16 +361,13 @@ https://protesilaos.com/emacs/modus-themes
     (modus-themes-load-theme 'modus-vivendi))
 #+end_src
 
-** Iosevka Comfy font
-https://git.sr.ht/~protesilaos/iosevka-comfy
-
+** Font
 #+begin_src elisp
-  (if my-use-iosevka-comfy
-      (let ((font "Iosevka Comfy Fixed"))
-        (set-face-attribute 'default nil :font font :height my-iosevka-comfy-height)
-        (set-frame-font font nil t))
-    (if (member "Segoe UI Emoji" (font-family-list))
-        (set-fontset-font t 'unicode "Segoe UI Emoji" nil 'append)))
+  (set-face-attribute 'default nil :font my-font :height my-font-height)
+  (set-frame-font my-font nil t)
+
+  (when (my-windows-p)
+    (set-fontset-font t 'unicode "Segoe UI Emoji" nil 'append))
 #+end_src
 
 ** Dired

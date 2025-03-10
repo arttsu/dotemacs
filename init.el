@@ -114,12 +114,11 @@
   :config
   (modus-themes-load-theme 'modus-vivendi))
 
-(if my-use-iosevka-comfy
-    (let ((font "Iosevka Comfy Fixed"))
-      (set-face-attribute 'default nil :font font :height my-iosevka-comfy-height)
-      (set-frame-font font nil t))
-  (if (member "Segoe UI Emoji" (font-family-list))
-      (set-fontset-font t 'unicode "Segoe UI Emoji" nil 'append)))
+(set-face-attribute 'default nil :font my-font :height my-font-height)
+(set-frame-font my-font nil t)
+
+(when (my-windows-p)
+  (set-fontset-font t 'unicode "Segoe UI Emoji" nil 'append))
 
 (defun my-dired-rename-to-timestamp ()
   (interactive)
