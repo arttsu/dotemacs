@@ -8,7 +8,6 @@
 :END:
 - [[#notes][Notes]]
   - [[#dependencies][Dependencies]]
-    - [[#install-iosevka-comfy-font][Install Iosevka Comfy font]]
     - [[#install-mpv-to-play-media-via-emms][Install mpv to play media via EMMS]]
     - [[#install-ledger][Install ledger]]
     - [[#set-up-gptel][Set up GPTel]]
@@ -113,14 +112,6 @@
 
 * Notes
 ** Dependencies
-*** Install Iosevka Comfy font
-**** Fedora
-#+begin_src shell
-  git clone --depth 1 https://git.sr.ht/~protesilaos/iosevka-comfy ~/tmp/iosevka-comfy
-  mkdir ~/.local/share/fonts
-  cp -R ~/tmp/iosevka-comfy/iosevka-comfy-fixed ~/.local/share/fonts/
-#+end_src
-
 *** Install mpv to play media via EMMS
 **** Fedora
 #+begin_src shell
