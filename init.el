@@ -832,5 +832,5 @@
   (add-hook 'emacs-startup-hook #'easysession-load-including-geometry 102)
   (add-hook 'emacs-startup-hook #'easysession-save-mode 103)
   :bind
-  ("C-c z" . easysession-switch-to)
-  ("C-c Z" . easysession-save-as))
+  (("C-c z" . easysession-switch-to)
+   ("C-c Z" . easysession-save)))
