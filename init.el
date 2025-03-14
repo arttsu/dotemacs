@@ -818,3 +818,19 @@
   ;; For latest claude sonnet model
   (setq aider-args '("--model" "o3-mini"))
   (global-set-key (kbd "C-c b") 'aider-transient-menu))
+
+(use-package easysession
+  :commands (easysession-switch-to
+             easysession-save-as
+             easysession-save-mode
+             easysession-load-including-geometry)
+
+  :custom
+  (easysession-mode-line-misc-info t)  ; Display the session in the modeline
+  (easysession-save-interval (* 1 60))  ; Save every 1 minutes
+  :init
+  (add-hook 'emacs-startup-hook #'easysession-load-including-geometry 102)
+  (add-hook 'emacs-startup-hook #'easysession-save-mode 103)
+  :bind
+  ("C-c z" . easysession-switch-to)
+  ("C-c Z" . easysession-save-as))
