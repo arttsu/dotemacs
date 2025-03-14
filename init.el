@@ -59,7 +59,6 @@
   (epa-file-encrypt-to (list my-gpg-key-id))
   (epa-pinentry-mode 'loopback)
   :config
-  (set-frame-name "Main")
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
   (scroll-bar-mode -1)
   (tool-bar-mode -1)
