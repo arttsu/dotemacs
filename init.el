@@ -457,7 +457,7 @@
         (category (org-get-category)))
     (if (or scheduled
             deadline
-            (string= category "OPENINBOX")
+            (or (string= category "SOMEDAY") (string= category "OPENINBOX"))
             (< priority 1000)
             (and (or (member "PROJECT" tags) (member "AREA" tags))
                  (< priority 3000)))
@@ -467,6 +467,19 @@
   (let ((subtree-end (save-excursion (org-end-of-subtree t)))
         (priority (org-get-priority (thing-at-point 'line t))))
     (if (< priority 1000)
+        subtree-end)))
+
+(defun my-org-day-agenda-not-high-prio-someday-p ()
+  (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+        (scheduled (org-get-scheduled-time (point)))
+        (deadline (org-get-deadline-time (point)))
+        (priority (org-get-priority (thing-at-point 'line t)))
+        (tags (org-get-tags))
+        (category (org-get-category)))
+    (if (or scheduled
+            deadline
+            (not (string= category "SOMEDAY"))
+            (< priority 3000))
         subtree-end)))
 
 (defconst my-org-day-agenda
@@ -489,7 +502,10 @@
                                  (org-tags-match-list-sublevels nil)
                                  (org-agenda-sorting-strategy '(priority-down))
                                  (org-agenda-skip-function 'my-org-day-agenda-skip-project-if)
-                                 (org-agenda-files '(,my-open-gtd-projects-dir)))))))
+                                 (org-agenda-files '(,my-open-gtd-projects-dir))))
+               (todo "TODO" ((org-agenda-overriding-header "Someday")
+                             (org-agenda-skip-function 'my-org-day-agenda-not-high-prio-someday-p)
+                             (org-agenda-skip-files ',my-local-gtd-files))))))
 
 (use-package org
   :custom
