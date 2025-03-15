@@ -1105,7 +1105,7 @@ https://github.com/vterm/vterm
 ** Copilot
 https://github.com/zerolfx/copilot.el
 
-#+begin_src elisp
+#+begin_src elisp :tangle no
   (use-package copilot
     :unless (my-windows-p)
     :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
@@ -1451,7 +1451,7 @@ https://github.com/skeeto/elfeed
 ** aider
 https://github.com/tninja/aider.el
 
-#+begin_src elisp
+#+begin_src elisp :tangle no
   (use-package aider
     :unless (my-windows-p)
     :straight (:host github :repo "tninja/aider.el" :files ("aider.el"))

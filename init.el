@@ -635,16 +635,6 @@
   :custom
   (shell-kill-buffer-on-exit t))
 
-(use-package copilot
-  :unless (my-windows-p)
-  :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
-  :custom
-  (copilot-idle-delay 0.3)
-  :custom-face (copilot-overlay-face ((t (:foreground "DarkOrchid" :slant italic))))
-  :config
-  (add-to-list 'warning-suppress-log-types '(copilot copilot-no-mode-indent))
-  :hook (prog-mode . copilot-mode))
-
 (use-package my-copilot
   :straight nil
   :after copilot)
@@ -809,14 +799,6 @@
 (use-package elfeed
   :custom
   (elfeed-feeds my-elfeed-feeds))
-
-(use-package aider
-  :unless (my-windows-p)
-  :straight (:host github :repo "tninja/aider.el" :files ("aider.el"))
-  :config
-  ;; For latest claude sonnet model
-  (setq aider-args '("--model" "o3-mini"))
-  (global-set-key (kbd "C-c b") 'aider-transient-menu))
 
 (use-package easysession
   :commands (easysession-switch-to
