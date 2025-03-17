@@ -651,6 +651,16 @@
   :custom
   (shell-kill-buffer-on-exit t))
 
+(use-package copilot
+  :unless (my-windows-p)
+  :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+  :custom
+  (copilot-idle-delay 0.3)
+  :custom-face (copilot-overlay-face ((t (:foreground "DarkOrchid" :slant italic))))
+  :config
+  (add-to-list 'warning-suppress-log-types '(copilot copilot-no-mode-indent))
+  :hook (prog-mode . copilot-mode))
+
 (use-package my-copilot
   :straight nil
   :after copilot)
