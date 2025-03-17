@@ -19,6 +19,7 @@
     - [[#anki][Anki]]
     - [[#notdeft][Notdeft]]
 - [[#setup][Setup]]
+  - [[#declare-flags][Declare flags]]
   - [[#load-local-config][Load local config]]
   - [[#os-helpers][OS helpers]]
   - [[#add-lisp-dir-to-load-path][Add 'lisp' dir to load path]]
@@ -28,6 +29,7 @@
 - [[#packages][Packages]]
   - [[#emacs][Emacs]]
     - [[#my-emacs][My Emacs]]
+  - [[#envrc][envrc]]
   - [[#modus-themes][Modus Themes]]
   - [[#font][Font]]
   - [[#dired][Dired]]
@@ -104,7 +106,6 @@
   - [[#org-roam-ui][Org-roam UI]]
   - [[#notdeft-1][Notdeft]]
   - [[#dash][dash]]
-  - [[#envrc][envrc]]
   - [[#emacs-pet][emacs-pet]]
   - [[#just][just]]
   - [[#elfeed][elfeed]]
@@ -202,6 +203,11 @@ On Fedora, install =ripgrep= package.
 ***** Fedora
 Need to install =tclap= and =xapian-core-devel= packages.
 * Setup
+** Declare flags
+#+begin_src elisp
+  (setq my-use-copilot nil)
+  (setq my-use-aider nil)
+#+end_src
 ** Load local config
 #+begin_src elisp
   (load (expand-file-name "local.el" user-emacs-directory))
@@ -213,6 +219,10 @@ Need to install =tclap= and =xapian-core-devel= packages.
 
   (defun my-mac-p ()
     (eq system-type 'darwin))
+
+  (defun my-env-flag (name)
+    (let ((value (getenv name)))
+      (and value (or (string= value "1") (string= value "true")))))
 #+end_src
 
 ** Add 'lisp' dir to load path
@@ -335,6 +345,12 @@ https://github.com/radian-software/straight.el
      ("C-c d <" . my/kill-to-beginning-of-buffer)
      ("C-c d >" . my/kill-to-end-of-buffer)
      ("C-c j h" . my/jump-home)))
+#+end_src
+
+** envrc
+#+begin_src elisp
+  (use-package envrc
+    :hook (after-init . envrc-global-mode))
 #+end_src
 
 ** Modus Themes
@@ -1146,7 +1162,7 @@ https://github.com/zerolfx/copilot.el
 
 #+begin_src elisp
   (use-package copilot
-    :unless (my-windows-p)
+    :when my-use-copilot
     :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
     :custom
     (copilot-idle-delay 0.3)
@@ -1456,12 +1472,6 @@ https://github.com/magnars/dash.el
   (use-package dash)
 #+end_src
 
-** envrc
-#+begin_src elisp
-  (use-package envrc
-    :hook (after-init . envrc-global-mode))
-#+end_src
-
 ** emacs-pet
 #+begin_src elisp
   (use-package pet
@@ -1492,7 +1502,7 @@ https://github.com/tninja/aider.el
 
 #+begin_src elisp :tangle no
   (use-package aider
-    :unless (my-windows-p)
+    :when my-use-aider
     :straight (:host github :repo "tninja/aider.el" :files ("aider.el"))
     :config
     ;; For latest claude sonnet model

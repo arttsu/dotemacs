@@ -1,3 +1,6 @@
+(setq my-use-copilot nil)
+(setq my-use-aider nil)
+
 (load (expand-file-name "local.el" user-emacs-directory))
 
 (defun my-windows-p ()
@@ -5,6 +8,10 @@
 
 (defun my-mac-p ()
   (eq system-type 'darwin))
+
+(defun my-env-flag (name)
+  (let ((value (getenv name)))
+    (and value (or (string= value "1") (string= value "true")))))
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
@@ -98,6 +105,9 @@
    ("C-c d <" . my/kill-to-beginning-of-buffer)
    ("C-c d >" . my/kill-to-end-of-buffer)
    ("C-c j h" . my/jump-home)))
+
+(use-package envrc
+  :hook (after-init . envrc-global-mode))
 
 (use-package modus-themes
   :custom
@@ -667,7 +677,7 @@
   (shell-kill-buffer-on-exit t))
 
 (use-package copilot
-  :unless (my-windows-p)
+  :when my-use-copilot
   :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
   :custom
   (copilot-idle-delay 0.3)
@@ -825,9 +835,6 @@
   (("C-c n n" . notdeft)))
 
 (use-package dash)
-
-(use-package envrc
-  :hook (after-init . envrc-global-mode))
 
 (use-package pet
   :config
