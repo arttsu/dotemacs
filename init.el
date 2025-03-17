@@ -816,6 +816,21 @@
   :custom
   (elfeed-feeds my-elfeed-feeds))
 
+(defun my-easysession-visible-buffer-list ()
+  "Return a list of all visible buffers in the current session.
+This includes buffers visible in windows or tab-bar tabs."
+  (let ((visible-buffers '()))
+    (dolist (buffer (buffer-list))
+      (when (or
+             ;; Windows
+             (get-buffer-window buffer 'visible)
+             ;; Tab-bar windows
+             (and (bound-and-true-p tab-bar-mode)
+                  (fboundp 'tab-bar-get-buffer-tab)
+                  (tab-bar-get-buffer-tab buffer t nil)))
+        (push buffer visible-buffers)))
+    visible-buffers))
+
 (use-package easysession
   :commands (easysession-switch-to
              easysession-save-as
@@ -825,6 +840,7 @@
   :custom
   (easysession-mode-line-misc-info t)  ; Display the session in the modeline
   (easysession-save-interval (* 1 60))  ; Save every 1 minutes
+  (easysession-buffer-list-function 'my-easysession-visible-buffer-list)
   :init
   (add-hook 'emacs-startup-hook #'easysession-load-including-geometry 102)
   (add-hook 'emacs-startup-hook #'easysession-save-mode 103)
