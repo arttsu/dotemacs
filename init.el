@@ -848,6 +848,14 @@
   :custom
   (elfeed-feeds my-elfeed-feeds))
 
+(use-package aider
+  :when my-use-aider
+  :straight (:host github :repo "tninja/aider.el" :files ("*.el"))
+  :config
+  ;; For latest claude sonnet model
+  (setq aider-args '("--model" "o3-mini"))
+  (global-set-key (kbd "C-c b") 'aider-transient-menu))
+
 (defun my-easysession-is-not-main ()
   "Is current session some other than 'main'?"
   (not (string= "main" (easysession-get-current-session-name))))

@@ -2,8 +2,8 @@
 (setq my-font-height 125)
 
 ;; Flags:
-;; (setq my-use-aider t)
 ;; (setq my-use-copilot t)
+;; (setq my-use-aider t)
 
 ;; # Iosevka Comfy Font
 ;; https://git.sr.ht/~protesilaos/iosevka-comfy
