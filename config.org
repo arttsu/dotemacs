@@ -112,6 +112,7 @@
   - [[#easysession][easysession]]
     - [[#dont-autosave-main-session][Don't autosave 'main' session]]
     - [[#save-only-visible-buffers][Save only visible buffers]]
+    - [[#new-session-setup][New session setup]]
     - [[#configure-1][Configure]]
 
 * Notes
@@ -1524,6 +1525,15 @@ https://github.com/jamescherti/easysession.el
           (push buffer visible-buffers)))
       visible-buffers))
 #+end_src
+*** New session setup
+#+begin_src elisp
+  (defun my-empty-easysession ()
+    "Set up a minimal environment when easysession creates a new session."
+    (when (and (boundp 'tab-bar-mode) tab-bar-mode)
+      (tab-bar-close-other-tabs))
+    (delete-other-windows)
+    (scratch-buffer))
+#+end_src
 *** Configure
 #+begin_src elisp
   (use-package easysession
@@ -1540,6 +1550,7 @@ https://github.com/jamescherti/easysession.el
     :init
     (add-hook 'emacs-startup-hook #'easysession-load-including-geometry 102)
     (add-hook 'emacs-startup-hook #'easysession-save-mode 103)
+    (add-hook 'easysession-new-session-hook #'my-empty-easysession)
     :bind
     (("C-c z" . easysession-switch-to)
      ("C-c Z" . easysession-save)))

@@ -860,6 +860,13 @@ This includes buffers visible in windows or tab-bar tabs."
         (push buffer visible-buffers)))
     visible-buffers))
 
+(defun my-empty-easysession ()
+  "Set up a minimal environment when easysession creates a new session."
+  (when (and (boundp 'tab-bar-mode) tab-bar-mode)
+    (tab-bar-close-other-tabs))
+  (delete-other-windows)
+  (scratch-buffer))
+
 (use-package easysession
   :commands (easysession-switch-to
              easysession-save-as
@@ -874,6 +881,7 @@ This includes buffers visible in windows or tab-bar tabs."
   :init
   (add-hook 'emacs-startup-hook #'easysession-load-including-geometry 102)
   (add-hook 'emacs-startup-hook #'easysession-save-mode 103)
+  (add-hook 'easysession-new-session-hook #'my-empty-easysession)
   :bind
   (("C-c z" . easysession-switch-to)
    ("C-c Z" . easysession-save)))
