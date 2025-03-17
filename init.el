@@ -816,6 +816,10 @@
   :custom
   (elfeed-feeds my-elfeed-feeds))
 
+(defun my-easysession-is-not-main ()
+  "Is current session some other than 'main'?"
+  (not (string= "main" (easysession-get-current-session-name))))
+
 (defun my-easysession-visible-buffer-list ()
   "Return a list of all visible buffers in the current session.
 This includes buffers visible in windows or tab-bar tabs."
@@ -841,6 +845,7 @@ This includes buffers visible in windows or tab-bar tabs."
   (easysession-mode-line-misc-info t)  ; Display the session in the modeline
   (easysession-save-interval (* 1 60))  ; Save every 1 minutes
   (easysession-buffer-list-function 'my-easysession-visible-buffer-list)
+  (easysession-save-mode-predicate 'my-easysession-is-not-main)
   :init
   (add-hook 'emacs-startup-hook #'easysession-load-including-geometry 102)
   (add-hook 'emacs-startup-hook #'easysession-save-mode 103)

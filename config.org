@@ -110,6 +110,7 @@
   - [[#elfeed][elfeed]]
   - [[#aider][aider]]
   - [[#easysession][easysession]]
+    - [[#dont-autosave-main-session][Don't autosave 'main' session]]
     - [[#save-only-visible-buffers][Save only visible buffers]]
     - [[#configure-1][Configure]]
 
@@ -1481,6 +1482,12 @@ https://github.com/tninja/aider.el
 
 ** easysession
 https://github.com/jamescherti/easysession.el
+*** Don't autosave 'main' session
+#+begin_src elisp
+  (defun my-easysession-is-not-main ()
+    "Is current session some other than 'main'?"
+    (not (string= "main" (easysession-get-current-session-name))))
+#+end_src
 *** Save only visible buffers
 #+begin_src elisp
   (defun my-easysession-visible-buffer-list ()
@@ -1510,6 +1517,7 @@ https://github.com/jamescherti/easysession.el
     (easysession-mode-line-misc-info t)  ; Display the session in the modeline
     (easysession-save-interval (* 1 60))  ; Save every 1 minutes
     (easysession-buffer-list-function 'my-easysession-visible-buffer-list)
+    (easysession-save-mode-predicate 'my-easysession-is-not-main)
     :init
     (add-hook 'emacs-startup-hook #'easysession-load-including-geometry 102)
     (add-hook 'emacs-startup-hook #'easysession-save-mode 103)
