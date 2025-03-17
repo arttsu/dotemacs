@@ -374,7 +374,7 @@
 
 (defun my-org-reset-priority-when-done ()
   (when (string= org-state "DONE")
-    (org-entry-put (point) "PRIORITY" nil)))
+    (ignore-error (org-entry-put (point) "PRIORITY" nil))))
 
 (defun my-org-extract-created-timestamp ()
   (save-excursion
