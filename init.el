@@ -372,11 +372,25 @@
 (defun my-org-files-in-dir (dir)
   (directory-files dir t "\\.org$"))
 
+(defun my-org-reset-priority-when-done ()
+  (when (string= org-state "DONE")
+    (org-entry-put (point) "PRIORITY" nil)))
+
+(defun my-org-extract-created-timestamp ()
+  (save-excursion
+    (save-restriction
+      (org-narrow-to-subtree)
+      (goto-char (point-min))
+      (if (re-search-forward "CLOSED: " nil t)
+          (buffer-substring-no-properties (point) (line-end-position))
+        "[1900-01-01 Mon 00:00]"))))
+
 (defun my-org-sort-todos ()
   "Sort the current subtree: first 'open' items by priority, then 'done' items by priority."
   (interactive)
   (unless (org-at-heading-p)
     (error "Not at a heading"))
+  (org-sort-entries nil ?f 'my-org-extract-created-timestamp)
   (org-sort-entries nil ?p)
   (org-sort-entries nil ?o)
   (org-cycle)
@@ -546,6 +560,7 @@
    '((shell . t)))
   (add-to-list 'org-modules 'org-id)
   (add-hook 'org-mode-hook 'my-org-setup)
+  (add-hook 'org-after-todo-state-change-hook 'my-org-reset-priority-when-done)
   :bind
   (("C-c c" . org-capture)
    ("C-c l" . org-store-link)
