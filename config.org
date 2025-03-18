@@ -779,7 +779,7 @@ https://orgmode.org/
 #+begin_src elisp
   (defun my-org-reset-priority-when-done ()
     (when (string= org-state "DONE")
-      (ignore-error (org-entry-put (point) "PRIORITY" nil))))
+      (ignore-errors (org-entry-put (point) "PRIORITY" nil))))
 #+end_src
 **** Extract created/closed timestamp
 #+begin_src elisp
