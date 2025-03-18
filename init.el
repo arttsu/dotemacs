@@ -382,7 +382,7 @@
 (defun my-org-files-in-dir (dir)
   (directory-files dir t "\\.org$"))
 
-(defun my-org-reset-priority-when-done ()
+(defun my-org-remove-priority-when-done ()
   (when (string= org-state "DONE")
     (ignore-errors (org-entry-put (point) "PRIORITY" nil))))
 
@@ -580,7 +580,7 @@
    '((shell . t)))
   (add-to-list 'org-modules 'org-id)
   (add-hook 'org-mode-hook 'my-org-setup)
-  (add-hook 'org-after-todo-state-change-hook 'my-org-reset-priority-when-done)
+  (add-hook 'org-after-todo-state-change-hook 'my-org-remove-priority-when-done)
   :bind
   (("C-c c" . org-capture)
    ("C-c l" . org-store-link)

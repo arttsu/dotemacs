@@ -775,9 +775,9 @@ https://orgmode.org/
   (defun my-org-files-in-dir (dir)
     (directory-files dir t "\\.org$"))
 #+end_src
-**** Reset priority to the default one when completing a todo
+**** Remove priority to the default one when completing a todo
 #+begin_src elisp
-  (defun my-org-reset-priority-when-done ()
+  (defun my-org-remove-priority-when-done ()
     (when (string= org-state "DONE")
       (ignore-errors (org-entry-put (point) "PRIORITY" nil))))
 #+end_src
@@ -997,7 +997,7 @@ https://orgmode.org/
      '((shell . t)))
     (add-to-list 'org-modules 'org-id)
     (add-hook 'org-mode-hook 'my-org-setup)
-    (add-hook 'org-after-todo-state-change-hook 'my-org-reset-priority-when-done)
+    (add-hook 'org-after-todo-state-change-hook 'my-org-remove-priority-when-done)
     :bind
     (("C-c c" . org-capture)
      ("C-c l" . org-store-link)
