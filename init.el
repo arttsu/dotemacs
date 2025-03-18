@@ -386,12 +386,21 @@
   (when (string= org-state "DONE")
     (ignore-error (org-entry-put (point) "PRIORITY" nil))))
 
-(defun my-org-extract-created-timestamp ()
+(defun my-org-extract-closed-timestamp ()
   (save-excursion
     (save-restriction
       (org-narrow-to-subtree)
       (goto-char (point-min))
       (if (re-search-forward "CLOSED: " nil t)
+          (buffer-substring-no-properties (point) (line-end-position))
+        "[1900-01-01 Mon 00:00]"))))
+
+(defun my-org-extract-created-timestamp ()
+  (save-excursion
+    (save-restriction
+      (org-narrow-to-subtree)
+      (goto-char (point-min))
+      (if (re-search-forward "# CREATED: " nil t)
           (buffer-substring-no-properties (point) (line-end-position))
         "[1900-01-01 Mon 00:00]"))))
 
@@ -401,6 +410,7 @@
   (unless (org-at-heading-p)
     (error "Not at a heading"))
   (org-sort-entries nil ?f 'my-org-extract-created-timestamp)
+  (org-sort-entries nil ?f 'my-org-extract-closed-timestamp)
   (org-sort-entries nil ?p)
   (org-sort-entries nil ?o)
   (org-cycle)
