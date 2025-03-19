@@ -416,6 +416,11 @@
   (org-cycle)
   (org-cycle))
 
+(defun my-org-sort-todos-after-refile ()
+  (org-up-heading-safe)
+  (when (string= (org-get-heading t t t t) "TODOs")
+    (my-org-sort-todos)))
+
 (defun my-org-end-of-subtree ()
   "Jump to the last item of the current subtree."
   (interactive)
@@ -581,6 +586,7 @@
   (add-to-list 'org-modules 'org-id)
   (add-hook 'org-mode-hook 'my-org-setup)
   (add-hook 'org-after-todo-state-change-hook 'my-org-remove-priority-when-done)
+  (add-hook 'org-after-refile-insert-hook 'my-org-sort-todos-after-refile)
   :bind
   (("C-c c" . org-capture)
    ("C-c l" . org-store-link)
