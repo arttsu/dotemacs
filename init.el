@@ -405,7 +405,6 @@
         "[1900-01-01 Mon 00:00]"))))
 
 (defun my-org-sort-todos ()
-  "Sort the current subtree: first 'open' items by priority, then 'done' items by priority."
   (interactive)
   (unless (org-at-heading-p)
     (error "Not at a heading"))
