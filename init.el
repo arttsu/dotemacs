@@ -417,8 +417,10 @@
 
 (defun my-org-sort-todos-after-refile ()
   (org-up-heading-safe)
-  (when (string= (org-get-heading t t t t) "TODOs")
-    (my-org-sort-todos)))
+  (let ((sort-todos (org-entry-get (point) "SORT_TODOS")))
+    (when (and sort-todos
+               (string= sort-todos "yes"))
+      (my-org-sort-todos))))
 
 (defun my-org-end-of-subtree ()
   "Jump to the last item of the current subtree."
