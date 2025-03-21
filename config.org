@@ -27,6 +27,8 @@
   - [[#straight][Straight]]
   - [[#macos-exec-path-from-shell][MacOS: Exec path from shell]]
 - [[#packages][Packages]]
+  - [[#helpers][Helpers]]
+    - [[#pop-mark][Pop mark]]
   - [[#emacs][Emacs]]
     - [[#my-emacs][My Emacs]]
   - [[#envrc][envrc]]
@@ -61,7 +63,7 @@
   - [[#org-mode][Org mode]]
     - [[#org-files][Org files]]
     - [[#setup-helpers][Setup helpers]]
-    - [[#helpers][Helpers]]
+    - [[#helpers-1][Helpers]]
     - [[#interactive-helpers][Interactive Helpers]]
     - [[#capturing][Capturing]]
     - [[#agendas][Agendas]]
@@ -277,6 +279,13 @@ https://github.com/radian-software/straight.el
 #+end_src
 
 * Packages
+** Helpers
+*** Pop mark
+#+begin_src elisp
+  (defun my-pop-mark ()
+    (interactive)
+    (set-mark-command '(4)))
+#+end_src
 ** Emacs
 #+begin_src elisp
   (use-package emacs
@@ -325,6 +334,7 @@ https://github.com/radian-software/straight.el
      ("s-t" . tab-switch)
      ([down-mouse-2] . mouse-set-point)
      ([mouse-2] . delete-window)
+     ("M-;" . my-pop-mark)
      :map prog-mode-map
      ("DEL" . backward-delete-char-untabify)
      ("M-g N" . flymake-goto-next-error)
@@ -629,7 +639,6 @@ https://github.com/abo-abo/avy
     (avy-single-candidate-jump t)
     :bind
     (("C-;" . avy-goto-char-timer)
-     ("M-;" . avy-pop-mark)
      ("M-g g" . avy-goto-line)
      ("M-g G" . avy-goto-end-of-line)
      ("M-g h" . avy-org-goto-heading-timer)
