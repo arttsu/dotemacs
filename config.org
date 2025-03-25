@@ -282,9 +282,11 @@ https://github.com/radian-software/straight.el
 ** Helpers
 *** Pop mark
 #+begin_src elisp
-  (defun my-pop-mark ()
-    (interactive)
-    (set-mark-command '(4)))
+  (defun my-pop-mark (&optional prefix)
+    (interactive "P")
+    (cond ((equal prefix nil) (set-mark-command '(4)))
+          ((equal prefix '(4)) (avy-pop-mark))
+          (t (error "Invalid prefix argument: %s" prefix))))
 #+end_src
 ** Emacs
 #+begin_src elisp

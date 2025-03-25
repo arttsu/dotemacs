@@ -44,9 +44,11 @@
   :config
   (exec-path-from-shell-initialize))
 
-(defun my-pop-mark ()
-  (interactive)
-  (set-mark-command '(4)))
+(defun my-pop-mark (&optional prefix)
+  (interactive "P")
+  (cond ((equal prefix nil) (set-mark-command '(4)))
+        ((equal prefix '(4)) (avy-pop-mark))
+        (t (error "Invalid prefix argument: %s" prefix))))
 
 (use-package emacs
   :custom
