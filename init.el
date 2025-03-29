@@ -914,7 +914,7 @@ This includes buffers visible in windows or tab-bar tabs."
 
   :custom
   (easysession-mode-line-misc-info t)  ; Display the session in the modeline
-  (easysession-save-interval (* 1 60))  ; Save every 1 minutes
+  (easysession-save-interval (* 5 60))  ; Save every 5 minutes
   (easysession-buffer-list-function 'my-easysession-visible-buffer-list)
   (easysession-save-mode-predicate 'my-easysession-is-not-main)
   :init
