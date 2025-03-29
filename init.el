@@ -902,7 +902,8 @@ This includes buffers visible in windows or tab-bar tabs."
 (defun my-empty-easysession ()
   "Set up a minimal environment when easysession creates a new session."
   (when (and (boundp 'tab-bar-mode) tab-bar-mode)
-    (tab-bar-close-other-tabs))
+    (tab-bar-close-other-tabs)
+    (tab-bar-rename-tab ""))
   (delete-other-windows)
   (scratch-buffer))
 
@@ -923,4 +924,5 @@ This includes buffers visible in windows or tab-bar tabs."
   (add-hook 'easysession-new-session-hook #'my-empty-easysession)
   :bind
   (("<f12> <f12>" . easysession-switch-to)
-   ("<f12> s" . easysession-save)))
+   ("<f12> s" . easysession-save)
+   ("<f12> k" . easysession-delete)))
