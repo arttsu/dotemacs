@@ -96,7 +96,7 @@
    ("s-t" . tab-switch)
    ([down-mouse-2] . mouse-set-point)
    ([mouse-2] . delete-window)
-   ("M-;" . my-pop-mark)
+   ("<f8>" . my-pop-mark)
    :map prog-mode-map
    ("DEL" . backward-delete-char-untabify)
    ("M-g N" . flymake-goto-next-error)
@@ -293,6 +293,7 @@
   (avy-single-candidate-jump t)
   :bind
   (("C-;" . avy-goto-char-timer)
+   ("M-;" . avy-pop-mark)
    ("M-g g" . avy-goto-line)
    ("M-g G" . avy-goto-end-of-line)
    ("M-g h" . avy-org-goto-heading-timer)
