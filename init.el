@@ -922,5 +922,5 @@ This includes buffers visible in windows or tab-bar tabs."
   (add-hook 'emacs-startup-hook #'easysession-save-mode 103)
   (add-hook 'easysession-new-session-hook #'my-empty-easysession)
   :bind
-  (("C-c z" . easysession-switch-to)
-   ("C-c Z" . easysession-save)))
+  (("<f12> <f12>" . easysession-switch-to)
+   ("<f12> s" . easysession-save)))
