@@ -50,6 +50,13 @@
         ((equal prefix '(4)) (avy-pop-mark))
         (t (error "Invalid prefix argument: %s" prefix))))
 
+(defun my-insert-current-date-or-datetime (&optional include-time)
+  "Insert the current date (YYYY-MM-DD) or datetime (YYYY-MM-DDTHH-MM-SS) at point.
+With a prefix argument, include the time."
+  (interactive "P")
+  (let ((format (if include-time "%Y-%m-%dT%H-%M-%S" "%Y-%m-%d")))
+    (insert (format-time-string format))))
+
 (use-package emacs
   :custom
   (inhibit-splash-screen t)
@@ -97,6 +104,8 @@
    ([down-mouse-2] . mouse-set-point)
    ([mouse-2] . delete-window)
    ("<f8>" . my-pop-mark)
+   ("C-M-<return>" . tab-switch)
+   ("C-c t" . my-insert-current-date-or-datetime)
    :map prog-mode-map
    ("DEL" . backward-delete-char-untabify)
    ("M-g N" . flymake-goto-next-error)
@@ -739,6 +748,7 @@
   :hook
   (scala-ts-mode . lsp)
   (python-mode . lsp)
+  (python-ts-mode . lsp)
   :commands lsp
   :bind
   (:map lsp-mode-map

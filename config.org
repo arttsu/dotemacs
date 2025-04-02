@@ -29,6 +29,7 @@
 - [[#packages][Packages]]
   - [[#helpers][Helpers]]
     - [[#pop-mark][Pop mark]]
+    - [[#insert-date-or-datetime][Insert date or datetime]]
   - [[#emacs][Emacs]]
     - [[#my-emacs][My Emacs]]
   - [[#envrc][envrc]]
@@ -288,6 +289,15 @@ https://github.com/radian-software/straight.el
           ((equal prefix '(4)) (avy-pop-mark))
           (t (error "Invalid prefix argument: %s" prefix))))
 #+end_src
+*** Insert date or datetime
+#+begin_src elisp
+  (defun my-insert-current-date-or-datetime (&optional include-time)
+    "Insert the current date (YYYY-MM-DD) or datetime (YYYY-MM-DDTHH-MM-SS) at point.
+  With a prefix argument, include the time."
+    (interactive "P")
+    (let ((format (if include-time "%Y-%m-%dT%H-%M-%S" "%Y-%m-%d")))
+      (insert (format-time-string format))))
+#+end_src
 ** Emacs
 #+begin_src elisp
   (use-package emacs
@@ -337,6 +347,8 @@ https://github.com/radian-software/straight.el
      ([down-mouse-2] . mouse-set-point)
      ([mouse-2] . delete-window)
      ("<f8>" . my-pop-mark)
+     ("C-M-<return>" . tab-switch)
+     ("C-c t" . my-insert-current-date-or-datetime)
      :map prog-mode-map
      ("DEL" . backward-delete-char-untabify)
      ("M-g N" . flymake-goto-next-error)
@@ -1268,6 +1280,7 @@ https://github.com/dajva/rg.el
     :hook
     (scala-ts-mode . lsp)
     (python-mode . lsp)
+    (python-ts-mode . lsp)
     :commands lsp
     :bind
     (:map lsp-mode-map
