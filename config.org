@@ -80,6 +80,8 @@
   - [[#ledger][Ledger]]
     - [[#my-ledger][My Ledger]]
   - [[#vterm][Vterm]]
+    - [[#vterm-unbind-function-keys][Vterm: Unbind function keys]]
+    - [[#vterm-configure][Vterm: Configure]]
   - [[#shell][Shell]]
   - [[#copilot][Copilot]]
     - [[#my-copilot][My Copilot]]
@@ -1178,6 +1180,24 @@ https://github.com/ledger/ledger-mode
 ** Vterm
 https://github.com/vterm/vterm
 
+*** Vterm: Unbind function keys
+#+begin_src elisp
+  (defun my-vterm-unbind-function-keys ()
+    (local-unset-key (kbd "<f1>"))
+    (local-unset-key (kbd "<f2>"))
+    (local-unset-key (kbd "<f3>"))
+    (local-unset-key (kbd "<f4>"))
+    (local-unset-key (kbd "<f5>"))
+    (local-unset-key (kbd "<f6>"))
+    (local-unset-key (kbd "<f7>"))
+    (local-unset-key (kbd "<f8>"))
+    (local-unset-key (kbd "<f9>"))
+    (local-unset-key (kbd "<f10>"))
+    (local-unset-key (kbd "<f11>"))
+    (local-unset-key (kbd "<f12>")))
+#+end_src
+
+*** Vterm: Configure
 #+begin_src elisp
   (use-package vterm
     :unless (my-windows-p)
@@ -1186,6 +1206,8 @@ https://github.com/vterm/vterm
     (vterm-shell my-fish-path)
     (vterm-max-scrollback 50000)
     (vterm-clear-scrollback-when-clearing t)
+    :config
+    (add-hook 'vterm-mode-hook 'my-vterm-unbind-function-keys)
     :bind
     (("C-x v" . vterm)
      ("C-x 4 v" . vterm-other-window)))

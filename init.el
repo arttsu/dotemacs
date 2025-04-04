@@ -694,6 +694,20 @@ With a prefix argument, include the time."
   :straight nil
   :after ledger-mode)
 
+(defun my-vterm-unbind-function-keys ()
+  (local-unset-key (kbd "<f1>"))
+  (local-unset-key (kbd "<f2>"))
+  (local-unset-key (kbd "<f3>"))
+  (local-unset-key (kbd "<f4>"))
+  (local-unset-key (kbd "<f5>"))
+  (local-unset-key (kbd "<f6>"))
+  (local-unset-key (kbd "<f7>"))
+  (local-unset-key (kbd "<f8>"))
+  (local-unset-key (kbd "<f9>"))
+  (local-unset-key (kbd "<f10>"))
+  (local-unset-key (kbd "<f11>"))
+  (local-unset-key (kbd "<f12>")))
+
 (use-package vterm
   :unless (my-windows-p)
   :custom
@@ -701,6 +715,8 @@ With a prefix argument, include the time."
   (vterm-shell my-fish-path)
   (vterm-max-scrollback 50000)
   (vterm-clear-scrollback-when-clearing t)
+  :config
+  (add-hook 'vterm-mode-hook 'my-vterm-unbind-function-keys)
   :bind
   (("C-x v" . vterm)
    ("C-x 4 v" . vterm-other-window)))
