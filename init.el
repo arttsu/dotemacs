@@ -934,6 +934,7 @@ This includes buffers visible in windows or tab-bar tabs."
   (scratch-buffer))
 
 (use-package easysession
+  :straight (:host github :repo "arttsu/easysession.el" :branch "switch-session-prompt-no-current" :files ("*.el"))
   :commands (easysession-switch-to
              easysession-save-as
              easysession-save-mode
@@ -944,6 +945,7 @@ This includes buffers visible in windows or tab-bar tabs."
   (easysession-save-interval (* 5 60))  ; Save every 5 minutes
   (easysession-buffer-list-function 'my-easysession-visible-buffer-list)
   (easysession-save-mode-predicate 'my-easysession-is-not-main)
+  (easysession-switch-to-exclude-current t)
   :init
   (add-hook 'emacs-startup-hook #'easysession-load-including-geometry 102)
   (add-hook 'emacs-startup-hook #'easysession-save-mode 103)
