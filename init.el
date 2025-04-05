@@ -402,6 +402,20 @@ With a prefix argument, include the time."
   (when (string= org-state "DONE")
     (ignore-errors (org-entry-put (point) "PRIORITY" nil))))
 
+(defun my-org-checklist-do-auto-advance ()
+  (let ((point-before (point)))
+    (org-forward-heading-same-level 1)
+    (when (= (point) point-before)
+      (org-up-heading-safe))))
+
+(defun my-org-checklist-auto-advance ()
+  (when (string= org-state "DONE")
+    (let* ((current-element (org-element-at-point))
+           (parent (org-element-property :parent current-element)))
+      (when (and parent
+                 (string= (org-entry-get parent "STYLE") "checklist"))
+        (run-with-idle-timer 0 nil 'my-org-checklist-do-auto-advance)))))
+
 (defun my-org-extract-closed-timestamp ()
   (save-excursion
     (save-restriction
@@ -603,6 +617,7 @@ With a prefix argument, include the time."
   (add-to-list 'org-modules 'org-id)
   (add-hook 'org-mode-hook 'my-org-setup)
   (add-hook 'org-after-todo-state-change-hook 'my-org-remove-priority-when-done)
+  (add-hook 'org-after-todo-state-change-hook 'my-org-checklist-auto-advance)
   (add-hook 'org-after-refile-insert-hook 'my-org-sort-todos-after-refile)
   :bind
   (("C-c c" . org-capture)
