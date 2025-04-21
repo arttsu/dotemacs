@@ -92,6 +92,8 @@ https://magit.vc/
     :ensure t
     :custom
     (org-startup-folded 'showall)
+    (org-startup-indented t)
+    (org-startup-with-inline-images t)
     (org-confirm-babel-evaluate nil))
 #+end_src
 *** Org-related
@@ -102,6 +104,20 @@ https://github.com/yilkalargaw/org-auto-tangle
   (use-package org-auto-tangle
     :ensure t
     :hook (org-mode . org-auto-tangle-mode))
+#+end_src
+**** Org Modern
+https://github.com/minad/org-modern
+***** Org Modern: Use-package
+#+begin_src elisp
+  (use-package org-modern
+    :ensure t
+    :after org
+    :custom
+    (org-auto-align-tags nil)
+    (org-tags-column 0)
+    (org-agenda-tags-column 0)
+    :config
+    (global-org-modern-mode))
 #+end_src
 *** UI
 **** Ace Window                                                        :RTFM:

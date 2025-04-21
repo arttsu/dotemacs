@@ -63,11 +63,23 @@
   :ensure t
   :custom
   (org-startup-folded 'showall)
+  (org-startup-indented t)
+  (org-startup-with-inline-images t)
   (org-confirm-babel-evaluate nil))
 
 (use-package org-auto-tangle
   :ensure t
   :hook (org-mode . org-auto-tangle-mode))
+
+(use-package org-modern
+  :ensure t
+  :after org
+  :custom
+  (org-auto-align-tags nil)
+  (org-tags-column 0)
+  (org-agenda-tags-column 0)
+  :config
+  (global-org-modern-mode))
 
 (use-package ace-window
   :ensure t
