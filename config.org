@@ -76,7 +76,7 @@ https://github.com/progfolio/elpaca
     (require-final-newline t)
     (indent-tabs-mode nil))
 #+end_src
-**** Magit                                                             :RTFM:
+**** Magit :RTFM:
 https://magit.vc/
 ***** Magit: Use-package
 #+begin_src elisp
@@ -85,7 +85,7 @@ https://magit.vc/
     :bind
     (("C-c g" . magit-file-dispatch)))
 #+end_src
-**** Org                                                               :RTFM:
+**** Org :RTFM:
 ***** Org: Use-package
 #+begin_src elisp
   (use-package org
@@ -124,7 +124,7 @@ https://protesilaos.com/emacs/modus-themes
     (modus-themes-load-theme 'modus-vivendi))
 #+end_src
 *** UI
-**** Ace Window                                                        :RTFM:
+**** Ace Window :RTFM:
 https://github.com/abo-abo/ace-window
 ***** Ace Window: Use-package
 #+begin_src elisp
@@ -137,7 +137,7 @@ https://github.com/abo-abo/ace-window
     (("M-o" . ace-window)))
 #+end_src
 *** Editing
-**** Smartparens                                                       :RTFM:
+**** Smartparens :RTFM:
 https://github.com/Fuco1/smartparens
 ***** Smartparens: Use-package
 #+begin_src elisp
@@ -165,7 +165,7 @@ https://github.com/Fuco1/smartparens
           ("C-c p {" . sp-wrap-curly)
           ("C-c p r" . sp-rewrap-sexp)))
 #+end_src
-**** Crux                                                              :RTFM:
+**** Crux :RTFM:
 https://github.com/bbatsov/crux
 ***** Crux: Use-package
 #+begin_src elisp
@@ -177,7 +177,7 @@ https://github.com/bbatsov/crux
      ("C-^" . crux-top-join-line)
      ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region)))
 #+end_src
-**** Whole Line or Region                                              :RTFM:
+**** Whole Line or Region :RTFM:
 https://github.com/purcell/whole-line-or-region
 ***** Whole Line or Region: Use-package
 #+begin_src elisp
@@ -190,7 +190,7 @@ https://github.com/purcell/whole-line-or-region
     (("M-/" . whole-line-or-region-comment-dwim)))
 #+end_src
 *** Org-related
-**** Auto-tangle                                                       :RTFM:
+**** Auto-tangle :RTFM:
 https://github.com/yilkalargaw/org-auto-tangle
 ***** Auto-tangle: Use-package
 #+begin_src elisp
