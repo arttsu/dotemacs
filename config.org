@@ -6,7 +6,7 @@
 :PROPERTIES:
 :VISIBILITY: folded
 :END:
-*** Elpaca                                                             :RTFM:
+*** Elpaca :RTFM:
 https://github.com/progfolio/elpaca
 **** Elpaca: Installer
 :PROPERTIES:
