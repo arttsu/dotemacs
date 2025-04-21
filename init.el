@@ -65,7 +65,14 @@
   (org-startup-folded 'showall)
   (org-startup-indented t)
   (org-startup-with-inline-images t)
-  (org-confirm-babel-evaluate nil))
+  (org-confirm-babel-evaluate nil)
+  (org-use-sub-superscripts '{})
+  (org-src-window-setup 'split-window-below)
+  (org-fold-catch-invisible-edits 'show-and-error)
+  (org-special-ctrl-a/e t)
+  (org-hide-emphasis-markers t)
+  (org-pretty-entities t)
+  (org-use-speed-commands t))
 
 (use-package org-auto-tangle
   :ensure t
