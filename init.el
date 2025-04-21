@@ -74,19 +74,20 @@
   (org-pretty-entities t)
   (org-use-speed-commands t))
 
-(use-package org-auto-tangle
+(use-package modus-themes
   :ensure t
-  :hook (org-mode . org-auto-tangle-mode))
-
-(use-package org-modern
-  :ensure t
-  :after org
   :custom
-  (org-auto-align-tags nil)
-  (org-tags-column 0)
-  (org-agenda-tags-column 0)
+  (modus-themes-italic-constructs t)
+  (modus-themes-org-blocks 'gray-background)
+  (modus-themes-headings '((0 . (ultrabold 1.7))
+                           (1 . (ultrabold 1.7))
+                           (2 . (extrabold 1.5))
+                           (3 . (extrabold 1.3))
+                           (4 . (extrabold 1.1))
+                           (t . (extrabold))))
+  (modus-themes-variable-pitch-ui t)
   :config
-  (global-org-modern-mode))
+  (modus-themes-load-theme 'modus-vivendi))
 
 (use-package ace-window
   :ensure t
@@ -135,3 +136,17 @@
   (whole-line-or-region-global-mode)
   :bind
   (("M-/" . whole-line-or-region-comment-dwim)))
+
+(use-package org-auto-tangle
+  :ensure t
+  :hook (org-mode . org-auto-tangle-mode))
+
+(use-package org-modern
+  :ensure t
+  :after org
+  :custom
+  (org-auto-align-tags nil)
+  (org-tags-column 0)
+  (org-agenda-tags-column 0)
+  :config
+  (global-org-modern-mode))
