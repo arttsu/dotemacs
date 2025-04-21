@@ -62,7 +62,8 @@
 (use-package org
   :ensure t
   :custom
-  (org-startup-folded 'showall))
+  (org-startup-folded 'showall)
+  (org-confirm-babel-evaluate nil))
 
 (use-package org-auto-tangle
   :ensure t
