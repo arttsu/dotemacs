@@ -63,3 +63,7 @@
   :ensure t
   :custom
   (org-startup-folded 'showall))
+
+(use-package org-auto-tangle
+  :ensure t
+  :hook (org-mode . org-auto-tangle-mode))

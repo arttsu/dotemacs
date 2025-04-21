@@ -1,5 +1,6 @@
-#+STARTUP: show3levels
+#+STARTUP: show4levels
 #+PROPERTY: header-args:elisp :results silent :tangle init.el
+#+AUTO_TANGLE: t
 * Emacs Config
 ** Setup
 :PROPERTIES:
@@ -57,8 +58,9 @@ https://github.com/progfolio/elpaca
     (elpaca-use-package-mode))
 #+end_src
 ** Packages
-*** Emacs
-**** Emacs: Use-package
+*** Core
+**** Emacs
+***** Emacs: Use-package
 #+begin_src elisp
   (use-package emacs
     :custom
@@ -74,20 +76,29 @@ https://github.com/progfolio/elpaca
     (require-final-newline t)
     (indent-tabs-mode nil))
 #+end_src
-*** Magit                                                              :RTFM:
+**** Magit                                                             :RTFM:
 https://magit.vc/
-**** Magit: Use-package
+***** Magit: Use-package
 #+begin_src elisp
   (use-package magit
     :ensure t
     :bind
     (("C-c g" . magit-file-dispatch)))
 #+end_src
-*** Org
-**** Org: Use-package
+**** Org                                                               :RTFM:
+***** Org: Use-package
 #+begin_src elisp
   (use-package org
     :ensure t
     :custom
     (org-startup-folded 'showall))
+#+end_src
+*** Org-related
+**** Auto-tangle                                                       :RTFM:
+https://github.com/yilkalargaw/org-auto-tangle
+***** Auto-tangle: Use-package
+#+begin_src elisp
+  (use-package org-auto-tangle
+    :ensure t
+    :hook (org-mode . org-auto-tangle-mode))
 #+end_src
