@@ -137,6 +137,27 @@
   :bind
   (("M-/" . whole-line-or-region-comment-dwim)))
 
+(use-package avy
+  :custom
+  (avy-single-candidate-jump t)
+  :bind
+  (("C-;" . avy-goto-char-timer)
+   ("M-;" . avy-pop-mark)
+   ("M-g g" . avy-goto-line)
+   ("M-g G" . avy-goto-end-of-line)
+   ("M-g h" . avy-org-goto-heading-timer)
+   ("M-g s" . avy-goto-word-1)
+   ("C-M-; c" . avy-copy-line)
+   ("C-M-; C" . avy-copy-region)
+   ("C-M-; m" . avy-move-line)
+   ("C-M-; M" . avy-move-region)
+   ("C-M-; k" . avy-kill-whole-line)
+   ("C-M-; K" . avy-kill-region)
+   ("C-M-; s" . avy-kill-ring-save-whole-line)
+   ("C-M-; S" . avy-kill-ring-save-region)
+   :map isearch-mode-map
+   ("C-;" . avy-isearch)))
+
 (use-package org-auto-tangle
   :ensure t
   :hook (org-mode . org-auto-tangle-mode))
