@@ -102,6 +102,19 @@ https://github.com/yilkalargaw/org-auto-tangle
     :ensure t
     :hook (org-mode . org-auto-tangle-mode))
 #+end_src
+*** UI
+**** Ace Window                                                        :RTFM:
+https://github.com/abo-abo/ace-window
+***** Ace Window: Use-package
+#+begin_src elisp
+  (use-package ace-window
+    :ensure t
+    :custom
+    (aw-keys '(?a ?s ?d ?f ?g ?h ?k ?l))
+    (aw-scope 'frame)
+    :bind
+    (("M-o" . ace-window)))
+#+end_src
 *** Editing
 **** Smartparens                                                       :RTFM:
 https://github.com/Fuco1/smartparens

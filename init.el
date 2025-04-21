@@ -68,6 +68,14 @@
   :ensure t
   :hook (org-mode . org-auto-tangle-mode))
 
+(use-package ace-window
+  :ensure t
+  :custom
+  (aw-keys '(?a ?s ?d ?f ?g ?h ?k ?l))
+  (aw-scope 'frame)
+  :bind
+  (("M-o" . ace-window)))
+
 (use-package smartparens
   :ensure t
   :config
