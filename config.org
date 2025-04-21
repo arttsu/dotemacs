@@ -145,3 +145,15 @@ https://github.com/Fuco1/smartparens
           ("C-c p {" . sp-wrap-curly)
           ("C-c p r" . sp-rewrap-sexp)))
 #+end_src
+**** Crux                                                              :RTFM:
+https://github.com/bbatsov/crux
+***** Crux: Use-package
+#+begin_src elisp
+  (use-package crux
+    :ensure t
+    :bind
+    (("C-o" . crux-smart-open-line)
+     ("C-S-o" . crux-smart-open-line-above)
+     ("C-^" . crux-top-join-line)
+     ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region)))
+#+end_src
