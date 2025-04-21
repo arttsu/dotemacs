@@ -58,3 +58,8 @@
   :ensure t
   :bind
   (("C-c g" . magit-file-dispatch)))
+
+(use-package org
+  :ensure t
+  :custom
+  (org-startup-folded 'showall))
