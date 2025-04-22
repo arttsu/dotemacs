@@ -1,3 +1,24 @@
+(defun my-linux-p ()
+  (eq system-type 'gnu/linux))
+
+(defun my-windows-p ()
+  (eq system-type 'windows-nt))
+
+(defun my-macos-p ()
+  (eq system-type 'darwin))
+
+(setq my-font (cond ((my-linux-p) "Liberation Mono")
+                    ((my-macos-p) "Menlo")
+                    ((my-windows-p) "Consolas")))
+(setq my-font-height 125)
+
+(let ((path-to-local-config (expand-file-name "local.el" user-emacs-directory)))
+  (if (file-exists-p path-to-local-config)
+      (progn
+        (load path-to-local-config)
+        (message "Loaded local config."))
+    (message "No local config.")))
+
 (defvar elpaca-installer-version 0.11)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
@@ -88,6 +109,12 @@
   (modus-themes-variable-pitch-ui t)
   :config
   (modus-themes-load-theme 'modus-vivendi))
+
+(set-face-attribute 'default nil :font my-font :height my-font-height)
+(set-frame-font my-font nil t)
+
+(when (my-windows-p)
+  (set-fontset-font t 'unicode "Segoe UI Emoji" nil 'append))
 
 (use-package ace-window
   :ensure

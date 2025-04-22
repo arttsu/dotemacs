@@ -2,10 +2,39 @@
 #+PROPERTY: header-args:elisp :results silent :tangle init.el
 #+AUTO_TANGLE: t
 * Emacs Config
+** Config helpers
+*** OS predicates
+#+begin_src elisp
+  (defun my-linux-p ()
+    (eq system-type 'gnu/linux))
+
+  (defun my-windows-p ()
+    (eq system-type 'windows-nt))
+
+  (defun my-macos-p ()
+    (eq system-type 'darwin))
+#+end_src
 ** Setup
 :PROPERTIES:
 :VISIBILITY: folded
 :END:
+*** Local config
+**** Local config: Set variables to default values
+#+begin_src elisp
+  (setq my-font (cond ((my-linux-p) "Liberation Mono")
+                      ((my-macos-p) "Menlo")
+                      ((my-windows-p) "Consolas")))
+  (setq my-font-height 125)
+#+end_src
+**** Local config: Load
+#+begin_src elisp
+  (let ((path-to-local-config (expand-file-name "local.el" user-emacs-directory)))
+    (if (file-exists-p path-to-local-config)
+        (progn
+          (load path-to-local-config)
+          (message "Loaded local config."))
+      (message "No local config.")))
+#+end_src
 *** Elpaca :RTFM:
 https://github.com/progfolio/elpaca
 **** Elpaca: Installer
@@ -122,6 +151,16 @@ https://protesilaos.com/emacs/modus-themes
     (modus-themes-variable-pitch-ui t)
     :config
     (modus-themes-load-theme 'modus-vivendi))
+#+end_src
+**** Font
+#+begin_src elisp
+  (set-face-attribute 'default nil :font my-font :height my-font-height)
+  (set-frame-font my-font nil t)
+#+end_src
+***** Better emojis on Windows
+#+begin_src elisp
+  (when (my-windows-p)
+    (set-fontset-font t 'unicode "Segoe UI Emoji" nil 'append))
 #+end_src
 *** UI
 **** Ace Window :RTFM:
