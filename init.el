@@ -82,6 +82,9 @@
   :bind
   (("C-c g" . magit-file-dispatch)))
 
+(use-package transient
+  :ensure)
+
 (use-package org
   :ensure
   :custom

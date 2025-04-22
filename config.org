@@ -119,6 +119,12 @@ https://magit.vc/
     :bind
     (("C-c g" . magit-file-dispatch)))
 #+end_src
+**** Transient :RTFM:
+***** Transient: Use-package
+#+begin_src elisp
+  (use-package transient
+    :ensure)
+#+end_src
 **** Org :RTFM:
 ***** Org: Use-package
 #+begin_src elisp
