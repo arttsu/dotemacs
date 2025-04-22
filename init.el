@@ -97,6 +97,30 @@
 (use-package transient
   :ensure)
 
+(defconst my-org-personal-dir (expand-file-name "~/org-personal"))
+(defconst my-gtd-personal-dir (expand-file-name "gtd" my-org-personal-dir))
+(defconst my-gtd-personal-inbox (expand-file-name "inbox.org" my-gtd-personal-dir))
+(defconst my-gtd-personal-areas (expand-file-name "areas" my-gtd-personal-dir))
+(defconst my-gtd-personal-projects (expand-file-name "projects" my-gtd-personal-dir))
+(defconst my-gtd-personal-dirs (list my-gtd-personal-dir
+                                     my-gtd-personal-areas
+                                     my-gtd-personal-projects))
+
+(defconst my-org-open-dir (expand-file-name "~/org-open"))
+(defconst my-gtd-open-dir (expand-file-name "gtd" my-org-open-dir))
+(defconst my-gtd-open-inbox (expand-file-name "inbox.org" my-gtd-open-dir))
+(defconst my-gtd-open-projects (expand-file-name "projects" my-gtd-open-dir))
+(defconst my-gtd-open-areas (expand-file-name "areas" my-gtd-open-dir))
+(defconst my-gtd-open-dirs (list my-gtd-open-dir
+                                 my-gtd-open-areas
+                                 my-gtd-open-projects))
+
+(defconst my-gtd-all-dirs (append my-gtd-personal-dirs my-gtd-open-dirs))
+
+(defun my-org-setup ()
+  (setq-local fill-column 120)
+  (auto-fill-mode 1))
+
 (use-package org
   :ensure
   :custom
@@ -110,7 +134,9 @@
   (org-special-ctrl-a/e t)
   (org-hide-emphasis-markers t)
   (org-pretty-entities t)
-  (org-use-speed-commands t))
+  (org-use-speed-commands t)
+  :config
+  (add-hook 'org-mode-hook 'my-org-setup))
 
 (use-package modus-themes
   :ensure
