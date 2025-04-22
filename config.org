@@ -276,7 +276,7 @@ https://github.com/bbatsov/super-save
     :config
     (super-save-mode))
 #+end_src
-**** easysession
+**** easysession :RTFM:
 https://github.com/jamescherti/easysession.el
 ***** easysession: Check that the current session is not 'main'
 #+begin_src elisp
