@@ -97,6 +97,19 @@
   :bind
   (("M-o" . ace-window)))
 
+(use-package vertico
+  :ensure t
+  :demand
+  :config
+  (vertico-mode)
+  :bind
+  (:map vertico-map
+        ("C-;" . vertico-quick-insert)))
+
+(use-package savehist
+  :config
+  (savehist-mode))
+
 (use-package smartparens
   :ensure t
   :config

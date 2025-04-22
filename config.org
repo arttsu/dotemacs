@@ -136,6 +136,26 @@ https://github.com/abo-abo/ace-window
     :bind
     (("M-o" . ace-window)))
 #+end_src
+**** Vertico :RTFM:
+https://github.com/minad/vertico
+***** Vertico: Use-package
+#+begin_src elisp
+  (use-package vertico
+    :ensure t
+    :demand
+    :config
+    (vertico-mode)
+    :bind
+    (:map vertico-map
+          ("C-;" . vertico-quick-insert)))
+#+end_src
+**** Savehist :RTFM:
+***** Savehist: Use-package
+#+begin_src elisp
+  (use-package savehist
+    :config
+    (savehist-mode))
+#+end_src
 *** Editing
 **** Smartparens :RTFM:
 https://github.com/Fuco1/smartparens
