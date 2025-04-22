@@ -68,14 +68,26 @@
   (inhibit-splash-screen t)
   (initial-major-mode 'text-mode)
   (initial-scratch-message "✅ All systems go! 🚀🪐✨")
-  (visible-bell t)
   (disabled-command-function nil)
   (save-interprogram-paste-before-kill t)
   (create-lockfiles nil)
   (make-backup-files nil)
   (custom-file (expand-file-name "custom.el" user-emacs-directory))
   (require-final-newline t)
-  (indent-tabs-mode nil))
+  (indent-tabs-mode nil)
+  (visible-bell t)
+  (global-auto-revert-non-file-buffers t)
+  :config
+  (scroll-bar-mode -1)
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+  (fset 'yes-or-no-p 'y-or-n-p)
+  (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+  (global-auto-revert-mode)
+  (global-subword-mode)
+  (tab-bar-mode)
+  (tab-bar-history-mode)
+  (repeat-mode))
 
 (use-package magit
   :ensure
