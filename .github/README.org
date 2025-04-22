@@ -1,1 +1,1 @@
-/home/art/.emacs.d/config.org
+../config.org
