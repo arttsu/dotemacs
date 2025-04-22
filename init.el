@@ -145,6 +145,18 @@
         ((equal prefix '(4)) (org-capture nil "iL"))
         (t (error "Invalid prefix argument: %s" prefix))))
 
+(defconst my-gtd-day-agenda
+  `("d" "Day" ((agenda "" ((org-agenda-span 1)
+                           (org-agenda-skip-scheduled-if-done t)
+                           (org-agenda-skip-deadline-if-done t)
+                           (org-agenda-skip-timestamp-if-done t)))
+               (todo "TODO" ((org-agenda-overriding-header "Ad-hoc tasks")
+                             (org-agenda-files ',my-gtd-personal-dirs)))
+               (tags "+PROJECT" ((org-agenda-overriding-header "Projects")
+                                 (org-tags-match-list-sublevels nil)
+                                 (org-agenda-sorting-strategy '(priority-down))
+                                 (org-agenda-files '(,my-gtd-personal-projects)))))))
+
 (defun my-org-setup ()
   (setq-local fill-column 120)
   (auto-fill-mode 1))
@@ -163,14 +175,19 @@
   (org-hide-emphasis-markers t)
   (org-pretty-entities t)
   (org-use-speed-commands t)
+  (org-log-done 'time)
   (org-capture-templates my-gtd-capture-templates)
+  (org-agenda-files my-gtd-all-dirs)
+  (org-agenda-custom-commands `(,my-gtd-day-agenda))
+  (org-refile-targets '((org-agenda-files :level . 2)))
   :config
   (add-hook 'org-mode-hook 'my-org-setup)
   (add-hook 'org-after-todo-state-change-hook 'my-org-remove-priority-when-done)
   :bind
   (("C-c c" . org-capture)
    ("C-c i" . my-gtd-capture-note)
-   ("C-c I" . my-gtd-capture-todo)))
+   ("C-c I" . my-gtd-capture-todo)
+   ("C-c a" . org-agenda)))
 
 (use-package modus-themes
   :ensure
