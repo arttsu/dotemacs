@@ -160,6 +160,19 @@
    ("M-s k" . consult-keep-lines)
    ("M-s f" . consult-focus-lines)))
 
+(use-package super-save
+  :ensure
+  :custom
+  (super-save-all-buffers t)
+  (super-save-auto-save-when-idle t)
+  (super-save-delete-trailing-whitespace 'except-current-line)
+  (super-save-silent t)
+  (super-save-exclude '(".sbt" "project/"
+                        ".gpg"))
+  (auto-save-default nil)
+  :config
+  (super-save-mode))
+
 (use-package smartparens
   :ensure
   :config

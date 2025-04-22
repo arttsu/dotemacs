@@ -86,7 +86,7 @@ https://github.com/progfolio/elpaca
   (elpaca elpaca-use-package
     (elpaca-use-package-mode))
 #+end_src
-** Packages
+** Configuration
 *** Core
 **** Emacs
 ***** Emacs: Use-package
@@ -225,6 +225,23 @@ https://github.com/minad/consult
      ("M-s l" . consult-line)
      ("M-s k" . consult-keep-lines)
      ("M-s f" . consult-focus-lines)))
+#+end_src
+**** Super Save :RTFM:
+https://github.com/bbatsov/super-save
+***** Super Save: Use-package
+#+begin_src elisp
+  (use-package super-save
+    :ensure
+    :custom
+    (super-save-all-buffers t)
+    (super-save-auto-save-when-idle t)
+    (super-save-delete-trailing-whitespace 'except-current-line)
+    (super-save-silent t)
+    (super-save-exclude '(".sbt" "project/"
+                          ".gpg"))
+    (auto-save-default nil)
+    :config
+    (super-save-mode))
 #+end_src
 *** Editing
 **** Smartparens :RTFM:
