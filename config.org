@@ -156,6 +156,16 @@ https://github.com/minad/vertico
     :config
     (savehist-mode))
 #+end_src
+**** Orderless
+https://github.com/oantolin/orderless
+***** Orderless: Use-package
+#+begin_src elisp
+  (use-package orderless
+    :ensure
+    :custom
+    (completion-styles '(orderless basic))
+    (completion-category-overrides '((file (styles partial-completion)))))
+#+end_src
 *** Editing
 **** Smartparens :RTFM:
 https://github.com/Fuco1/smartparens
