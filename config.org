@@ -161,6 +161,39 @@ https://github.com/magit/transient
 
   (defconst my-gtd-all-dirs (append my-gtd-personal-dirs my-gtd-open-dirs))
 #+end_src
+***** Org: GTD: Helpers
+****** Org: GTD: Remove priority when todo is done
+#+begin_src elisp
+  (defun my-org-remove-priority-when-done ()
+    (when (string= org-state "DONE")
+      (ignore-errors (org-entry-put (point) "PRIORITY" nil))))
+#+end_src
+***** Org: GTD: Capturing
+#+begin_src elisp
+  (defun my-org-capture-template-path (name)
+    (expand-file-name (concat "capture-templates/" name ".txt") user-emacs-directory))
+
+  (defconst my-gtd-personal-inbox-target `(file+headline ,my-gtd-personal-inbox "Inbox items"))
+
+  (defconst my-gtd-capture-templates
+    `(("i" "Inbox")
+      ("ii" "note" entry ,my-gtd-personal-inbox-target (file ,(my-org-capture-template-path "gtd-note")))
+      ("il" "note link" entry ,my-gtd-personal-inbox-target (file ,(my-org-capture-template-path "gtd-note-link")))
+      ("iI" "todo" entry ,my-gtd-personal-inbox-target (file ,(my-org-capture-template-path "gtd-todo")))
+      ("iL" "todo link" entry ,my-gtd-personal-inbox-target (file ,(my-org-capture-template-path "gtd-todo-link")))))
+
+  (defun my-gtd-capture-note (&optional prefix)
+    (interactive "P")
+    (cond ((equal prefix nil) (org-capture nil "ii"))
+          ((equal prefix '(4)) (org-capture nil "il"))
+          (t (error "Invalid prefix argument: %s" prefix))))
+
+  (defun my-gtd-capture-todo (&optional prefix)
+    (interactive "P")
+    (cond ((equal prefix nil) (org-capture nil "iI"))
+          ((equal prefix '(4)) (org-capture nil "iL"))
+          (t (error "Invalid prefix argument: %s" prefix))))
+#+end_src
 ***** Org: Setup
 #+begin_src elisp
   (defun my-org-setup ()
@@ -183,8 +216,14 @@ https://github.com/magit/transient
     (org-hide-emphasis-markers t)
     (org-pretty-entities t)
     (org-use-speed-commands t)
+    (org-capture-templates my-gtd-capture-templates)
     :config
-    (add-hook 'org-mode-hook 'my-org-setup))
+    (add-hook 'org-mode-hook 'my-org-setup)
+    (add-hook 'org-after-todo-state-change-hook 'my-org-remove-priority-when-done)
+    :bind
+    (("C-c c" . org-capture)
+     ("C-c i" . my-gtd-capture-note)
+     ("C-c I" . my-gtd-capture-todo)))
 #+end_src
 *** Theme
 **** Modus Themes :RTFM:
