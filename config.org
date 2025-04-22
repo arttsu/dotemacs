@@ -120,6 +120,7 @@ https://magit.vc/
     (("C-c g" . magit-file-dispatch)))
 #+end_src
 **** Transient :RTFM:
+https://github.com/magit/transient
 ***** Transient: Use-package
 #+begin_src elisp
   (use-package transient
