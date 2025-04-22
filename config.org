@@ -81,7 +81,7 @@ https://magit.vc/
 ***** Magit: Use-package
 #+begin_src elisp
   (use-package magit
-    :ensure t
+    :ensure
     :bind
     (("C-c g" . magit-file-dispatch)))
 #+end_src
@@ -89,7 +89,7 @@ https://magit.vc/
 ***** Org: Use-package
 #+begin_src elisp
   (use-package org
-    :ensure t
+    :ensure
     :custom
     (org-startup-folded 'showall)
     (org-startup-indented t)
@@ -109,7 +109,7 @@ https://protesilaos.com/emacs/modus-themes
 ***** Modus Themes: Use-package
 #+begin_src elisp
   (use-package modus-themes
-    :ensure t
+    :ensure
     :custom
     (modus-themes-italic-constructs t)
     (modus-themes-org-blocks 'gray-background)
@@ -129,7 +129,7 @@ https://github.com/abo-abo/ace-window
 ***** Ace Window: Use-package
 #+begin_src elisp
   (use-package ace-window
-    :ensure t
+    :ensure
     :custom
     (aw-keys '(?a ?s ?d ?f ?g ?h ?k ?l))
     (aw-scope 'frame)
@@ -141,7 +141,7 @@ https://github.com/minad/vertico
 ***** Vertico: Use-package
 #+begin_src elisp
   (use-package vertico
-    :ensure t
+    :ensure
     :demand
     :config
     (vertico-mode)
@@ -172,7 +172,7 @@ https://github.com/Fuco1/smartparens
 ***** Smartparens: Use-package
 #+begin_src elisp
   (use-package smartparens
-    :ensure t
+    :ensure
     :config
     (require 'smartparens-config)
     :hook
@@ -200,7 +200,7 @@ https://github.com/bbatsov/crux
 ***** Crux: Use-package
 #+begin_src elisp
   (use-package crux
-    :ensure t
+    :ensure
     :bind
     (("C-o" . crux-smart-open-line)
      ("C-S-o" . crux-smart-open-line-above)
@@ -212,8 +212,8 @@ https://github.com/purcell/whole-line-or-region
 ***** Whole Line or Region: Use-package
 #+begin_src elisp
   (use-package whole-line-or-region
-    :ensure t
-    :demand t
+    :ensure
+    :demand
     :config
     (whole-line-or-region-global-mode)
     :bind
@@ -250,7 +250,7 @@ https://github.com/yilkalargaw/org-auto-tangle
 ***** Auto-tangle: Use-package
 #+begin_src elisp
   (use-package org-auto-tangle
-    :ensure t
+    :ensure
     :hook (org-mode . org-auto-tangle-mode))
 #+end_src
 **** Org Modern :RTFM:
@@ -258,7 +258,7 @@ https://github.com/minad/org-modern
 ***** Org Modern: Use-package
 #+begin_src elisp
   (use-package org-modern
-    :ensure t
+    :ensure
     :after org
     :custom
     (org-auto-align-tags nil)

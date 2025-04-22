@@ -55,12 +55,12 @@
   (indent-tabs-mode nil))
 
 (use-package magit
-  :ensure t
+  :ensure
   :bind
   (("C-c g" . magit-file-dispatch)))
 
 (use-package org
-  :ensure t
+  :ensure
   :custom
   (org-startup-folded 'showall)
   (org-startup-indented t)
@@ -75,7 +75,7 @@
   (org-use-speed-commands t))
 
 (use-package modus-themes
-  :ensure t
+  :ensure
   :custom
   (modus-themes-italic-constructs t)
   (modus-themes-org-blocks 'gray-background)
@@ -90,7 +90,7 @@
   (modus-themes-load-theme 'modus-vivendi))
 
 (use-package ace-window
-  :ensure t
+  :ensure
   :custom
   (aw-keys '(?a ?s ?d ?f ?g ?h ?k ?l))
   (aw-scope 'frame)
@@ -98,7 +98,7 @@
   (("M-o" . ace-window)))
 
 (use-package vertico
-  :ensure t
+  :ensure
   :demand
   :config
   (vertico-mode)
@@ -117,7 +117,7 @@
   (completion-category-overrides '((file (styles partial-completion)))))
 
 (use-package smartparens
-  :ensure t
+  :ensure
   :config
   (require 'smartparens-config)
   :hook
@@ -141,7 +141,7 @@
         ("C-c p r" . sp-rewrap-sexp)))
 
 (use-package crux
-  :ensure t
+  :ensure
   :bind
   (("C-o" . crux-smart-open-line)
    ("C-S-o" . crux-smart-open-line-above)
@@ -149,8 +149,8 @@
    ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region)))
 
 (use-package whole-line-or-region
-  :ensure t
-  :demand t
+  :ensure
+  :demand
   :config
   (whole-line-or-region-global-mode)
   :bind
@@ -178,11 +178,11 @@
    ("C-;" . avy-isearch)))
 
 (use-package org-auto-tangle
-  :ensure t
+  :ensure
   :hook (org-mode . org-auto-tangle-mode))
 
 (use-package org-modern
-  :ensure t
+  :ensure
   :after org
   :custom
   (org-auto-align-tags nil)
