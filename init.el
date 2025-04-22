@@ -99,7 +99,7 @@
 
 (defconst my-org-personal-dir (expand-file-name "~/org-personal"))
 (defconst my-gtd-personal-dir (expand-file-name "gtd" my-org-personal-dir))
-(defconst my-gtd-personal-inbox (expand-file-name "inbox.org" my-gtd-personal-dir))
+(defconst my-gtd-personal-inbox (expand-file-name "personal-inbox.org" my-gtd-personal-dir))
 (defconst my-gtd-personal-areas (expand-file-name "areas" my-gtd-personal-dir))
 (defconst my-gtd-personal-projects (expand-file-name "projects" my-gtd-personal-dir))
 (defconst my-gtd-personal-dirs (list my-gtd-personal-dir
@@ -108,7 +108,6 @@
 
 (defconst my-org-open-dir (expand-file-name "~/org-open"))
 (defconst my-gtd-open-dir (expand-file-name "gtd" my-org-open-dir))
-(defconst my-gtd-open-inbox (expand-file-name "inbox.org" my-gtd-open-dir))
 (defconst my-gtd-open-projects (expand-file-name "projects" my-gtd-open-dir))
 (defconst my-gtd-open-areas (expand-file-name "areas" my-gtd-open-dir))
 (defconst my-gtd-open-dirs (list my-gtd-open-dir
