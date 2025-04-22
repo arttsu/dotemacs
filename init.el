@@ -12,6 +12,8 @@
                     ((my-windows-p) "Consolas")))
 (setq my-font-height 125)
 
+(setq my-vterm-shell nil)
+
 (let ((path-to-local-config (expand-file-name "local.el" user-emacs-directory)))
   (if (file-exists-p path-to-local-config)
       (progn
@@ -264,3 +266,34 @@
   (org-agenda-tags-column 0)
   :config
   (global-org-modern-mode))
+
+(defun my-vterm-unbind-keys ()
+  (local-unset-key (kbd "<f1>"))
+  (local-unset-key (kbd "<f2>"))
+  (local-unset-key (kbd "<f3>"))
+  (local-unset-key (kbd "<f4>"))
+  (local-unset-key (kbd "<f5>"))
+  (local-unset-key (kbd "<f6>"))
+  (local-unset-key (kbd "<f7>"))
+  (local-unset-key (kbd "<f8>"))
+  (local-unset-key (kbd "<f9>"))
+  (local-unset-key (kbd "<f10>"))
+  (local-unset-key (kbd "<f11>"))
+  (local-unset-key (kbd "<f12>")))
+
+(use-package vterm
+  :when my-vterm-shell
+  :ensure
+  :custom
+  (vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
+  (vterm-shell my-vterm-shell)
+  (vterm-max-scrollback 50000)
+  (vterm-clear-scrollback-when-clearing t)
+  :config
+  (add-hook 'vterm-mode-hook 'my-vterm-unbind-keys)
+  :bind
+  (("C-x v" . vterm)
+   ("C-x 4 v" . vterm-other-window)))
+
+(use-package fish-mode
+  :ensure)

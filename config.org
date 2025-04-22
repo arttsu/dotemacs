@@ -3,6 +3,9 @@
 #+AUTO_TANGLE: t
 * Emacs Config
 ** Config helpers
+:PROPERTIES:
+:VISIBILITY: folded
+:END:
 *** OS predicates
 #+begin_src elisp
   (defun my-linux-p ()
@@ -25,6 +28,8 @@
                       ((my-macos-p) "Menlo")
                       ((my-windows-p) "Consolas")))
   (setq my-font-height 125)
+
+  (setq my-vterm-shell nil)
 #+end_src
 **** Local config: Load
 #+begin_src elisp
@@ -364,4 +369,54 @@ https://github.com/minad/org-modern
     (org-agenda-tags-column 0)
     :config
     (global-org-modern-mode))
+#+end_src
+*** Tools
+**** Vterm :RTFM:
+https://github.com/vterm/vterm
+***** Vterm: Dependencies
+CMake, libtool
+
+On Fedora:
+#+begin_src sh
+  sudo dnf install -y cmake libtool
+#+end_src
+***** Vterm: Unbind keys
+#+begin_src elisp
+  (defun my-vterm-unbind-keys ()
+    (local-unset-key (kbd "<f1>"))
+    (local-unset-key (kbd "<f2>"))
+    (local-unset-key (kbd "<f3>"))
+    (local-unset-key (kbd "<f4>"))
+    (local-unset-key (kbd "<f5>"))
+    (local-unset-key (kbd "<f6>"))
+    (local-unset-key (kbd "<f7>"))
+    (local-unset-key (kbd "<f8>"))
+    (local-unset-key (kbd "<f9>"))
+    (local-unset-key (kbd "<f10>"))
+    (local-unset-key (kbd "<f11>"))
+    (local-unset-key (kbd "<f12>")))
+#+end_src
+***** Vterm: Use-package
+#+begin_src elisp
+  (use-package vterm
+    :when my-vterm-shell
+    :ensure
+    :custom
+    (vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
+    (vterm-shell my-vterm-shell)
+    (vterm-max-scrollback 50000)
+    (vterm-clear-scrollback-when-clearing t)
+    :config
+    (add-hook 'vterm-mode-hook 'my-vterm-unbind-keys)
+    :bind
+    (("C-x v" . vterm)
+     ("C-x 4 v" . vterm-other-window)))
+#+end_src
+*** Major modes
+**** fish mode
+https://github.com/emacsmirror/fish-mode
+***** fish mode: Use-package
+#+begin_src elisp
+  (use-package fish-mode
+    :ensure)
 #+end_src
