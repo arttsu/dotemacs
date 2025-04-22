@@ -9,3 +9,6 @@ tramp
 history
 projects
 local.el
+/easysession/
+/org-persist/
+/server/

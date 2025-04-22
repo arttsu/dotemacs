@@ -9,7 +9,7 @@
 
 (setq my-font (cond ((my-linux-p) "Liberation Mono")
                     ((my-macos-p) "Menlo")
-                    ((my-windows-p) "Consolas")))
+                    ((my-windows-p) "Cascadia Code")))
 (setq my-font-height 125)
 
 (setq my-vterm-shell nil)
@@ -194,6 +194,48 @@
   (auto-save-default nil)
   :config
   (super-save-mode))
+
+(defun my-easysession-not-main-p ()
+  (not (string= (easysession-get-current-session-name) "main")))
+
+(defun my-easysession-visible-buffer-list ()
+  (let ((visible-buffers '()))
+    (dolist (buffer (buffer-list))
+      (when (or (get-buffer-window buffer 'visible)
+                (and (bound-and-true-p tab-bar-mode)
+                     (fboundp 'tab-bar-get-buffer-tab)
+                     (tab-bar-get-buffer-tab buffer t nil)))
+        (push buffer visible-buffers)))
+    visible-buffers))
+
+(defun my-easysession-setup-minimal ()
+  (when (and (boundp 'tab-bar-mode) tab-bar-mode)
+    (tab-bar-close-other-tabs)
+    (tab-bar-rename-tab ""))
+  (delete-other-windows)
+  (scratch-buffer))
+
+(use-package easysession
+  :ensure
+  :commands (easysession-switch-to
+             easysession-save-as
+             easysession-save-mode
+             easysession-load-including-geometry)
+  :custom
+  (easysession-mode-line-misc-info t)
+  (easysession-save-interval (* 5 60))
+  (easysession-buffer-list-function 'my-easysession-visible-buffer-list)
+  (easysession-save-mode-predicate 'my-easysession-not-main-p)
+  (easysession-switch-to-exclude-current t)
+  :init
+  (add-hook 'emacs-startup-hook 'easysession-load-including-geometry 102)
+  (add-hook 'emacs-startup-hook 'easysession-save-mode 103)
+  :config
+  (add-hook 'easysession-new-session-hook 'my-easysession-setup-minimal)
+  :bind
+  (("<f12> <f12>" . easysession-switch-to)
+   ("<f12> s" . easysession-save)
+   ("<f12> k" . easysession-delete)))
 
 (use-package smartparens
   :ensure
