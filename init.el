@@ -111,6 +111,10 @@
 (use-package transient
   :ensure)
 
+(defun my-org-require-at-heading ()
+  (unless (org-at-heading-p)
+    (error "Not at a heading")))
+
 (defconst my-org-personal-dir (expand-file-name "~/org-personal"))
 (defconst my-gtd-personal-dir (expand-file-name "gtd" my-org-personal-dir))
 (defconst my-gtd-personal-inbox (expand-file-name "personal-inbox.org" my-gtd-personal-dir))
@@ -152,6 +156,10 @@
           (buffer-substring-no-properties (point) (line-end-position))
         "[1900-01-01 Mon 00:00]"))))
 
+(defun my-gtd-checklist-p ()
+  (let ((style (org-entry-get (point) "STYLE")))
+    (and style (string= style "checklist"))))
+
 (defun my-gtd-insert-note ()
   (interactive)
   (org-insert-heading-respect-content)
@@ -175,14 +183,22 @@
 
 (defun my-gtd-sort-todos ()
   (interactive)
-  (unless (org-at-heading-p)
-    (error "Not at a heading"))
+  (my-org-require-at-heading)
   (org-sort-entries nil ?f 'my-gtd-extract-created-timestamp)
   (org-sort-entries nil ?f 'my-gtd-extract-closed-timestamp)
   (org-sort-entries nil ?p)
   (org-sort-entries nil ?o)
   (org-cycle)
   (org-cycle))
+
+(defun my-gtd-sort-checklist ()
+  (interactive)
+  (my-org-require-at-heading)
+  (if (my-gtd-checklist-p)
+      (my-gtd-sort-todos)
+    (org-up-heading-safe)
+    (when (my-gtd-checklist-p)
+      (my-gtd-sort-todos))))
 
 (defun my-org-capture-template-path (name)
   (expand-file-name (concat "capture-templates/" name ".txt") user-emacs-directory))
@@ -277,13 +293,15 @@
   :config
   (add-hook 'org-mode-hook 'my-org-setup)
   (add-hook 'org-after-todo-state-change-hook 'my-org-remove-priority-when-done)
+  (add-hook 'org-after-refile-insert-hook 'my-gtd-sort-checklist)
   :bind
   (("C-c c" . org-capture)
    ("C-c i" . my-gtd-capture-note)
    ("C-c I" . my-gtd-capture-todo)
    ("C-c a" . org-agenda)
    :map org-mode-map
-   ("C-c o s" . my-gtd-sort-todos)
+   ("C-c o s" . my-gtd-sort-checklist)
+   ("C-c o S" . my-gtd-sort-todos)
    ("C-c o i" . my-gtd-insert-note)
    ("C-c o I" . my-gtd-insert-todo)))
 

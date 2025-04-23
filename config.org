@@ -156,6 +156,13 @@ https://github.com/magit/transient
     :ensure)
 #+end_src
 **** Org :RTFM:
+***** Org: Helpers
+****** Org: Require being at a heading
+#+begin_src elisp
+  (defun my-org-require-at-heading ()
+    (unless (org-at-heading-p)
+      (error "Not at a heading")))
+#+end_src
 ***** Org: GTD: Files
 #+begin_src elisp
   (defconst my-org-personal-dir (expand-file-name "~/org-personal"))
@@ -204,6 +211,12 @@ https://github.com/magit/transient
             (buffer-substring-no-properties (point) (line-end-position))
           "[1900-01-01 Mon 00:00]"))))
 #+end_src
+****** Org: GTD: Checklist predicate
+#+begin_src elisp
+  (defun my-gtd-checklist-p ()
+    (let ((style (org-entry-get (point) "STYLE")))
+      (and style (string= style "checklist"))))
+#+end_src
 ***** Org: GTD: Interactive helpers
 ****** Org: GTD: Insert todo
 #+begin_src elisp
@@ -234,14 +247,22 @@ https://github.com/magit/transient
 #+begin_src elisp
   (defun my-gtd-sort-todos ()
     (interactive)
-    (unless (org-at-heading-p)
-      (error "Not at a heading"))
+    (my-org-require-at-heading)
     (org-sort-entries nil ?f 'my-gtd-extract-created-timestamp)
     (org-sort-entries nil ?f 'my-gtd-extract-closed-timestamp)
     (org-sort-entries nil ?p)
     (org-sort-entries nil ?o)
     (org-cycle)
     (org-cycle))
+
+  (defun my-gtd-sort-checklist ()
+    (interactive)
+    (my-org-require-at-heading)
+    (if (my-gtd-checklist-p)
+        (my-gtd-sort-todos)
+      (org-up-heading-safe)
+      (when (my-gtd-checklist-p)
+        (my-gtd-sort-todos))))
 #+end_src
 ***** Org: GTD: Capturing
 #+begin_src elisp
@@ -344,13 +365,15 @@ https://github.com/magit/transient
     :config
     (add-hook 'org-mode-hook 'my-org-setup)
     (add-hook 'org-after-todo-state-change-hook 'my-org-remove-priority-when-done)
+    (add-hook 'org-after-refile-insert-hook 'my-gtd-sort-checklist)
     :bind
     (("C-c c" . org-capture)
      ("C-c i" . my-gtd-capture-note)
      ("C-c I" . my-gtd-capture-todo)
      ("C-c a" . org-agenda)
      :map org-mode-map
-     ("C-c o s" . my-gtd-sort-todos)
+     ("C-c o s" . my-gtd-sort-checklist)
+     ("C-c o S" . my-gtd-sort-todos)
      ("C-c o i" . my-gtd-insert-note)
      ("C-c o I" . my-gtd-insert-todo)))
 #+end_src
