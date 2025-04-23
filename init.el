@@ -89,6 +89,20 @@
   (tab-bar-history-mode)
   (repeat-mode))
 
+(use-package dired
+  :custom
+  (dired-dwim-target t)
+  (insert-directory-program (cond ((my-windows-p) insert-directory-program)
+                                  ((my-macos-p) "gls")
+                                  (t "ls")))
+  (dired-listing-switches (cond ((my-windows-p) dired-listing-switches)
+                                (t "-alh --group-directories-first")))
+  :bind
+  (("<f7>" . dired-jump)
+   :map dired-mode-map
+   ("o" . crux-open-with)
+   ("<tab>" . dired-find-file-other-window)))
+
 (use-package magit
   :ensure
   :bind
