@@ -158,12 +158,26 @@
         ((equal prefix '(4)) (org-capture nil "iL"))
         (t (error "Invalid prefix argument: %s" prefix))))
 
+(defun my-gtd-day-agenda-skip-todo-p ()
+  (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+        (scheduled (org-get-scheduled-time (point)))
+        (deadline (org-get-deadline-time (point)))
+        (priority (org-get-priority (thing-at-point 'line t)))
+        (tags (org-get-tags)))
+    (when (or scheduled
+              deadline
+              (< priority 1000)
+              (and (< priority 3000)
+                   (or (member "PROJECT" tags) (member "AREA" tags))))
+      subtree-end)))
+
 (defconst my-gtd-day-agenda
   `("d" "Day" ((agenda "" ((org-agenda-span 1)
                            (org-agenda-skip-scheduled-if-done t)
                            (org-agenda-skip-deadline-if-done t)
                            (org-agenda-skip-timestamp-if-done t)))
                (todo "TODO" ((org-agenda-overriding-header "Ad-hoc tasks")
+                             (org-agenda-skip-function 'my-gtd-day-agenda-skip-todo-p)
                              (org-agenda-files ',my-gtd-personal-dirs)))
                (tags "+PROJECT" ((org-agenda-overriding-header "Projects")
                                  (org-tags-match-list-sublevels nil)
