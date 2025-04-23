@@ -184,6 +184,26 @@ https://github.com/magit/transient
     (when (string= org-state "DONE")
       (ignore-errors (org-entry-put (point) "PRIORITY" nil))))
 #+end_src
+****** Org: GTD: Extract created/closed timestamp
+#+begin_src elisp
+  (defun my-gtd-extract-created-timestamp ()
+    (save-excursion
+      (save-restriction
+        (org-narrow-to-subtree)
+        (goto-char (point-min))
+        (if (re-search-forward "# CREATED: " nil t)
+            (buffer-substring-no-properties (point) (line-end-position))
+          "[1900-01-01 Mon 00:00]"))))
+
+  (defun my-gtd-extract-closed-timestamp ()
+    (save-excursion
+      (save-restriction
+        (org-narrow-to-subtree)
+        (goto-char (point-min))
+        (if (re-search-forward "CLOSED: " nil t)
+            (buffer-substring-no-properties (point) (line-end-position))
+          "[1900-01-01 Mon 00:00]"))))
+#+end_src
 ***** Org: GTD: Interactive helpers
 ****** Org: GTD: Insert todo
 #+begin_src elisp
@@ -209,6 +229,19 @@ https://github.com/magit/transient
     (insert "\n")
     (forward-line -2)
     (end-of-line))
+#+end_src
+****** Org: GTD: Sort TODOs
+#+begin_src elisp
+  (defun my-gtd-sort-todos ()
+    (interactive)
+    (unless (org-at-heading-p)
+      (error "Not at a heading"))
+    (org-sort-entries nil ?f 'my-gtd-extract-created-timestamp)
+    (org-sort-entries nil ?f 'my-gtd-extract-closed-timestamp)
+    (org-sort-entries nil ?p)
+    (org-sort-entries nil ?o)
+    (org-cycle)
+    (org-cycle))
 #+end_src
 ***** Org: GTD: Capturing
 #+begin_src elisp
@@ -317,6 +350,7 @@ https://github.com/magit/transient
      ("C-c I" . my-gtd-capture-todo)
      ("C-c a" . org-agenda)
      :map org-mode-map
+     ("C-c o s" . my-gtd-sort-todos)
      ("C-c o i" . my-gtd-insert-note)
      ("C-c o I" . my-gtd-insert-todo)))
 #+end_src

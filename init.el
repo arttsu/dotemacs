@@ -134,6 +134,24 @@
   (when (string= org-state "DONE")
     (ignore-errors (org-entry-put (point) "PRIORITY" nil))))
 
+(defun my-gtd-extract-created-timestamp ()
+  (save-excursion
+    (save-restriction
+      (org-narrow-to-subtree)
+      (goto-char (point-min))
+      (if (re-search-forward "# CREATED: " nil t)
+          (buffer-substring-no-properties (point) (line-end-position))
+        "[1900-01-01 Mon 00:00]"))))
+
+(defun my-gtd-extract-closed-timestamp ()
+  (save-excursion
+    (save-restriction
+      (org-narrow-to-subtree)
+      (goto-char (point-min))
+      (if (re-search-forward "CLOSED: " nil t)
+          (buffer-substring-no-properties (point) (line-end-position))
+        "[1900-01-01 Mon 00:00]"))))
+
 (defun my-gtd-insert-note ()
   (interactive)
   (org-insert-heading-respect-content)
@@ -154,6 +172,17 @@
   (insert "\n")
   (forward-line -2)
   (end-of-line))
+
+(defun my-gtd-sort-todos ()
+  (interactive)
+  (unless (org-at-heading-p)
+    (error "Not at a heading"))
+  (org-sort-entries nil ?f 'my-gtd-extract-created-timestamp)
+  (org-sort-entries nil ?f 'my-gtd-extract-closed-timestamp)
+  (org-sort-entries nil ?p)
+  (org-sort-entries nil ?o)
+  (org-cycle)
+  (org-cycle))
 
 (defun my-org-capture-template-path (name)
   (expand-file-name (concat "capture-templates/" name ".txt") user-emacs-directory))
@@ -254,6 +283,7 @@
    ("C-c I" . my-gtd-capture-todo)
    ("C-c a" . org-agenda)
    :map org-mode-map
+   ("C-c o s" . my-gtd-sort-todos)
    ("C-c o i" . my-gtd-insert-note)
    ("C-c o I" . my-gtd-insert-todo)))
 
