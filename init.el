@@ -203,6 +203,8 @@
   (org-pretty-entities t)
   (org-use-speed-commands t)
   (org-log-done 'time)
+  (org-priority-lowest 69)
+  (org-priority-default 68)
   (org-capture-templates my-gtd-capture-templates)
   (org-agenda-files my-gtd-all-dirs)
   (org-agenda-custom-commands `(,my-gtd-day-agenda))
@@ -425,6 +427,13 @@
   (org-auto-align-tags nil)
   (org-tags-column 0)
   (org-agenda-tags-column 0)
+  (org-modern-priority-faces '((?A :background "Firebrick3" :foreground "White")
+                               (?B :background "Goldenrod" :foreground "White")
+                               (?C :background "SeaGreen" :foreground "White")
+                               (?D :background "MediumOrchid" :foreground "White")
+                               (?E :background "Seashell3" :foreground "Black")))
+  :custom-face
+  (org-modern-tag ((t (:foreground "White" :background "CornflowerBlue" :slant italic))))
   :config
   (global-org-modern-mode))
 
