@@ -134,6 +134,27 @@
   (when (string= org-state "DONE")
     (ignore-errors (org-entry-put (point) "PRIORITY" nil))))
 
+(defun my-gtd-insert-note ()
+  (interactive)
+  (org-insert-heading-respect-content)
+  (forward-line)
+  (insert "# CREATED: ")
+  (org-insert-timestamp (current-time) t t)
+  (insert "\n")
+  (forward-line -2)
+  (end-of-line))
+
+(defun my-gtd-insert-todo ()
+  (interactive)
+  (org-insert-heading-respect-content)
+  (insert "TODO ")
+  (forward-line)
+  (insert "# CREATED: ")
+  (org-insert-timestamp (current-time) t t)
+  (insert "\n")
+  (forward-line -2)
+  (end-of-line))
+
 (defun my-org-capture-template-path (name)
   (expand-file-name (concat "capture-templates/" name ".txt") user-emacs-directory))
 
@@ -231,7 +252,10 @@
   (("C-c c" . org-capture)
    ("C-c i" . my-gtd-capture-note)
    ("C-c I" . my-gtd-capture-todo)
-   ("C-c a" . org-agenda)))
+   ("C-c a" . org-agenda)
+   :map org-mode-map
+   ("C-c o i" . my-gtd-insert-note)
+   ("C-c o I" . my-gtd-insert-todo)))
 
 (use-package modus-themes
   :ensure
