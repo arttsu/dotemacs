@@ -177,6 +177,21 @@
   (let ((style (org-entry-get (point) "STYLE")))
     (and style (string= style "checklist"))))
 
+(defun my-gtd-checklist-do-auto-advance ()
+  (let ((point-before (point)))
+    (org-forward-heading-same-level 1)
+    (when (= (point) point-before)
+      (org-up-heading-safe))))
+
+(defun my-gtd-checklist-auto-advance ()
+  (when (string= org-state "DONE")
+    (let* ((current-element (org-element-at-point))
+           (parent (org-element-property :parent current-element))
+           (parent-style-prop (and parent (org-entry-get parent "STYLE")))
+           (parent-style (or parent-style-prop "")))
+      (when (string= parent-style "checklist")
+        (run-with-idle-timer 0 nil 'my-gtd-checklist-do-auto-advance)))))
+
 (defun my-gtd-insert-note ()
   (interactive)
   (org-insert-heading-respect-content)
@@ -310,6 +325,7 @@
   :config
   (add-hook 'org-mode-hook 'my-org-setup)
   (add-hook 'org-after-todo-state-change-hook 'my-org-remove-priority-when-done)
+  (add-hook 'org-after-todo-state-change-hook 'my-gtd-checklist-auto-advance)
   (add-hook 'org-after-refile-insert-hook 'my-gtd-sort-checklist)
   :bind
   (("C-c c" . org-capture)
