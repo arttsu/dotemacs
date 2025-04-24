@@ -14,6 +14,8 @@
 
 (setq my-vterm-shell nil)
 
+(setq my-use-ripgrep nil)
+
 (let ((path-to-local-config (expand-file-name "local.el" user-emacs-directory)))
   (if (file-exists-p path-to-local-config)
       (progn
@@ -593,6 +595,10 @@
   :bind
   (("C-x v" . vterm)
    ("C-x 4 v" . vterm-other-window)))
+
+(use-package rg
+  :when my-use-ripgrep
+  :ensure)
 
 (use-package fish-mode
   :ensure)

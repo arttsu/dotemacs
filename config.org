@@ -30,6 +30,8 @@
   (setq my-font-height 125)
 
   (setq my-vterm-shell nil)
+
+  (setq my-use-ripgrep nil)
 #+end_src
 **** Local config: Load
 #+begin_src elisp
@@ -760,6 +762,22 @@ On Fedora:
     :bind
     (("C-x v" . vterm)
      ("C-x 4 v" . vterm-other-window)))
+#+end_src
+**** Ripgrep :RTFM:
+https://github.com/dajva/rg.el
+***** Ripgrep: Dependencies
+[[https://github.com/BurntSushi/ripgrep?tab=readme-ov-file#installation][ripgrep]]
+
+On Windows, install via Winget:
+
+#+begin_src sh
+  winget install BurntSushi.ripgrep.MSVC
+#+end_src
+***** Ripgrep: Use-package
+#+begin_src elisp
+  (use-package rg
+    :when my-use-ripgrep
+    :ensure)
 #+end_src
 *** Major modes
 **** fish mode
