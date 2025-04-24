@@ -87,7 +87,19 @@
   (global-subword-mode)
   (tab-bar-mode)
   (tab-bar-history-mode)
-  (repeat-mode))
+  (repeat-mode)
+  :bind
+  (("C-c j x" . scratch-buffer)
+   ("M-g w" . forward-to-word)
+   ("M-g W" . backward-to-word)
+   ("C-M-; d" . duplicate-dwim)
+   ("C-c d h" . erase-buffer)
+   ("M-z" . zap-up-to-char)
+   ("M-Z" . zap-to-char)
+   ("C-c e b" . eval-buffer)
+   ("C-M-<return>" . tab-switch)
+   ([down-mouse-2] . mouse-set-point)
+   ([mouse-2] . delete-window)))
 
 (use-package dired
   :custom
