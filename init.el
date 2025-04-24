@@ -63,6 +63,10 @@
 (elpaca elpaca-use-package
   (elpaca-use-package-mode))
 
+(defun my-pop-mark ()
+  (interactive)
+  (set-mark-command '(4)))
+
 (use-package emacs
   :custom
   (inhibit-splash-screen t)
@@ -98,6 +102,7 @@
    ("M-Z" . zap-to-char)
    ("C-c e b" . eval-buffer)
    ("C-M-<return>" . tab-switch)
+   ("<f8>" . my-pop-mark)
    ([down-mouse-2] . mouse-set-point)
    ([mouse-2] . delete-window)))
 

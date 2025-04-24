@@ -94,6 +94,13 @@ https://github.com/progfolio/elpaca
 ** Configuration
 *** Core
 **** Emacs
+***** Emacs: Interactive helpers
+****** Emacs: Pop mark
+#+begin_src elisp
+  (defun my-pop-mark ()
+    (interactive)
+    (set-mark-command '(4)))
+#+end_src
 ***** Emacs: Use-package
 #+begin_src elisp
   (use-package emacs
@@ -131,6 +138,7 @@ https://github.com/progfolio/elpaca
      ("M-Z" . zap-to-char)
      ("C-c e b" . eval-buffer)
      ("C-M-<return>" . tab-switch)
+     ("<f8>" . my-pop-mark)
      ([down-mouse-2] . mouse-set-point)
      ([mouse-2] . delete-window)))
 #+end_src
