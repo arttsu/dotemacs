@@ -412,7 +412,12 @@ https://github.com/magit/transient
     (org-agenda-files my-gtd-all-dirs)
     (org-agenda-custom-commands `(,my-gtd-day-agenda))
     (org-refile-targets '((org-agenda-files :level . 2)))
+    (org-attach-id-dir (expand-file-name "attachments" my-org-personal-dir))
+    (org-attach-use-inheritance t)
+    (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
     :config
+    (require 'org-attach)
+    (require 'org-id)
     (add-hook 'org-mode-hook 'my-org-setup)
     (add-hook 'org-after-todo-state-change-hook 'my-org-remove-priority-when-done)
     (add-hook 'org-after-todo-state-change-hook 'my-gtd-checklist-auto-advance)
