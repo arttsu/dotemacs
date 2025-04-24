@@ -132,6 +132,14 @@
   (unless (org-at-heading-p)
     (error "Not at a heading")))
 
+(defun my-org-duplicate-subtree ()
+  (interactive)
+  (my-org-require-at-heading)
+  (beginning-of-line)
+  (org-copy-subtree)
+  (org-paste-subtree)
+  (org-delete-property "ID"))
+
 (defconst my-org-personal-dir (expand-file-name "~/org-personal"))
 (defconst my-gtd-personal-dir (expand-file-name "gtd" my-org-personal-dir))
 (defconst my-gtd-personal-inbox (expand-file-name "personal-inbox.org" my-gtd-personal-dir))
@@ -336,7 +344,8 @@
    ("C-c o s" . my-gtd-sort-checklist)
    ("C-c o S" . my-gtd-sort-todos)
    ("C-c o i" . my-gtd-insert-note)
-   ("C-c o I" . my-gtd-insert-todo)))
+   ("C-c o I" . my-gtd-insert-todo)
+   ("C-c o d" . my-org-duplicate-subtree)))
 
 (use-package modus-themes
   :ensure

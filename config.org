@@ -183,6 +183,17 @@ https://github.com/magit/transient
     (unless (org-at-heading-p)
       (error "Not at a heading")))
 #+end_src
+***** Org: Interactive helpers
+****** Org: Duplicate a subtree
+#+begin_src elisp
+  (defun my-org-duplicate-subtree ()
+    (interactive)
+    (my-org-require-at-heading)
+    (beginning-of-line)
+    (org-copy-subtree)
+    (org-paste-subtree)
+    (org-delete-property "ID"))
+#+end_src
 ***** Org: GTD: Files
 #+begin_src elisp
   (defconst my-org-personal-dir (expand-file-name "~/org-personal"))
@@ -413,7 +424,8 @@ https://github.com/magit/transient
      ("C-c o s" . my-gtd-sort-checklist)
      ("C-c o S" . my-gtd-sort-todos)
      ("C-c o i" . my-gtd-insert-note)
-     ("C-c o I" . my-gtd-insert-todo)))
+     ("C-c o I" . my-gtd-insert-todo)
+     ("C-c o d" . my-org-duplicate-subtree)))
 #+end_src
 *** Theme
 **** Modus Themes :RTFM:
