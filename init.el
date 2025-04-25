@@ -75,6 +75,10 @@
   (interactive)
   (set-mark-command '(4)))
 
+(defun my-jump-home ()
+  (interactive)
+  (find-file "~/"))
+
 (use-package emacs
   :custom
   (inhibit-splash-screen t)
@@ -102,6 +106,7 @@
   (repeat-mode)
   :bind
   (("C-c j x" . scratch-buffer)
+   ("C-c j h" . my-jump-home)
    ("M-g w" . forward-to-word)
    ("M-g W" . backward-to-word)
    ("C-M-; d" . duplicate-dwim)
@@ -127,6 +132,9 @@
    :map dired-mode-map
    ("o" . crux-open-with)
    ("<tab>" . dired-find-file-other-window)))
+
+(use-package dired-du
+  :ensure)
 
 (use-package magit
   :ensure

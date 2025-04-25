@@ -112,6 +112,12 @@ https://github.com/progfolio/elpaca
     (interactive)
     (set-mark-command '(4)))
 #+end_src
+****** Emacs: Jump home
+#+begin_src elisp
+  (defun my-jump-home ()
+    (interactive)
+    (find-file "~/"))
+#+end_src
 ***** Emacs: Use-package
 #+begin_src elisp
   (use-package emacs
@@ -141,6 +147,7 @@ https://github.com/progfolio/elpaca
     (repeat-mode)
     :bind
     (("C-c j x" . scratch-buffer)
+     ("C-c j h" . my-jump-home)
      ("M-g w" . forward-to-word)
      ("M-g W" . backward-to-word)
      ("C-M-; d" . duplicate-dwim)
@@ -169,6 +176,13 @@ https://github.com/progfolio/elpaca
      :map dired-mode-map
      ("o" . crux-open-with)
      ("<tab>" . dired-find-file-other-window)))
+#+end_src
+***** dired-du
+https://github.com/calancha/dired-du
+****** dired-du: Use-package
+#+begin_src elisp
+  (use-package dired-du
+    :ensure)
 #+end_src
 **** Magit :RTFM:
 https://magit.vc/
