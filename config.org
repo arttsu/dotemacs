@@ -719,6 +719,19 @@ https://github.com/abo-abo/avy
      :map isearch-mode-map
      ("C-;" . avy-isearch)))
 #+end_src
+**** Multiple Cursors :RTFM:
+https://github.com/magnars/multiple-cursors.el
+***** Multiple Cursors: Use-package
+#+begin_src elisp
+  (use-package multiple-cursors
+    :ensure
+    :bind
+    (("C-+" . mc/mark-next-like-this)
+     ("C-c k l" . mc/edit-lines)
+     ("C-c k m" . mc/mark-all-dwim)
+     ("C-S-<mouse-1>" . mc/add-cursor-on-click)
+     ("C-<return>" . set-rectangular-region-anchor)))
+#+end_src
 *** Org-related
 **** Auto-tangle :RTFM:
 https://github.com/yilkalargaw/org-auto-tangle

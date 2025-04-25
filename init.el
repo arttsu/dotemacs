@@ -566,6 +566,15 @@
    :map isearch-mode-map
    ("C-;" . avy-isearch)))
 
+(use-package multiple-cursors
+  :ensure
+  :bind
+  (("C-+" . mc/mark-next-like-this)
+   ("C-c k l" . mc/edit-lines)
+   ("C-c k m" . mc/mark-all-dwim)
+   ("C-S-<mouse-1>" . mc/add-cursor-on-click)
+   ("C-<return>" . set-rectangular-region-anchor)))
+
 (use-package org-auto-tangle
   :ensure
   :hook (org-mode . org-auto-tangle-mode))
