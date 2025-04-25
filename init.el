@@ -605,5 +605,52 @@
   :when my-use-ripgrep
   :ensure)
 
+(defun my-gptel-auto-fill-response (begin end)
+  (when (and (not (eq begin end)) (eq major-mode 'org-mode))
+    (save-excursion
+      (goto-char begin)
+      (while (not (>= (point) end))
+        (org-forward-sentence)
+        (let ((elem (org-element-at-point)))
+          (when (member (org-element-type elem) '(paragraph item))
+            (save-excursion
+              (goto-char (org-element-property :begin elem))
+              (fill-paragraph))))))))
+
+(defun my-gptel-clear-buffer ()
+  (interactive)
+  (erase-buffer)
+  (insert "*** "))
+
+(defun my-gptel-send ()
+  (interactive)
+  (goto-char (point-max))
+  (gptel-send)
+  (org-back-to-heading)
+  (recenter-top-bottom 0))
+
+(define-derived-mode my-gptel-mode org-mode "GPTel")
+
+(defun my-gptel-mode-setup ()
+  (interactive)
+  (org-mode)
+  (gptel-mode))
+
+(use-package gptel
+  :ensure
+  :custom
+  (gptel-model 'gpt-4o)
+  (gptel-default-mode 'org-mode)
+  :config
+  (add-hook 'gptel-mode-hook 'toggle-truncate-lines)
+  (add-hook 'gptel-post-response-functions 'my-gptel-auto-fill-response)
+  (add-hook 'my-gptel-mode-hook 'my-gptel-mode-setup)
+  :bind
+  (("C-c SPC" . gptel)
+   :map gptel-mode-map
+   ("C-c C-c" . my-gptel-send)
+   ("C-c k" . gptel-abort)
+   ("C-c d h" . my-gptel-clear-buffer)))
+
 (use-package fish-mode
   :ensure)
