@@ -575,6 +575,11 @@
    ("C-S-<mouse-1>" . mc/add-cursor-on-click)
    ("C-<return>" . set-rectangular-region-anchor)))
 
+(use-package expand-region
+  :ensure
+  :bind
+  (("C-=" . er/expand-region)))
+
 (use-package org-auto-tangle
   :ensure
   :hook (org-mode . org-auto-tangle-mode))

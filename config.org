@@ -732,6 +732,15 @@ https://github.com/magnars/multiple-cursors.el
      ("C-S-<mouse-1>" . mc/add-cursor-on-click)
      ("C-<return>" . set-rectangular-region-anchor)))
 #+end_src
+**** Expand Region :RTFM:
+https://github.com/magnars/expand-region.el
+***** Expand Region: Use-package
+#+begin_src elisp
+  (use-package expand-region
+    :ensure
+    :bind
+    (("C-=" . er/expand-region)))
+#+end_src
 *** Org-related
 **** Auto-tangle :RTFM:
 https://github.com/yilkalargaw/org-auto-tangle
