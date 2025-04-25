@@ -93,6 +93,15 @@ https://github.com/progfolio/elpaca
   (elpaca elpaca-use-package
     (elpaca-use-package-mode))
 #+end_src
+*** Exec path from shell (for MacOS)
+**** Exec path from shell: Use-package
+#+begin_src elisp
+  (use-package exec-path-from-shell
+    :ensure
+    :when (my-macos-p)
+    :config
+    (exec-path-from-shell-initialize))
+#+end_src
 ** Configuration
 *** Core
 **** Emacs

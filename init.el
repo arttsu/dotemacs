@@ -65,6 +65,12 @@
 (elpaca elpaca-use-package
   (elpaca-use-package-mode))
 
+(use-package exec-path-from-shell
+  :ensure
+  :when (my-macos-p)
+  :config
+  (exec-path-from-shell-initialize))
+
 (defun my-pop-mark ()
   (interactive)
   (set-mark-command '(4)))
