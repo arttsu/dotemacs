@@ -256,6 +256,19 @@
     (when (my-gtd-checklist-p)
       (my-gtd-sort-todos))))
 
+(defun my-gtd-reset-checklist ()
+  (interactive)
+  (my-org-require-at-heading)
+  (let ((style (org-entry-get (point) "STYLE")))
+    (if (not (my-gtd-checklist-p))
+        (error "Not at a checklist")
+      (when (yes-or-no-p "Reset the checklist?")
+        (org-map-entries (lambda ()
+                           (org-todo "TODO"))
+                         nil
+                         'tree)
+        (org-todo "")))))
+
 (defun my-org-capture-template-path (name)
   (expand-file-name (concat "capture-templates/" name ".txt") user-emacs-directory))
 
@@ -364,6 +377,7 @@
    :map org-mode-map
    ("C-c o s" . my-gtd-sort-checklist)
    ("C-c o S" . my-gtd-sort-todos)
+   ("C-c o r" . my-gtd-reset-checklist)
    ("C-c o i" . my-gtd-insert-note)
    ("C-c o I" . my-gtd-insert-todo)
    ("C-c o d" . my-org-duplicate-subtree)))
