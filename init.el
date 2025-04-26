@@ -519,6 +519,12 @@
    ("<f12> s" . easysession-save)
    ("<f12> k" . easysession-delete)))
 
+(use-package link-hint
+  :ensure
+  :bind
+  (("C-c f" . link-hint-open-link)
+   ("C-c y" . link-hint-copy-link)))
+
 (use-package smartparens
   :ensure
   :config

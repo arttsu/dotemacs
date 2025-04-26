@@ -657,6 +657,16 @@ https://github.com/jamescherti/easysession.el
      ("<f12> s" . easysession-save)
      ("<f12> k" . easysession-delete)))
 #+end_src
+**** Link hint :RTFM:
+https://github.com/noctuid/link-hint.el
+***** Link hint: Use-package
+#+begin_src elisp
+  (use-package link-hint
+    :ensure
+    :bind
+    (("C-c f" . link-hint-open-link)
+     ("C-c y" . link-hint-copy-link)))
+#+end_src
 *** Editing
 **** Smartparens :RTFM:
 https://github.com/Fuco1/smartparens
