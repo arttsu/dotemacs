@@ -912,6 +912,23 @@ Create a =.authinfo= file in the home directory, with:
      ("C-c k" . gptel-abort)
      ("C-c d h" . my-gptel-clear-buffer)))
 #+end_src
+**** EMMS :RTFM:
+https://www.gnu.org/software/emms/manual/#Introduction
+***** EMMS: Use-package
+#+begin_src elisp
+  (use-package emms
+    :ensure
+    :custom
+    (emms-player-list '(emms-player-mpv))
+    (emms-player-mpv-update-metadata t)
+    (emms-streams-file (expand-file-name "streams.emms" user-emacs-directory))
+    :config
+    (emms-all)
+    :bind
+    (("C-c r r" . emms-streams)
+     ("C-c r p" . emms-pause)
+     ("C-c r k" . emms-stop)))
+#+end_src
 *** Major modes
 **** fish mode
 https://github.com/emacsmirror/fish-mode
