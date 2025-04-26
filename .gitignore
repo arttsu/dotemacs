@@ -14,3 +14,4 @@ local.el
 /server/
 /.org-id-locations
 /emms/
+/custom.el
