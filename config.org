@@ -930,6 +930,8 @@ Create a =.authinfo= file in the home directory, with:
 #+end_src
 **** EMMS :RTFM:
 https://www.gnu.org/software/emms/manual/#Introduction
+***** EMMS: Dependencies
+mpv
 ***** EMMS: Use-package
 #+begin_src elisp
   (use-package emms
