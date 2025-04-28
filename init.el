@@ -71,6 +71,13 @@
   :config
   (exec-path-from-shell-initialize))
 
+(setq custom-file-path (expand-file-name "custom.el" user-emacs-directory))
+
+(if (not (file-exists-p custom-file-path))
+    (message "No custom file")
+  (load custom-file-path)
+  (message "Loaded custom file"))
+
 (defun my-pop-mark ()
   (interactive)
   (set-mark-command '(4)))
@@ -88,7 +95,7 @@
   (save-interprogram-paste-before-kill t)
   (create-lockfiles nil)
   (make-backup-files nil)
-  (custom-file (expand-file-name "custom.el" user-emacs-directory))
+  (custom-file custom-file-path)
   (require-final-newline t)
   (indent-tabs-mode nil)
   (visible-bell t)

@@ -105,6 +105,15 @@ https://github.com/progfolio/elpaca
 ** Configuration
 *** Core
 **** Emacs
+***** Emacs: Load the Custom File
+#+begin_src elisp
+  (setq custom-file-path (expand-file-name "custom.el" user-emacs-directory))
+
+  (if (not (file-exists-p custom-file-path))
+      (message "No custom file")
+    (load custom-file-path)
+    (message "Loaded custom file"))
+#+end_src
 ***** Emacs: Interactive helpers
 ****** Emacs: Pop mark
 #+begin_src elisp
@@ -129,7 +138,7 @@ https://github.com/progfolio/elpaca
     (save-interprogram-paste-before-kill t)
     (create-lockfiles nil)
     (make-backup-files nil)
-    (custom-file (expand-file-name "custom.el" user-emacs-directory))
+    (custom-file custom-file-path)
     (require-final-newline t)
     (indent-tabs-mode nil)
     (visible-bell t)
