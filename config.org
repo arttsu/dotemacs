@@ -32,6 +32,8 @@
   (setq my-vterm-shell nil)
 
   (setq my-use-ripgrep nil)
+
+  (setq my-use-copilot nil)
 #+end_src
 **** Local config: Load
 #+begin_src elisp
@@ -207,6 +209,12 @@ https://github.com/magit/transient
 ***** Transient: Use-package
 #+begin_src elisp
   (use-package transient
+    :ensure)
+#+end_src
+**** Hydra :RTFM:
+***** Hydra: Use-package
+#+begin_src elisp
+  (use-package hydra
     :ensure)
 #+end_src
 **** Org :RTFM:
@@ -1021,6 +1029,35 @@ mpv
     :config
     (jarchive-setup))
 #+end_src
+**** Copilot :RTFM:
+***** Copilot: Dependencies
+*@github/copilot-language-server*
+
+Install via npm:
+
+#+begin_src sh
+  npm install @github/copilot-language-server
+#+end_src
+***** Copilot: Use-package
+#+begin_src elisp
+  (use-package copilot
+    :ensure
+    :when my-use-copilot
+    :after hydra
+    :custom
+    (copilot-idle-delay 0.3)
+    :custom-face
+    (copilot-overlay-face ((t (:foreground "DarkOrchid1" :slant italic))))
+    :config
+    (add-to-list 'warning-suppress-log-types '(copilot copilot-no-mode-indent))
+    (defhydra my-copilot-accept-completion (copilot-mode-map "C-M-<tab>")
+      "Accept Copilot completion"
+      ("C-M-<tab>" copilot-accept-completion "Accept" :color blue)
+      ("C-M-f" copilot-accept-completion-by-word "By word")
+      ("C-M-e" copilot-accept-completion-by-line "By line"))
+    :hook
+    (prog-mode . copilot-mode))
+#+end_src
 *** Major modes
 **** fish mode
 https://github.com/emacsmirror/fish-mode
@@ -1035,4 +1072,11 @@ https://github.com/emacsmirror/fish-mode
   (use-package markdown-mode
     :ensure
     :interpreter "markdown")
+#+end_src
+**** YAML
+https://github.com/yoshiki/yaml-mode
+***** YAML: Use-package
+#+begin_src elisp
+  (use-package yaml-mode
+    :ensure)
 #+end_src

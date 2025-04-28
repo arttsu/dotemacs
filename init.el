@@ -16,6 +16,8 @@
 
 (setq my-use-ripgrep nil)
 
+(setq my-use-copilot nil)
+
 (let ((path-to-local-config (expand-file-name "local.el" user-emacs-directory)))
   (if (file-exists-p path-to-local-config)
       (progn
@@ -149,6 +151,9 @@
   (("C-c g" . magit-file-dispatch)))
 
 (use-package transient
+  :ensure)
+
+(use-package hydra
   :ensure)
 
 (defun my-org-require-at-heading ()
@@ -771,9 +776,30 @@
   :config
   (jarchive-setup))
 
+(use-package copilot
+  :ensure
+  :when my-use-copilot
+  :after hydra
+  :custom
+  (copilot-idle-delay 0.3)
+  :custom-face
+  (copilot-overlay-face ((t (:foreground "DarkOrchid1" :slant italic))))
+  :config
+  (add-to-list 'warning-suppress-log-types '(copilot copilot-no-mode-indent))
+  (defhydra my-copilot-accept-completion (copilot-mode-map "C-M-<tab>")
+    "Accept Copilot completion"
+    ("C-M-<tab>" copilot-accept-completion "Accept" :color blue)
+    ("C-M-f" copilot-accept-completion-by-word "By word")
+    ("C-M-e" copilot-accept-completion-by-line "By line"))
+  :hook
+  (prog-mode . copilot-mode))
+
 (use-package fish-mode
   :ensure)
 
 (use-package markdown-mode
   :ensure
   :interpreter "markdown")
+
+(use-package yaml-mode
+  :ensure)
