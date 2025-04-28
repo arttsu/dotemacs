@@ -280,7 +280,7 @@ https://github.com/magit/transient
 #+begin_src elisp
   (defun my-gtd-checklist-p ()
     (let ((style (org-entry-get (point) "STYLE")))
-      (and style (string= style "checklist"))))
+      (string= style "checklist")))
 #+end_src
 ****** Org: GTD: Checklist: Auto-advance
 #+begin_src elisp
@@ -291,7 +291,7 @@ https://github.com/magit/transient
         (org-up-heading-safe))))
 
   (defun my-gtd-checklist-auto-advance ()
-    (when (string= org-state "DONE")
+    (when (when (and (not org-agenda-headline-snapshot-before-repeat) (string= org-state "DONE")))
       (let* ((current-element (org-element-at-point))
              (parent (org-element-property :parent current-element))
              (parent-style-prop (and parent (org-entry-get parent "STYLE")))

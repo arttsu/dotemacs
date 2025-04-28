@@ -206,7 +206,7 @@
 
 (defun my-gtd-checklist-p ()
   (let ((style (org-entry-get (point) "STYLE")))
-    (and style (string= style "checklist"))))
+    (string= style "checklist")))
 
 (defun my-gtd-checklist-do-auto-advance ()
   (let ((point-before (point)))
@@ -215,7 +215,7 @@
       (org-up-heading-safe))))
 
 (defun my-gtd-checklist-auto-advance ()
-  (when (string= org-state "DONE")
+  (when (when (and (not org-agenda-headline-snapshot-before-repeat) (string= org-state "DONE")))
     (let* ((current-element (org-element-at-point))
            (parent (org-element-property :parent current-element))
            (parent-style-prop (and parent (org-entry-get parent "STYLE")))
