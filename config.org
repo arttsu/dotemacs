@@ -974,3 +974,10 @@ https://github.com/emacsmirror/fish-mode
   (use-package fish-mode
     :ensure)
 #+end_src
+**** Markdown
+***** Markdown: Use-package
+#+begin_src elisp
+  (use-package markdown-mode
+    :ensure
+    :interpreter "markdown")
+#+end_src

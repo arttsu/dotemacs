@@ -732,3 +732,7 @@
 
 (use-package fish-mode
   :ensure)
+
+(use-package markdown-mode
+  :ensure
+  :interpreter "markdown")
