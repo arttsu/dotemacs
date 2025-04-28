@@ -484,9 +484,6 @@
   :config
   (super-save-mode))
 
-(defun my-easysession-not-main-p ()
-  (not (string= (easysession-get-current-session-name) "main")))
-
 (defun my-easysession-visible-buffer-list ()
   (let ((visible-buffers '()))
     (dolist (buffer (buffer-list))
@@ -504,6 +501,11 @@
   (delete-other-windows)
   (scratch-buffer))
 
+(defun my-easysession-reset-session ()
+  (interactive)
+  (when (yes-or-no-p "Reset session?")
+    (my-easysession-setup-minimal)))
+
 (use-package easysession
   :ensure
   :commands (easysession-switch-to
@@ -514,17 +516,18 @@
   (easysession-mode-line-misc-info t)
   (easysession-save-interval (* 5 60))
   (easysession-buffer-list-function 'my-easysession-visible-buffer-list)
-  (easysession-save-mode-predicate 'my-easysession-not-main-p)
   (easysession-switch-to-exclude-current t)
   :init
   (add-hook 'emacs-startup-hook 'easysession-load-including-geometry 102)
   (add-hook 'emacs-startup-hook 'easysession-save-mode 103)
   :config
   (add-hook 'easysession-new-session-hook 'my-easysession-setup-minimal)
+  (add-hook 'easysession-before-load-hook 'easysession-save)
   :bind
   (("<f12> <f12>" . easysession-switch-to)
    ("<f12> s" . easysession-save)
-   ("<f12> k" . easysession-delete)))
+   ("<f12> k" . easysession-delete)
+   ("<f12> r" . my-easysession-reset-session)))
 
 (use-package link-hint
   :ensure
