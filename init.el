@@ -733,6 +733,10 @@
    ("C-c r p" . emms-pause)
    ("C-c r k" . emms-stop)))
 
+(use-package envrc
+  :ensure
+  :hook (elpaca-after-init . envrc-global-mode))
+
 (use-package lsp-mode
   :ensure
   :custom
@@ -752,6 +756,14 @@
 (use-package lsp-ui
   :ensure
   :commands lsp-ui-mode)
+
+(use-package pet
+  :ensure
+  :after envrc
+  :config
+  (add-hook 'python-base-mode-hook 'pet-mode -10)
+  (require 'envrc)
+  (add-hook 'change-major-mode-after-body-hook 'envrc-mode))
 
 (use-package jarchive
   :ensure

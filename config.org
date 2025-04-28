@@ -968,6 +968,13 @@ mpv
      ("C-c r k" . emms-stop)))
 #+end_src
 *** Programming
+**** envrc :RTFM:
+***** envrc: Use-package
+#+begin_src elisp
+  (use-package envrc
+    :ensure
+    :hook (elpaca-after-init . envrc-global-mode))
+#+end_src
 **** LSP mode :RTFM:
 ***** LSP mode: Use-package
 #+begin_src elisp
@@ -993,6 +1000,17 @@ mpv
   (use-package lsp-ui
     :ensure
     :commands lsp-ui-mode)
+#+end_src
+**** Emacs Pet :RTFM:
+***** Emacs Pet: Use-package
+#+begin_src elisp
+  (use-package pet
+    :ensure
+    :after envrc
+    :config
+    (add-hook 'python-base-mode-hook 'pet-mode -10)
+    (require 'envrc)
+    (add-hook 'change-major-mode-after-body-hook 'envrc-mode))
 #+end_src
 **** Jarchive :RTFM:
 ***** Jarchive: Use-package
