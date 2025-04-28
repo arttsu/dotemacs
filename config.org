@@ -993,6 +993,15 @@ mpv
     :ensure
     :commands lsp-ui-mode)
 #+end_src
+**** Jarchive :RTFM:
+***** Jarchive: Use-package
+#+begin_src elisp
+  (use-package jarchive
+    :ensure
+    :unless (my-windows-p)
+    :config
+    (jarchive-setup))
+#+end_src
 *** Major modes
 **** fish mode
 https://github.com/emacsmirror/fish-mode

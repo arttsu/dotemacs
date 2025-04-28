@@ -750,6 +750,12 @@
   :ensure
   :commands lsp-ui-mode)
 
+(use-package jarchive
+  :ensure
+  :unless (my-windows-p)
+  :config
+  (jarchive-setup))
+
 (use-package fish-mode
   :ensure)
 
