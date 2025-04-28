@@ -966,6 +966,33 @@ mpv
      ("C-c r p" . emms-pause)
      ("C-c r k" . emms-stop)))
 #+end_src
+*** Programming
+**** LSP mode :RTFM:
+***** LSP mode: Use-package
+#+begin_src elisp
+  (use-package lsp-mode
+    :ensure
+    :custom
+    (lsp-keymap-prefix "<f5>")
+    (lsp-pylsp-plugins-black-enabled t)
+    :hook
+    (python-mode . lsp)
+    (python-ts-mode . lsp)
+    :commands lsp
+    :bind
+    (:map
+     lsp-mode-map
+     ([M-down-mouse-1] . mouse-set-point)
+     ([M-mouse-1] . lsp-find-definition)
+     ([M-mouse-3] . xref-go-back)))
+#+end_src
+**** LSP UI :RTFM:
+***** LSP UI: Use-package
+#+begin_src elisp
+  (use-package lsp-ui
+    :ensure
+    :commands lsp-ui-mode)
+#+end_src
 *** Major modes
 **** fish mode
 https://github.com/emacsmirror/fish-mode

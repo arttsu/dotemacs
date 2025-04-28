@@ -730,6 +730,26 @@
    ("C-c r p" . emms-pause)
    ("C-c r k" . emms-stop)))
 
+(use-package lsp-mode
+  :ensure
+  :custom
+  (lsp-keymap-prefix "<f5>")
+  (lsp-pylsp-plugins-black-enabled t)
+  :hook
+  (python-mode . lsp)
+  (python-ts-mode . lsp)
+  :commands lsp
+  :bind
+  (:map
+   lsp-mode-map
+   ([M-down-mouse-1] . mouse-set-point)
+   ([M-mouse-1] . lsp-find-definition)
+   ([M-mouse-3] . xref-go-back)))
+
+(use-package lsp-ui
+  :ensure
+  :commands lsp-ui-mode)
+
 (use-package fish-mode
   :ensure)
 
