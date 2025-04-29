@@ -369,6 +369,15 @@ https://github.com/magit/transient
                            'tree)
           (org-todo "")))))
 #+end_src
+****** Org: GTD: Complete as "won't do"
+#+begin_src elisp
+  (defun my-gtd-complete-as-wont-do ()
+    (interactive)
+    (my-org-require-at-heading)
+    (let ((heading (org-get-heading t t t t)))
+      (org-todo 'done)
+      (org-edit-headline (format "+%s+" heading))))
+#+end_src
 ***** Org: GTD: Capturing
 #+begin_src elisp
   (defun my-org-capture-template-path (name)
@@ -488,7 +497,8 @@ https://github.com/magit/transient
      ("C-c o r" . my-gtd-reset-checklist)
      ("C-c o i" . my-gtd-insert-note)
      ("C-c o I" . my-gtd-insert-todo)
-     ("C-c o d" . my-org-duplicate-subtree)))
+     ("C-c o d" . my-org-duplicate-subtree)
+     ("C-c o x" . my-gtd-complete-as-wont-do)))
 #+end_src
 *** Theme
 **** Modus Themes :RTFM:

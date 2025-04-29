@@ -281,6 +281,13 @@
                          'tree)
         (org-todo "")))))
 
+(defun my-gtd-complete-as-wont-do ()
+  (interactive)
+  (my-org-require-at-heading)
+  (let ((heading (org-get-heading t t t t)))
+    (org-todo 'done)
+    (org-edit-headline (format "+%s+" heading))))
+
 (defun my-org-capture-template-path (name)
   (expand-file-name (concat "capture-templates/" name ".txt") user-emacs-directory))
 
@@ -392,7 +399,8 @@
    ("C-c o r" . my-gtd-reset-checklist)
    ("C-c o i" . my-gtd-insert-note)
    ("C-c o I" . my-gtd-insert-todo)
-   ("C-c o d" . my-org-duplicate-subtree)))
+   ("C-c o d" . my-org-duplicate-subtree)
+   ("C-c o x" . my-gtd-complete-as-wont-do)))
 
 (use-package modus-themes
   :ensure
