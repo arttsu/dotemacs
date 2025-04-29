@@ -794,6 +794,10 @@
   :hook
   (prog-mode . copilot-mode))
 
+(use-package scala-ts-mode
+  :ensure
+  :interpreter "scala")
+
 (use-package fish-mode
   :ensure)
 

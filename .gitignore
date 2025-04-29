@@ -16,3 +16,4 @@ local.el
 /emms/
 /custom.el
 /.lsp-session-v1
+/tree-sitter/

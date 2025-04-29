@@ -1058,6 +1058,14 @@ Install via npm:
     :hook
     (prog-mode . copilot-mode))
 #+end_src
+**** Scala Treesitter :RTFM:
+https://github.com/KaranAhlawat/scala-ts-mode
+***** Scala Treesitter: Use-package
+#+begin_src elisp
+  (use-package scala-ts-mode
+    :ensure
+    :interpreter "scala")
+#+end_src
 *** Major modes
 **** fish mode
 https://github.com/emacsmirror/fish-mode
