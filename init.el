@@ -220,7 +220,7 @@
       (org-up-heading-safe))))
 
 (defun my-gtd-checklist-auto-advance ()
-  (when (when (and (not org-agenda-headline-snapshot-before-repeat) (string= org-state "DONE")))
+  (when (and (or (not (boundp 'org-agenda-headline-snapshot-before-repeat)) (not org-agenda-headline-snapshot-before-repeat)) (string= org-state "DONE"))
     (let* ((current-element (org-element-at-point))
            (parent (org-element-property :parent current-element))
            (parent-style-prop (and parent (org-entry-get parent "STYLE")))
