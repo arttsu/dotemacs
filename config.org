@@ -1105,6 +1105,12 @@ https://github.com/KaranAhlawat/scala-ts-mode
     (:map scala-ts-mode-map
           ("<f5> I" . lsp-metals-build-import)))
 #+end_src
+**** GraphQL
+***** GraphQL: Use-package
+#+begin_src elisp
+  (use-package graphql-mode
+    :ensure)
+#+end_src
 *** Major modes
 **** fish mode
 https://github.com/emacsmirror/fish-mode

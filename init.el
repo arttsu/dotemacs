@@ -825,6 +825,9 @@
   (:map scala-ts-mode-map
         ("<f5> I" . lsp-metals-build-import)))
 
+(use-package graphql-mode
+  :ensure)
+
 (use-package fish-mode
   :ensure)
 
