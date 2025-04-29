@@ -1090,7 +1090,7 @@ https://github.com/KaranAhlawat/scala-ts-mode
 #+begin_src elisp
   (use-package lsp-metals
     :ensure
-    :after lsp-mode
+    :after (lsp-mode scala-ts-mode)
     :bind
     (:map scala-ts-mode-map
           ("<f5> I" . lsp-metals-build-import)))

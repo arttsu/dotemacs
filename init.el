@@ -812,7 +812,7 @@
 
 (use-package lsp-metals
   :ensure
-  :after lsp-mode
+  :after (lsp-mode scala-ts-mode)
   :bind
   (:map scala-ts-mode-map
         ("<f5> I" . lsp-metals-build-import)))
