@@ -829,6 +829,14 @@ https://github.com/minad/org-modern
     :config
     (global-org-modern-mode))
 #+end_src
+**** Babel Restclient :RTFM:
+https://github.com/alf/ob-restclient.el
+***** Babel Restclient: Use-package
+#+begin_src elisp
+  (use-package ob-restclient
+    :ensure
+    :after org)
+#+end_src
 *** Tools
 **** Vterm :RTFM:
 https://github.com/vterm/vterm

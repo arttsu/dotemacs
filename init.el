@@ -646,6 +646,10 @@
   :config
   (global-org-modern-mode))
 
+(use-package ob-restclient
+  :ensure
+  :after org)
+
 (defun my-vterm-unbind-keys ()
   (local-unset-key (kbd "<f1>"))
   (local-unset-key (kbd "<f2>"))
