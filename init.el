@@ -465,7 +465,8 @@
    ("M-g o" . consult-outline)
    ("M-s l" . consult-line)
    ("M-s k" . consult-keep-lines)
-   ("M-s f" . consult-focus-lines)))
+   ("M-s f" . consult-focus-lines)
+   ("M-s r" . consult-ripgrep)))
 
 (use-package corfu
   :ensure
@@ -688,7 +689,10 @@
 
 (use-package rg
   :when my-use-ripgrep
-  :ensure)
+  :ensure
+  :bind
+  (("M-s R" . rg)
+   ("C-x p g" . rg-project)))
 
 (defun my-gptel-auto-fill-response (begin end)
   (when (and (not (eq begin end)) (eq major-mode 'org-mode))

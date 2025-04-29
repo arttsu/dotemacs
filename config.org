@@ -592,7 +592,8 @@ https://github.com/minad/consult
      ("M-g o" . consult-outline)
      ("M-s l" . consult-line)
      ("M-s k" . consult-keep-lines)
-     ("M-s f" . consult-focus-lines)))
+     ("M-s f" . consult-focus-lines)
+     ("M-s r" . consult-ripgrep)))
 #+end_src
 **** Corfu :RTFM:
 https://github.com/minad/corfu
@@ -903,7 +904,11 @@ On Windows, install via Winget:
 #+begin_src elisp
   (use-package rg
     :when my-use-ripgrep
-    :ensure)
+    :after project
+    :ensure
+    :bind
+    (("M-s R" . rg)
+     ("C-x p g" . rg-project)))
 #+end_src
 **** GPTel :RTFM:
 https://github.com/karthink/gptel
