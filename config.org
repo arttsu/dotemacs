@@ -696,6 +696,22 @@ https://github.com/noctuid/link-hint.el
     (("C-c f" . link-hint-open-link)
      ("C-c y" . link-hint-copy-link)))
 #+end_src
+**** Embark :RTFM:
+***** Embark: Use-package
+#+begin_src elisp
+  (use-package embark
+    :ensure
+    :bind
+    (("C-." . embark-act)
+     ("M-." . embark-dwim)))
+#+end_src
+**** Embark Consult :RTFM:
+***** Embark Consult: Use-package
+#+begin_src elisp
+  (use-package embark-consult
+    :ensure
+    :after (embark consult))
+#+end_src
 *** Editing
 **** Smartparens :RTFM:
 https://github.com/Fuco1/smartparens
@@ -751,11 +767,32 @@ https://github.com/purcell/whole-line-or-region
 #+end_src
 **** Avy :RTFM:
 https://github.com/abo-abo/avy
+***** Avy: Emark actions
+#+begin_src elisp
+  (defun my-avy-embark-with-save-excursion (f)
+    (let ((point-before (point)))
+      (goto-char target-point)
+      (let ((buffer-before-embark (buffer-name (current-buffer)))
+            (point-before-embark (point)))
+        (funcall f)
+        (when (and (string= buffer-before-embark (buffer-name (current-buffer)))
+                   (= point-before-embark (point)))
+          (goto-char point-before)))))
+
+  (defun my-avy-embark-act (target-point)
+    (my-avy-embark-with-save-excursion 'embark-act))
+
+  (defun my-avy-embark-dwim (target-point)
+    (my-avy-embark-with-save-excursion 'embark-dwim))
+#+end_src
 ***** Avy: Use-package
 #+begin_src elisp
   (use-package avy
     :custom
     (avy-single-candidate-jump t)
+    :config
+    (setf (alist-get ?. avy-dispatch-alist) 'my-avy-embark-act)
+    (setf (alist-get ?\; avy-dispatch-alist) 'my-avy-embark-dwim)
     :bind
     (("C-;" . avy-goto-char-timer)
      ("M-;" . avy-pop-mark)

@@ -549,6 +549,16 @@
   (("C-c f" . link-hint-open-link)
    ("C-c y" . link-hint-copy-link)))
 
+(use-package embark
+  :ensure
+  :bind
+  (("C-." . embark-act)
+   ("M-." . embark-dwim)))
+
+(use-package embark-consult
+  :ensure
+  :after (embark consult))
+
 (use-package smartparens
   :ensure
   :config
@@ -589,9 +599,28 @@
   :bind
   (("M-/" . whole-line-or-region-comment-dwim)))
 
+(defun my-avy-embark-with-save-excursion (f)
+  (let ((point-before (point)))
+    (goto-char target-point)
+    (let ((buffer-before-embark (buffer-name (current-buffer)))
+          (point-before-embark (point)))
+      (funcall f)
+      (when (and (string= buffer-before-embark (buffer-name (current-buffer)))
+                 (= point-before-embark (point)))
+        (goto-char point-before)))))
+
+(defun my-avy-embark-act (target-point)
+  (my-avy-embark-with-save-excursion 'embark-act))
+
+(defun my-avy-embark-dwim (target-point)
+  (my-avy-embark-with-save-excursion 'embark-dwim))
+
 (use-package avy
   :custom
   (avy-single-candidate-jump t)
+  :config
+  (setf (alist-get ?. avy-dispatch-alist) 'my-avy-embark-act)
+  (setf (alist-get ?\; avy-dispatch-alist) 'my-avy-embark-dwim)
   :bind
   (("C-;" . avy-goto-char-timer)
    ("M-;" . avy-pop-mark)
@@ -689,6 +718,7 @@
 
 (use-package rg
   :when my-use-ripgrep
+  :after project
   :ensure
   :bind
   (("M-s R" . rg)
