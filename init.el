@@ -822,3 +822,6 @@
 
 (use-package yaml-mode
   :ensure)
+
+(use-package just-mode
+  :ensure)

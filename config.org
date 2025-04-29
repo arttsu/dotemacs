@@ -1109,3 +1109,10 @@ https://github.com/yoshiki/yaml-mode
   (use-package yaml-mode
     :ensure)
 #+end_src
+**** Just :RTFM:
+https://github.com/leon-barrett/just-mode.el
+***** Just: Use-package
+#+begin_src elisp
+  (use-package just-mode
+    :ensure)
+#+end_src
