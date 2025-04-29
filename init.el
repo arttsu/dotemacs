@@ -742,6 +742,12 @@
   :ensure
   :hook (elpaca-after-init . envrc-global-mode))
 
+(use-package tree-sitter
+  :ensure
+  :unless (my-windows-p)
+  :custom
+  (treesit-font-lock-level 4))
+
 (use-package lsp-mode
   :ensure
   :custom
@@ -750,6 +756,7 @@
   :hook
   (python-mode . lsp)
   (python-ts-mode . lsp)
+  (scala-ts-mode . lsp)
   :commands lsp
   :bind
   (:map
@@ -796,7 +803,15 @@
 
 (use-package scala-ts-mode
   :ensure
-  :interpreter "scala")
+  :interpreter "scala"
+  :mode "\\.\\(scala\\|sbt\\|worksheet\\.sc\\)\\'")
+
+(use-package lsp-metals
+  :ensure
+  :after lsp-mode
+  :bind
+  (:map scala-ts-mode-map
+        ("<f5> I" . lsp-metals-build-import)))
 
 (use-package fish-mode
   :ensure)

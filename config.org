@@ -983,6 +983,15 @@ mpv
     :ensure
     :hook (elpaca-after-init . envrc-global-mode))
 #+end_src
+**** Tree Sitter
+***** Tree Sitter: Use-package
+#+begin_src elisp
+  (use-package tree-sitter
+    :ensure
+    :unless (my-windows-p)
+    :custom
+    (treesit-font-lock-level 4))
+#+end_src
 **** LSP mode :RTFM:
 ***** LSP mode: Use-package
 #+begin_src elisp
@@ -994,6 +1003,7 @@ mpv
     :hook
     (python-mode . lsp)
     (python-ts-mode . lsp)
+    (scala-ts-mode . lsp)
     :commands lsp
     :bind
     (:map
@@ -1058,13 +1068,24 @@ Install via npm:
     :hook
     (prog-mode . copilot-mode))
 #+end_src
-**** Scala Treesitter :RTFM:
+**** Scala Tree Sitter :RTFM:
 https://github.com/KaranAhlawat/scala-ts-mode
-***** Scala Treesitter: Use-package
+***** Scala Tree Sitter: Use-package
 #+begin_src elisp
   (use-package scala-ts-mode
     :ensure
-    :interpreter "scala")
+    :interpreter "scala"
+    :mode "\\.\\(scala\\|sbt\\|worksheet\\.sc\\)\\'")
+#+end_src
+**** LSP metals :RTFM:
+***** LSP metals: Use-package
+#+begin_src elisp
+  (use-package lsp-metals
+    :ensure
+    :after lsp-mode
+    :bind
+    (:map scala-ts-mode-map
+          ("<f5> I" . lsp-metals-build-import)))
 #+end_src
 *** Major modes
 **** fish mode
