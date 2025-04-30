@@ -1194,6 +1194,13 @@ https://github.com/KaranAhlawat/scala-ts-mode
   (use-package graphql-mode
     :ensure)
 #+end_src
+**** Dockerfile :RTFM:
+https://github.com/spotify/dockerfile-mode
+***** Dockerfile: Use-package
+#+begin_src elisp
+  (use-package dockerfile-mode
+    :ensure)
+#+end_src
 *** Major modes
 **** fish mode
 https://github.com/emacsmirror/fish-mode

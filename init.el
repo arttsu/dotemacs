@@ -897,6 +897,9 @@
 (use-package graphql-mode
   :ensure)
 
+(use-package dockerfile-mode
+  :ensure)
+
 (use-package fish-mode
   :ensure)
 
