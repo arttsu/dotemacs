@@ -663,6 +663,23 @@
    ("M-g ;" . iy-go-to-or-up-to-continue)
    ("M-g ," . iy-go-to-or-up-to-continue-backward)))
 
+(use-package tempel
+  :ensure
+  :demand
+  :custom
+  (tempel-trigger-prefix "<")
+  :init
+  (defun my-tempel-setup-capf()
+    (setq-local completion-at-point-functions (cons 'tempel-complete completion-at-point-functions)))
+  (add-hook 'text-mode-hook 'my-tempel-setup-capf)
+  (add-hook 'conf-mode-hook 'my-tempel-setup-capf)
+  (add-hook 'prog-mode-hook 'my-tempel-setup-capf)
+  :config
+  (tempel-key "C-c t f" fun emacs-lisp-mode-map)
+  (tempel-key "C-c t t" today)
+  :bind
+  (("M-+" . tempel-insert)))
+
 (use-package org-auto-tangle
   :ensure
   :hook (org-mode . org-auto-tangle-mode))

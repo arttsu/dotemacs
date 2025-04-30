@@ -1,0 +1,23 @@
+-*- mode: emacs-lisp -*-
+
+fundamental-mode
+
+(today (format-time-string "%Y-%m-%d"))
+
+org-mode
+
+(el "#+begin_src elisp" n> r> n "#+end_src" :post (org-edit-src-code))
+(eln "#+name: " p n (i el) :post (org-edit-src-code))
+(sh "#+begin_src shell" n> r> n "#+end_src" :post (org-edit-src-code))
+
+(ex "#+begin_example" n> r> n "#+end_example")
+
+(rest "#+name: " (p "rest") n
+      "#+begin_src restclient :var base_url=" (p "preview") " " p n>
+      (p "GET") " :base_url/" q n
+      "#+end_src"
+       :post (org-edit-src-code))
+
+emacs-lisp-mode
+
+(fun "(defun " p " (" p ")" n> r> ")")
