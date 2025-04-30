@@ -702,6 +702,22 @@
   (local-unset-key (kbd "<f11>"))
   (local-unset-key (kbd "<f12>")))
 
+(defun my-vterm--new-buffer-and-switch (path buffer-name)
+  (let ((default-directory path))
+    (vterm buffer-name)
+    (switch-to-buffer buffer-name)))
+
+(defun my-vterm-project (&optional prefix)
+  (interactive "P")
+  (if-let ((project-root-path (when (project-current) (project-root (project-current)))))
+      (let ((target-buffer-name (format "*%s: vterm*" (project-name (project-current)))))
+        (if (get-buffer target-buffer-name)
+            (if prefix
+                (let ((new-buffer-name (generate-new-buffer-name target-buffer-name)))
+                  (my-vterm--new-buffer-and-switch project-root-path new-buffer-name))
+              (switch-to-buffer target-buffer-name))
+          (my-vterm--new-buffer-and-switch project-root-path target-buffer-name)))))
+
 (use-package vterm
   :when my-vterm-shell
   :ensure
@@ -712,9 +728,11 @@
   (vterm-clear-scrollback-when-clearing t)
   :config
   (add-hook 'vterm-mode-hook 'my-vterm-unbind-keys)
+  (add-to-list 'project-switch-commands '(my-vterm-project "Vterm" "V") t)
   :bind
   (("C-x v" . vterm)
-   ("C-x 4 v" . vterm-other-window)))
+   ("C-x 4 v" . vterm-other-window)
+   ("C-x p v" . my-vterm-project)))
 
 (use-package rg
   :when my-use-ripgrep
