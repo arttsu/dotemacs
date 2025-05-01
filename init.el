@@ -102,6 +102,7 @@
   (indent-tabs-mode nil)
   (visible-bell t)
   (global-auto-revert-non-file-buffers t)
+  (epg-pinentry-mode 'loopback)
   :config
   (scroll-bar-mode -1)
   (tool-bar-mode -1)
