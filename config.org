@@ -300,7 +300,8 @@ https://github.com/magit/transient
         (org-up-heading-safe))))
 
   (defun my-gtd-checklist-auto-advance ()
-    (when (and (or (not (boundp 'org-agenda-headline-snapshot-before-repeat)) (not org-agenda-headline-snapshot-before-repeat)) (string= org-state "DONE"))
+    (when (and (not (eq this-command 'org-agenda-todo))
+               (string= org-state "DONE"))
       (let* ((current-element (org-element-at-point))
              (parent (org-element-property :parent current-element))
              (parent-style-prop (and parent (org-entry-get parent "STYLE")))
