@@ -1077,6 +1077,23 @@ mpv
      ("C-c r p" . emms-pause)
      ("C-c r k" . emms-stop)))
 #+end_src
+**** Ledger :RTFM:
+https://github.com/ledger/ledger-mode
+***** Ledger: Balance for period helper
+#+begin_src elisp
+  (defun my-ledger--bal-period (period)
+    (format "%%(binary) -f %%(ledger-file) --invert --period \"%s\" -S amount bal ^Income ^Expenses" period))
+#+end_src
+***** Ledger: Use-package
+#+begin_src elisp
+  (use-package ledger-mode
+    :ensure
+    :custom
+    (ledger-default-date-format "%Y-%m-%d")
+    :config
+    (ledger-reports-add "bal-this-month" (my-ledger--bal-period "this month"))
+    (ledger-reports-add "bal-last-month" (my-ledger--bal-period "last month")))
+#+end_src
 *** Programming
 **** envrc :RTFM:
 ***** envrc: Use-package

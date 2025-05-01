@@ -820,6 +820,17 @@
    ("C-c r p" . emms-pause)
    ("C-c r k" . emms-stop)))
 
+(defun my-ledger--bal-period (period)
+  (format "%%(binary) -f %%(ledger-file) --invert --period \"%s\" -S amount bal ^Income ^Expenses" period))
+
+(use-package ledger-mode
+  :ensure
+  :custom
+  (ledger-default-date-format "%Y-%m-%d")
+  :config
+  (ledger-reports-add "bal-this-month" (my-ledger--bal-period "this month"))
+  (ledger-reports-add "bal-last-month" (my-ledger--bal-period "last month")))
+
 (use-package envrc
   :ensure
   :hook (elpaca-after-init . envrc-global-mode))
