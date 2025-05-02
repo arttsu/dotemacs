@@ -17,3 +17,5 @@ local.el
 /custom.el
 /.lsp-session-v1
 /tree-sitter/
+/.mc-lists.el
+/.dap-breakpoints
