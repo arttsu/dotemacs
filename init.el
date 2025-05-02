@@ -832,6 +832,21 @@
   (ledger-reports-add "bal-this-month" (my-ledger--bal-period "this month"))
   (ledger-reports-add "bal-last-month" (my-ledger--bal-period "last month")))
 
+(use-package kubel
+  :ensure
+  :unless (my-windows-p)
+  :after vterm
+  :config
+  (add-to-list 'vterm-tramp-shells '("kubectl" "/bin/bash"))
+  :bind
+  (("C-c K" . kubel)
+   :map kubel-mode-map
+   ("n" . next-line)
+   ("p" . previous-line)
+   ("N" . kubel-set-namespace)
+   ("v" . kubel-exec-vterm-pod)
+   ("P" . kubel-port-forward-pod)))
+
 (use-package envrc
   :ensure
   :hook (elpaca-after-init . envrc-global-mode))
