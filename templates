@@ -10,7 +10,7 @@ org-mode
 (eln "#+name: " p n (i el) :post (org-edit-src-code))
 (sh "#+begin_src shell" n> r> n "#+end_src" :post (org-edit-src-code))
 
-(ex "#+begin_example" n> r> n "#+end_example")
+(ex "#+begin_example" n> r> n "#+end_example" :post (org-edit-src-code))
 
 (rest "#+name: " (p "rest") n
       "#+begin_src restclient :var base_url=" (p "preview") " " p n>
