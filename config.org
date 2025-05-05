@@ -196,6 +196,13 @@ https://github.com/calancha/dired-du
   (use-package dired-du
     :ensure)
 #+end_src
+**** Project :RTFM:
+***** Project: Use-package
+#+begin_src elisp
+  (use-package project
+    :config
+    (add-to-list 'project-switch-commands '(project-dired "Dired" "<return>") t))
+#+end_src
 **** Magit :RTFM:
 https://magit.vc/
 ***** Magit: Use-package

@@ -146,6 +146,10 @@
 (use-package dired-du
   :ensure)
 
+(use-package project
+  :config
+  (add-to-list 'project-switch-commands '(project-dired "Dired" "<return>") t))
+
 (use-package magit
   :ensure
   :bind
