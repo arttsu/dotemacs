@@ -402,6 +402,7 @@
    ("C-c i" . my-gtd-capture-note)
    ("C-c I" . my-gtd-capture-todo)
    ("C-c a" . org-agenda)
+   ("C-c l" . org-store-link)
    :map org-mode-map
    ("C-c o s" . my-gtd-sort-checklist)
    ("C-c o S" . my-gtd-sort-todos)
