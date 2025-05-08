@@ -155,6 +155,12 @@
   :bind
   (("C-c g" . magit-file-dispatch)))
 
+(use-package flymake
+  :bind
+  (:map scala-ts-mode-map
+        ("C-c ! n" . flymake-goto-next-error)
+        ("C-c ! p" . flymake-goto-prev-error)))
+
 (use-package transient
   :ensure)
 
@@ -477,7 +483,9 @@
    ("M-s l" . consult-line)
    ("M-s k" . consult-keep-lines)
    ("M-s f" . consult-focus-lines)
-   ("M-s r" . consult-ripgrep)))
+   ("M-s r" . consult-ripgrep)
+   :map prog-mode-map
+   ("C-c ! !" . consult-flymake)))
 
 (use-package corfu
   :ensure

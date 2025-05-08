@@ -212,6 +212,15 @@ https://magit.vc/
     :bind
     (("C-c g" . magit-file-dispatch)))
 #+end_src
+**** Flymake :RTFM:
+***** Flymake: Use-package
+#+begin_src elisp
+  (use-package flymake
+    :bind
+    (:map scala-ts-mode-map
+          ("C-c ! n" . flymake-goto-next-error)
+          ("C-c ! p" . flymake-goto-prev-error)))
+#+end_src
 **** Transient :RTFM:
 https://github.com/magit/transient
 ***** Transient: Use-package
@@ -607,7 +616,9 @@ https://github.com/minad/consult
      ("M-s l" . consult-line)
      ("M-s k" . consult-keep-lines)
      ("M-s f" . consult-focus-lines)
-     ("M-s r" . consult-ripgrep)))
+     ("M-s r" . consult-ripgrep)
+     :map prog-mode-map
+     ("C-c ! !" . consult-flymake)))
 #+end_src
 **** Corfu :RTFM:
 https://github.com/minad/corfu
