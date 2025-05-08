@@ -757,6 +757,7 @@
 (use-package vterm
   :when my-vterm-shell
   :ensure
+  :demand
   :custom
   (vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
   (vterm-shell my-vterm-shell)
