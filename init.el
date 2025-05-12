@@ -876,15 +876,21 @@
   :custom
   (treesit-font-lock-level 4))
 
+(defun lsp-corfu-setup ()
+  (setq-local completion-styles '(orderless)
+              completion-category-defaults nil))
+
 (use-package lsp-mode
   :ensure
   :custom
   (lsp-keymap-prefix "<f5>")
   (lsp-pylsp-plugins-black-enabled t)
+  (lsp-completion-provider :none)
   :hook
   (python-mode . lsp)
   (python-ts-mode . lsp)
   (scala-ts-mode . lsp)
+  (lsp-mode . lsp-corfu-setup)
   :commands lsp
   :bind
   (:map

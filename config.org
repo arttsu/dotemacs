@@ -1157,6 +1157,12 @@ https://github.com/abrochard/kubel
     (treesit-font-lock-level 4))
 #+end_src
 **** LSP mode :RTFM:
+***** LSP mode: Corfu completion
+#+begin_src elisp
+  (defun lsp-corfu-setup ()
+    (setq-local completion-styles '(orderless)
+                completion-category-defaults nil))
+#+end_src
 ***** LSP mode: Use-package
 #+begin_src elisp
   (use-package lsp-mode
@@ -1164,10 +1170,12 @@ https://github.com/abrochard/kubel
     :custom
     (lsp-keymap-prefix "<f5>")
     (lsp-pylsp-plugins-black-enabled t)
+    (lsp-completion-provider :none)
     :hook
     (python-mode . lsp)
     (python-ts-mode . lsp)
     (scala-ts-mode . lsp)
+    (lsp-mode . lsp-corfu-setup)
     :commands lsp
     :bind
     (:map
