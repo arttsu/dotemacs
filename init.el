@@ -715,6 +715,7 @@
                                (?C :background "SeaGreen" :foreground "White")
                                (?D :background "MediumOrchid" :foreground "White")
                                (?E :background "Seashell3" :foreground "Black")))
+  (org-modern-table t)
   :custom-face
   (org-modern-tag ((t (:foreground "White" :background "CornflowerBlue" :slant italic))))
   :config
