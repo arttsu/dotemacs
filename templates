@@ -51,7 +51,7 @@ org-mode
     "| 22:30-23:00 | |" n
     "|-------------+-|"
     :post (progn
-            (re-search-backward "\\b8:00")
+            (re-search-backward "\\b08:00")
             (run-with-idle-timer 0 nil 'org-cycle)))
 
 (| "|-" :post (org-cycle))
