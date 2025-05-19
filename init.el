@@ -157,7 +157,7 @@
 
 (use-package flymake
   :bind
-  (:map scala-ts-mode-map
+  (:map prog-mode-map
         ("C-c ! n" . flymake-goto-next-error)
         ("C-c ! p" . flymake-goto-prev-error)))
 
