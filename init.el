@@ -889,7 +889,6 @@
   :hook
   (python-mode . lsp)
   (python-ts-mode . lsp)
-  (scala-ts-mode . lsp)
   (lsp-mode . lsp-corfu-setup)
   :commands lsp
   :bind
@@ -938,7 +937,8 @@
 (use-package scala-ts-mode
   :ensure
   :interpreter "scala"
-  :mode "\\.\\(scala\\|sbt\\|worksheet\\.sc\\)\\'")
+  :mode "\\.\\(scala\\|sbt\\|worksheet\\.sc\\)\\'"
+  :hook (scala-ts-mode . lsp))
 
 (use-package lsp-metals
   :ensure
