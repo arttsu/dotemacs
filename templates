@@ -6,9 +6,11 @@ fundamental-mode
 
 org-mode
 
-(el "#+begin_src elisp" n> r> n "#+end_src" :post (org-edit-src-code))
-(eln "#+name: " p n (i el) :post (org-edit-src-code))
+(el-bare "#+begin_src elisp" n> r> n "#+end_src")
+(el (i el-bare) :post (org-edit-src-code))
+(eln "#+name: " p n (i el-bare) :post (org-edit-src-code))
 (sh "#+begin_src shell" n> r> n "#+end_src" :post (org-edit-src-code))
+(src "#+begin_src " p n> r> n "#+end_src" :post (org-edit-src-code))
 
 (ex "#+begin_example" n> r> n "#+end_example" :post (org-edit-src-code))
 

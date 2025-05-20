@@ -682,6 +682,13 @@
    ("M-g ;" . iy-go-to-or-up-to-continue)
    ("M-g ," . iy-go-to-or-up-to-continue-backward)))
 
+(defun tempel-include (elt)
+  (when (eq (car-safe elt) 'i)
+    (if-let (template (alist-get (cadr elt) (tempel--templates)))
+        (cons 'l template)
+      (message "Template %s not found" (cadr elt))
+      nil)))
+
 (use-package tempel
   :ensure
   :demand
@@ -696,6 +703,7 @@
   :config
   (tempel-key "C-c t f" fun emacs-lisp-mode-map)
   (tempel-key "C-c t t" today)
+  (add-to-list 'tempel-user-elements #'tempel-include)
   :bind
   (("M-+" . tempel-insert)))
 
