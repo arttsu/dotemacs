@@ -403,6 +403,9 @@
   (add-hook 'org-after-todo-state-change-hook 'my-org-remove-priority-when-done)
   (add-hook 'org-after-todo-state-change-hook 'my-gtd-checklist-auto-advance)
   (add-hook 'org-after-refile-insert-hook 'my-gtd-sort-checklist)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((shell . t)))
   :bind
   (("C-c c" . org-capture)
    ("C-c i" . my-gtd-capture-note)
