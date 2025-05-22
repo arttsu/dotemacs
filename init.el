@@ -744,6 +744,7 @@
   :config
   (org-mem-updater-mode)
   (org-node-cache-mode)
+  (org-node-backlink-mode)
   :bind
   (("M-s M-f" . org-node-find)
    ("M-s M-i" . org-node-insert-link)))
