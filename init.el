@@ -419,7 +419,8 @@
    ("C-c o i" . my-gtd-insert-note)
    ("C-c o I" . my-gtd-insert-todo)
    ("C-c o d" . my-org-duplicate-subtree)
-   ("C-c o x" . my-gtd-complete-as-wont-do)))
+   ("C-c o x" . my-gtd-complete-as-wont-do)
+   ("C-c o C-i"  . org-id-get-create)))
 
 (use-package modus-themes
   :ensure
