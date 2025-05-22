@@ -185,7 +185,10 @@
   (if-let* ((id (org-id-get nil nil nil t)))
       (let ((dir (org-attach-dir-from-id id)))
         (if (file-directory-p dir)
-            (let* ((attachments (directory-files dir nil nil t))
+            (let* ((attachments (directory-files dir t nil t))
+                   (attachments (mapcar (lambda (f) (cons f (file-attribute-modification-time (file-attributes f)))) attachments))
+                   (attachments (mapcar #'car (sort attachments (lambda (a b) (time-less-p (cdr a) (cdr b))))))
+                   (attachments (mapcar #'file-name-nondirectory attachments))
                    (attachments (cl-remove-if (lambda (f) (member f '("." ".."))) attachments)))
               ;; Remove the existing drawer
               (save-excursion
@@ -197,7 +200,8 @@
               (org-insert-drawer nil "ATTACHMENTS")
               (delete-char 1) ;; Remove the newline within the drawer
               (dolist (file attachments)
-                (insert (format "- [[attachment:%s]]\n" file))))
+                (insert (format "- [[attachment:%s]]\n" file)))
+              (org-back-to-heading))
           (message "No attachments directory.")))
     (message "No Org ID.")))
 
