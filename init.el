@@ -736,6 +736,18 @@
   :ensure
   :after org)
 
+(use-package org-node
+  :ensure
+  :custom
+  (org-mem-do-sync-with-org-id t)
+  (org-mem-watch-dirs (list my-org-personal-dir my-org-open-dir))
+  :config
+  (org-mem-updater-mode)
+  (org-node-cache-mode)
+  :bind
+  (("M-s M-f" . org-node-find)
+   ("M-s M-i" . org-node-insert-link)))
+
 (defun my-vterm-unbind-keys ()
   (local-unset-key (kbd "<f1>"))
   (local-unset-key (kbd "<f2>"))
