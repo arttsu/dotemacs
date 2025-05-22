@@ -253,6 +253,30 @@ https://github.com/magit/transient
     (org-paste-subtree)
     (org-delete-property "ID"))
 #+end_src
+****** Org: Write attachments drawer
+#+begin_src elisp
+  (defun my-org-attach-write-drawer ()
+    (interactive)
+    (my-org-require-at-heading)
+    (if-let* ((id (org-id-get nil nil nil t)))
+        (let ((dir (org-attach-dir-from-id id)))
+          (if (file-directory-p dir)
+              (let* ((attachments (directory-files dir nil nil t))
+                     (attachments (cl-remove-if (lambda (f) (member f '("." ".."))) attachments)))
+                ;; Remove the existing drawer
+                (save-excursion
+                  (when (re-search-forward "^ *:ATTACHMENTS:" (org-entry-end-position) t)
+                    (org-mark-element)
+                    (delete-region (region-beginning) (region-end))
+                    (delete-blank-lines)))
+                (org-end-of-meta-data)
+                (org-insert-drawer nil "ATTACHMENTS")
+                (delete-char 1) ;; Remove the newline within the drawer
+                (dolist (file attachments)
+                  (insert (format "- [[attachment:%s]]\n" file))))
+            (message "No attachments directory.")))
+      (message "No Org ID.")))
+#+end_src
 ***** Org: GTD: Files
 #+begin_src elisp
   (defconst my-org-personal-dir (expand-file-name "~/org-personal"))
@@ -524,7 +548,8 @@ https://github.com/magit/transient
      ("C-c o I" . my-gtd-insert-todo)
      ("C-c o d" . my-org-duplicate-subtree)
      ("C-c o x" . my-gtd-complete-as-wont-do)
-     ("C-c o C-i"  . org-id-get-create)))
+     ("C-c o C-i"  . org-id-get-create)
+     ("C-c o a" . my-org-attach-write-drawer)))
 #+end_src
 *** Theme
 **** Modus Themes :RTFM:
@@ -1101,6 +1126,7 @@ Create a =.authinfo= file in the home directory, with:
 #+begin_src elisp
   (use-package gptel
     :ensure
+    :mode ("\\.gptel\\'" . my-gptel-mode)
     :custom
     (gptel-model 'gpt-4o)
     (gptel-default-mode 'org-mode)

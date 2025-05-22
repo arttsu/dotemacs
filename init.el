@@ -179,6 +179,28 @@
   (org-paste-subtree)
   (org-delete-property "ID"))
 
+(defun my-org-attach-write-drawer ()
+  (interactive)
+  (my-org-require-at-heading)
+  (if-let* ((id (org-id-get nil nil nil t)))
+      (let ((dir (org-attach-dir-from-id id)))
+        (if (file-directory-p dir)
+            (let* ((attachments (directory-files dir nil nil t))
+                   (attachments (cl-remove-if (lambda (f) (member f '("." ".."))) attachments)))
+              ;; Remove the existing drawer
+              (save-excursion
+                (when (re-search-forward "^ *:ATTACHMENTS:" (org-entry-end-position) t)
+                  (org-mark-element)
+                  (delete-region (region-beginning) (region-end))
+                  (delete-blank-lines)))
+              (org-end-of-meta-data)
+              (org-insert-drawer nil "ATTACHMENTS")
+              (delete-char 1) ;; Remove the newline within the drawer
+              (dolist (file attachments)
+                (insert (format "- [[attachment:%s]]\n" file))))
+          (message "No attachments directory.")))
+    (message "No Org ID.")))
+
 (defconst my-org-personal-dir (expand-file-name "~/org-personal"))
 (defconst my-gtd-personal-dir (expand-file-name "gtd" my-org-personal-dir))
 (defconst my-gtd-personal-inbox (expand-file-name "personal-inbox.org" my-gtd-personal-dir))
@@ -420,7 +442,8 @@
    ("C-c o I" . my-gtd-insert-todo)
    ("C-c o d" . my-org-duplicate-subtree)
    ("C-c o x" . my-gtd-complete-as-wont-do)
-   ("C-c o C-i"  . org-id-get-create)))
+   ("C-c o C-i"  . org-id-get-create)
+   ("C-c o a" . my-org-attach-write-drawer)))
 
 (use-package modus-themes
   :ensure
@@ -838,6 +861,7 @@
 
 (use-package gptel
   :ensure
+  :mode ("\\.gptel\\'" . my-gptel-mode)
   :custom
   (gptel-model 'gpt-4o)
   (gptel-default-mode 'org-mode)
