@@ -866,7 +866,7 @@
 
 (use-package gptel
   :ensure
-  :mode ("\\.gptel\\'" . my-gptel-mode)
+  :demand
   :custom
   (gptel-model 'gpt-4o)
   (gptel-default-mode 'org-mode)
@@ -874,6 +874,7 @@
   (add-hook 'gptel-mode-hook 'toggle-truncate-lines)
   (add-hook 'gptel-post-response-functions 'my-gptel-auto-fill-response)
   (add-hook 'my-gptel-mode-hook 'my-gptel-mode-setup)
+  (add-to-list 'auto-mode-alist '("\\.gptel\\'" . my-gptel-mode))
   :bind
   (("C-c SPC" . gptel)
    :map gptel-mode-map
