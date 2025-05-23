@@ -399,6 +399,7 @@
   :ensure
   :custom
   (org-startup-folded 'showall)
+  (org-hide-drawer-startup nil)
   (org-startup-indented t)
   (org-startup-with-inline-images t)
   (org-confirm-babel-evaluate nil)
