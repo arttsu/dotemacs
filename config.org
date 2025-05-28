@@ -34,6 +34,8 @@
   (setq my-use-ripgrep nil)
 
   (setq my-use-copilot nil)
+
+  (setq my-use-aider nil)
 #+end_src
 **** Local config: Load
 #+begin_src elisp
@@ -1334,6 +1336,17 @@ https://github.com/spotify/dockerfile-mode
 #+begin_src elisp
   (use-package dockerfile-mode
     :ensure)
+#+end_src
+**** aider
+https://github.com/tninja/aider.el
+
+#+begin_src elisp
+  (use-package aider
+    :ensure
+    :when my-use-aider
+    :config
+    (setq aider-args '("--model" "litellm/gemini-25-pro"))
+    (global-set-key (kbd "C-c b") 'aider-transient-menu))
 #+end_src
 *** Major modes
 **** fish mode

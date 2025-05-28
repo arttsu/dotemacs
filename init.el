@@ -18,6 +18,8 @@
 
 (setq my-use-copilot nil)
 
+(setq my-use-aider nil)
+
 (let ((path-to-local-config (expand-file-name "local.el" user-emacs-directory)))
   (if (file-exists-p path-to-local-config)
       (progn
@@ -1007,6 +1009,13 @@
 
 (use-package dockerfile-mode
   :ensure)
+
+(use-package aider
+  :ensure
+  :when my-use-aider
+  :config
+  (setq aider-args '("--model" "litellm/gemini-25-pro"))
+  (global-set-key (kbd "C-c b") 'aider-transient-menu))
 
 (use-package fish-mode
   :ensure)
