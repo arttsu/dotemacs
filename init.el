@@ -20,6 +20,8 @@
 
 (setq my-use-aider nil)
 
+(setq my-use-jinx nil)
+
 (let ((path-to-local-config (expand-file-name "local.el" user-emacs-directory)))
   (if (file-exists-p path-to-local-config)
       (progn
@@ -486,6 +488,11 @@
   :demand
   :config
   (vertico-mode)
+  (vertico-multiform-mode)
+  (add-to-list 'vertico-multiform-categories
+               '(jinx grid (vertico-grid-annotate . 20)))
+  (add-to-list 'vertico-multiform-commands
+               '(consult-ripgrep buffer indexed))
   :bind
   (:map vertico-map
         ("C-;" . vertico-quick-insert)))
@@ -922,6 +929,15 @@
    ("N" . kubel-set-namespace)
    ("v" . kubel-exec-vterm-pod)
    ("P" . kubel-port-forward-pod)))
+
+(use-package jinx
+  :ensure
+  :when my-use-jinx
+  :custom (jinx-languages "en_US de_DE ru")
+  :hook (emacs-startup . global-jinx-mode)
+  :bind
+  (("M-$" . jinx-correct)
+   ("C-M-$" . jinx-languages)))
 
 (use-package envrc
   :ensure

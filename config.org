@@ -36,6 +36,8 @@
   (setq my-use-copilot nil)
 
   (setq my-use-aider nil)
+
+  (setq my-use-jinx nil)
 #+end_src
 **** Local config: Load
 #+begin_src elisp
@@ -610,6 +612,11 @@ https://github.com/minad/vertico
     :demand
     :config
     (vertico-mode)
+    (vertico-multiform-mode)
+    (add-to-list 'vertico-multiform-categories
+                 '(jinx grid (vertico-grid-annotate . 20)))
+    (add-to-list 'vertico-multiform-commands
+                 '(consult-ripgrep buffer indexed))
     :bind
     (:map vertico-map
           ("C-;" . vertico-quick-insert)))
@@ -828,7 +835,7 @@ https://github.com/purcell/whole-line-or-region
 #+end_src
 **** Avy :RTFM:
 https://github.com/abo-abo/avy
-***** Avy: Emark actions
+***** Avy: Embark actions
 #+begin_src elisp
   (defun my-avy-embark-with-save-excursion (f)
     (let ((point-before (point)))
@@ -894,7 +901,7 @@ https://github.com/magnars/expand-region.el
     :bind
     (("C-=" . er/expand-region)))
 #+end_src
-**** Go ot Char :RTFM:
+**** Go to Char :RTFM:
 https://github.com/doitian/iy-go-to-char
 ***** Go to Char: Use-package
 #+begin_src elisp
@@ -1203,6 +1210,19 @@ https://github.com/abrochard/kubel
      ("N" . kubel-set-namespace)
      ("v" . kubel-exec-vterm-pod)
      ("P" . kubel-port-forward-pod)))
+#+end_src
+**** Jinx
+https://github.com/minad/jinx
+***** Jinx: Use-package
+#+begin_src elisp
+  (use-package jinx
+    :ensure
+    :when my-use-jinx
+    :custom (jinx-languages "en_US de_DE ru")
+    :hook (emacs-startup . global-jinx-mode)
+    :bind
+    (("M-$" . jinx-correct)
+     ("C-M-$" . jinx-languages)))
 #+end_src
 *** Programming
 **** envrc :RTFM:
