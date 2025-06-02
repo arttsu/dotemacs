@@ -1014,7 +1014,7 @@
   :ensure
   :when my-use-aider
   :config
-  (setq aider-args '("--model" "litellm/gemini-25-pro"))
+  (setq aider-args '("--model" "litellm_proxy/gemini-25-pro"))
   (global-set-key (kbd "C-c b") 'aider-transient-menu))
 
 (use-package fish-mode
