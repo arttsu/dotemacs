@@ -744,6 +744,7 @@
   :config
   (tempel-key "C-c t f" fun emacs-lisp-mode-map)
   (tempel-key "C-c t t" today)
+  (tempel-key "C-c t T" now)
   (add-to-list 'tempel-user-elements #'tempel-include)
   :bind
   (("M-+" . tempel-insert)))
