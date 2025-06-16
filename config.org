@@ -542,7 +542,7 @@ https://github.com/magit/transient
     (add-hook 'org-after-refile-insert-hook 'my-gtd-sort-checklist)
     (org-babel-do-load-languages
      'org-babel-load-languages
-     '((shell . t)))
+     '((shell . t) (clojure . t)))
     :bind
     (("C-c c" . org-capture)
      ("C-c i" . my-gtd-capture-note)
@@ -1368,6 +1368,11 @@ https://github.com/tninja/aider.el
     :config
     (setq aider-args '("--model" "litellm_proxy/gemini-25-pro"))
     (global-set-key (kbd "C-c b") 'aider-transient-menu))
+#+end_src
+**** Clojure
+#+begin_src elisp
+  (use-package clojure-mode
+    :ensure)
 #+end_src
 *** Major modes
 **** fish mode

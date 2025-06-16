@@ -436,7 +436,7 @@
   (add-hook 'org-after-refile-insert-hook 'my-gtd-sort-checklist)
   (org-babel-do-load-languages
    'org-babel-load-languages
-   '((shell . t)))
+   '((shell . t) (clojure . t)))
   :bind
   (("C-c c" . org-capture)
    ("C-c i" . my-gtd-capture-note)
@@ -1033,6 +1033,9 @@
   :config
   (setq aider-args '("--model" "litellm_proxy/gemini-25-pro"))
   (global-set-key (kbd "C-c b") 'aider-transient-menu))
+
+(use-package clojure-mode
+  :ensure)
 
 (use-package fish-mode
   :ensure)
