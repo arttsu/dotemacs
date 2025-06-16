@@ -1374,6 +1374,13 @@ https://github.com/tninja/aider.el
   (use-package clojure-mode
     :ensure)
 #+end_src
+**** CIDER
+#+begin_src elisp
+  (use-package cider
+    :ensure
+    :custom
+    (cider-jack-in-default 'babashka))
+#+end_src
 *** Major modes
 **** fish mode
 https://github.com/emacsmirror/fish-mode

@@ -1037,6 +1037,11 @@
 (use-package clojure-mode
   :ensure)
 
+(use-package cider
+  :ensure
+  :custom
+  (cider-jack-in-default 'babashka))
+
 (use-package fish-mode
   :ensure)
 
