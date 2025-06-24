@@ -618,6 +618,7 @@ https://github.com/magit/transient
      ("C-c I" . my-gtd-capture-todo)
      ("C-c a" . org-agenda)
      ("C-c l" . org-store-link)
+     ("C-c o p" . my-gtd-create-project)
      :map org-mode-map
      ("C-c o s" . my-gtd-sort-checklist)
      ("C-c o S" . my-gtd-sort-todos)
@@ -627,8 +628,7 @@ https://github.com/magit/transient
      ("C-c o d" . my-org-duplicate-subtree)
      ("C-c o x" . my-gtd-complete-as-wont-do)
      ("C-c o C-i"  . org-id-get-create)
-     ("C-c o a" . my-org-attach-write-drawer)
-     ("C-c o p" . my-gtd-create-project)))
+     ("C-c o a" . my-org-attach-write-drawer)))
 #+end_src
 *** Theme
 **** Modus Themes :RTFM:
