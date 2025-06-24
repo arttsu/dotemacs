@@ -330,6 +330,73 @@
     (org-todo 'done)
     (org-edit-headline (format "+%s+" heading))))
 
+(defun my-gtd-create-project ()
+  "Create a new GTD project file from template with interactive prompts."
+  (interactive)
+  (let* ((context-options '("Personal" "Open"))
+         (selected-context (completing-read "Context: "
+                                            context-options
+                                            nil t nil nil "Personal"))
+         (projects-dir (pcase selected-context
+                         ("Personal" my-gtd-personal-projects)
+                         ("Open" my-gtd-open-projects)
+                         (_ (error "Invalid context selected: %s" selected-context))))
+
+         ;; Get mandatory title with validation
+         (title (let ((input ""))
+                  (while (string-empty-p (string-trim input))
+                    (setq input (read-string "Project Title: ")))
+                  input))
+
+         ;; Get mandatory category with validation
+         (category (let ((input ""))
+                     (while (string-empty-p (string-trim input))
+                       (setq input (read-string "Category: ")))
+                     input))
+
+         ;; Get optional priority with character input
+         (priority (let ((char (read-char "Priority [A-E] (or RET for default '#D'): ")))
+                     (cond
+                      ((= char ?\r) "[#D]")  ; Return key
+                      ((and (>= char ?a) (<= char ?e)) (format "[#%c]" (upcase char)))
+                      ((and (>= char ?A) (<= char ?E)) (format "[#%c]" char))
+                      (t "[#D]"))))  ; Default for any other input
+
+         ;; Generate automatic data
+         (timestamp (format-time-string "[%Y-%m-%d %a]"))
+         (file-timestamp (format-time-string "%Y-%m-%d"))
+         (slug (replace-regexp-in-string
+                "[^a-z0-9-]" ""
+                (replace-regexp-in-string
+                 "\\s-+" "-"
+                 (downcase title))))
+         (filename (concat file-timestamp "-" slug ".org"))
+         (full-file-path (file-name-concat projects-dir filename))
+         (org-id (org-id-new))
+
+         ;; Read template from file and populate with data
+         (template-content (with-temp-buffer
+                             (insert-file-contents (my-org-capture-template-path "gtd-project"))
+                             (buffer-string)))
+         (template (format template-content priority title org-id category timestamp)))
+
+    ;; Check for file existence and write file
+    (when (and (file-exists-p full-file-path)
+               (not (y-or-n-p (format "File %s exists. Overwrite? " filename))))
+      (user-error "File creation cancelled"))
+
+    ;; Write template to file
+    (write-region template nil full-file-path)
+
+    ;; Open file and register org-id location
+    (find-file full-file-path)
+    (goto-char (point-min))
+    (when (re-search-forward ":ID:" nil t)
+      (org-id-get-create))  ; This registers the ID location
+
+    ;; Final confirmation
+    (message "Project file created: %s" full-file-path)))
+
 (defun my-org-capture-template-path (name)
   (expand-file-name (concat "capture-templates/" name ".txt") user-emacs-directory))
 
