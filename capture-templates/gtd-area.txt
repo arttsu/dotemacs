@@ -1,0 +1,12 @@
+* %s :AREA:
+:PROPERTIES:
+:ID:       %s
+:CATEGORY: %s
+:END:
+CREATED: %s \\
+** Resources
+** TODOs
+:PROPERTIES:
+:STYLE:    checklist
+:END:
+** Log

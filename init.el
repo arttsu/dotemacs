@@ -397,6 +397,64 @@
     ;; Final confirmation
     (message "Project file created: %s" full-file-path)))
 
+(defun my-gtd-create-area ()
+  "Create a new GTD area file from template with interactive prompts."
+  (interactive)
+  (let* ((context-options '("Personal" "Open"))
+         (selected-context (completing-read "Context: "
+                                            context-options
+                                            nil t nil nil "Personal"))
+         (areas-dir (pcase selected-context
+                      ("Personal" my-gtd-personal-areas)
+                      ("Open" my-gtd-open-areas)
+                      (_ (error "Invalid context selected: %s" selected-context))))
+
+         ;; Get mandatory title with validation
+         (title (let ((input ""))
+                  (while (string-empty-p (string-trim input))
+                    (setq input (read-string "Area Title: ")))
+                  input))
+
+         ;; Get mandatory category with validation
+         (category (let ((input ""))
+                     (while (string-empty-p (string-trim input))
+                       (setq input (read-string "Category: ")))
+                     input))
+
+         ;; Generate automatic data
+         (timestamp (format-time-string "[%Y-%m-%d %a]"))
+         (slug (replace-regexp-in-string
+                "[^a-z0-9-]" ""
+                (replace-regexp-in-string
+                 "\\s-+" "-"
+                 (downcase title))))
+         (filename (concat slug ".org"))
+         (full-file-path (file-name-concat areas-dir filename))
+         (org-id (org-id-new))
+
+         ;; Read template from file and populate with data
+         (template-content (with-temp-buffer
+                             (insert-file-contents (my-org-capture-template-path "gtd-area"))
+                             (buffer-string)))
+         (template (format template-content title org-id category timestamp)))
+
+    ;; Check for file existence and write file
+    (when (and (file-exists-p full-file-path)
+               (not (y-or-n-p (format "File %s exists. Overwrite? " filename))))
+      (user-error "File creation cancelled"))
+
+    ;; Write template to file
+    (write-region template nil full-file-path)
+
+    ;; Open file and register org-id location
+    (find-file full-file-path)
+    (goto-char (point-min))
+    (when (re-search-forward ":ID:" nil t)
+      (org-id-get-create))  ; This registers the ID location
+
+    ;; Final confirmation
+    (message "Area file created: %s" full-file-path)))
+
 (defun my-org-capture-template-path (name)
   (expand-file-name (concat "capture-templates/" name ".txt") user-emacs-directory))
 
@@ -511,6 +569,7 @@
    ("C-c a" . org-agenda)
    ("C-c l" . org-store-link)
    ("C-c o p" . my-gtd-create-project)
+   ("C-c o A" . my-gtd-create-area)
    :map org-mode-map
    ("C-c o s" . my-gtd-sort-checklist)
    ("C-c o S" . my-gtd-sort-todos)
