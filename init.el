@@ -915,6 +915,10 @@
   (("M-s M-f" . org-node-find)
    ("M-s M-i" . org-node-insert-link)))
 
+(use-package ox-gfm
+  :ensure
+  :after org)
+
 (defun my-vterm-unbind-keys ()
   (local-unset-key (kbd "<f1>"))
   (local-unset-key (kbd "<f2>"))

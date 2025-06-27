@@ -1134,6 +1134,14 @@ https://github.com/meedstrom/org-node
     (("M-s M-f" . org-node-find)
      ("M-s M-i" . org-node-insert-link)))
 #+end_src
+**** GitHub-flavored Markdown export
+https://github.com/larstvei/ox-gfm
+***** GitHub-flavored Markdown export: Use-package
+#+begin_src elisp
+  (use-package ox-gfm
+    :ensure
+    :after org)
+#+end_src
 *** Tools
 **** Vterm :RTFM:
 https://github.com/vterm/vterm
