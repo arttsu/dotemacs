@@ -1457,6 +1457,15 @@ On Fedora:
      ("C-x 4 v" . vterm-other-window)
      ("C-x p v" . my-vterm-project)))
 #+end_src
+**** eat
+https://codeberg.org/akib/emacs-eat
+
+#+begin_src elisp
+  (use-package eat
+    :ensure
+    :custom
+    (eat-kill-buffer-on-exit t))
+#+end_src
 **** Ripgrep :RTFM:
 https://github.com/dajva/rg.el
 ***** Ripgrep: Dependencies

@@ -1212,6 +1212,11 @@ With prefix argument, or when no AREA link exists, prompt to select an area file
    ("C-x 4 v" . vterm-other-window)
    ("C-x p v" . my-vterm-project)))
 
+(use-package eat
+  :ensure
+  :custom
+  (eat-kill-buffer-on-exit t))
+
 (use-package rg
   :when my-use-ripgrep
   :after project
