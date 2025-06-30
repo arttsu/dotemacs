@@ -523,6 +523,105 @@
       ;; Final confirmation
       (message "Project archived to %s" new-file-path))))
 
+(defun my-gtd-copy-heading-to-area (&optional prefix)
+  "Copy the current heading's subtree to its linked area file and tag as :COPIED:.
+With prefix argument, or when no AREA link exists, prompt to select an area file."
+  (interactive "P")
+  (save-excursion
+    ;; Step 1: Initial Context Validation
+    (unless (org-at-heading-p)
+      (error "Not at a heading"))
+
+    (when (member "COPIED" (org-get-tags))
+      (error "Heading has already been copied"))
+
+    ;; Step 2: Determine if we need to select an area
+    (let* ((area-link nil)
+           (project-title nil)
+           (project-id nil)
+           (area-file-path nil)
+           (current-file-path (buffer-file-name))
+           (current-dir (file-name-directory current-file-path))
+           (is-personal-project (string-match-p "/org-personal/" current-file-path))
+           (is-open-project (string-match-p "/org-open/" current-file-path))
+           (areas-dir (cond (is-personal-project my-gtd-personal-areas)
+                            (is-open-project my-gtd-open-areas)
+                            (t (error "Project file is not in a recognized GTD directory"))))
+           (force-select-area prefix))
+
+      ;; Try to find existing AREA link if not forcing selection
+      (unless force-select-area
+        (save-excursion
+          (goto-char (point-min))
+          (when (re-search-forward "^AREA: *\\(\\[\\[id:[^]]+\\]\\(?:\\[.*?\\]\\)?\\]\\)" nil t)
+            (setq area-link (match-string 1)))))
+
+      ;; If no area link found or prefix used, prompt for area selection
+      (when (or force-select-area (not area-link))
+        (let* ((area-files (directory-files areas-dir t "\\.org$"))
+               (area-choices (mapcar (lambda (file)
+                                       (cons (file-name-base file) file))
+                                     area-files))
+               (selected-area (completing-read "Select area: " area-choices nil t)))
+          (setq area-file-path (cdr (assoc selected-area area-choices)))))
+
+      ;; Find Project Info
+      (save-excursion
+        (goto-char (point-min))
+        (setq project-title (org-get-heading t t t t))  ; Remove priority and tags
+        (setq project-id (org-id-get))
+        (unless project-id
+          (error "Project's top-level heading has no ID")))
+
+      ;; Step 3: Copy Subtree and Prepare for Destination
+      (org-copy-subtree 1)
+
+      ;; If we have an area-link, resolve it to file path
+      (when (and area-link (not area-file-path))
+        (let ((id-match (string-match "id:\\([^]]+\\)" area-link)))
+          (unless id-match
+            (error "Could not extract ID from area link: %s" area-link))
+          (let ((area-id (match-string 1 area-link)))
+            (setq area-file-path (org-id-find-id-file area-id))
+            (unless area-file-path
+              (error "Could not find file for area link: %s" area-link)))))
+
+      ;; Step 4: Modify the Area File
+      (with-current-buffer (find-file-noselect area-file-path)
+        (goto-char (point-min))
+        (if (re-search-forward "^\\* Moved project items$" nil t)
+            ;; Heading found - move to end of its subtree
+            (org-end-of-subtree t)
+          ;; Heading not found - create it at end of buffer
+          (goto-char (point-max))
+          (unless (bolp) (insert "\n"))
+          (insert "* Moved project items\n"))
+
+        ;; Insert spacing and paste the subtree
+        (insert "\n")
+        (yank)
+
+        ;; Move to the pasted heading and add traceability link
+        (org-back-to-heading t)
+        (org-end-of-meta-data t)
+        (insert (format "COPIED_FROM: [[id:%s][%s]]\n" project-id project-title))
+
+        ;; Save the area file
+        (save-buffer))
+
+      ;; Step 5: Finalize the Source Project File
+      (org-set-tags (append (org-get-tags) '("COPIED")))
+
+      ;; Mark TODO as DONE if it's not already done
+      (let ((todo-state (org-get-todo-state)))
+        (when (and todo-state (not (member todo-state org-done-keywords)))
+          (org-todo 'done)))
+
+      (save-buffer)
+
+      ;; Step 6: Display Confirmation
+      (message "Copied heading to '%s' and tagged as :COPIED:" (file-name-nondirectory area-file-path)))))
+
 (defun my-org-capture-template-path (name)
   (expand-file-name (concat "capture-templates/" name ".txt") user-emacs-directory))
 
@@ -647,6 +746,7 @@
    ("C-c o d" . my-org-duplicate-subtree)
    ("C-c o x" . my-gtd-complete-as-wont-do)
    ("C-c o Z" . my-gtd-archive-project)
+   ("C-c o c" . my-gtd-copy-heading-to-area)
    ("C-c o C-i"  . org-id-get-create)
    ("C-c o a" . my-org-attach-write-drawer)))
 

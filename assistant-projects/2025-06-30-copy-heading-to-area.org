@@ -1,0 +1,75 @@
+#+TITLE: Implementation Specification: my-gtd-copy-heading-to-area (Single Function)
+#+AUTHOR: User & Assistant
+
+This document outlines the step-by-step implementation plan for a new Emacs Lisp function, =my-gtd-copy-heading-to-area=. All logic will be contained within this single function.
+
+* Function: my-gtd-copy-heading-to-area
+
+** Purpose
+Provide a single interactive command that copies the current heading's subtree from a project file to its linked area file. The function will find the area file via an =AREA:= link, paste the content under a specific heading, and tag the original heading as =:COPIED:=.
+
+** High-Level Structure
+The function should be defined as interactive. It must wrap its entire logic in a =save-excursion= block to ensure the user's cursor position is restored upon completion or error. A =let*= block should be used to sequentially define variables and perform checks.
+
+** Implementation Steps
+
+*** 1. Initial Context Validation
+The first actions inside the function must be to validate the environment.
+- Check if the cursor is at a heading using =(org-at-heading-p)=. If not, signal an error with the message "Not at a heading."
+- Check if the current heading already has the =:COPIED:= tag. This can be done by checking if "COPIED" is a member of the list returned by =(org-get-tags)=. If it is, signal an error with the message "Heading has already been copied."
+
+*** 2. Retrieve Area Link and Project Information
+Use a =let*= block to find and store critical information. The operations should be performed in a =save-excursion= so they don't move the main cursor.
+- *Find Area Link*:
+  - Go to the beginning of the buffer.
+  - Search forward for a line matching the regular expression ="^AREA: *\\(\\[\\[id:[^]]+\\]\\]\\)"=.
+  - If a match is found, store the content of the first capturing group (the link itself) in a variable, e.g., =area-link=.
+  - If no match is found, signal an error: "No 'AREA: [[id:...]]' link found in this project."
+- *Find Project Info*:
+  - Go to the first heading of the buffer.
+  - Get its title using =(org-get-heading t t)= and store it in a variable, e.g., =project-title=.
+  - Get its ID using =(org-id-get)= and store it in a variable, e.g., =project-id=.
+  - If =project-id= is nil, signal an error: "Project's top-level heading has no ID."
+
+*** 3. Copy Subtree and Prepare for Destination
+- Copy the entire subtree at the user's current position to the kill ring. Use =(org-copy-subtree 1)= for this.
+- Resolve the =area-link= to a file path. Use =(org-id-find-id-file)= with the ID extracted from =area-link=. Store this path in a variable, e.g., =area-file-path=.
+- If =area-file-path= is nil (meaning the link is broken or points to a non-existent entry), signal an error, e.g., "Could not find file for area link: [link]".
+
+*** 4. Modify the Area File
+Perform all operations on the area file within a =with-current-buffer= block, operating on the buffer returned by =(find-file-noselect area-file-path)=. This ensures the operations happen in the background.
+- Inside the area file's buffer:
+  - Go to the beginning of the buffer.
+  - Search for a top-level heading with the exact title ="Moved project items"=.
+  - *If the heading is found*: Move the cursor to the end of its subtree to prepare for insertion.
+  - *If the heading is not found*: Go to the end of the buffer, insert a newline if necessary, and insert the new heading: ="* Moved project items\n"=.
+  - Insert a newline for spacing, then paste the copied subtree from the kill ring using =(yank)=.
+  - Move the cursor to the heading that was just pasted.
+  - Move to the end of its property drawer/metadata section.
+  - Insert the traceability link on a new line, formatted as a string: ="COPIED_FROM: [[id:%s][%s]]\n"=, using the stored =project-id= and =project-title=.
+  - Save the area file buffer using =(save-buffer)=.
+
+*** 5. Finalize the Source Project File
+After the =with-current-buffer= block has executed successfully:
+- Append the =:COPIED:= tag to the original heading. This should be done carefully to preserve existing tags.
+- Save the current (project) buffer.
+
+*** 6. Display Confirmation
+- Display a confirmation message in the echo area, e.g., "Copied heading to 'area-file.org' and tagged as :COPIED:".
+
+* Testing Strategy
+
+The final function should be tested against the following scenarios:
+
+** Success Scenarios
+- Run on a valid heading in a project file with a valid =AREA= link and project =ID=. Check that the heading is copied correctly to the area file and the original is tagged.
+- Test when the area file *does not* have a ="* Moved project items"= heading. Verify the heading is created.
+- Test when the area file *already has* a ="* Moved project items"= heading. Verify the new content is appended correctly within that section.
+
+** Failure Scenarios (Error Conditions)
+Verify that the function signals a clear, user-friendly error and makes no changes in the following cases:
+- The command is run when the cursor is not on a heading.
+- The command is run on a heading that is already tagged with =:COPIED:=.
+- The project file is missing the =AREA: [[id:...]]\= line.
+- The project's top-level heading is missing an =:ID:= property.
+- The =AREA= link is broken (i.e., its ID is not registered in Org's ID database).
