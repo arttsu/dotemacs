@@ -1215,7 +1215,12 @@ With prefix argument, or when no AREA link exists, prompt to select an area file
 (use-package eat
   :ensure
   :custom
-  (eat-kill-buffer-on-exit t))
+  (eat-kill-buffer-on-exit t)
+  :bind
+  (("C-x e" . eat)
+   ("C-x 4 e" . eat-other-window)
+   ("C-x p e" . eat-project)
+   ("C-x p 4 e" . eat-project-other-window)))
 
 (use-package rg
   :when my-use-ripgrep

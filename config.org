@@ -1459,12 +1459,17 @@ On Fedora:
 #+end_src
 **** eat
 https://codeberg.org/akib/emacs-eat
-
+***** eat: Use-package
 #+begin_src elisp
   (use-package eat
     :ensure
     :custom
-    (eat-kill-buffer-on-exit t))
+    (eat-kill-buffer-on-exit t)
+    :bind
+    (("C-x e" . eat)
+     ("C-x 4 e" . eat-other-window)
+     ("C-x p e" . eat-project)
+     ("C-x p 4 e" . eat-project-other-window)))
 #+end_src
 **** Ripgrep :RTFM:
 https://github.com/dajva/rg.el
