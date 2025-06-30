@@ -455,6 +455,55 @@
     ;; Final confirmation
     (message "Area file created: %s" full-file-path)))
 
+(defun my-gtd-archive-project ()
+  "Archive a GTD project file by moving it to the archive subdirectory."
+  (interactive)
+  ;; Step 1: Safety checks
+  (unless (eq major-mode 'org-mode)
+    (error "This is not an Org project file"))
+
+  ;; Get the tags of the top-level headline
+  (save-excursion
+    (goto-char (point-min))
+    (unless (and (org-at-heading-p)
+                 (member "PROJECT" (org-get-tags)))
+      (error "This is not an Org project file")))
+
+  ;; Confirm with user
+  (when (y-or-n-p "Archive this project? ")
+    ;; Step 2: Determine and prepare archive file path
+    (let* ((current-file-path (buffer-file-name))
+           (current-dir (file-name-directory current-file-path))
+           (filename (file-name-nondirectory current-file-path))
+           (archive-dir (file-name-concat current-dir "archive"))
+           (new-file-path (file-name-concat archive-dir filename)))
+
+      ;; Create archive directory if it doesn't exist
+      (make-directory archive-dir t)
+
+      ;; Step 3: Remove priority cookie from headline
+      (save-excursion
+        (goto-char (point-min))
+        (org-entry-put (point) "PRIORITY" nil))
+
+      ;; Step 4: Insert ARCHIVED_AT timestamp
+      (save-excursion
+        (goto-char (point-min))
+        (when (re-search-forward "^CREATED: " nil t)
+          (end-of-line)
+          (let ((timestamp-string (format-time-string "[%Y-%m-%d %a %H:%M]")))
+            (insert (format "\nARCHIVED_AT: %s \\\\" timestamp-string)))))
+
+      ;; Step 5: Move file and update Org ID locations
+      (save-buffer)
+      (rename-file current-file-path new-file-path)
+      (org-id-update-id-locations (list new-file-path))
+      (set-visited-file-name new-file-path)
+      (set-buffer-modified-p nil)
+
+      ;; Final confirmation
+      (message "Project archived to %s" new-file-path))))
+
 (defun my-org-capture-template-path (name)
   (expand-file-name (concat "capture-templates/" name ".txt") user-emacs-directory))
 
@@ -578,6 +627,7 @@
    ("C-c o I" . my-gtd-insert-todo)
    ("C-c o d" . my-org-duplicate-subtree)
    ("C-c o x" . my-gtd-complete-as-wont-do)
+   ("C-c o Z" . my-gtd-archive-project)
    ("C-c o C-i"  . org-id-get-create)
    ("C-c o a" . my-org-attach-write-drawer)))
 
