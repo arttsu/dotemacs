@@ -183,31 +183,107 @@
   (org-paste-subtree)
   (org-delete-property "ID"))
 
-(defun my-org-attach-write-drawer ()
+(defun my-gtd-update-attachments-heading ()
+  "Find all attachments for a project/area file and list them under a top-level * Attachments heading."
   (interactive)
-  (my-org-require-at-heading)
-  (if-let* ((id (org-id-get nil nil nil t)))
-      (let ((dir (org-attach-dir-from-id id)))
-        (if (file-directory-p dir)
-            (let* ((attachments (directory-files dir t nil t))
-                   (attachments (mapcar (lambda (f) (cons f (file-attribute-modification-time (file-attributes f)))) attachments))
-                   (attachments (mapcar #'car (sort attachments (lambda (a b) (time-less-p (cdr a) (cdr b))))))
-                   (attachments (mapcar #'file-name-nondirectory attachments))
-                   (attachments (cl-remove-if (lambda (f) (member f '("." ".."))) attachments)))
-              ;; Remove the existing drawer
-              (save-excursion
-                (when (re-search-forward "^ *:ATTACHMENTS:" (org-entry-end-position) t)
-                  (org-mark-element)
-                  (delete-region (region-beginning) (region-end))
-                  (delete-blank-lines)))
-              (org-end-of-meta-data)
-              (org-insert-drawer nil "ATTACHMENTS")
-              (delete-char 1) ;; Remove the newline within the drawer
-              (dolist (file attachments)
-                (insert (format "- [[attachment:%s]]\n" file)))
-              (org-back-to-heading))
-          (message "No attachments directory.")))
-    (message "No Org ID.")))
+  (save-excursion
+    ;; Step 1: Initial validation checks
+    (unless (buffer-file-name)
+      (error "Not in a file-visiting buffer"))
+
+    ;; Check if this is a project or area file
+    (goto-char (point-min))
+    (unless (and (org-at-heading-p)
+                 (or (member "PROJECT" (org-get-tags))
+                     (member "AREA" (org-get-tags))))
+      (error "Not a project or area file"))
+
+    ;; Step 2: Get the headline ID
+    (let ((project-id (org-id-get)))
+      (unless project-id
+        (error "Project/Area headline has no ID"))
+
+      ;; Step 3: Get the list of attachment files
+      (let* ((attach-dir (org-attach-dir-from-id project-id))
+             (attachments (when (and attach-dir (file-directory-p attach-dir))
+                            (directory-files attach-dir t nil t)))
+             ;; Filter out . and .. entries
+             (attachments (when attachments
+                            (cl-remove-if (lambda (f) (member (file-name-nondirectory f) '("." ".."))) attachments))))
+
+        ;; Step 4: Sort attachments by modification time (newest first)
+        (when attachments
+          (setq attachments
+                (mapcar #'car
+                        (sort (mapcar (lambda (f) (cons f (file-attribute-modification-time (file-attributes f)))) attachments)
+                              (lambda (a b) (time-less-p (cdr b) (cdr a)))))))
+
+        ;; Step 5: Locate and manage the top-level * Attachments heading
+        (let ((attachments-heading-pos nil))
+          ;; Find existing top-level Attachments heading
+          (save-excursion
+            (goto-char (point-min))
+            (when (re-search-forward "^\\* Attachments$" nil t)
+              (setq attachments-heading-pos (match-beginning 0))))
+
+          ;; Handle "No Attachments" case
+          (if (not attachments)
+              (when attachments-heading-pos
+                (goto-char attachments-heading-pos)
+                (org-mark-subtree)
+                (delete-region (region-beginning) (region-end)))
+
+            ;; Handle "Has Attachments" case
+            (if attachments-heading-pos
+                ;; Heading exists - clear its contents
+                (progn
+                  (goto-char attachments-heading-pos)
+                  ;; Delete everything from after the heading line to end of subtree
+                  (forward-line 1)
+                  (let ((content-start (point)))
+                    (org-end-of-subtree t)
+                    (delete-region content-start (point)))
+                  ;; Move back to the heading
+                  (goto-char attachments-heading-pos))
+              ;; Heading doesn't exist - create it at end of buffer
+              (goto-char (point-max))
+              (unless (bolp) (insert "\n"))
+              (insert "* Attachments\n")
+              ;; We're already positioned at the heading we just created
+              )
+
+            ;; Convert absolute path to home-relative path for portability
+            (let ((relative-attach-dir
+                   (if (string-prefix-p (expand-file-name "~") attach-dir)
+                       (concat "~" (substring attach-dir (length (expand-file-name "~"))))
+                     attach-dir)))
+              ;; Set ATTACH_DIR property with home-relative path
+              (org-entry-put (point) "ATTACH_DIR" relative-attach-dir))
+
+            ;; Move to end of properties drawer to insert content
+            (org-end-of-meta-data)
+            ;; Ensure we have exactly one newline before content
+            (when (not (looking-at "^$"))
+              (insert "\n"))
+
+            ;; Insert new content
+            (dolist (file-path attachments)
+              (let ((filename (file-name-nondirectory file-path)))
+                (insert (format "- [[attachment:%s]]\n" filename))))))))))
+
+(defun my-gtd-auto-update-attachments-on-save ()
+  "Auto-update attachments heading when saving project/area files."
+  (when (and (eq major-mode 'org-mode)
+             (buffer-file-name))
+    (save-excursion
+      (goto-char (point-min))
+      (when (and (org-at-heading-p)
+                 (or (member "PROJECT" (org-get-tags))
+                     (member "AREA" (org-get-tags)))
+                 (org-id-get))
+        (condition-case nil
+            (my-gtd-update-attachments-heading)
+          (error nil))))))
 
 (defconst my-org-personal-dir (expand-file-name "~/org-personal"))
 (defconst my-gtd-personal-dir (expand-file-name "gtd" my-org-personal-dir))
@@ -726,6 +802,7 @@ With prefix argument, or when no AREA link exists, prompt to select an area file
   (add-hook 'org-after-todo-state-change-hook 'my-org-remove-priority-when-done)
   (add-hook 'org-after-todo-state-change-hook 'my-gtd-checklist-auto-advance)
   (add-hook 'org-after-refile-insert-hook 'my-gtd-sort-checklist)
+  (add-hook 'before-save-hook 'my-gtd-auto-update-attachments-on-save)
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((shell . t) (clojure . t)))
@@ -748,7 +825,7 @@ With prefix argument, or when no AREA link exists, prompt to select an area file
    ("C-c o Z" . my-gtd-archive-project)
    ("C-c o c" . my-gtd-copy-heading-to-area)
    ("C-c o C-i"  . org-id-get-create)
-   ("C-c o a" . my-org-attach-write-drawer)))
+   ("C-c o a" . my-gtd-update-attachments-heading)))
 
 (use-package modus-themes
   :ensure

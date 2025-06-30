@@ -1,0 +1,127 @@
+* Implementation Guide: ~my-gtd-update-attachments-heading~
+
+This guide details the step-by-step creation of an Emacs Lisp function, ~my-gtd-update-attachments-heading~. The function will find all attachments for a project/area file and list them under a top-level ~* Attachments~ heading, replacing any previous version of that heading.
+
+** Step 1: Function Definition and Initial Validation
+
+   *Instructions:*
+   The first step is to create the function's skeleton and add checks to ensure it only runs in a valid context (a project or area file).
+
+   1.  Define a new interactive function named ~my-gtd-update-attachments-heading~.
+   2.  Wrap the entire function body in a ~save-excursion~ block to preserve the user's cursor position.
+   3.  *Check 1: File Buffer:* Verify the buffer is visiting a file. If ~(buffer-file-name)~ returns ~nil~, raise an error.
+       #+begin_src elisp
+         (unless (buffer-file-name)
+           (error "Not in a file-visiting buffer"))
+       #+end_src
+   4.  *Check 2: Project/Area File:*
+       - Go to the beginning of the buffer with ~(goto-char (point-min))~.
+       - Get the tags of the first headline.
+       - Check if the tags list contains either ~"PROJECT"~ or ~"AREA"~. If not, raise an error.
+       #+begin_src elisp
+         (goto-char (point-min))
+         (unless (and (org-at-heading-p)
+                      (or (member "PROJECT" (org-get-tags))
+                          (member "AREA" (org-get-tags))))
+           (error "Not a project or area file"))
+       #+end_src
+
+   *Testing:*
+   - Call the function from a non-file buffer (e.g., ~*scratch*~). It must fail with the "Not in a file..." error.
+   - Call it from a regular Org file that lacks a ~:PROJECT:~ or ~:AREA:~ tag on its first headline. It must fail with the "Not a project..." error.
+   - Call it from the provided ~2025-06-13-set-up-kanata-on-nwabudike.org~ example file. It should run without error.
+
+** Step 2: Get the Headline ID
+
+   *Instructions:*
+   Attachments are linked to a headline's ~ID~ property. This step retrieves that ID.
+
+   1.  After the initial checks, get the ID of the first headline using ~(org-id-get)~. Store it in a variable (e.g., ~project-id~).
+   2.  If ~project-id~ is ~nil~, it means the headline has no ~:ID:~ property. Raise an error.
+       #+begin_src elisp
+         (let ((project-id (org-id-get)))
+           (unless project-id
+             (error "Project/Area headline has no ID")))
+       #+end_src
+
+   *Testing:*
+   - Temporarily remove the ~:PROPERTIES: ... :ID: ... :END:~ drawer from your test project file and call the function. It must fail with the "no ID" error.
+   - Restore the ~:ID:~ property. The function should again run without error.
+
+** Step 3: Get the List of Attachment Files
+
+   *Instructions:*
+   Use the ID to find the attachment directory and get a list of its contents.
+
+   1.  Use ~(org-attach-dir-from-id project-id)~ to get the attachment directory path. Store it in a variable ~attach-dir~.
+   2.  Check if this path points to a valid directory using ~(file-directory-p attach-dir)~.
+   3.  If it is a valid directory, get a list of all files inside it using ~(directory-files attach-dir t nil t)~. Store this list in a variable ~attachments~.
+   4.  If the directory doesn't exist or is empty, the ~attachments~ variable should be an empty list (~nil~).
+
+   *Testing:*
+   - Run the function on a project where the attachments directory is empty or doesn't exist. The ~attachments~ variable should be ~nil~.
+   - Add a file to the attachments directory. Run the function again. The ~attachments~ variable should now be a list containing the full path to that file.
+
+** Step 4: Sort Attachments by Modification Time (Newest First)
+
+   *Instructions:*
+   Sort the file list so the most recently modified files appear first.
+
+   1.  If the ~attachments~ list is not empty, sort it.
+   2.  A good way to sort by a file attribute is to first create a list of pairs: `(cons file-path modification-time)`.
+   3.  Sort this list of pairs based on the time (the ~cdr~ of each pair). Use ~time-less-p~ to compare, but reverse the arguments to get descending (newest-first) order.
+   4.  After sorting, map over the list to extract just the file paths (the ~car~ of each pair).
+       #+begin_src elisp
+         ;; Assuming `attachments` is a list of file paths
+         (setq attachments
+               (mapcar #'car
+                       (sort (mapcar (lambda (f) (cons f (file-attribute-modification-time (file-attributes f)))) attachments)
+                             (lambda (a b) (time-less-p (cdr b) (cdr a))))))
+       #+end_src
+
+   *Testing:*
+   - Create two files in an attachment directory, e.g., ~file1.txt~ and ~file2.txt~. Use the ~touch~ command to make ~file2.txt~ newer.
+   - Run the function and inspect the sorted list. The path for ~file2.txt~ must appear before ~file1.txt~.
+
+** Step 5: Locate and Manage the ~* Attachments~ Heading
+
+   *Instructions:*
+   This is the main logic for updating the buffer. It handles creating, clearing, or deleting the ~* Attachments~ heading as needed.
+
+   1.  *Find existing heading:*
+       - Create a variable, ~attachments-heading-pos~, and set it to ~nil~.
+       - Within a ~save-excursion~, search for the heading from the top of the buffer: ~(re-search-forward "^\\* Attachments$" nil t)~.
+       - If found, store its starting position in ~attachments-heading-pos~.
+   2.  *Handle "No Attachments" case:*
+       - If the sorted ~attachments~ list is empty:
+         - If ~attachments-heading-pos~ is not ~nil~ (the heading exists), go to that position, mark the entire subtree with ~org-mark-subtree~, and delete it with ~delete-region~.
+         - The function's work is done, so it should exit.
+   3.  *Handle "Has Attachments" case:*
+       - If the sorted ~attachments~ list is *not* empty:
+         - If ~attachments-heading-pos~ *is not* ~nil~ (heading exists), go to the position right after the heading title and clear its old contents by deleting the region to the end of the subtree.
+         - If ~attachments-heading-pos~ *is* ~nil~ (no heading exists), go to the end of the buffer (~(goto-char (point-max))~), add a newline for spacing, and insert ~"* Attachments\n"~.
+   4.  *Insert new content:*
+       - After preparing the heading, iterate through your sorted list of file paths.
+       - For each path, get just the filename using ~file-name-nondirectory~.
+       - Insert a formatted org list item: ~- [[attachment:FILENAME]]\n~.
+
+   *Testing:*
+   - *Cleanup:* On a project with an existing ~* Attachments~ heading but no actual attachment files, run the function. The entire heading should be removed.
+   - *Update:* On a project with an existing ~* Attachments~ heading and some files, run the function. The content under the heading should be replaced with the new, correctly sorted list.
+   - *Creation:* On a project with attachment files but no ~* Attachments~ heading, run the function. A new heading should appear at the end of the file with the correct content.
+
+** Step 6: Final Integration and Keybinding
+
+   *Instructions:*
+   The final step is to replace the old function and its keybinding in your Emacs configuration.
+
+   1.  Place your new ~my-gtd-update-attachments-heading~ function in your ~config.org~ file, likely in the ~Org: Interactive helpers~ section.
+   2.  Find and *delete* the entire function definition for ~my-org-attach-write-drawer~.
+   3.  In the ~:bind~ section for the ~org~ package, locate the keybinding for the old function:
+       - ~("C-c o a" . my-org-attach-write-drawer)~
+   4.  Replace it with a binding for your new function:
+       - ~("C-c o a" . my-gtd-update-attachments-heading)~
+   5.  Tangle your ~config.org~ (~C-c C-v t~) and restart Emacs or re-evaluate the relevant configuration blocks.
+
+   *Testing:*
+   - Press ~C-c o a~ in your project file. It should trigger the new behavior. Verify all test cases from Step 5 work correctly with the keybinding.
