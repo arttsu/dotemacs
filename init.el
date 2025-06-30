@@ -326,9 +326,30 @@
           (buffer-substring-no-properties (point) (line-end-position))
         "[1900-01-01 Mon 00:00]"))))
 
+(defun my-gtd-extract-created-timestamp-for-reverse-sort ()
+  "Extract created timestamp but return in reverse alphabetical order for newest-first sorting."
+  (let ((timestamp (my-gtd-extract-created-timestamp)))
+    ;; Convert to a format that sorts newest first when sorted alphabetically
+    ;; We'll negate the comparison by inverting all time components
+    (if (string-match "\\[\\([0-9]\\{4\\}\\)-\\([0-9]\\{2\\}\\)-\\([0-9]\\{2\\}\\).*\\([0-9]\\{2\\}\\):\\([0-9]\\{2\\}\\)\\]" timestamp)
+        (let ((year (string-to-number (match-string 1 timestamp)))
+              (month (string-to-number (match-string 2 timestamp)))
+              (day (string-to-number (match-string 3 timestamp)))
+              (hour (string-to-number (match-string 4 timestamp)))
+              (minute (string-to-number (match-string 5 timestamp))))
+          ;; Return a string that sorts newest first
+          (format "[%04d-%02d-%02d %02d:%02d"
+                  (- 9999 year) (- 99 month) (- 99 day)
+                  (- 99 hour) (- 99 minute)))
+      "[0000-00-00 00:00")))
+
 (defun my-gtd-checklist-p ()
   (let ((style (org-entry-get (point) "STYLE")))
     (string= style "checklist")))
+
+(defun my-gtd-log-p ()
+  (let ((style (org-entry-get (point) "STYLE")))
+    (string= style "log")))
 
 (defun my-gtd-checklist-do-auto-advance ()
   (let ((point-before (point)))
@@ -377,14 +398,30 @@
   (org-cycle)
   (org-cycle))
 
-(defun my-gtd-sort-checklist ()
+(defun my-gtd-sort-by-style ()
   (interactive)
   (my-org-require-at-heading)
-  (if (my-gtd-checklist-p)
-      (my-gtd-sort-todos)
-    (org-up-heading-safe)
-    (when (my-gtd-checklist-p)
-      (my-gtd-sort-todos))))
+  (let ((style (org-entry-get (point) "STYLE")))
+    (cond
+     ((string= style "checklist")
+      (my-gtd-sort-todos))
+     ((string= style "log")
+      (org-sort-entries nil ?f 'my-gtd-extract-created-timestamp-for-reverse-sort)
+      (org-cycle)
+      (org-cycle))
+     (t
+      (message "No supported STYLE property found")))))
+
+(defun my-gtd-sort-entries ()
+  (interactive)
+  (my-org-require-at-heading)
+  (let ((style (org-entry-get (point) "STYLE")))
+    (if (or (string= style "checklist") (string= style "log"))
+        (my-gtd-sort-by-style)
+      (org-up-heading-safe)
+      (let ((parent-style (org-entry-get (point) "STYLE")))
+        (when (or (string= parent-style "checklist") (string= parent-style "log"))
+          (my-gtd-sort-by-style))))))
 
 (defun my-gtd-reset-checklist ()
   (interactive)
@@ -801,7 +838,7 @@ With prefix argument, or when no AREA link exists, prompt to select an area file
   (add-hook 'org-mode-hook 'my-org-setup)
   (add-hook 'org-after-todo-state-change-hook 'my-org-remove-priority-when-done)
   (add-hook 'org-after-todo-state-change-hook 'my-gtd-checklist-auto-advance)
-  (add-hook 'org-after-refile-insert-hook 'my-gtd-sort-checklist)
+  (add-hook 'org-after-refile-insert-hook 'my-gtd-sort-entries)
   (add-hook 'before-save-hook 'my-gtd-auto-update-attachments-on-save)
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -815,7 +852,7 @@ With prefix argument, or when no AREA link exists, prompt to select an area file
    ("C-c o p" . my-gtd-create-project)
    ("C-c o A" . my-gtd-create-area)
    :map org-mode-map
-   ("C-c o s" . my-gtd-sort-checklist)
+   ("C-c o s" . my-gtd-sort-entries)
    ("C-c o S" . my-gtd-sort-todos)
    ("C-c o r" . my-gtd-reset-checklist)
    ("C-c o i" . my-gtd-insert-note)

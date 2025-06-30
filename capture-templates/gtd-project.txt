@@ -11,3 +11,6 @@ AREA: AREA \\
 :STYLE:    checklist
 :END:
 ** Log
+:PROPERTIES:
+:STYLE:    log
+:END:

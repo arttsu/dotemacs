@@ -10,3 +10,6 @@ CREATED: %s \\
 :STYLE:    checklist
 :END:
 ** Log
+:PROPERTIES:
+:STYLE:    log
+:END:
