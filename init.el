@@ -439,7 +439,7 @@
                       (t "[#D]"))))  ; Default for any other input
 
          ;; Generate automatic data
-         (timestamp (format-time-string "[%Y-%m-%d %a]"))
+         (timestamp (format-time-string "[%Y-%m-%d %a %H:%M]"))
          (file-timestamp (format-time-string "%Y-%m-%d"))
          (slug (replace-regexp-in-string
                 "[^a-z0-9-]" ""
@@ -517,7 +517,7 @@
                      input))
 
          ;; Generate automatic data
-         (timestamp (format-time-string "[%Y-%m-%d %a]"))
+         (timestamp (format-time-string "[%Y-%m-%d %a %H:%M]"))
          (slug (replace-regexp-in-string
                 "[^a-z0-9-]" ""
                 (replace-regexp-in-string
