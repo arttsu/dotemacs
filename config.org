@@ -494,6 +494,25 @@ https://github.com/magit/transient
       (when (re-search-forward ":ID:" nil t)
         (org-id-get-create))  ; This registers the ID location
 
+      ;; Ask about easysession switch
+      (when (and (fboundp 'easysession-save-as)
+                 (y-or-n-p "Switch to a new easysession for this project? "))
+        (let ((session-name slug))  ; Use normalized project name without timestamp
+          ;; Switch to previous buffer before session change
+          (when (> (length (buffer-list)) 1)
+            (switch-to-buffer (other-buffer (current-buffer) t)))
+
+          ;; Save current session and create new session
+          (easysession-save-as session-name)
+
+          ;; Clean up tabs - delete all other tabs and rename current to 'notes'
+          (when (and (boundp 'tab-bar-mode) tab-bar-mode)
+            (tab-bar-close-other-tabs)
+            (tab-bar-rename-tab "notes"))
+
+          ;; Ensure the project file is open in the new session
+          (find-file full-file-path)))
+
       ;; Final confirmation
       (message "Project file created: %s" full-file-path)))
 #+end_src
