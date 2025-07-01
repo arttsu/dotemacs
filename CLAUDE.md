@@ -61,4 +61,4 @@ This file provides guidance to Claude Code when working with this Emacs configur
 
 ## GTD System Documentation
 
-[To be documented - custom Getting Things Done implementation details will go here]
+For detailed documentation of the Getting Things Done system implementation, see [[file:GTD.org][GTD.org]].

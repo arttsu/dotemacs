@@ -1,0 +1,202 @@
+#+TITLE: GTD System Migration Plan
+#+AUTHOR: Claude Code Assistant
+#+DATE: 2025-01-07
+#+STARTUP: overview
+
+* Overview
+
+This document tracks the migration of the GTD (Getting Things Done) system from config.org.bkp to the current configuration. The migration follows a phased approach to ensure testability and minimize risk.
+
+* Naming Convention Changes
+
+** OLD → NEW Mapping
+- =personal= → =local= (context-specific content)
+- =open= → =shared= (cross-context content)
+
+** Directory Structure
+- =~/org-personal/gtd/= → =~/org-local/gtd/=
+- =~/org-open/gtd/= → =~/org-shared/gtd/=
+
+** Variable Naming Examples
+- =my-gtd-personal-dir= → =my-gtd-local-dir=
+- =my-gtd-open-projects= → =my-gtd-shared-projects=
+- =my-gtd-personal-inbox= → =my-gtd-local-inbox=
+
+* Migration Phases
+
+** Phase 0: Documentation & Planning ✅ COMPLETED
+*** Steps Completed
+- [X] Create comprehensive GTD system documentation (GTD.org)
+- [X] Document local vs shared architecture rationale
+- [X] Create this migration plan document
+- [X] Update CLAUDE.md to reference GTD.org
+
+** Phase 1: Foundation & Helpers 🔄 IN PROGRESS
+*** Scope
+Core infrastructure needed for all other phases.
+
+*** Steps
+- [ ] Add GTD directory constants with new local/shared naming
+- [ ] Add core helper functions (timestamps, predicates, priority management)
+- [ ] Update org-node configuration with GTD directories
+- [ ] Add basic org-mode hooks for priority management
+
+*** Test Plan
+- [ ] Functions load without errors
+- [ ] Directory constants point to correct paths
+- [ ] Basic helper functions work (can test timestamp extraction, predicates)
+- [ ] Org-node can watch GTD directories
+
+*** Functions to Migrate (9 functions)
+- =my-org-remove-priority-when-done= - Clears priority on DONE
+- =my-gtd-extract-created-timestamp= - Gets creation timestamp
+- =my-gtd-extract-closed-timestamp= - Gets completion timestamp  
+- =my-gtd-extract-created-timestamp-for-reverse-sort= - For newest-first sorting
+- =my-gtd-checklist-p= - Checks if entry is a checklist
+- =my-gtd-log-p= - Checks if entry is a log
+- =my-gtd-checklist-do-auto-advance= - Advances to next checklist item
+- =my-gtd-checklist-auto-advance= - Hook for auto-advancing checklists
+- =my-gtd-require-at-heading= - Validates cursor position
+
+** Phase 2: Basic Workflow 
+*** Scope
+Basic content creation and organization without external dependencies.
+
+*** Steps
+- [ ] Add note/todo insertion functions
+- [ ] Add sorting and organization utilities
+- [ ] Add checklist management functions
+- [ ] Add basic project/area structure functions
+
+*** Test Plan
+- [ ] Can create notes and todos with timestamps
+- [ ] Sorting functions work on existing org files
+- [ ] Checklist functionality operates correctly
+- [ ] No external template dependencies required
+
+*** Functions to Migrate (7 functions)
+- =my-gtd-insert-note= - Creates note with timestamp
+- =my-gtd-insert-todo= - Creates todo with timestamp
+- =my-gtd-sort-todos= - Sorts by priority/timestamp
+- =my-gtd-sort-by-style= - Style-specific sorting
+- =my-gtd-sort-entries= - Smart sorting dispatcher
+- =my-gtd-reset-checklist= - Resets checklist to TODO
+- =my-gtd-complete-as-wont-do= - Marks as strikethrough
+
+** Phase 3: Project Lifecycle
+*** Scope
+Advanced project management requiring template files.
+
+*** Steps
+- [ ] Create template directory and files
+- [ ] Add project/area creation functions
+- [ ] Add archive and completion workflows
+- [ ] Add cross-linking functionality
+
+*** Test Plan
+- [ ] Can create projects/areas with templates
+- [ ] Archive workflow moves files correctly
+- [ ] Cross-linking maintains traceability
+
+*** Functions to Migrate (4 functions)
+- =my-gtd-create-project= - Interactive project creation
+- =my-gtd-create-area= - Interactive area creation
+- =my-gtd-archive-project= - Move project to archive
+- =my-gtd-copy-heading-to-area= - Cross-link workflow
+
+** Phase 4: Capture System
+*** Scope
+Capture templates and quick-entry functions.
+
+*** Steps
+- [ ] Add capture template configuration
+- [ ] Add capture wrapper functions
+- [ ] Integrate with org-capture system
+- [ ] Update org configuration with capture settings
+
+*** Test Plan
+- [ ] Capture templates work correctly
+- [ ] Quick capture functions route to inbox
+- [ ] Template files are found and loaded
+
+*** Functions to Migrate (3 functions + templates)
+- =my-org-capture-template-path= - Template file resolver
+- =my-gtd-capture-note= - Quick note capture
+- =my-gtd-capture-todo= - Quick todo capture
+- =my-gtd-capture-templates= - Template definitions
+
+** Phase 5: Integration & Polish
+*** Scope
+Full system integration with agenda and automation.
+
+*** Steps
+- [ ] Add agenda configuration and custom commands
+- [ ] Add attachment management functions
+- [ ] Add all org-mode hooks and auto-behaviors
+- [ ] Add complete keybinding setup
+- [ ] Final org configuration integration
+
+*** Test Plan
+- [ ] Custom agenda views work correctly
+- [ ] All automation triggers properly
+- [ ] Attachment management functions
+- [ ] Complete GTD workflow functional
+
+*** Functions to Migrate (4 functions + config)
+- =my-gtd-day-agenda-skip-todo-p= - Agenda filtering
+- =my-gtd-day-agenda-skip-project-p= - Project filtering
+- =my-gtd-update-attachments-heading= - Attachment management
+- =my-gtd-auto-update-attachments-on-save= - Auto-update hook
+- Complete org-mode configuration integration
+
+* Progress Tracking
+
+** Completed Phases
+- [X] Phase 0: Documentation & Planning
+
+** Current Phase
+- [ ] Phase 1: Foundation & Helpers
+
+** Phase Status Legend
+- ✅ COMPLETED
+- 🔄 IN PROGRESS  
+- ⏸️ BLOCKED
+- ❌ FAILED
+- ⏳ PENDING
+
+* Dependencies & Prerequisites
+
+** Phase 1 Dependencies
+- None (foundational)
+
+** Phase 2 Dependencies  
+- Completed Phase 1
+- Basic GTD directory structure exists
+
+** Phase 3 Dependencies
+- Completed Phase 1-2
+- Template files created in =capture-templates/= directory
+- Directory structure for projects/areas
+
+** Phase 4 Dependencies
+- Completed Phase 1-3
+- Template files for capture system
+
+** Phase 5 Dependencies
+- Completed Phase 1-4
+- Full GTD directory structure
+- All template files
+
+* Notes & Decisions
+
+** Architectural Decisions
+- Use "local" and "shared" instead of "personal" and "open" for clarity
+- Maintain phased approach for testability
+- Keep template files in =capture-templates/= subdirectory
+- Preserve all existing functionality while updating naming
+
+** Testing Strategy
+- Each phase must be testable independently
+- Can stop at any phase if issues arise
+- Manual testing of core workflows at each phase
+- Verify no regressions in existing org functionality

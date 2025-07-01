@@ -1,0 +1,88 @@
+#+TITLE: GTD System Documentation
+#+AUTHOR: Artem Tseranu
+#+DATE: 2025-01-07
+
+* Overview
+
+This GTD (Getting Things Done) system is based on David Allen's methodology, adapted for Emacs/Org mode with a focus on context isolation and efficient workflow management.
+
+* Local vs Shared Architecture
+
+**Purpose**: Context isolation for security and appropriateness reasons.
+
+- **Local** (~~/org-local/gtd/~~): Context-specific content
+  - Work projects with confidential/sensitive information that cannot leave work machine
+  - Personal tasks that might be inappropriate in work contexts (e.g., during screen sharing)
+  - Any content that should remain within a specific life context
+
+- **Shared** (~~/org-shared/gtd/~~): Cross-context content
+  - Projects or areas that span multiple life contexts
+  - Collaborative work that can be safely shared across environments
+  - Reference material appropriate for any context
+
+* Content Types
+
+** Projects
+Time-bound initiatives with clear completion criteria (PROJECT tag)
+- Have defined outcomes and deadlines
+- Contain multiple related tasks
+- Get archived when completed
+
+** Areas
+Ongoing responsibilities without end dates (AREA tag)
+- Continuous areas of focus (e.g., "Health", "Team Management")
+- Standards to maintain rather than outcomes to achieve
+- Contains both ongoing tasks and "someday/maybe" items in dedicated sections
+
+** Ad-hoc tasks
+Standalone tasks not belonging to any project or area
+- Quick actions that don't warrant their own project
+- Tasks that don't fit into existing areas
+- Captured in inbox and processed independently
+
+** Inbox
+Temporary capture location for processing
+- All new items go here initially
+- Regularly processed and moved to appropriate locations
+- Keeps capture frictionless during busy periods
+
+* Priority System
+
+- **#A (Critical)**: Urgent, high-impact items requiring immediate attention
+- **#B (Next)**: Important items to tackle soon in current context
+- **#C, #D, #E**: Lower priority items, sorted by relative importance
+- **Auto-clearing**: Priority automatically removed when tasks marked DONE
+
+* Standard Project/Area Structure
+
+Each project and area file follows a consistent structure:
+
+** Resources
+Links and references
+- JIRA tickets, documentation links
+- Research materials, specifications
+- External dependencies and contacts
+
+** Todos
+Actionable tasks needed for completion
+- Broken down into specific, actionable items
+- Prioritized and tagged appropriately
+- Include next actions and waiting-for items
+
+** Log
+Working notes and progress tracking
+- Links to work produced (PRs, documents, messages)
+- Issues encountered and solutions found
+- Random thoughts, insights, and decisions made
+- Chronological record of project evolution
+
+* Workflow Features
+
+- **No dedicated "someday/maybe"**: These items are organized into dedicated sections within relevant areas
+- **Template-driven creation**: Consistent file structure and naming conventions
+- **Auto-timestamping**: CREATED timestamps on all new entries
+- **Smart sorting**: By timestamp, priority, and completion status
+- **Checklist auto-advance**: Automatically moves to next item in checklists
+- **Cross-linking**: Copy items between projects/areas with full traceability
+- **Attachment management**: Automatic organization and listing of project attachments
+- **Custom agenda views**: Intelligent filtering showing relevant items by context and priority
