@@ -326,3 +326,11 @@
         ("C-c p [" . sp-wrap-square)
         ("C-c p {" . sp-wrap-curly)
         ("C-c p r" . sp-rewrap-sexp)))
+
+(use-package crux
+  :ensure
+  :bind
+  (("C-o" . crux-smart-open-line)
+   ("C-S-o" . crux-smart-open-line-above)
+   ("C-^" . crux-top-join-line)
+   ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region)))

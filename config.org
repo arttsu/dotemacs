@@ -440,3 +440,15 @@ We declare it explicitly to ensure we get a recent version, avoiding compatibili
           ("C-c p {" . sp-wrap-curly)
           ("C-c p r" . sp-rewrap-sexp)))
 #+end_src
+
+** Crux
+
+#+begin_src elisp
+  (use-package crux
+    :ensure
+    :bind
+    (("C-o" . crux-smart-open-line)
+     ("C-S-o" . crux-smart-open-line-above)
+     ("C-^" . crux-top-join-line)
+     ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region)))
+#+end_src
