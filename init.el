@@ -244,3 +244,53 @@
 
    :map prog-mode-map
    ("C-c ! !" . consult-flymake)))
+
+(defun my-avy-embark-act (target-point)
+  "Jump to avy target and run embark-act."
+  (goto-char target-point)
+  (embark-act))
+
+(defun my-avy-embark-dwim (target-point)
+  "Jump to avy target and run embark-dwim."
+  (goto-char target-point)
+  (embark-dwim))
+
+(use-package avy
+  :ensure
+  :custom
+  (avy-single-candidate-jump t)
+  :config
+  ;; Embark integration - use . for embark-act, ; for embark-dwim
+  (setf (alist-get ?. avy-dispatch-alist) 'my-avy-embark-act)
+  (setf (alist-get ?\; avy-dispatch-alist) 'my-avy-embark-dwim)
+  :bind
+  (;; Core avy commands
+   ("C-;" . avy-goto-char-timer)
+   ("M-;" . avy-pop-mark)
+   ("M-g g" . avy-goto-line)
+   ("M-g G" . avy-goto-end-of-line)
+   ("M-g h" . avy-org-goto-heading-timer)
+   ("M-g s" . avy-goto-word-1)
+
+   ;; Avy actions
+   ("C-M-; c" . avy-copy-line)
+   ("C-M-; C" . avy-copy-region)
+   ("C-M-; m" . avy-move-line)
+   ("C-M-; M" . avy-move-region)
+   ("C-M-; k" . avy-kill-whole-line)
+   ("C-M-; K" . avy-kill-region)
+   ("C-M-; s" . avy-kill-ring-save-whole-line)
+   ("C-M-; S" . avy-kill-ring-save-region)
+
+   :map isearch-mode-map
+   ("C-;" . avy-isearch)))
+
+(use-package embark
+  :ensure
+  :bind
+  (("C-." . embark-act)
+   ("M-." . embark-dwim)))
+
+(use-package embark-consult
+  :ensure
+  :after (embark consult))
