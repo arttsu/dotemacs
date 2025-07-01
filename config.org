@@ -488,3 +488,20 @@ We declare it explicitly to ensure we get a recent version, avoiding compatibili
      ("M-g ;" . iy-go-to-or-up-to-continue)
      ("M-g ," . iy-go-to-or-up-to-continue-backward)))
 #+end_src
+
+** Super Save
+
+#+begin_src elisp
+  (use-package super-save
+    :ensure
+    :custom
+    (super-save-all-buffers t)
+    (super-save-auto-save-when-idle t)
+    (super-save-delete-trailing-whitespace 'except-current-line)
+    (super-save-silent t)
+    (super-save-exclude '(".sbt" "project/"
+                          ".gpg"))
+    (auto-save-default nil)
+    :config
+    (super-save-mode))
+#+end_src
