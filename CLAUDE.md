@@ -46,12 +46,12 @@ This file provides guidance to Claude Code when working with this Emacs configur
   - **Setup** - Package manager, local config, custom file
   - **Core Configuration** - Essential Emacs settings, built-in packages
   - **Appearance** - Themes, fonts, visual customization
-  - **Interface & Interaction** - Universal packages that enhance how you interact with Emacs:
+  - **Interface & Editing** - Packages that enhance how you interact with Emacs and manipulate text:
     - Completion systems (Vertico, Orderless, Corfu)
     - Enhanced commands (Consult)
     - Navigation (Avy)
     - Context actions (Embark)
-  - **Editing** - Text manipulation packages (coming soon)
+    - Text manipulation (Smartparens, Multiple Cursors, etc.)
   - **Programming** - Language-specific and development tools (coming soon)
   - **Tools** - External integrations and utilities (coming soon)
 
