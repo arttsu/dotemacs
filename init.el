@@ -535,9 +535,16 @@
     (save-restriction
       (org-narrow-to-subtree)
       (goto-char (point-min))
-      (if (re-search-forward "# CREATED: " nil t)
-          (buffer-substring-no-properties (point) (line-end-position))
-        "[1900-01-01 Mon 00:00]"))))
+      (cond
+       ;; First try #+CREATED: format
+       ((re-search-forward "^#\\+CREATED: " nil t)
+        (buffer-substring-no-properties (point) (line-end-position)))
+       ;; For log entries, try to extract from heading
+       ((and (my-gtd-log-p)
+             (re-search-forward "^\\*+ \\(\\[.*?\\]\\)" nil t))
+        (match-string-no-properties 1))
+       ;; Default fallback
+       (t "[1900-01-01 Mon 00:00]")))))
 
 (defun my-gtd-extract-closed-timestamp ()
   "Extract CLOSED timestamp from current entry."
@@ -566,12 +573,12 @@
 ;; Style predicates
 (defun my-gtd-checklist-p ()
   "Check if current entry has STYLE property set to 'checklist'."
-  (let ((style (org-entry-get (point) "STYLE")))
+  (let ((style (org-entry-get (point) "STYLE" t)))
     (string= style "checklist")))
 
 (defun my-gtd-log-p ()
   "Check if current entry has STYLE property set to 'log'."
-  (let ((style (org-entry-get (point) "STYLE")))
+  (let ((style (org-entry-get (point) "STYLE" t)))
     (string= style "log")))
 
 ;; Checklist auto-advance functionality
