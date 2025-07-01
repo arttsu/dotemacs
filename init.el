@@ -389,3 +389,11 @@
   (my-add-super-save-advice 'ace-window)
   :bind
   ("M-o" . ace-window))
+
+(use-package whole-line-or-region
+  :ensure
+  :demand
+  :config
+  (whole-line-or-region-global-mode)
+  :bind
+  ("M-/" . whole-line-or-region-comment-dwim))

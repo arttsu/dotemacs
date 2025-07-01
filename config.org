@@ -527,3 +527,15 @@ We declare it explicitly to ensure we get a recent version, avoiding compatibili
     :bind
     ("M-o" . ace-window))
 #+end_src
+
+** Whole Line or Region
+
+#+begin_src elisp
+  (use-package whole-line-or-region
+    :ensure
+    :demand
+    :config
+    (whole-line-or-region-global-mode)
+    :bind
+    ("M-/" . whole-line-or-region-comment-dwim))
+#+end_src
