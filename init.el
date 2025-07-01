@@ -67,15 +67,13 @@
 (elpaca elpaca-use-package
   (elpaca-use-package-mode))
 
-(elpaca-wait)
-
 (use-package exec-path-from-shell
-  :if (my-macos-p)
+  :ensure
+  :when (my-macos-p)
   :config
   (exec-path-from-shell-initialize))
 
 (use-package emacs
-  :ensure nil
   :custom
   ;; UI and startup
   (inhibit-startup-message t)
@@ -139,7 +137,6 @@
   (find-file "~/"))
 
 (use-package dired
-  :ensure nil
   :custom
   (dired-dwim-target t)
   (insert-directory-program (cond ((my-windows-p) insert-directory-program)
@@ -149,7 +146,6 @@
                                 (t "-alh --group-directories-first"))))
 
 (use-package emacs
-  :ensure nil
   :bind
   (;; Navigation
    ("C-c j x" . scratch-buffer)

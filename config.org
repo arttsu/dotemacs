@@ -1,9 +1,6 @@
 #+TITLE: Emacs Configuration
 #+PROPERTY: header-args:elisp :results silent :tangle init.el
 
-* COMMENT TODOs
-- Clean up trailing whitespace
-
 * Early Init
 
 #+begin_src elisp :tangle ./early-init.el
@@ -109,15 +106,14 @@
 #+begin_src elisp
   (elpaca elpaca-use-package
     (elpaca-use-package-mode))
-
-  (elpaca-wait)
 #+end_src
 
 ** macOS Path Setup
 
 #+begin_src elisp
   (use-package exec-path-from-shell
-    :if (my-macos-p)
+    :ensure
+    :when (my-macos-p)
     :config
     (exec-path-from-shell-initialize))
 #+end_src
@@ -128,7 +124,6 @@
 
 #+begin_src elisp
   (use-package emacs
-    :ensure nil
     :custom
     ;; UI and startup
     (inhibit-startup-message t)
@@ -200,7 +195,6 @@
 
 #+begin_src elisp
   (use-package dired
-    :ensure nil
     :custom
     (dired-dwim-target t)
     (insert-directory-program (cond ((my-windows-p) insert-directory-program)
@@ -214,7 +208,6 @@
 
 #+begin_src elisp
   (use-package emacs
-    :ensure nil
     :bind
     (;; Navigation
      ("C-c j x" . scratch-buffer)
