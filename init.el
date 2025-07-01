@@ -476,7 +476,13 @@
    ("C-c c" . org-capture)
    ("C-c l" . org-store-link)
    :map org-mode-map
-   ("C-c o C-i" . org-id-get-create)))
+   ("C-c o C-i" . org-id-get-create)
+   ;; GTD workflow
+   ("C-c o i" . my-gtd-insert-note)
+   ("C-c o I" . my-gtd-insert-todo)
+   ("C-c o s" . my-gtd-sort-entries)
+   ("C-c o r" . my-gtd-reset-checklist)
+   ("C-c o x" . my-gtd-complete-as-wont-do)))
 
 (use-package org-modern
   :ensure
@@ -568,7 +574,21 @@
           (format "[%04d-%02d-%02d %02d:%02d"
                   (- 9999 year) (- 99 month) (- 99 day)
                   (- 99 hour) (- 99 minute)))
-      "[0000-00-00 00:00")))
+      "[0000-00-00 00:00]")))
+
+(defun my-gtd-extract-closed-timestamp-for-reverse-sort ()
+  "Extract closed timestamp for newest-first sorting."
+  (let ((timestamp (my-gtd-extract-closed-timestamp)))
+    (if (string-match "\\[\\([0-9]\\{4\\}\\)-\\([0-9]\\{2\\}\\)-\\([0-9]\\{2\\}\\).*\\([0-9]\\{2\\}\\):\\([0-9]\\{2\\}\\)\\]" timestamp)
+        (let ((year (string-to-number (match-string 1 timestamp)))
+              (month (string-to-number (match-string 2 timestamp)))
+              (day (string-to-number (match-string 3 timestamp)))
+              (hour (string-to-number (match-string 4 timestamp)))
+              (minute (string-to-number (match-string 5 timestamp))))
+          (format "[%04d-%02d-%02d %02d:%02d"
+                  (- 9999 year) (- 99 month) (- 99 day)
+                  (- 99 hour) (- 99 minute)))
+      "[9999-99-99 99:99]")))
 
 ;; Style predicates
 (defun my-gtd-checklist-p ()
@@ -599,6 +619,116 @@
            (parent-style (or parent-style-prop "")))
       (when (string= parent-style "checklist")
         (run-with-idle-timer 0 nil 'my-gtd-checklist-do-auto-advance)))))
+
+;; Note and todo insertion
+(defun my-gtd-insert-note ()
+  "Insert a new note with timestamp."
+  (interactive)
+  (org-insert-heading-respect-content)
+  (forward-line)
+  (insert "#+CREATED: ")
+  (org-insert-timestamp (current-time) t t)
+  (insert "\n")
+  (forward-line -2)
+  (end-of-line))
+
+(defun my-gtd-insert-todo ()
+  "Insert a new TODO with timestamp."
+  (interactive)
+  (org-insert-heading-respect-content)
+  (insert "TODO ")
+  (forward-line)
+  (insert "#+CREATED: ")
+  (org-insert-timestamp (current-time) t t)
+  (insert "\n")
+  (forward-line -2)
+  (end-of-line))
+
+;; Sorting functions
+(defun my-gtd-sort-todos ()
+  "Sort TODOs by created timestamp, closed timestamp, priority, and todo state."
+  (interactive)
+  (my-org-require-at-heading)
+  (org-sort-entries nil ?f 'my-gtd-extract-created-timestamp)
+  (org-sort-entries nil ?f 'my-gtd-extract-closed-timestamp)
+  (org-sort-entries nil ?p)
+  (org-sort-entries nil ?o)
+  (org-cycle)
+  (org-cycle))
+
+
+(defun my-gtd-sort-by-style ()
+  "Sort entries based on their STYLE property."
+  (interactive)
+  (my-org-require-at-heading)
+  (let ((style (org-entry-get (point) "STYLE" t)))
+    (cond
+     ((string= style "checklist")
+      (my-gtd-sort-todos))
+     ((string= style "log")
+      (org-sort-entries nil ?f 'my-gtd-extract-created-timestamp-for-reverse-sort)
+      (org-cycle)
+      (org-cycle))
+     (t
+      (message "No supported STYLE property found")))))
+
+(defun my-gtd-sort-entries ()
+  "Smart sort that checks current entry or parent for sorting style."
+  (interactive)
+  (my-org-require-at-heading)
+  (let ((style (org-entry-get (point) "STYLE" t)))
+    (if (or (string= style "checklist") (string= style "log"))
+        (my-gtd-sort-by-style)
+      (org-up-heading-safe)
+      (let ((parent-style (org-entry-get (point) "STYLE" t)))
+        (when (or (string= parent-style "checklist") (string= parent-style "log"))
+          (my-gtd-sort-by-style))))))
+
+;; Checklist management
+(defun my-gtd-reset-checklist ()
+  "Reset all items in a checklist to TODO state."
+  (interactive)
+  (my-org-require-at-heading)
+  (let ((style (org-entry-get (point) "STYLE" t)))
+    (if (not (my-gtd-checklist-p))
+        (error "Not at a checklist")
+      (when (yes-or-no-p "Reset the checklist?")
+        (org-map-entries (lambda ()
+                           (org-todo "TODO")
+                           ;; Remove strikethrough if present
+                           (let ((heading (org-get-heading t t t t)))
+                             (when (string-match "^\\+\\(.+\\)\\+$" heading)
+                               (org-edit-headline (match-string 1 heading))))
+                           ;; Remove WONT_DO tag
+                           (org-toggle-tag "WONT_DO" 'off))
+                         nil
+                         'tree)
+        (org-todo "")))))
+
+(defun my-gtd-complete-as-wont-do ()
+  "Toggle entry between won't-do and todo states."
+  (interactive)
+  (my-org-require-at-heading)
+  (let ((heading (org-get-heading t t t t))
+        (tags (org-get-tags)))
+    ;; Toggle between WONT_DO and TODO states
+    (if (member "WONT_DO" tags)
+        ;; Currently marked as WONT_DO - undo it
+        (progn
+          (org-todo "TODO")
+          (org-toggle-tag "WONT_DO" 'off)
+          ;; Remove strikethrough if present
+          (when (string-match "^\\+\\(.+\\)\\+$" heading)
+            (org-edit-headline (match-string 1 heading)))
+          (message "Unmarked as won't do"))
+      ;; Not marked as WONT_DO - mark it
+      (progn
+        (org-todo 'done)
+        (org-toggle-tag "WONT_DO" 'on)
+        ;; Only add strikethrough if not already present
+        (unless (string-match "^\\+.+\\+$" heading)
+          (org-edit-headline (format "+%s+" heading)))
+        (message "Marked as won't do")))))
 
 (use-package org-node
   :ensure

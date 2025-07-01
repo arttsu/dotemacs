@@ -63,16 +63,20 @@ Core infrastructure needed for all other phases.
 Basic content creation and organization without external dependencies.
 
 *** Steps
-- [ ] Add note/todo insertion functions
-- [ ] Add sorting and organization utilities
-- [ ] Add checklist management functions
-- [ ] Add basic project/area structure functions
+- [X] Add note/todo insertion functions
+- [X] Add sorting and organization utilities
+- [X] Add checklist management functions
+- [X] Add basic project/area structure functions
 
 *** Test Plan
-- [ ] Can create notes and todos with timestamps
-- [ ] Sorting functions work on existing org files
-- [ ] Checklist functionality operates correctly
-- [ ] No external template dependencies required
+- [X] Can create notes and todos with timestamps
+- [X] Sorting functions work on existing org files
+- [X] Checklist functionality operates correctly
+- [X] No external template dependencies required
+
+*** Outstanding Items Before Phase 3
+- [ ] Fix checklist sorting to show DONE items in reverse chronological order
+- [ ] Enable sorting when called from child entries (should navigate to parent)
 
 *** Functions to Migrate (7 functions)
 - =my-gtd-insert-note= - Creates note with timestamp
@@ -154,10 +158,10 @@ Full system integration with agenda and automation.
 ** Completed Phases
 - [X] Phase 0: Documentation & Planning
 - [X] Phase 1: Foundation & Helpers
+- [X] Phase 2: Basic Workflow
 
 ** Current Phase
-- [X] Phase 1: Foundation & Helpers
-- [ ] Phase 2: Basic Workflow
+- [ ] Phase 2: Basic Workflow (finishing outstanding items)
 
 ** Phase Status Legend
 - ✅ COMPLETED
