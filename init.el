@@ -192,3 +192,9 @@
   :bind
   (:map vertico-map
         ("C-;" . vertico-quick-insert)))
+
+(use-package orderless
+  :ensure
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles partial-completion)))))

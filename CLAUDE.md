@@ -23,6 +23,7 @@ This file provides guidance to Claude Code when working with this Emacs configur
 - Never tangle files automatically - ask the user to run `M-x org-babel-tangle`
 - Use regular `use-package` declarations (not `elpaca-use-package`) after enabling support
 - `:ensure` defaults to `t` with elpaca-use-package-mode, use `:ensure nil` for built-ins
+- **Check for package integrations** - When migrating packages, review the old config for special integration configurations (e.g., vertico-multiform settings for specific packages, custom keybindings that bridge packages, or specialized configurations that optimize package interactions)
 
 ### Code Style
 
