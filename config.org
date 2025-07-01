@@ -389,3 +389,24 @@
     :ensure
     :after (embark consult))
 #+end_src
+
+* Tools
+
+** Transient
+
+Transient is a dependency of Magit that provides its interactive command interfaces.
+We declare it explicitly to ensure we get a recent version, avoiding compatibility issues.
+
+#+begin_src elisp
+  (use-package transient
+    :ensure)
+#+end_src
+
+** Magit
+
+#+begin_src elisp
+  (use-package magit
+    :ensure
+    :bind
+    ("C-c g" . magit-file-dispatch))
+#+end_src

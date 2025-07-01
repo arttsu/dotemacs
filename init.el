@@ -294,3 +294,11 @@
 (use-package embark-consult
   :ensure
   :after (embark consult))
+
+(use-package transient
+  :ensure)
+
+(use-package magit
+  :ensure
+  :bind
+  ("C-c g" . magit-file-dispatch))
