@@ -225,8 +225,6 @@
                                   (t "-alh --group-directories-first"))))
 #+end_src
 
-** Key Bindings
-
 * Appearance
 
 ** Modus Themes
@@ -248,7 +246,7 @@
     (modus-themes-load-theme 'modus-vivendi))
 #+end_src
 
-* User Interface
+* Interface & Interaction
 
 ** Vertico
 
@@ -330,8 +328,6 @@
      ("C-c ! !" . consult-flymake)))
 #+end_src
 
-* Navigation
-
 ** Avy
 
 #+begin_src elisp
@@ -375,8 +371,6 @@
      :map isearch-mode-map
      ("C-;" . avy-isearch)))
 #+end_src
-
-* Context Actions
 
 ** Embark
 
