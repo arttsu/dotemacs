@@ -31,21 +31,21 @@ This document tracks the migration of the GTD (Getting Things Done) system from 
 - [X] Create this migration plan document
 - [X] Update CLAUDE.md to reference GTD.org
 
-** Phase 1: Foundation & Helpers 🔄 IN PROGRESS
+** Phase 1: Foundation & Helpers ✅ COMPLETED
 *** Scope
 Core infrastructure needed for all other phases.
 
 *** Steps
-- [ ] Add GTD directory constants with new local/shared naming
-- [ ] Add core helper functions (timestamps, predicates, priority management)
-- [ ] Update org-node configuration with GTD directories
-- [ ] Add basic org-mode hooks for priority management
+- [X] Add GTD directory constants with new local/shared naming
+- [X] Add core helper functions (timestamps, predicates, priority management)
+- [X] Update org-node configuration with GTD directories
+- [X] Add basic org-mode hooks for priority management
 
 *** Test Plan
-- [ ] Functions load without errors
-- [ ] Directory constants point to correct paths
-- [ ] Basic helper functions work (can test timestamp extraction, predicates)
-- [ ] Org-node can watch GTD directories
+- [X] Functions load without errors
+- [X] Directory constants point to correct paths
+- [X] Basic helper functions work (can test timestamp extraction, predicates)
+- [X] Org-node can watch GTD directories
 
 *** Functions to Migrate (9 functions)
 - =my-org-remove-priority-when-done= - Clears priority on DONE
@@ -58,7 +58,7 @@ Core infrastructure needed for all other phases.
 - =my-gtd-checklist-auto-advance= - Hook for auto-advancing checklists
 - =my-gtd-require-at-heading= - Validates cursor position
 
-** Phase 2: Basic Workflow 
+** Phase 2: Basic Workflow 🔄 IN PROGRESS
 *** Scope
 Basic content creation and organization without external dependencies.
 
@@ -153,9 +153,11 @@ Full system integration with agenda and automation.
 
 ** Completed Phases
 - [X] Phase 0: Documentation & Planning
+- [X] Phase 1: Foundation & Helpers
 
 ** Current Phase
-- [ ] Phase 1: Foundation & Helpers
+- [X] Phase 1: Foundation & Helpers
+- [ ] Phase 2: Basic Workflow
 
 ** Phase Status Legend
 - ✅ COMPLETED
