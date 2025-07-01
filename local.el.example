@@ -1,0 +1,11 @@
+;;; local.el.example --- Example local configuration file
+
+;; Copy this file to local.el and customize for your environment
+
+;; Font configuration
+(setq my-font "JetBrains Mono")  ; or "Fira Code", "Source Code Pro", etc.
+(setq my-font-height 140)        ; Adjust to your preference
+
+;; Additional machine-specific settings can be added here
+
+;;; local.el.example ends here
