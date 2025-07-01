@@ -425,3 +425,68 @@
   :ensure
   :bind
   ("C-c g" . magit-file-dispatch))
+
+(use-package org
+  :ensure
+  :custom
+  ;; Startup and display
+  (org-startup-folded 'showall)
+  (org-hide-drawer-startup nil)
+  (org-startup-indented nil)
+  (org-startup-with-inline-images t)
+
+  ;; Editing behavior
+  (org-fold-catch-invisible-edits 'show-and-error)
+  (org-special-ctrl-a/e t)
+  (org-hide-emphasis-markers t)
+  (org-pretty-entities t)
+  (org-use-speed-commands t)
+  (org-use-sub-superscripts '{})
+  (org-src-window-setup 'split-window-below)
+  (org-confirm-babel-evaluate nil)
+
+  ;; Todo and priority settings
+  (org-log-done 'time)
+  (org-priority-lowest 69)
+  (org-priority-default 68)
+
+  ;; Linking and ID settings
+  (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+  (org-refile-targets '((org-agenda-files :level . 2)))
+
+  ;; Habit settings
+  (org-habit-graph-column 80)
+  (org-habit-show-done-always-green t)
+
+  :config
+  (require 'org-attach)
+  (require 'org-id)
+  (require 'org-habit)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((shell . t)))
+
+  :bind
+  (("C-c a" . org-agenda)
+   ("C-c c" . org-capture)
+   ("C-c l" . org-store-link)
+   :map org-mode-map
+   ("C-c o C-i" . org-id-get-create)))
+
+(use-package org-modern
+  :ensure
+  :after org
+  :custom
+  (org-auto-align-tags nil)
+  (org-tags-column 0)
+  (org-agenda-tags-column 0)
+  (org-modern-priority-faces '((?A :background "Firebrick3" :foreground "White")
+                               (?B :background "Goldenrod" :foreground "White")
+                               (?C :background "SeaGreen" :foreground "White")
+                               (?D :background "MediumOrchid" :foreground "White")
+                               (?E :background "Seashell3" :foreground "Black")))
+  (org-modern-table nil)
+  :custom-face
+  (org-modern-tag ((t (:foreground "White" :background "CornflowerBlue" :slant italic))))
+  :config
+  (global-org-modern-mode))
