@@ -247,3 +247,21 @@
     :config
     (modus-themes-load-theme 'modus-vivendi))
 #+end_src
+
+* User Interface
+
+** Vertico
+
+#+begin_src elisp
+  (use-package vertico
+    :ensure
+    :demand
+    :custom
+    (vertico-cycle t)
+    :config
+    (vertico-mode)
+    (vertico-multiform-mode)
+    :bind
+    (:map vertico-map
+          ("C-;" . vertico-quick-insert)))
+#+end_src

@@ -180,3 +180,15 @@
   (modus-themes-variable-pitch-ui t)
   :config
   (modus-themes-load-theme 'modus-vivendi))
+
+(use-package vertico
+  :ensure
+  :demand
+  :custom
+  (vertico-cycle t)
+  :config
+  (vertico-mode)
+  (vertico-multiform-mode)
+  :bind
+  (:map vertico-map
+        ("C-;" . vertico-quick-insert)))
