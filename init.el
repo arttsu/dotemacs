@@ -19,6 +19,12 @@
         (message "Loaded local config."))
     (message "No local config.")))
 
+(setq custom-file-path (expand-file-name "custom.el" user-emacs-directory))
+(setq custom-file custom-file-path)
+
+(when (file-exists-p custom-file-path)
+  (load custom-file-path))
+
 (defvar elpaca-installer-version 0.11)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
@@ -70,23 +76,28 @@
 
 (use-package emacs
   :ensure nil
-  :init
-  (setq-default
-   ;; UI cleanup
-   inhibit-startup-message t
-   initial-scratch-message nil
-   
-   ;; Better defaults
-   indent-tabs-mode nil
-   tab-width 4
-   require-final-newline t
-   
-   ;; Auto-revert
-   global-auto-revert-non-file-buffers t
-   
-   ;; Misc
-   visible-bell t)
+  :custom
+  ;; UI and startup
+  (inhibit-startup-message t)
+  (initial-scratch-message "✅ All systems go! 🚀🪐✨")
+  (initial-major-mode 'text-mode)
+  (visible-bell t)
   
+  ;; Editing behavior
+  (indent-tabs-mode nil)
+  (tab-width 4)
+  (require-final-newline t)
+  (save-interprogram-paste-before-kill t)
+  
+  ;; File handling
+  (create-lockfiles nil)
+  (make-backup-files nil)
+  (global-auto-revert-non-file-buffers t)
+  
+  ;; Security and permissions
+  (epg-pinentry-mode 'loopback)
+  (disabled-command-function nil)
+
   :config
   ;; UI cleanup
   (scroll-bar-mode -1)
@@ -94,10 +105,68 @@
   (menu-bar-mode -1)
   (tooltip-mode -1)
   (set-fringe-mode 10)
+
+  ;; Font configuration
+  (set-face-attribute 'default nil :font my-font :height my-font-height)
+  (set-frame-font my-font nil t)
   
-  ;; Enable useful modes
+  ;; Better emoji support on Windows
+  (when (my-windows-p)
+    (set-fontset-font t 'unicode "Segoe UI Emoji" nil 'append))
+
+  ;; Essential modes
   (global-auto-revert-mode)
-  (fset 'yes-or-no-p 'y-or-n-p)
+  (savehist-mode)
+  (global-subword-mode)
+  (tab-bar-mode)
+  (tab-bar-history-mode)
+  (repeat-mode)
   
-  ;; Line numbers only in programming modes
+  ;; Simplify prompts
+  (fset 'yes-or-no-p 'y-or-n-p)
+
+  ;; Only in programming buffers to avoid clutter in text modes
   (add-hook 'prog-mode-hook 'display-line-numbers-mode))
+
+(defun my-pop-mark ()
+  "Jump back to previous mark position"
+  (interactive)
+  (set-mark-command '(4)))
+
+(defun my-jump-home ()
+  "Open home directory in dired"
+  (interactive)
+  (find-file "~/"))
+
+(use-package dired
+  :ensure nil
+  :custom
+  (dired-dwim-target t)
+  (insert-directory-program (cond ((my-windows-p) insert-directory-program)
+                                  ((my-macos-p) "gls")
+                                  (t "ls")))
+  (dired-listing-switches (cond ((my-windows-p) dired-listing-switches)
+                                (t "-alh --group-directories-first"))))
+
+(use-package emacs
+  :ensure nil
+  :bind
+  (;; Navigation
+   ("C-c j x" . scratch-buffer)
+   ("C-c j h" . my-jump-home)
+   ("<f8>" . my-pop-mark)
+   ("C-M-<return>" . tab-switch)
+   
+   ;; Text navigation
+   ("M-g w" . forward-to-word)
+   ("M-g W" . backward-to-word)
+   
+   ;; Editing
+   ("C-M-; d" . duplicate-dwim)
+   ("C-c d h" . erase-buffer)
+   ("M-z" . zap-up-to-char)
+   ("M-Z" . zap-to-char)
+   
+   ;; Mouse
+   ([down-mouse-2] . mouse-set-point)
+   ([mouse-2] . delete-window)))

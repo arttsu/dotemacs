@@ -30,6 +30,10 @@ This file provides guidance to Claude Code when working with this Emacs configur
 - Custom functions use `my-` prefix (not `my/`)
 - OS predicates: `my-linux-p`, `my-macos-p`, `my-windows-p`
 - Local machine config goes in `local.el` (git-ignored)
+- Use `:custom` instead of `setq` and `setq-default` in use-package forms
+- Keep comments minimal - explain WHY not WHAT
+- Write for yourself as the target audience
+- Group related settings with empty lines, avoid labeling sections
 
 ### Structure
 
