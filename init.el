@@ -157,6 +157,13 @@
   (interactive)
   (find-file "~/"))
 
+(defun my-add-super-save-advice (command)
+  "Add advice to COMMAND to auto-save before execution."
+  (advice-add command :before
+              (lambda (&rest _)
+                (when (bound-and-true-p super-save-mode)
+                  (super-save-command)))))
+
 (use-package dired
   :custom
   (dired-dwim-target t)
@@ -377,5 +384,8 @@
   :custom
   (aw-keys '(?a ?s ?d ?f ?g ?h ?k ?l))
   (aw-scope 'frame)
+  :config
+  ;; Manual integration with super-save since triggers don't work reliably
+  (my-add-super-save-advice 'ace-window)
   :bind
   ("M-o" . ace-window))
