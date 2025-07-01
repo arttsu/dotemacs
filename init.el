@@ -490,3 +490,15 @@
   (org-modern-tag ((t (:foreground "White" :background "CornflowerBlue" :slant italic))))
   :config
   (global-org-modern-mode))
+
+(use-package org-node
+  :ensure
+  :custom
+  (org-mem-do-sync-with-org-id t)
+  :config
+  (org-mem-updater-mode)
+  (org-node-cache-mode)
+  (org-node-backlink-mode)
+  :bind
+  (("M-s M-f" . org-node-find)
+   ("M-s M-i" . org-node-insert-link)))

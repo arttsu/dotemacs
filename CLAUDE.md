@@ -52,8 +52,12 @@ This file provides guidance to Claude Code when working with this Emacs configur
     - Navigation (Avy)
     - Context actions (Embark)
     - Text manipulation (Smartparens, Multiple Cursors, etc.)
+  - **Tools** - External integrations and utilities
+  - **Org & GTD** - Org mode and Getting Things Done workflow packages:
+    - Core Org configuration
+    - Org Modern (visual enhancements)
+    - Org Node (knowledge management)
   - **Programming** - Language-specific and development tools (coming soon)
-  - **Tools** - External integrations and utilities (coming soon)
 
 ## GTD System Documentation
 

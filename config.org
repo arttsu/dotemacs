@@ -644,3 +644,19 @@ We declare it explicitly to ensure we get a recent version, avoiding compatibili
     :config
     (global-org-modern-mode))
 #+end_src
+
+** Org Node
+
+#+begin_src elisp
+  (use-package org-node
+    :ensure
+    :custom
+    (org-mem-do-sync-with-org-id t)
+    :config
+    (org-mem-updater-mode)
+    (org-node-cache-mode)
+    (org-node-backlink-mode)
+    :bind
+    (("M-s M-f" . org-node-find)
+     ("M-s M-i" . org-node-insert-link)))
+#+end_src
