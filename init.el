@@ -371,3 +371,11 @@
   (auto-save-default nil)
   :config
   (super-save-mode))
+
+(use-package ace-window
+  :ensure
+  :custom
+  (aw-keys '(?a ?s ?d ?f ?g ?h ?k ?l))
+  (aw-scope 'frame)
+  :bind
+  ("M-o" . ace-window))

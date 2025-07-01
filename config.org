@@ -505,3 +505,15 @@ We declare it explicitly to ensure we get a recent version, avoiding compatibili
     :config
     (super-save-mode))
 #+end_src
+
+** Ace Window
+
+#+begin_src elisp
+  (use-package ace-window
+    :ensure
+    :custom
+    (aw-keys '(?a ?s ?d ?f ?g ?h ?k ?l))
+    (aw-scope 'frame)
+    :bind
+    ("M-o" . ace-window))
+#+end_src
