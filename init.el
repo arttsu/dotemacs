@@ -189,6 +189,9 @@
   :config
   (vertico-mode)
   (vertico-multiform-mode)
+  ;; Configure multiform for specific commands
+  (add-to-list 'vertico-multiform-commands
+               '(consult-ripgrep buffer indexed))
   :bind
   (:map vertico-map
         ("C-;" . vertico-quick-insert)))
@@ -215,3 +218,29 @@
   (:map corfu-map
         ("C-SPC" . corfu-insert-separator)
         ("C-;" . corfu-quick-insert)))
+
+(use-package consult
+  :ensure
+  :config
+  ;; Don't live preview buffers to avoid triggering package loading (esp. Org)
+  (consult-customize consult-buffer :preview-key "M-.")
+  :bind
+  (;; Buffer and project navigation
+   ("C-x b" . consult-buffer)
+   ("C-x B" . consult-buffer-other-tab)
+   ("C-x 4 b" . consult-buffer-other-window)
+   ("C-x 5 b" . consult-buffer-other-frame)
+   ("C-x p b" . consult-project-buffer)
+
+   ;; Navigation
+   ("M-g M-g" . consult-goto-line)
+   ("M-g o" . consult-outline)
+
+   ;; Search
+   ("M-s l" . consult-line)
+   ("M-s k" . consult-keep-lines)
+   ("M-s f" . consult-focus-lines)
+   ("M-s r" . consult-ripgrep)
+
+   :map prog-mode-map
+   ("C-c ! !" . consult-flymake)))
