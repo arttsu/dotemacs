@@ -5,7 +5,7 @@ This file provides guidance to Claude Code when working with this Emacs configur
 ## Goals
 
 1. **Clean and well-structured config** - Follow best practices, only include necessary functionality
-2. **Document custom GTD setup** - Help understand the workflow for future tasks and potential blog post
+2. **Document custom GTD setup** - Help understand the workflow for future tasks
 3. **Prefer built-in functionality** - Use Emacs built-ins when possible instead of custom implementations
 
 ## Guidelines
@@ -14,7 +14,7 @@ This file provides guidance to Claude Code when working with this Emacs configur
 
 - **Ask when unsure** - About structure, naming conventions, or architectural decisions
 - **Suggest improvements** - Point out better practices or built-in alternatives to custom code
-- **Verify before changing** - Always check the backed up config.org for existing patterns
+- **Verify before changing** - Always check the backed up config.org for existing patterns (TODO: remove this once the migration is complete)
 - **Explain changes** - When adding or modifying functionality, explain why and wait for approval
 
 ### Working with the Config
@@ -33,8 +33,6 @@ This file provides guidance to Claude Code when working with this Emacs configur
 
 ### Structure
 
-- Organize with `:PROPERTIES:` and `:VISIBILITY:` headers
-- Use `#+STARTUP: show4levels` for org files
 - Keep sections focused and minimal
 
 ## GTD System Documentation

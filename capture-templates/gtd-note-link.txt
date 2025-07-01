@@ -1,2 +1,0 @@
-* [[%c][%^{Title}]]
-# CREATED: %U%?
