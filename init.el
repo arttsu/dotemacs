@@ -397,3 +397,31 @@
   (whole-line-or-region-global-mode)
   :bind
   ("M-/" . whole-line-or-region-comment-dwim))
+
+(defun tempel-include (elt)
+  "Include template from another template."
+  (when (eq (car-safe elt) 'i)
+    (if-let (template (alist-get (cadr elt) (tempel--templates)))
+        (cons 'l template)
+      (message "Template %s not found" (cadr elt))
+      nil)))
+
+(use-package tempel
+  :ensure
+  :demand
+  :custom
+  (tempel-trigger-prefix "<")
+  :init
+  (defun my-tempel-setup-capf()
+    (setq-local completion-at-point-functions
+                (cons 'tempel-complete completion-at-point-functions)))
+  (add-hook 'text-mode-hook 'my-tempel-setup-capf)
+  (add-hook 'conf-mode-hook 'my-tempel-setup-capf)
+  (add-hook 'prog-mode-hook 'my-tempel-setup-capf)
+  :config
+  (tempel-key "C-c t f" fun emacs-lisp-mode-map)
+  (tempel-key "C-c t t" today)
+  (tempel-key "C-c t T" now)
+  (add-to-list 'tempel-user-elements #'tempel-include)
+  :bind
+  ("M-+" . tempel-insert))
