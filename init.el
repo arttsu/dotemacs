@@ -467,9 +467,6 @@
                     (setq input (read-string "Project Title: ")))
                   input))
 
-         ;; Get optional category
-         (category (read-string "Category (optional): "))
-
          ;; Get optional priority with character input
          (priority (let ((char (read-char "Priority [A-E] (or RET for default '#D'): ")))
                      (cond
@@ -494,16 +491,7 @@
          (template-content (with-temp-buffer
                              (insert-file-contents (my-org-capture-template-path "gtd-project"))
                              (buffer-string)))
-         (template (with-temp-buffer
-                     (insert (format template-content priority title org-id 
-                                    (if (string-empty-p category) title category) 
-                                    timestamp))
-                     ;; Remove CATEGORY property line if category is empty
-                     (when (string-empty-p category)
-                       (goto-char (point-min))
-                       (when (re-search-forward "^:CATEGORY:.*\n" nil t)
-                         (replace-match "")))
-                     (buffer-string))))
+         (template (format template-content priority title org-id timestamp)))
 
     ;; Check for file existence and write file
     (when (and (file-exists-p full-file-path)
@@ -561,9 +549,6 @@
                     (setq input (read-string "Area Title: ")))
                   input))
 
-         ;; Get optional category
-         (category (read-string "Category (optional): "))
-
          ;; Generate automatic data
          (timestamp (format-time-string "[%Y-%m-%d %a %H:%M]"))
          (slug (replace-regexp-in-string
@@ -579,16 +564,7 @@
          (template-content (with-temp-buffer
                              (insert-file-contents (my-org-capture-template-path "gtd-area"))
                              (buffer-string)))
-         (template (with-temp-buffer
-                     (insert (format template-content title org-id 
-                                    (if (string-empty-p category) title category) 
-                                    timestamp))
-                     ;; Remove CATEGORY property line if category is empty
-                     (when (string-empty-p category)
-                       (goto-char (point-min))
-                       (when (re-search-forward "^:CATEGORY:.*\n" nil t)
-                         (replace-match "")))
-                     (buffer-string))))
+         (template (format template-content title org-id timestamp)))
 
     ;; Check for file existence and write file
     (when (and (file-exists-p full-file-path)
@@ -784,13 +760,14 @@ With prefix argument, or when no AREA link exists, prompt to select an area file
   (let ((subtree-end (save-excursion (org-end-of-subtree t)))
         (scheduled (org-get-scheduled-time (point)))
         (deadline (org-get-deadline-time (point)))
-        (priority (org-get-priority (thing-at-point 'line t)))
-        (tags (org-get-tags)))
-    (when (or scheduled
-              deadline
-              (< priority 1000)
-              (and (< priority 3000)
-                   (member (org-entry-get (point) "GTD_TYPE") '("project" "area"))))
+        (priority (org-get-priority (thing-at-point 'line t))))
+    (unless (or scheduled
+                deadline
+                (< priority 1000)
+                (and (< priority 3000)
+                     (string= (org-entry-get (point) "GTD_TYPE") "project"))
+                (and (< priority 3000)
+                     (string= (org-entry-get (point) "GTD_TYPE") "area")))
       subtree-end)))
 
 (defun my-gtd-day-agenda-skip-project-p ()
@@ -837,6 +814,19 @@ With prefix argument, or when no AREA link exists, prompt to select an area file
                                  (org-agenda-skip-function 'my-gtd-day-agenda-skip-project-p)
                                  (org-agenda-files '(,my-gtd-shared-projects)))))))
 
+(defun my-org-agenda-category-short ()
+  "Return a shortened category name, stripping timestamp from filename if present."
+  (let* ((file-name (file-name-base (buffer-file-name)))
+         ;; Strip timestamp pattern YYYY-MM-DD- from beginning
+         (cleaned-name (replace-regexp-in-string "^[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}-" "" file-name))
+         ;; Limit to 19 characters and capitalize first letter
+         (short-name (if (> (length cleaned-name) 19)
+                         (substring cleaned-name 0 19)
+                       cleaned-name)))
+    (if (string-empty-p short-name) 
+        (substring file-name 0 (min 19 (length file-name)))
+      (capitalize short-name))))
+
 (defun my-org-setup ()
   (setq-local fill-column 120)
   (auto-fill-mode 1))
@@ -862,6 +852,10 @@ With prefix argument, or when no AREA link exists, prompt to select an area file
   (org-capture-templates my-gtd-capture-templates)
   (org-agenda-files my-gtd-all-dirs)
   (org-agenda-custom-commands `(,my-gtd-day-agenda))
+  (org-agenda-prefix-format '((agenda . " %i %-20(my-org-agenda-category-short) %?-12t% s")
+                               (todo . " %i %-20(my-org-agenda-category-short) ")
+                               (tags . " %i %-20(my-org-agenda-category-short) ")
+                               (search . " %i %-20(my-org-agenda-category-short) ")))
   (org-refile-targets '((org-agenda-files :level . 2)))
   (org-attach-id-dir (expand-file-name "attachments" my-org-personal-dir))
   (org-attach-use-inheritance t)

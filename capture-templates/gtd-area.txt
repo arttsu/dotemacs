@@ -1,7 +1,6 @@
 * %s
 :PROPERTIES:
 :ID:       %s
-:CATEGORY: %s
 :GTD_TYPE:  area
 :CREATED:  %s
 :END:
