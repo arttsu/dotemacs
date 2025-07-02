@@ -815,17 +815,25 @@ With prefix argument, or when no AREA link exists, prompt to select an area file
                                  (org-agenda-files '(,my-gtd-shared-projects)))))))
 
 (defun my-org-agenda-category-short ()
-  "Return a shortened category name, stripping timestamp from filename if present."
-  (let* ((file-name (file-name-base (buffer-file-name)))
-         ;; Strip timestamp pattern YYYY-MM-DD- from beginning
-         (cleaned-name (replace-regexp-in-string "^[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}-" "" file-name))
-         ;; Limit to 19 characters and capitalize first letter
-         (short-name (if (> (length cleaned-name) 19)
-                         (substring cleaned-name 0 19)
-                       cleaned-name)))
-    (if (string-empty-p short-name) 
-        (substring file-name 0 (min 19 (length file-name)))
-      (capitalize short-name))))
+  "Return a shortened category name from the top-level heading or filename as fallback."
+  (let ((category-name
+         (or
+          ;; Try to get the top-level heading (project/area title)
+          (save-excursion
+            (save-restriction
+              (widen)
+              (goto-char (point-min))
+              (when (org-at-heading-p)
+                (org-get-heading t t t t))))  ; Strip priority, tags, TODO, and comments
+          ;; Fallback to filename if no heading found
+          (let* ((file-name (file-name-base (buffer-file-name)))
+                 ;; Strip timestamp pattern YYYY-MM-DD- from beginning
+                 (cleaned-name (replace-regexp-in-string "^[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}-" "" file-name)))
+            cleaned-name))))
+    ;; Limit to 19 characters (or 18 + ellipsis if truncated)
+    (if (> (length category-name) 19)
+        (concat (substring category-name 0 18) "…")
+      category-name)))
 
 (defun my-org-setup ()
   (setq-local fill-column 120)
