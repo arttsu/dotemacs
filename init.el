@@ -302,7 +302,26 @@
                                  my-gtd-open-areas
                                  my-gtd-open-projects))
 
-(defconst my-gtd-all-dirs (append my-gtd-personal-dirs my-gtd-open-dirs))
+(defconst my-org-local-dir (expand-file-name "~/org-local"))
+(defconst my-gtd-local-dir (expand-file-name "gtd" my-org-local-dir))
+(defconst my-gtd-local-projects (expand-file-name "projects" my-gtd-local-dir))
+(defconst my-gtd-local-areas (expand-file-name "areas" my-gtd-local-dir))
+(defconst my-gtd-local-dirs (list my-gtd-local-dir
+                                  my-gtd-local-areas
+                                  my-gtd-local-projects))
+
+(defconst my-org-shared-dir (expand-file-name "~/org-shared"))
+(defconst my-gtd-shared-dir (expand-file-name "gtd" my-org-shared-dir))
+(defconst my-gtd-shared-projects (expand-file-name "projects" my-gtd-shared-dir))
+(defconst my-gtd-shared-areas (expand-file-name "areas" my-gtd-shared-dir))
+(defconst my-gtd-shared-dirs (list my-gtd-shared-dir
+                                   my-gtd-shared-areas
+                                   my-gtd-shared-projects))
+
+(defconst my-gtd-all-dirs (append my-gtd-personal-dirs
+                                  my-gtd-open-dirs
+                                  my-gtd-local-dirs
+                                  my-gtd-shared-dirs))
 
 (defun my-org-remove-priority-when-done ()
   (when (string= org-state "DONE")
@@ -446,13 +465,15 @@
 (defun my-gtd-create-project ()
   "Create a new GTD project file from template with interactive prompts."
   (interactive)
-  (let* ((context-options '("Personal" "Open"))
+  (let* ((context-options '("Personal" "Open" "Local" "Shared"))
          (selected-context (completing-read "Context: "
                                             context-options
                                             nil t nil nil "Personal"))
          (projects-dir (pcase selected-context
                          ("Personal" my-gtd-personal-projects)
                          ("Open" my-gtd-open-projects)
+                         ("Local" my-gtd-local-projects)
+                         ("Shared" my-gtd-shared-projects)
                          (_ (error "Invalid context selected: %s" selected-context))))
 
          ;; Get mandatory title with validation
@@ -532,13 +553,15 @@
 (defun my-gtd-create-area ()
   "Create a new GTD area file from template with interactive prompts."
   (interactive)
-  (let* ((context-options '("Personal" "Open"))
+  (let* ((context-options '("Personal" "Open" "Local" "Shared"))
          (selected-context (completing-read "Context: "
                                             context-options
                                             nil t nil nil "Personal"))
          (areas-dir (pcase selected-context
                       ("Personal" my-gtd-personal-areas)
                       ("Open" my-gtd-open-areas)
+                      ("Local" my-gtd-local-areas)
+                      ("Shared" my-gtd-shared-areas)
                       (_ (error "Invalid context selected: %s" selected-context))))
 
          ;; Get mandatory title with validation
@@ -657,8 +680,12 @@ With prefix argument, or when no AREA link exists, prompt to select an area file
            (current-dir (file-name-directory current-file-path))
            (is-personal-project (string-match-p "/org-personal/" current-file-path))
            (is-open-project (string-match-p "/org-open/" current-file-path))
+           (is-local-project (string-match-p "/org-local/" current-file-path))
+           (is-shared-project (string-match-p "/org-shared/" current-file-path))
            (areas-dir (cond (is-personal-project my-gtd-personal-areas)
                             (is-open-project my-gtd-open-areas)
+                            (is-local-project my-gtd-local-areas)
+                            (is-shared-project my-gtd-shared-areas)
                             (t (error "Project file is not in a recognized GTD directory"))))
            (force-select-area prefix))
 
@@ -798,7 +825,23 @@ With prefix argument, or when no AREA link exists, prompt to select an area file
                                  (org-tags-match-list-sublevels nil)
                                  (org-agenda-sorting-strategy '(priority-down))
                                  (org-agenda-skip-function 'my-gtd-day-agenda-skip-project-p)
-                                 (org-agenda-files '(,my-gtd-open-projects)))))))
+                                 (org-agenda-files '(,my-gtd-open-projects))))
+               (todo "TODO" ((org-agenda-overriding-header "Local ad-hoc and high-prio project tasks")
+                             (org-agenda-skip-function 'my-gtd-day-agenda-skip-todo-p)
+                             (org-agenda-files ',my-gtd-local-dirs)))
+               (tags "+PROJECT" ((org-agenda-overriding-header "Local projects")
+                                 (org-tags-match-list-sublevels nil)
+                                 (org-agenda-sorting-strategy '(priority-down))
+                                 (org-agenda-skip-function 'my-gtd-day-agenda-skip-project-p)
+                                 (org-agenda-files '(,my-gtd-local-projects))))
+               (todo "TODO" ((org-agenda-overriding-header "Shared ad-hoc and high-prio project tasks")
+                             (org-agenda-skip-function 'my-gtd-day-agenda-skip-todo-p)
+                             (org-agenda-files ',my-gtd-shared-dirs)))
+               (tags "+PROJECT" ((org-agenda-overriding-header "Shared projects")
+                                 (org-tags-match-list-sublevels nil)
+                                 (org-agenda-sorting-strategy '(priority-down))
+                                 (org-agenda-skip-function 'my-gtd-day-agenda-skip-project-p)
+                                 (org-agenda-files '(,my-gtd-shared-projects)))))))
 
 (defun my-org-setup ()
   (setq-local fill-column 120)
@@ -1189,7 +1232,7 @@ With prefix argument, or when no AREA link exists, prompt to select an area file
   :ensure
   :custom
   (org-mem-do-sync-with-org-id t)
-  (org-mem-watch-dirs (list my-org-personal-dir my-org-open-dir))
+  (org-mem-watch-dirs (list my-org-personal-dir my-org-open-dir my-org-local-dir my-org-shared-dir))
   :config
   (org-mem-updater-mode)
   (org-node-cache-mode)
