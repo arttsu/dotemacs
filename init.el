@@ -908,7 +908,7 @@ With prefix argument, or when no AREA link exists, prompt to select an area file
                            (t . (extrabold))))
   (modus-themes-variable-pitch-ui t)
   :config
-  (modus-themes-load-theme 'modus-vivendi))
+  (modus-themes-load-theme 'modus-operandi))
 
 (set-face-attribute 'default nil :font my-font :height my-font-height)
 (set-frame-font my-font nil t)

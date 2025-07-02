@@ -1033,7 +1033,7 @@ https://protesilaos.com/emacs/modus-themes
                              (t . (extrabold))))
     (modus-themes-variable-pitch-ui t)
     :config
-    (modus-themes-load-theme 'modus-vivendi))
+    (modus-themes-load-theme 'modus-operandi))
 #+end_src
 **** Font
 #+begin_src elisp
