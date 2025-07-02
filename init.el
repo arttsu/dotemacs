@@ -760,14 +760,22 @@ With prefix argument, or when no AREA link exists, prompt to select an area file
   (let ((subtree-end (save-excursion (org-end-of-subtree t)))
         (scheduled (org-get-scheduled-time (point)))
         (deadline (org-get-deadline-time (point)))
-        (priority (org-get-priority (thing-at-point 'line t))))
+        (priority (org-get-priority (thing-at-point 'line t)))
+        (gtd-type (org-entry-get-with-inheritance "GTD_TYPE"))
+        (tags (org-get-tags-at)))
     (unless (or scheduled
                 deadline
-                (< priority 1000)
-                (and (< priority 3000)
-                     (string= (org-entry-get (point) "GTD_TYPE") "project"))
-                (and (< priority 3000)
-                     (string= (org-entry-get (point) "GTD_TYPE") "area")))
+                ;; For ad-hoc todos (not in projects/areas): show unless priority is E
+                (and (not (member gtd-type '("project" "area")))
+                     (not (member "PROJECT" tags))
+                     (not (member "AREA" tags))
+                     (not (= priority 0)))  ; E priority = 0
+                ;; For project/area todos: show only if priority is A or B
+                (and (or (member gtd-type '("project" "area"))
+                         (member "PROJECT" tags)
+                         (member "AREA" tags))
+                     (or (= priority 4000)  ; A priority
+                         (= priority 3000))))  ; B priority
       subtree-end)))
 
 (defun my-gtd-day-agenda-skip-project-p ()
@@ -815,35 +823,45 @@ With prefix argument, or when no AREA link exists, prompt to select an area file
                                  (org-agenda-files '(,my-gtd-shared-projects)))))))
 
 (defun my-org-agenda-category-short ()
-  "Return empty string for project/area files, or shortened name for other files."
-  ;; Check if this is a project or area file
-  (if (save-excursion
-        (save-restriction
-          (widen)
-          (goto-char (point-min))
-          (when (org-at-heading-p)
-            (member (org-entry-get (point) "GTD_TYPE") '("project" "area")))))
-      ;; Return empty string for project/area files
-      ""
-    ;; For non-project/area files, show category
-    (let ((category-name
-           (or
-            ;; Try to get the top-level heading
-            (save-excursion
-              (save-restriction
-                (widen)
-                (goto-char (point-min))
-                (when (org-at-heading-p)
-                  (org-get-heading t t t t))))  ; Strip priority, tags, TODO, and comments
-            ;; Fallback to filename
-            (let* ((file-name (file-name-base (buffer-file-name)))
-                   ;; Strip timestamp pattern YYYY-MM-DD- from beginning
-                   (cleaned-name (replace-regexp-in-string "^[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}-" "" file-name)))
-              cleaned-name))))
-      ;; Limit to 19 characters (or 18 + ellipsis if truncated)
-      (if (> (length category-name) 19)
-          (concat (substring category-name 0 18) "…")
-        category-name))))
+  "Return project/area name for tasks within projects/areas, or shortened name for other files."
+  (let ((gtd-type-current (org-entry-get (point) "GTD_TYPE"))
+        (gtd-type-inherited (org-entry-get-with-inheritance "GTD_TYPE")))
+    (cond
+     ;; If current heading has GTD_TYPE (i.e., it's the project/area heading itself), return empty
+     ((member gtd-type-current '("project" "area"))
+      "")
+     ;; If we're inside a project/area (inherited GTD_TYPE), show the project/area name
+     ((member gtd-type-inherited '("project" "area"))
+      (let ((project-name (save-excursion
+                            (save-restriction
+                              (widen)
+                              (goto-char (point-min))
+                              (when (org-at-heading-p)
+                                (org-get-heading t t t t))))))  ; Strip priority, tags, TODO, and comments
+        ;; Limit to 19 characters (or 18 + ellipsis if truncated)
+        (if (and project-name (> (length project-name) 19))
+            (concat (substring project-name 0 18) "…")
+          (or project-name ""))))
+     ;; For non-project/area files, show category based on filename or top-level heading
+     (t
+      (let ((category-name
+             (or
+              ;; Try to get the top-level heading
+              (save-excursion
+                (save-restriction
+                  (widen)
+                  (goto-char (point-min))
+                  (when (org-at-heading-p)
+                    (org-get-heading t t t t))))  ; Strip priority, tags, TODO, and comments
+              ;; Fallback to filename
+              (let* ((file-name (file-name-base (buffer-file-name)))
+                     ;; Strip timestamp pattern YYYY-MM-DD- from beginning
+                     (cleaned-name (replace-regexp-in-string "^[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}-" "" file-name)))
+                cleaned-name))))
+        ;; Limit to 19 characters (or 18 + ellipsis if truncated)
+        (if (> (length category-name) 19)
+            (concat (substring category-name 0 18) "…")
+          category-name))))))
 
 (defun my-org-setup ()
   (setq-local fill-column 120)
