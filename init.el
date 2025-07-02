@@ -537,20 +537,8 @@
 ;; Timestamp extraction functions
 (defun my-gtd-extract-created-timestamp ()
   "Extract CREATED timestamp from current entry."
-  (save-excursion
-    (save-restriction
-      (org-narrow-to-subtree)
-      (goto-char (point-min))
-      (cond
-       ;; First try #+CREATED: format
-       ((re-search-forward "^#\\+CREATED: " nil t)
-        (buffer-substring-no-properties (point) (line-end-position)))
-       ;; For log entries, try to extract from heading
-       ((and (my-gtd-log-p)
-             (re-search-forward "^\\*+ \\(\\[.*?\\]\\)" nil t))
-        (match-string-no-properties 1))
-       ;; Default fallback
-       (t "[1900-01-01 Mon 00:00]")))))
+  (or (org-entry-get (point) "CREATED")
+      "[1900-01-01 Mon 00:00]"))
 
 (defun my-gtd-extract-closed-timestamp ()
   "Extract CLOSED timestamp from current entry."
@@ -619,30 +607,6 @@
            (parent-style (or parent-style-prop "")))
       (when (string= parent-style "checklist")
         (run-with-idle-timer 0 nil 'my-gtd-checklist-do-auto-advance)))))
-
-;; Note and todo insertion
-(defun my-gtd-insert-note ()
-  "Insert a new note with timestamp."
-  (interactive)
-  (org-insert-heading-respect-content)
-  (forward-line)
-  (insert "#+CREATED: ")
-  (org-insert-timestamp (current-time) t t)
-  (insert "\n")
-  (forward-line -2)
-  (end-of-line))
-
-(defun my-gtd-insert-todo ()
-  "Insert a new TODO with timestamp."
-  (interactive)
-  (org-insert-heading-respect-content)
-  (insert "TODO ")
-  (forward-line)
-  (insert "#+CREATED: ")
-  (org-insert-timestamp (current-time) t t)
-  (insert "\n")
-  (forward-line -2)
-  (end-of-line))
 
 ;; Sorting functions
 (defun my-gtd-sort-todos ()

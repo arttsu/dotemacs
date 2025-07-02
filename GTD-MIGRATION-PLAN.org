@@ -63,7 +63,7 @@ Core infrastructure needed for all other phases.
 Basic content creation and organization without external dependencies.
 
 *** Steps
-- [X] Add note/todo insertion functions
+- [X] ~~Add note/todo insertion functions~~ (skipped - using capture templates)
 - [X] Add sorting and organization utilities
 - [X] Add checklist management functions
 - [X] Add basic project/area structure functions
@@ -78,9 +78,7 @@ Basic content creation and organization without external dependencies.
 - [ ] Fix checklist sorting to show DONE items in reverse chronological order
 - [ ] Enable sorting when called from child entries (should navigate to parent)
 
-*** Functions to Migrate (7 functions)
-- =my-gtd-insert-note= - Creates note with timestamp
-- =my-gtd-insert-todo= - Creates todo with timestamp
+*** Functions to Migrate (5 functions)
 - =my-gtd-sort-todos= - Sorts by priority/timestamp
 - =my-gtd-sort-by-style= - Style-specific sorting
 - =my-gtd-sort-entries= - Smart sorting dispatcher
