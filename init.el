@@ -763,20 +763,22 @@ With prefix argument, or when no AREA link exists, prompt to select an area file
         (priority (org-get-priority (thing-at-point 'line t)))
         (gtd-type (org-entry-get-with-inheritance "GTD_TYPE"))
         (tags (org-get-tags-at)))
-    (unless (or scheduled
-                deadline
-                ;; For ad-hoc todos (not in projects/areas): show unless priority is E
-                (and (not (member gtd-type '("project" "area")))
-                     (not (member "PROJECT" tags))
-                     (not (member "AREA" tags))
-                     (not (= priority 0)))  ; E priority = 0
-                ;; For project/area todos: show only if priority is A or B
-                (and (or (member gtd-type '("project" "area"))
-                         (member "PROJECT" tags)
-                         (member "AREA" tags))
-                     (or (= priority 4000)  ; A priority
-                         (= priority 3000))))  ; B priority
-      subtree-end)))
+    (cond
+     ;; Skip scheduled/deadline items - they'll show in the calendar section
+     ((or scheduled deadline) subtree-end)
+     ;; For ad-hoc todos (not in projects/areas): show unless priority is E
+     ((and (not (member gtd-type '("project" "area")))
+           (not (member "PROJECT" tags))
+           (not (member "AREA" tags))
+           (not (= priority 0))) nil)  ; E priority = 0
+     ;; For project/area todos: show only if priority is A or B
+     ((and (or (member gtd-type '("project" "area"))
+               (member "PROJECT" tags)
+               (member "AREA" tags))
+           (or (= priority 4000)  ; A priority
+               (= priority 3000))) nil)  ; B priority
+     ;; Skip everything else
+     (t subtree-end))))
 
 (defun my-gtd-day-agenda-skip-project-p ()
   (let ((subtree-end (save-excursion (org-end-of-subtree t)))
