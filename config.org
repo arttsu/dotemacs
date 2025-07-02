@@ -270,8 +270,7 @@ https://github.com/magit/transient
       ;; Check if this is a project or area file
       (goto-char (point-min))
       (unless (and (org-at-heading-p)
-                   (or (member "PROJECT" (org-get-tags))
-                       (member "AREA" (org-get-tags))))
+                   (member (org-entry-get (point) "GTD_TYPE") '("project" "area")))
         (error "Not a project or area file"))
 
       ;; Step 2: Get the headline ID
@@ -356,8 +355,7 @@ https://github.com/magit/transient
       (save-excursion
         (goto-char (point-min))
         (when (and (org-at-heading-p)
-                   (or (member "PROJECT" (org-get-tags))
-                       (member "AREA" (org-get-tags)))
+                   (member (org-entry-get (point) "GTD_TYPE") '("project" "area"))
                    (org-id-get))
           (condition-case nil
               (my-gtd-update-attachments-heading)
@@ -413,13 +411,8 @@ https://github.com/magit/transient
 ****** Org: GTD: Extract created/closed timestamp
 #+begin_src elisp
   (defun my-gtd-extract-created-timestamp ()
-    (save-excursion
-      (save-restriction
-        (org-narrow-to-subtree)
-        (goto-char (point-min))
-        (if (re-search-forward "# CREATED: " nil t)
-            (buffer-substring-no-properties (point) (line-end-position))
-          "[1900-01-01 Mon 00:00]"))))
+    (or (org-entry-get (point) "CREATED")
+        "[1900-01-01 Mon 00:00]"))
 
   (defun my-gtd-extract-closed-timestamp ()
     (save-excursion
@@ -483,11 +476,7 @@ https://github.com/magit/transient
   (defun my-gtd-insert-note ()
     (interactive)
     (org-insert-heading-respect-content)
-    (forward-line)
-    (insert "# CREATED: ")
-    (org-insert-timestamp (current-time) t t)
-    (insert "\n")
-    (forward-line -2)
+    (org-entry-put (point) "CREATED" (format-time-string "[%Y-%m-%d %a %H:%M]"))
     (end-of-line))
 #+end_src
 ****** Org: GTD: Insert todo
@@ -496,11 +485,7 @@ https://github.com/magit/transient
     (interactive)
     (org-insert-heading-respect-content)
     (insert "TODO ")
-    (forward-line)
-    (insert "# CREATED: ")
-    (org-insert-timestamp (current-time) t t)
-    (insert "\n")
-    (forward-line -2)
+    (org-entry-put (point) "CREATED" (format-time-string "[%Y-%m-%d %a %H:%M]"))
     (end-of-line))
 #+end_src
 ****** Org: GTD: Sort entries
@@ -586,11 +571,8 @@ https://github.com/magit/transient
                       (setq input (read-string "Project Title: ")))
                     input))
 
-           ;; Get mandatory category with validation
-           (category (let ((input ""))
-                       (while (string-empty-p (string-trim input))
-                         (setq input (read-string "Category: ")))
-                       input))
+           ;; Get optional category
+           (category (read-string "Category (optional): "))
 
            ;; Get optional priority with character input
            (priority (let ((char (read-char "Priority [A-E] (or RET for default '#D'): ")))
@@ -616,7 +598,16 @@ https://github.com/magit/transient
            (template-content (with-temp-buffer
                                (insert-file-contents (my-org-capture-template-path "gtd-project"))
                                (buffer-string)))
-           (template (format template-content priority title org-id category timestamp)))
+           (template (with-temp-buffer
+                       (insert (format template-content priority title org-id 
+                                      (if (string-empty-p category) title category) 
+                                      timestamp))
+                       ;; Remove CATEGORY property line if category is empty
+                       (when (string-empty-p category)
+                         (goto-char (point-min))
+                         (when (re-search-forward "^:CATEGORY:.*\n" nil t)
+                           (replace-match "")))
+                       (buffer-string))))
 
       ;; Check for file existence and write file
       (when (and (file-exists-p full-file-path)
@@ -676,11 +667,8 @@ https://github.com/magit/transient
                       (setq input (read-string "Area Title: ")))
                     input))
 
-           ;; Get mandatory category with validation
-           (category (let ((input ""))
-                       (while (string-empty-p (string-trim input))
-                         (setq input (read-string "Category: ")))
-                       input))
+           ;; Get optional category
+           (category (read-string "Category (optional): "))
 
            ;; Generate automatic data
            (timestamp (format-time-string "[%Y-%m-%d %a %H:%M]"))
@@ -697,7 +685,16 @@ https://github.com/magit/transient
            (template-content (with-temp-buffer
                                (insert-file-contents (my-org-capture-template-path "gtd-area"))
                                (buffer-string)))
-           (template (format template-content title org-id category timestamp)))
+           (template (with-temp-buffer
+                       (insert (format template-content title org-id 
+                                      (if (string-empty-p category) title category) 
+                                      timestamp))
+                       ;; Remove CATEGORY property line if category is empty
+                       (when (string-empty-p category)
+                         (goto-char (point-min))
+                         (when (re-search-forward "^:CATEGORY:.*\n" nil t)
+                           (replace-match "")))
+                       (buffer-string))))
 
       ;; Check for file existence and write file
       (when (and (file-exists-p full-file-path)
@@ -725,11 +722,11 @@ https://github.com/magit/transient
     (unless (eq major-mode 'org-mode)
       (error "This is not an Org project file"))
 
-    ;; Get the tags of the top-level headline
+    ;; Check if this is a project file
     (save-excursion
       (goto-char (point-min))
       (unless (and (org-at-heading-p)
-                   (member "PROJECT" (org-get-tags)))
+                   (string= "project" (org-entry-get (point) "GTD_TYPE")))
         (error "This is not an Org project file")))
 
     ;; Confirm with user
@@ -749,13 +746,10 @@ https://github.com/magit/transient
           (goto-char (point-min))
           (org-entry-put (point) "PRIORITY" nil))
 
-        ;; Step 4: Insert ARCHIVED_AT timestamp
+        ;; Step 4: Set ARCHIVED property
         (save-excursion
           (goto-char (point-min))
-          (when (re-search-forward "^CREATED: " nil t)
-            (end-of-line)
-            (let ((timestamp-string (format-time-string "[%Y-%m-%d %a %H:%M]")))
-              (insert (format "\nARCHIVED_AT: %s \\\\" timestamp-string)))))
+          (org-entry-put (point) "ARCHIVED" (format-time-string "[%Y-%m-%d %a %H:%M]")))
 
         ;; Step 5: Move file and update Org ID locations
         (save-buffer)
@@ -910,7 +904,7 @@ https://github.com/magit/transient
                 deadline
                 (< priority 1000)
                 (and (< priority 3000)
-                     (or (member "PROJECT" tags) (member "AREA" tags))))
+                     (member (org-entry-get (point) "GTD_TYPE") '("project" "area"))))
         subtree-end)))
 
   (defun my-gtd-day-agenda-skip-project-p ()
@@ -927,7 +921,7 @@ https://github.com/magit/transient
                  (todo "TODO" ((org-agenda-overriding-header "Ad-hoc and high-prio project tasks")
                                (org-agenda-skip-function 'my-gtd-day-agenda-skip-todo-p)
                                (org-agenda-files ',my-gtd-personal-dirs)))
-                 (tags "+PROJECT" ((org-agenda-overriding-header "Projects")
+                 (tags "GTD_TYPE=\"project\"" ((org-agenda-overriding-header "Projects")
                                    (org-tags-match-list-sublevels nil)
                                    (org-agenda-sorting-strategy '(priority-down))
                                    (org-agenda-skip-function 'my-gtd-day-agenda-skip-project-p)
@@ -935,7 +929,7 @@ https://github.com/magit/transient
                  (todo "TODO" ((org-agenda-overriding-header "Open ad-hoc and high-prio project tasks")
                                (org-agenda-skip-function 'my-gtd-day-agenda-skip-todo-p)
                                (org-agenda-files ',my-gtd-open-dirs)))
-                 (tags "+PROJECT" ((org-agenda-overriding-header "Open projects")
+                 (tags "GTD_TYPE=\"project\"" ((org-agenda-overriding-header "Open projects")
                                    (org-tags-match-list-sublevels nil)
                                    (org-agenda-sorting-strategy '(priority-down))
                                    (org-agenda-skip-function 'my-gtd-day-agenda-skip-project-p)
@@ -943,7 +937,7 @@ https://github.com/magit/transient
                  (todo "TODO" ((org-agenda-overriding-header "Local ad-hoc and high-prio project tasks")
                                (org-agenda-skip-function 'my-gtd-day-agenda-skip-todo-p)
                                (org-agenda-files ',my-gtd-local-dirs)))
-                 (tags "+PROJECT" ((org-agenda-overriding-header "Local projects")
+                 (tags "GTD_TYPE=\"project\"" ((org-agenda-overriding-header "Local projects")
                                    (org-tags-match-list-sublevels nil)
                                    (org-agenda-sorting-strategy '(priority-down))
                                    (org-agenda-skip-function 'my-gtd-day-agenda-skip-project-p)
@@ -951,7 +945,7 @@ https://github.com/magit/transient
                  (todo "TODO" ((org-agenda-overriding-header "Shared ad-hoc and high-prio project tasks")
                                (org-agenda-skip-function 'my-gtd-day-agenda-skip-todo-p)
                                (org-agenda-files ',my-gtd-shared-dirs)))
-                 (tags "+PROJECT" ((org-agenda-overriding-header "Shared projects")
+                 (tags "GTD_TYPE=\"project\"" ((org-agenda-overriding-header "Shared projects")
                                    (org-tags-match-list-sublevels nil)
                                    (org-agenda-sorting-strategy '(priority-down))
                                    (org-agenda-skip-function 'my-gtd-day-agenda-skip-project-p)

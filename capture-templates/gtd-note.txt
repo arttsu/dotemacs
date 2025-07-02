@@ -1,2 +1,5 @@
 * %^{Title}
-# CREATED: %U%?
+:PROPERTIES:
+:CREATED:  %U
+:END:
+%?

@@ -1,15 +1,20 @@
-* %s %s :PROJECT:
+* %s %s
 :PROPERTIES:
 :ID:       %s
 :CATEGORY: %s
+:GTD_TYPE:  project
+:CREATED:  %s
 :END:
-CREATED: %s \\
+
 AREA: AREA \\
+
 ** Resources
-** TODOs
+
+** To-dos
 :PROPERTIES:
 :STYLE:    checklist
 :END:
+
 ** Log
 :PROPERTIES:
 :STYLE:    log
