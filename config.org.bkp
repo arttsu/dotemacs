@@ -270,8 +270,7 @@ https://github.com/magit/transient
       ;; Check if this is a project or area file
       (goto-char (point-min))
       (unless (and (org-at-heading-p)
-                   (or (member "PROJECT" (org-get-tags))
-                       (member "AREA" (org-get-tags))))
+                   (member (org-entry-get (point) "GTD_TYPE") '("project" "area")))
         (error "Not a project or area file"))
 
       ;; Step 2: Get the headline ID
@@ -356,8 +355,7 @@ https://github.com/magit/transient
       (save-excursion
         (goto-char (point-min))
         (when (and (org-at-heading-p)
-                   (or (member "PROJECT" (org-get-tags))
-                       (member "AREA" (org-get-tags)))
+                   (member (org-entry-get (point) "GTD_TYPE") '("project" "area"))
                    (org-id-get))
           (condition-case nil
               (my-gtd-update-attachments-heading)
@@ -382,7 +380,26 @@ https://github.com/magit/transient
                                    my-gtd-open-areas
                                    my-gtd-open-projects))
 
-  (defconst my-gtd-all-dirs (append my-gtd-personal-dirs my-gtd-open-dirs))
+  (defconst my-org-local-dir (expand-file-name "~/org-local"))
+  (defconst my-gtd-local-dir (expand-file-name "gtd" my-org-local-dir))
+  (defconst my-gtd-local-projects (expand-file-name "projects" my-gtd-local-dir))
+  (defconst my-gtd-local-areas (expand-file-name "areas" my-gtd-local-dir))
+  (defconst my-gtd-local-dirs (list my-gtd-local-dir
+                                    my-gtd-local-areas
+                                    my-gtd-local-projects))
+
+  (defconst my-org-shared-dir (expand-file-name "~/org-shared"))
+  (defconst my-gtd-shared-dir (expand-file-name "gtd" my-org-shared-dir))
+  (defconst my-gtd-shared-projects (expand-file-name "projects" my-gtd-shared-dir))
+  (defconst my-gtd-shared-areas (expand-file-name "areas" my-gtd-shared-dir))
+  (defconst my-gtd-shared-dirs (list my-gtd-shared-dir
+                                     my-gtd-shared-areas
+                                     my-gtd-shared-projects))
+
+  (defconst my-gtd-all-dirs (append my-gtd-personal-dirs
+                                    my-gtd-open-dirs
+                                    my-gtd-local-dirs
+                                    my-gtd-shared-dirs))
 #+end_src
 ***** Org: GTD: Helpers
 ****** Org: GTD: Remove priority when todo is done
@@ -394,13 +411,8 @@ https://github.com/magit/transient
 ****** Org: GTD: Extract created/closed timestamp
 #+begin_src elisp
   (defun my-gtd-extract-created-timestamp ()
-    (save-excursion
-      (save-restriction
-        (org-narrow-to-subtree)
-        (goto-char (point-min))
-        (if (re-search-forward "# CREATED: " nil t)
-            (buffer-substring-no-properties (point) (line-end-position))
-          "[1900-01-01 Mon 00:00]"))))
+    (or (org-entry-get (point) "CREATED")
+        "[1900-01-01 Mon 00:00]"))
 
   (defun my-gtd-extract-closed-timestamp ()
     (save-excursion
@@ -464,11 +476,7 @@ https://github.com/magit/transient
   (defun my-gtd-insert-note ()
     (interactive)
     (org-insert-heading-respect-content)
-    (forward-line)
-    (insert "# CREATED: ")
-    (org-insert-timestamp (current-time) t t)
-    (insert "\n")
-    (forward-line -2)
+    (org-entry-put (point) "CREATED" (format-time-string "[%Y-%m-%d %a %H:%M]"))
     (end-of-line))
 #+end_src
 ****** Org: GTD: Insert todo
@@ -477,11 +485,7 @@ https://github.com/magit/transient
     (interactive)
     (org-insert-heading-respect-content)
     (insert "TODO ")
-    (forward-line)
-    (insert "# CREATED: ")
-    (org-insert-timestamp (current-time) t t)
-    (insert "\n")
-    (forward-line -2)
+    (org-entry-put (point) "CREATED" (format-time-string "[%Y-%m-%d %a %H:%M]"))
     (end-of-line))
 #+end_src
 ****** Org: GTD: Sort entries
@@ -550,13 +554,15 @@ https://github.com/magit/transient
   (defun my-gtd-create-project ()
     "Create a new GTD project file from template with interactive prompts."
     (interactive)
-    (let* ((context-options '("Personal" "Open"))
+    (let* ((context-options '("Personal" "Open" "Local" "Shared"))
            (selected-context (completing-read "Context: "
                                               context-options
                                               nil t nil nil "Personal"))
            (projects-dir (pcase selected-context
                            ("Personal" my-gtd-personal-projects)
                            ("Open" my-gtd-open-projects)
+                           ("Local" my-gtd-local-projects)
+                           ("Shared" my-gtd-shared-projects)
                            (_ (error "Invalid context selected: %s" selected-context))))
 
            ;; Get mandatory title with validation
@@ -564,12 +570,6 @@ https://github.com/magit/transient
                     (while (string-empty-p (string-trim input))
                       (setq input (read-string "Project Title: ")))
                     input))
-
-           ;; Get mandatory category with validation
-           (category (let ((input ""))
-                       (while (string-empty-p (string-trim input))
-                         (setq input (read-string "Category: ")))
-                       input))
 
            ;; Get optional priority with character input
            (priority (let ((char (read-char "Priority [A-E] (or RET for default '#D'): ")))
@@ -595,7 +595,7 @@ https://github.com/magit/transient
            (template-content (with-temp-buffer
                                (insert-file-contents (my-org-capture-template-path "gtd-project"))
                                (buffer-string)))
-           (template (format template-content priority title org-id category timestamp)))
+           (template (format template-content priority title org-id timestamp)))
 
       ;; Check for file existence and write file
       (when (and (file-exists-p full-file-path)
@@ -638,13 +638,15 @@ https://github.com/magit/transient
   (defun my-gtd-create-area ()
     "Create a new GTD area file from template with interactive prompts."
     (interactive)
-    (let* ((context-options '("Personal" "Open"))
+    (let* ((context-options '("Personal" "Open" "Local" "Shared"))
            (selected-context (completing-read "Context: "
                                               context-options
                                               nil t nil nil "Personal"))
            (areas-dir (pcase selected-context
                         ("Personal" my-gtd-personal-areas)
                         ("Open" my-gtd-open-areas)
+                        ("Local" my-gtd-local-areas)
+                        ("Shared" my-gtd-shared-areas)
                         (_ (error "Invalid context selected: %s" selected-context))))
 
            ;; Get mandatory title with validation
@@ -652,12 +654,6 @@ https://github.com/magit/transient
                     (while (string-empty-p (string-trim input))
                       (setq input (read-string "Area Title: ")))
                     input))
-
-           ;; Get mandatory category with validation
-           (category (let ((input ""))
-                       (while (string-empty-p (string-trim input))
-                         (setq input (read-string "Category: ")))
-                       input))
 
            ;; Generate automatic data
            (timestamp (format-time-string "[%Y-%m-%d %a %H:%M]"))
@@ -674,7 +670,7 @@ https://github.com/magit/transient
            (template-content (with-temp-buffer
                                (insert-file-contents (my-org-capture-template-path "gtd-area"))
                                (buffer-string)))
-           (template (format template-content title org-id category timestamp)))
+           (template (format template-content title org-id timestamp)))
 
       ;; Check for file existence and write file
       (when (and (file-exists-p full-file-path)
@@ -702,11 +698,11 @@ https://github.com/magit/transient
     (unless (eq major-mode 'org-mode)
       (error "This is not an Org project file"))
 
-    ;; Get the tags of the top-level headline
+    ;; Check if this is a project file
     (save-excursion
       (goto-char (point-min))
       (unless (and (org-at-heading-p)
-                   (member "PROJECT" (org-get-tags)))
+                   (string= "project" (org-entry-get (point) "GTD_TYPE")))
         (error "This is not an Org project file")))
 
     ;; Confirm with user
@@ -726,13 +722,10 @@ https://github.com/magit/transient
           (goto-char (point-min))
           (org-entry-put (point) "PRIORITY" nil))
 
-        ;; Step 4: Insert ARCHIVED_AT timestamp
+        ;; Step 4: Set ARCHIVED property
         (save-excursion
           (goto-char (point-min))
-          (when (re-search-forward "^CREATED: " nil t)
-            (end-of-line)
-            (let ((timestamp-string (format-time-string "[%Y-%m-%d %a %H:%M]")))
-              (insert (format "\nARCHIVED_AT: %s \\\\" timestamp-string)))))
+          (org-entry-put (point) "ARCHIVED" (format-time-string "[%Y-%m-%d %a %H:%M]")))
 
         ;; Step 5: Move file and update Org ID locations
         (save-buffer)
@@ -767,8 +760,12 @@ https://github.com/magit/transient
              (current-dir (file-name-directory current-file-path))
              (is-personal-project (string-match-p "/org-personal/" current-file-path))
              (is-open-project (string-match-p "/org-open/" current-file-path))
+             (is-local-project (string-match-p "/org-local/" current-file-path))
+             (is-shared-project (string-match-p "/org-shared/" current-file-path))
              (areas-dir (cond (is-personal-project my-gtd-personal-areas)
                               (is-open-project my-gtd-open-areas)
+                              (is-local-project my-gtd-local-areas)
+                              (is-shared-project my-gtd-shared-areas)
                               (t (error "Project file is not in a recognized GTD directory"))))
              (force-select-area prefix))
 
@@ -878,13 +875,24 @@ https://github.com/magit/transient
           (scheduled (org-get-scheduled-time (point)))
           (deadline (org-get-deadline-time (point)))
           (priority (org-get-priority (thing-at-point 'line t)))
-          (tags (org-get-tags)))
-      (when (or scheduled
-                deadline
-                (< priority 1000)
-                (and (< priority 3000)
-                     (or (member "PROJECT" tags) (member "AREA" tags))))
-        subtree-end)))
+          (gtd-type (org-entry-get-with-inheritance "GTD_TYPE"))
+          (tags (org-get-tags-at)))
+      (cond
+       ;; Skip scheduled/deadline items - they'll show in the calendar section
+       ((or scheduled deadline) subtree-end)
+       ;; For ad-hoc todos (not in projects/areas): show unless priority is E
+       ((and (not (member gtd-type '("project" "area")))
+             (not (member "PROJECT" tags))
+             (not (member "AREA" tags))
+             (not (= priority 0))) nil)  ; E priority = 0
+       ;; For project/area todos: show only if priority is A or B
+       ((and (or (member gtd-type '("project" "area"))
+                 (member "PROJECT" tags)
+                 (member "AREA" tags))
+             (or (= priority 4000)  ; A priority
+                 (= priority 3000))) nil)  ; B priority
+       ;; Skip everything else
+       (t subtree-end))))
 
   (defun my-gtd-day-agenda-skip-project-p ()
     (let ((subtree-end (save-excursion (org-end-of-subtree t)))
@@ -900,7 +908,7 @@ https://github.com/magit/transient
                  (todo "TODO" ((org-agenda-overriding-header "Ad-hoc and high-prio project tasks")
                                (org-agenda-skip-function 'my-gtd-day-agenda-skip-todo-p)
                                (org-agenda-files ',my-gtd-personal-dirs)))
-                 (tags "+PROJECT" ((org-agenda-overriding-header "Projects")
+                 (tags "GTD_TYPE=\"project\"" ((org-agenda-overriding-header "Projects")
                                    (org-tags-match-list-sublevels nil)
                                    (org-agenda-sorting-strategy '(priority-down))
                                    (org-agenda-skip-function 'my-gtd-day-agenda-skip-project-p)
@@ -908,11 +916,70 @@ https://github.com/magit/transient
                  (todo "TODO" ((org-agenda-overriding-header "Open ad-hoc and high-prio project tasks")
                                (org-agenda-skip-function 'my-gtd-day-agenda-skip-todo-p)
                                (org-agenda-files ',my-gtd-open-dirs)))
-                 (tags "+PROJECT" ((org-agenda-overriding-header "Open projects")
+                 (tags "GTD_TYPE=\"project\"" ((org-agenda-overriding-header "Open projects")
                                    (org-tags-match-list-sublevels nil)
                                    (org-agenda-sorting-strategy '(priority-down))
                                    (org-agenda-skip-function 'my-gtd-day-agenda-skip-project-p)
-                                   (org-agenda-files '(,my-gtd-open-projects)))))))
+                                   (org-agenda-files '(,my-gtd-open-projects))))
+                 (todo "TODO" ((org-agenda-overriding-header "Local ad-hoc and high-prio project tasks")
+                               (org-agenda-skip-function 'my-gtd-day-agenda-skip-todo-p)
+                               (org-agenda-files ',my-gtd-local-dirs)))
+                 (tags "GTD_TYPE=\"project\"" ((org-agenda-overriding-header "Local projects")
+                                   (org-tags-match-list-sublevels nil)
+                                   (org-agenda-sorting-strategy '(priority-down))
+                                   (org-agenda-skip-function 'my-gtd-day-agenda-skip-project-p)
+                                   (org-agenda-files '(,my-gtd-local-projects))))
+                 (todo "TODO" ((org-agenda-overriding-header "Shared ad-hoc and high-prio project tasks")
+                               (org-agenda-skip-function 'my-gtd-day-agenda-skip-todo-p)
+                               (org-agenda-files ',my-gtd-shared-dirs)))
+                 (tags "GTD_TYPE=\"project\"" ((org-agenda-overriding-header "Shared projects")
+                                   (org-tags-match-list-sublevels nil)
+                                   (org-agenda-sorting-strategy '(priority-down))
+                                   (org-agenda-skip-function 'my-gtd-day-agenda-skip-project-p)
+                                   (org-agenda-files '(,my-gtd-shared-projects)))))))
+#+end_src
+***** Org: Custom category function
+#+begin_src elisp
+  (defun my-org-agenda-category-short ()
+    "Return project/area name for tasks within projects/areas, or shortened name for other files."
+    (let ((gtd-type-current (org-entry-get (point) "GTD_TYPE"))
+          (gtd-type-inherited (org-entry-get-with-inheritance "GTD_TYPE")))
+      (cond
+       ;; If current heading has GTD_TYPE (i.e., it's the project/area heading itself), return empty
+       ((member gtd-type-current '("project" "area"))
+        "")
+       ;; If we're inside a project/area (inherited GTD_TYPE), show the project/area name
+       ((member gtd-type-inherited '("project" "area"))
+        (let ((project-name (save-excursion
+                              (save-restriction
+                                (widen)
+                                (goto-char (point-min))
+                                (when (org-at-heading-p)
+                                  (org-get-heading t t t t))))))  ; Strip priority, tags, TODO, and comments
+          ;; Limit to 19 characters (or 18 + ellipsis if truncated)
+          (if (and project-name (> (length project-name) 19))
+              (concat (substring project-name 0 18) "…")
+            (or project-name ""))))
+       ;; For non-project/area files, show category based on filename or top-level heading
+       (t
+        (let ((category-name
+               (or
+                ;; Try to get the top-level heading
+                (save-excursion
+                  (save-restriction
+                    (widen)
+                    (goto-char (point-min))
+                    (when (org-at-heading-p)
+                      (org-get-heading t t t t))))  ; Strip priority, tags, TODO, and comments
+                ;; Fallback to filename
+                (let* ((file-name (file-name-base (buffer-file-name)))
+                       ;; Strip timestamp pattern YYYY-MM-DD- from beginning
+                       (cleaned-name (replace-regexp-in-string "^[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}-" "" file-name)))
+                  cleaned-name))))
+          ;; Limit to 19 characters (or 18 + ellipsis if truncated)
+          (if (> (length category-name) 19)
+              (concat (substring category-name 0 18) "…")
+            category-name))))))
 #+end_src
 ***** Org: Setup
 #+begin_src elisp
@@ -927,7 +994,7 @@ https://github.com/magit/transient
     :custom
     (org-startup-folded 'showall)
     (org-hide-drawer-startup nil)
-    (org-startup-indented t)
+    (org-startup-indented nil)
     (org-startup-with-inline-images t)
     (org-confirm-babel-evaluate nil)
     (org-use-sub-superscripts '{})
@@ -943,6 +1010,10 @@ https://github.com/magit/transient
     (org-capture-templates my-gtd-capture-templates)
     (org-agenda-files my-gtd-all-dirs)
     (org-agenda-custom-commands `(,my-gtd-day-agenda))
+    (org-agenda-prefix-format '((agenda . " %i %-20(my-org-agenda-category-short) %?-12t% s")
+                                 (todo . " %i %-20(my-org-agenda-category-short) ")
+                                 (tags . " %i %-20(my-org-agenda-category-short) ")
+                                 (search . " %i %-20(my-org-agenda-category-short) ")))
     (org-refile-targets '((org-agenda-files :level . 2)))
     (org-attach-id-dir (expand-file-name "attachments" my-org-personal-dir))
     (org-attach-use-inheritance t)
@@ -1000,7 +1071,7 @@ https://protesilaos.com/emacs/modus-themes
                              (t . (extrabold))))
     (modus-themes-variable-pitch-ui t)
     :config
-    (modus-themes-load-theme 'modus-vivendi))
+    (modus-themes-load-theme 'modus-operandi))
 #+end_src
 **** Font
 #+begin_src elisp
@@ -1416,7 +1487,7 @@ https://github.com/meedstrom/org-node
     :ensure
     :custom
     (org-mem-do-sync-with-org-id t)
-    (org-mem-watch-dirs (list my-org-personal-dir my-org-open-dir))
+    (org-mem-watch-dirs (list my-org-personal-dir my-org-open-dir my-org-local-dir my-org-shared-dir))
     :config
     (org-mem-updater-mode)
     (org-node-cache-mode)
