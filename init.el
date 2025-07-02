@@ -809,7 +809,7 @@ With prefix argument, or when no AREA link exists, prompt to select an area file
   :custom
   (org-startup-folded 'showall)
   (org-hide-drawer-startup nil)
-  (org-startup-indented t)
+  (org-startup-indented nil)
   (org-startup-with-inline-images t)
   (org-confirm-babel-evaluate nil)
   (org-use-sub-superscripts '{})
