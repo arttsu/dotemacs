@@ -1,0 +1,4 @@
+* [[%c][%?]]
+:PROPERTIES:
+:CREATED: %U
+:END:

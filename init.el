@@ -458,6 +458,9 @@
   (org-habit-graph-column 80)
   (org-habit-show-done-always-green t)
 
+  ;; Capture templates
+  (org-capture-templates my-gtd-capture-templates)
+
   :config
   (require 'org-attach)
   (require 'org-id)
@@ -475,6 +478,9 @@
   (("C-c a" . org-agenda)
    ("C-c c" . org-capture)
    ("C-c l" . org-store-link)
+   ;; GTD capture
+   ("C-c i" . my-gtd-capture-note)
+   ("C-c I" . my-gtd-capture-todo)
    ;; GTD project lifecycle
    ("C-c o p" . my-gtd-create-project)
    ("C-c o A" . my-gtd-create-area)
@@ -885,6 +891,31 @@ Returns inverted timestamp for DONE items, earliest date for TODO items."
         (set-buffer-modified-p nil)
 
         (message "Project archived to: %s" new-path)))))
+
+;; Capture template definitions
+(defconst my-gtd-local-inbox-target `(file+headline ,my-gtd-local-inbox "Inbox items"))
+
+(defconst my-gtd-capture-templates
+  `(("i" "Inbox")
+    ("ii" "note" entry ,my-gtd-local-inbox-target (file ,(my-org-capture-template-path "gtd-note")))
+    ("il" "note link" entry ,my-gtd-local-inbox-target (file ,(my-org-capture-template-path "gtd-note-link")))
+    ("iI" "todo" entry ,my-gtd-local-inbox-target (file ,(my-org-capture-template-path "gtd-todo")))
+    ("iL" "todo link" entry ,my-gtd-local-inbox-target (file ,(my-org-capture-template-path "gtd-todo-link")))))
+
+;; Capture wrapper functions
+(defun my-gtd-capture-note (&optional prefix)
+  "Capture a note to inbox. With prefix, capture with link."
+  (interactive "P")
+  (cond ((equal prefix nil) (org-capture nil "ii"))
+        ((equal prefix '(4)) (org-capture nil "il"))
+        (t (error "Invalid prefix argument: %s" prefix))))
+
+(defun my-gtd-capture-todo (&optional prefix)
+  "Capture a todo to inbox. With prefix, capture with link."
+  (interactive "P")
+  (cond ((equal prefix nil) (org-capture nil "iI"))
+        ((equal prefix '(4)) (org-capture nil "iL"))
+        (t (error "Invalid prefix argument: %s" prefix))))
 
 (use-package org-node
   :ensure
