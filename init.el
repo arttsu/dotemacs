@@ -186,7 +186,7 @@
                            (t . (extrabold))))
   (modus-themes-variable-pitch-ui t)
   :config
-  (modus-themes-load-theme 'modus-vivendi))
+  (modus-themes-load-theme 'modus-operandi))
 
 (use-package vertico
   :ensure
@@ -646,8 +646,8 @@ DEFAULT is returned if timestamp doesn't match expected format."
                            (let ((heading (org-get-heading t t t t)))
                              (when (string-match "^\\+\\(.+\\)\\+$" heading)
                                (org-edit-headline (match-string 1 heading))))
-                           ;; Remove WONT_DO tag
-                           (org-toggle-tag "WONT_DO" 'off))
+                           ;; Remove CLOSED_AS property
+                           (org-delete-property "CLOSED_AS"))
                          nil
                          'tree)
         (org-todo "")))))
@@ -657,21 +657,21 @@ DEFAULT is returned if timestamp doesn't match expected format."
   (interactive)
   (my-org-require-at-heading)
   (let ((heading (org-get-heading t t t t))
-        (tags (org-get-tags)))
-    ;; Toggle between WONT_DO and TODO states
-    (if (member "WONT_DO" tags)
-        ;; Currently marked as WONT_DO - undo it
+        (closed-as (org-entry-get (point) "CLOSED_AS")))
+    ;; Toggle between won't-do and TODO states
+    (if (string= closed-as "WONT_DO")
+        ;; Currently marked as won't do - undo it
         (progn
           (org-todo "TODO")
-          (org-toggle-tag "WONT_DO" 'off)
+          (org-delete-property "CLOSED_AS")
           ;; Remove strikethrough if present
           (when (string-match "^\\+\\(.+\\)\\+$" heading)
             (org-edit-headline (match-string 1 heading)))
           (message "Unmarked as won't do"))
-      ;; Not marked as WONT_DO - mark it
+      ;; Not marked as won't do - mark it
       (progn
         (org-todo 'done)
-        (org-toggle-tag "WONT_DO" 'on)
+        (org-entry-put (point) "CLOSED_AS" "WONT_DO")
         ;; Only add strikethrough if not already present
         (unless (string-match "^\\+.+\\+$" heading)
           (org-edit-headline (format "+%s+" heading)))
