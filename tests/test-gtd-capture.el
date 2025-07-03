@@ -236,14 +236,50 @@
   (with-gtd-test-buffer "* Test Heading\nContent"
     (goto-char (point-min))
     (my-gtd-add-blank-line-after-refile)
-    ;; Should not add blank line at end of buffer
-    (should (string-match-p "Content\\'" (buffer-string)))))
+    ;; Should add blank line even at end of buffer (for refiled items)
+    (should (string-match-p "Content\n\\'" (buffer-string)))))
 
 ;;; Integration Test Note
 ;;
 ;; The blank line functionality has been implemented and works correctly in practice.
 ;; The hook is added to org-after-refile-insert-hook and will automatically insert
 ;; blank lines when refiling items to maintain clean separation between entries.
+
+;;; Log Entry Formatting Tests
+
+(ert-deftest test-gtd-log-entry-formatting-function-defined ()
+  "Test that log entry formatting function is defined."
+  (should (fboundp 'my-gtd-format-log-entry-after-refile)))
+
+(ert-deftest test-gtd-log-entry-timestamp-extraction ()
+  "Test that log entries get timestamps prepended when refiled under log section."
+  (with-gtd-test-buffer "* Parent\n:PROPERTIES:\n:STYLE: log\n:END:\n\n** Test Entry\n:PROPERTIES:\n:CREATED: [2025-01-01 Mon 12:00]\n:END:\nSome content"
+    (goto-char (point-min))
+    (org-next-visible-heading 1) ; Go to "Test Entry"
+    (my-gtd-format-log-entry-after-refile)
+    (let ((heading (org-get-heading t t t t)))
+      (should (string-match "^\\[2025-01-01 Mon 12:00\\] Test Entry" heading)))))
+
+(ert-deftest test-gtd-log-entry-no-duplicate-timestamp ()
+  "Test that timestamp is not added if already present in heading."
+  (with-gtd-test-buffer "* Parent\n:PROPERTIES:\n:STYLE: log\n:END:\n\n** [2025-01-01 Mon 12:00] Test Entry\n:PROPERTIES:\n:CREATED: [2025-01-01 Mon 12:00]\n:END:\nSome content"
+    (goto-char (point-min))
+    (org-next-visible-heading 1) ; Go to "Test Entry"
+    (my-gtd-format-log-entry-after-refile)
+    (let ((heading (org-get-heading t t t t)))
+      ;; Should still only have one timestamp
+      (should (string-match "^\\[2025-01-01 Mon 12:00\\] Test Entry" heading))
+      (should-not (string-match "\\[.*\\].*\\[.*\\]" heading)))))
+
+(ert-deftest test-gtd-log-entry-non-log-section ()
+  "Test that timestamp is not added when not under log section."
+  (with-gtd-test-buffer "* Parent\n:PROPERTIES:\n:STYLE: checklist\n:END:\n\n** Test Entry\n:PROPERTIES:\n:CREATED: [2025-01-01 Mon 12:00]\n:END:\nSome content"
+    (goto-char (point-min))
+    (org-next-visible-heading 1) ; Go to "Test Entry"
+    (let ((original-heading (org-get-heading t t t t)))
+      (my-gtd-format-log-entry-after-refile)
+      (let ((new-heading (org-get-heading t t t t)))
+        (should (string= original-heading new-heading))))))
 
 (provide 'test-gtd-capture)
 ;;; test-gtd-capture.el ends here

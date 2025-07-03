@@ -622,8 +622,9 @@ We declare it explicitly to ensure we get a recent version, avoiding compatibili
     ;; GTD hooks
     (add-hook 'org-after-todo-state-change-hook 'my-org-remove-priority-when-done)
     (add-hook 'org-after-todo-state-change-hook 'my-gtd-checklist-auto-advance)
-    ;; Add sorting first, then blank line insertion
+    ;; Refile hooks in order: blank line, format log entry, then sort
     (add-hook 'org-after-refile-insert-hook 'my-gtd-add-blank-line-after-refile -10)
+    (add-hook 'org-after-refile-insert-hook 'my-gtd-format-log-entry-after-refile 50)
     (add-hook 'org-after-refile-insert-hook 'my-gtd-sort-entries 90)
 
     (org-babel-do-load-languages
@@ -1133,6 +1134,20 @@ DEFAULT is returned if timestamp doesn't match expected format."
       (save-excursion
         (org-end-of-subtree t t)
         (insert "\n"))))
+
+  ;; Hook to format log entries with timestamp
+  (defun my-gtd-format-log-entry-after-refile ()
+    "Format refiled item as log entry if under a log section."
+    (when (org-at-heading-p)
+      ;; Check if STYLE property is "log" (with inheritance)
+      (let ((style (org-entry-get (point) "STYLE" t)))
+        (when (string= style "log")
+          ;; Extract timestamp and format heading
+          (let* ((created (org-entry-get (point) "CREATED"))
+                 (heading (org-get-heading t t t t)))
+            (when (and created (not (string-match "^\\[" heading)))
+              ;; Only add timestamp if not already present
+              (org-edit-headline (format "%s %s" created heading))))))))
 
   ;; Refile target verification function
   (defun my-gtd-refile-verify-target ()
