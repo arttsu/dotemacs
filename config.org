@@ -250,7 +250,7 @@
                              (t . (extrabold))))
     (modus-themes-variable-pitch-ui t)
     :config
-    (modus-themes-load-theme 'modus-vivendi))
+    (modus-themes-load-theme 'modus-operandi))
 #+end_src
 
 * Interface & Editing
@@ -627,8 +627,6 @@ We declare it explicitly to ensure we get a recent version, avoiding compatibili
      :map org-mode-map
      ("C-c o C-i" . org-id-get-create)
      ;; GTD workflow
-     ("C-c o i" . my-gtd-insert-note)
-     ("C-c o I" . my-gtd-insert-todo)
      ("C-c o s" . my-gtd-sort-entries)
      ("C-c o r" . my-gtd-reset-checklist)
      ("C-c o x" . my-gtd-complete-as-wont-do)))
@@ -665,19 +663,16 @@ We declare it explicitly to ensure we get a recent version, avoiding compatibili
   (defconst my-gtd-local-inbox (expand-file-name "inbox.org" my-gtd-local-dir))
   (defconst my-gtd-local-areas (expand-file-name "areas" my-gtd-local-dir))
   (defconst my-gtd-local-projects (expand-file-name "projects" my-gtd-local-dir))
-  (defconst my-gtd-local-dirs (list my-gtd-local-dir
-                                    my-gtd-local-areas
-                                    my-gtd-local-projects))
 
   (defconst my-org-shared-dir (expand-file-name "~/org-shared"))
   (defconst my-gtd-shared-dir (expand-file-name "gtd" my-org-shared-dir))
   (defconst my-gtd-shared-projects (expand-file-name "projects" my-gtd-shared-dir))
   (defconst my-gtd-shared-areas (expand-file-name "areas" my-gtd-shared-dir))
-  (defconst my-gtd-shared-dirs (list my-gtd-shared-dir
-                                     my-gtd-shared-areas
-                                     my-gtd-shared-projects))
 
-  (defconst my-gtd-all-dirs (append my-gtd-local-dirs my-gtd-shared-dirs))
+  ;; Directory lists for org-node watching
+  (defconst my-gtd-all-dirs
+    (list my-gtd-local-dir my-gtd-local-areas my-gtd-local-projects
+          my-gtd-shared-dir my-gtd-shared-areas my-gtd-shared-projects))
 #+end_src
 
 ** GTD Helper Functions
@@ -711,33 +706,23 @@ We declare it explicitly to ensure we get a recent version, avoiding compatibili
             (buffer-substring-no-properties (point) (line-end-position))
           "[1900-01-01 Mon 00:00]"))))
 
+  (defun my-gtd-invert-timestamp-for-reverse-sort (timestamp &optional default)
+    "Invert a timestamp for newest-first sorting.
+DEFAULT is returned if timestamp doesn't match expected format."
+    (if (string-match "\\[\\([0-9]\\{4\\}\\)-\\([0-9]\\{2\\}\\)-\\([0-9]\\{2\\}\\).*\\([0-9]\\{2\\}\\):\\([0-9]\\{2\\}\\)\\]" timestamp)
+        (let ((year (string-to-number (match-string 1 timestamp)))
+              (month (string-to-number (match-string 2 timestamp)))
+              (day (string-to-number (match-string 3 timestamp)))
+              (hour (string-to-number (match-string 4 timestamp)))
+              (minute (string-to-number (match-string 5 timestamp))))
+          (format "[%04d-%02d-%02d %02d:%02d"
+                  (- 9999 year) (- 99 month) (- 99 day)
+                  (- 99 hour) (- 99 minute)))
+      (or default "[0000-00-00 00:00]")))
+
   (defun my-gtd-extract-created-timestamp-for-reverse-sort ()
     "Extract created timestamp for newest-first sorting."
-    (let ((timestamp (my-gtd-extract-created-timestamp)))
-      (if (string-match "\\[\\([0-9]\\{4\\}\\)-\\([0-9]\\{2\\}\\)-\\([0-9]\\{2\\}\\).*\\([0-9]\\{2\\}\\):\\([0-9]\\{2\\}\\)\\]" timestamp)
-          (let ((year (string-to-number (match-string 1 timestamp)))
-                (month (string-to-number (match-string 2 timestamp)))
-                (day (string-to-number (match-string 3 timestamp)))
-                (hour (string-to-number (match-string 4 timestamp)))
-                (minute (string-to-number (match-string 5 timestamp))))
-            (format "[%04d-%02d-%02d %02d:%02d"
-                    (- 9999 year) (- 99 month) (- 99 day)
-                    (- 99 hour) (- 99 minute)))
-        "[0000-00-00 00:00]")))
-
-  (defun my-gtd-extract-closed-timestamp-for-reverse-sort ()
-    "Extract closed timestamp for newest-first sorting."
-    (let ((timestamp (my-gtd-extract-closed-timestamp)))
-      (if (string-match "\\[\\([0-9]\\{4\\}\\)-\\([0-9]\\{2\\}\\)-\\([0-9]\\{2\\}\\).*\\([0-9]\\{2\\}\\):\\([0-9]\\{2\\}\\)\\]" timestamp)
-          (let ((year (string-to-number (match-string 1 timestamp)))
-                (month (string-to-number (match-string 2 timestamp)))
-                (day (string-to-number (match-string 3 timestamp)))
-                (hour (string-to-number (match-string 4 timestamp)))
-                (minute (string-to-number (match-string 5 timestamp))))
-            (format "[%04d-%02d-%02d %02d:%02d"
-                    (- 9999 year) (- 99 month) (- 99 day)
-                    (- 99 hour) (- 99 minute)))
-        "[9999-99-99 99:99]")))
+    (my-gtd-invert-timestamp-for-reverse-sort (my-gtd-extract-created-timestamp)))
 
   ;; Style predicates
   (defun my-gtd-checklist-p ()
@@ -782,8 +767,7 @@ We declare it explicitly to ensure we get a recent version, avoiding compatibili
     (org-sort-entries nil ?f 'my-gtd-extract-closed-timestamp)
     (org-sort-entries nil ?p)
     (org-sort-entries nil ?o)
-    (org-cycle)
-    (org-cycle))
+    (org-show-children))
 
 
   (defun my-gtd-sort-by-style ()
@@ -796,8 +780,7 @@ We declare it explicitly to ensure we get a recent version, avoiding compatibili
         (my-gtd-sort-todos))
        ((string= style "log")
         (org-sort-entries nil ?f 'my-gtd-extract-created-timestamp-for-reverse-sort)
-        (org-cycle)
-        (org-cycle))
+        (org-show-children))
        (t
         (message "No supported STYLE property found")))))
 
@@ -806,11 +789,11 @@ We declare it explicitly to ensure we get a recent version, avoiding compatibili
     (interactive)
     (my-org-require-at-heading)
     (let ((style (org-entry-get (point) "STYLE" t)))
-      (if (or (string= style "checklist") (string= style "log"))
+      (if (member style '("checklist" "log"))
           (my-gtd-sort-by-style)
         (org-up-heading-safe)
         (let ((parent-style (org-entry-get (point) "STYLE" t)))
-          (when (or (string= parent-style "checklist") (string= parent-style "log"))
+          (when (member parent-style '("checklist" "log"))
             (my-gtd-sort-by-style))))))
 
   ;; Checklist management

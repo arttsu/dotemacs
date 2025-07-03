@@ -478,8 +478,6 @@
    :map org-mode-map
    ("C-c o C-i" . org-id-get-create)
    ;; GTD workflow
-   ("C-c o i" . my-gtd-insert-note)
-   ("C-c o I" . my-gtd-insert-todo)
    ("C-c o s" . my-gtd-sort-entries)
    ("C-c o r" . my-gtd-reset-checklist)
    ("C-c o x" . my-gtd-complete-as-wont-do)))
@@ -508,51 +506,48 @@
 (defconst my-gtd-local-inbox (expand-file-name "inbox.org" my-gtd-local-dir))
 (defconst my-gtd-local-areas (expand-file-name "areas" my-gtd-local-dir))
 (defconst my-gtd-local-projects (expand-file-name "projects" my-gtd-local-dir))
-(defconst my-gtd-local-dirs (list my-gtd-local-dir
-                                  my-gtd-local-areas
-                                  my-gtd-local-projects))
 
 (defconst my-org-shared-dir (expand-file-name "~/org-shared"))
 (defconst my-gtd-shared-dir (expand-file-name "gtd" my-org-shared-dir))
 (defconst my-gtd-shared-projects (expand-file-name "projects" my-gtd-shared-dir))
 (defconst my-gtd-shared-areas (expand-file-name "areas" my-gtd-shared-dir))
-(defconst my-gtd-shared-dirs (list my-gtd-shared-dir
-                                   my-gtd-shared-areas
-                                   my-gtd-shared-projects))
 
-(defconst my-gtd-all-dirs (append my-gtd-local-dirs my-gtd-shared-dirs))
+;; Directory lists for org-node watching
+(defconst my-gtd-all-dirs
+  (list my-gtd-local-dir my-gtd-local-areas my-gtd-local-projects
+        my-gtd-shared-dir my-gtd-shared-areas my-gtd-shared-projects))
 
 ;; Helper function for validating cursor position
-(defun my-org-require-at-heading ()
-  "Ensure point is at an org heading."
-  (unless (org-at-heading-p)
-    (error "Not at a heading")))
+  (defun my-org-require-at-heading ()
+    "Ensure point is at an org heading."
+    (unless (org-at-heading-p)
+      (error "Not at a heading")))
 
-;; Priority management
-(defun my-org-remove-priority-when-done ()
-  "Remove priority when todo is marked DONE."
-  (when (string= org-state "DONE")
-    (ignore-errors (org-entry-put (point) "PRIORITY" nil))))
+  ;; Priority management
+  (defun my-org-remove-priority-when-done ()
+    "Remove priority when todo is marked DONE."
+    (when (string= org-state "DONE")
+      (ignore-errors (org-entry-put (point) "PRIORITY" nil))))
 
-;; Timestamp extraction functions
-(defun my-gtd-extract-created-timestamp ()
-  "Extract CREATED timestamp from current entry."
-  (or (org-entry-get (point) "CREATED")
-      "[1900-01-01 Mon 00:00]"))
+  ;; Timestamp extraction functions
+  (defun my-gtd-extract-created-timestamp ()
+    "Extract CREATED timestamp from current entry."
+    (or (org-entry-get (point) "CREATED")
+        "[1900-01-01 Mon 00:00]"))
 
-(defun my-gtd-extract-closed-timestamp ()
-  "Extract CLOSED timestamp from current entry."
-  (save-excursion
-    (save-restriction
-      (org-narrow-to-subtree)
-      (goto-char (point-min))
-      (if (re-search-forward "CLOSED: " nil t)
-          (buffer-substring-no-properties (point) (line-end-position))
-        "[1900-01-01 Mon 00:00]"))))
+  (defun my-gtd-extract-closed-timestamp ()
+    "Extract CLOSED timestamp from current entry."
+    (save-excursion
+      (save-restriction
+        (org-narrow-to-subtree)
+        (goto-char (point-min))
+        (if (re-search-forward "CLOSED: " nil t)
+            (buffer-substring-no-properties (point) (line-end-position))
+          "[1900-01-01 Mon 00:00]"))))
 
-(defun my-gtd-extract-created-timestamp-for-reverse-sort ()
-  "Extract created timestamp for newest-first sorting."
-  (let ((timestamp (my-gtd-extract-created-timestamp)))
+  (defun my-gtd-invert-timestamp-for-reverse-sort (timestamp &optional default)
+    "Invert a timestamp for newest-first sorting.
+DEFAULT is returned if timestamp doesn't match expected format."
     (if (string-match "\\[\\([0-9]\\{4\\}\\)-\\([0-9]\\{2\\}\\)-\\([0-9]\\{2\\}\\).*\\([0-9]\\{2\\}\\):\\([0-9]\\{2\\}\\)\\]" timestamp)
         (let ((year (string-to-number (match-string 1 timestamp)))
               (month (string-to-number (match-string 2 timestamp)))
@@ -562,51 +557,41 @@
           (format "[%04d-%02d-%02d %02d:%02d"
                   (- 9999 year) (- 99 month) (- 99 day)
                   (- 99 hour) (- 99 minute)))
-      "[0000-00-00 00:00]")))
+      (or default "[0000-00-00 00:00]")))
 
-(defun my-gtd-extract-closed-timestamp-for-reverse-sort ()
-  "Extract closed timestamp for newest-first sorting."
-  (let ((timestamp (my-gtd-extract-closed-timestamp)))
-    (if (string-match "\\[\\([0-9]\\{4\\}\\)-\\([0-9]\\{2\\}\\)-\\([0-9]\\{2\\}\\).*\\([0-9]\\{2\\}\\):\\([0-9]\\{2\\}\\)\\]" timestamp)
-        (let ((year (string-to-number (match-string 1 timestamp)))
-              (month (string-to-number (match-string 2 timestamp)))
-              (day (string-to-number (match-string 3 timestamp)))
-              (hour (string-to-number (match-string 4 timestamp)))
-              (minute (string-to-number (match-string 5 timestamp))))
-          (format "[%04d-%02d-%02d %02d:%02d"
-                  (- 9999 year) (- 99 month) (- 99 day)
-                  (- 99 hour) (- 99 minute)))
-      "[9999-99-99 99:99]")))
+  (defun my-gtd-extract-created-timestamp-for-reverse-sort ()
+    "Extract created timestamp for newest-first sorting."
+    (my-gtd-invert-timestamp-for-reverse-sort (my-gtd-extract-created-timestamp)))
 
-;; Style predicates
-(defun my-gtd-checklist-p ()
-  "Check if current entry has STYLE property set to 'checklist'."
-  (let ((style (org-entry-get (point) "STYLE" t)))
-    (string= style "checklist")))
+  ;; Style predicates
+  (defun my-gtd-checklist-p ()
+    "Check if current entry has STYLE property set to 'checklist'."
+    (let ((style (org-entry-get (point) "STYLE" t)))
+      (string= style "checklist")))
 
-(defun my-gtd-log-p ()
-  "Check if current entry has STYLE property set to 'log'."
-  (let ((style (org-entry-get (point) "STYLE" t)))
-    (string= style "log")))
+  (defun my-gtd-log-p ()
+    "Check if current entry has STYLE property set to 'log'."
+    (let ((style (org-entry-get (point) "STYLE" t)))
+      (string= style "log")))
 
-;; Checklist auto-advance functionality
-(defun my-gtd-checklist-do-auto-advance ()
-  "Move to next heading in checklist."
-  (let ((point-before (point)))
-    (org-forward-heading-same-level 1)
-    (when (= (point) point-before)
-      (org-up-heading-safe))))
+  ;; Checklist auto-advance functionality
+  (defun my-gtd-checklist-do-auto-advance ()
+    "Move to next heading in checklist."
+    (let ((point-before (point)))
+      (org-forward-heading-same-level 1)
+      (when (= (point) point-before)
+        (org-up-heading-safe))))
 
-(defun my-gtd-checklist-auto-advance ()
-  "Auto-advance to next item when completing checklist items."
-  (when (and (not (eq this-command 'org-agenda-todo))
-             (string= org-state "DONE"))
-    (let* ((current-element (org-element-at-point))
-           (parent (org-element-property :parent current-element))
-           (parent-style-prop (and parent (org-entry-get parent "STYLE")))
-           (parent-style (or parent-style-prop "")))
-      (when (string= parent-style "checklist")
-        (run-with-idle-timer 0 nil 'my-gtd-checklist-do-auto-advance)))))
+  (defun my-gtd-checklist-auto-advance ()
+    "Auto-advance to next item when completing checklist items."
+    (when (and (not (eq this-command 'org-agenda-todo))
+               (string= org-state "DONE"))
+      (let* ((current-element (org-element-at-point))
+             (parent (org-element-property :parent current-element))
+             (parent-style-prop (and parent (org-entry-get parent "STYLE")))
+             (parent-style (or parent-style-prop "")))
+        (when (string= parent-style "checklist")
+          (run-with-idle-timer 0 nil 'my-gtd-checklist-do-auto-advance)))))
 
 ;; Sorting functions
 (defun my-gtd-sort-todos ()
@@ -617,8 +602,7 @@
   (org-sort-entries nil ?f 'my-gtd-extract-closed-timestamp)
   (org-sort-entries nil ?p)
   (org-sort-entries nil ?o)
-  (org-cycle)
-  (org-cycle))
+  (org-show-children))
 
 
 (defun my-gtd-sort-by-style ()
@@ -631,8 +615,7 @@
       (my-gtd-sort-todos))
      ((string= style "log")
       (org-sort-entries nil ?f 'my-gtd-extract-created-timestamp-for-reverse-sort)
-      (org-cycle)
-      (org-cycle))
+      (org-show-children))
      (t
       (message "No supported STYLE property found")))))
 
@@ -641,11 +624,11 @@
   (interactive)
   (my-org-require-at-heading)
   (let ((style (org-entry-get (point) "STYLE" t)))
-    (if (or (string= style "checklist") (string= style "log"))
+    (if (member style '("checklist" "log"))
         (my-gtd-sort-by-style)
       (org-up-heading-safe)
       (let ((parent-style (org-entry-get (point) "STYLE" t)))
-        (when (or (string= parent-style "checklist") (string= parent-style "log"))
+        (when (member parent-style '("checklist" "log"))
           (my-gtd-sort-by-style))))))
 
 ;; Checklist management
