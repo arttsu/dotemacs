@@ -20,8 +20,9 @@ This file provides guidance to Claude Code when working with this Emacs configur
 ### Working with the Config
 
 - Configuration is in `config.org` which tangles to `init.el` and `early-init.el`
-- **Use the tangle script** - Run `./tangle-config.sh` after making changes to clean whitespace and tangle
-- **Never tangle files automatically** - Always use the script or ask the user to run `M-x org-babel-tangle`
+- **Use the build workflow** - Run `make` or `make build` after finalizing changes for complete workflow
+- **Individual steps available** - `make clean-whitespace`, `make tangle`, `make test` for specific tasks
+- **Never tangle files automatically** - Always use the scripts or ask the user to run `M-x org-babel-tangle`
 - Use regular `use-package` declarations (not `elpaca-use-package`) after enabling support
 - `:ensure` defaults to `t` with elpaca-use-package-mode, use `:ensure nil` for built-ins
 - **Check for package integrations** - When migrating packages, review the old config for special integration configurations (e.g., vertico-multiform settings for specific packages, custom keybindings that bridge packages, or specialized configurations that optimize package interactions)
@@ -36,6 +37,7 @@ This file provides guidance to Claude Code when working with this Emacs configur
 - Keep comments minimal - explain WHY not WHAT
 - Write for yourself as the target audience
 - Group related settings with empty lines, avoid labeling sections
+- **Org file style** - Include blank lines after headings before content and after content for readability
 
 ### Structure
 
