@@ -10,6 +10,7 @@
 (require 'test-gtd-checklist)
 (require 'test-gtd-project-lifecycle)
 (require 'test-gtd-capture)
+(require 'test-gtd-agenda)
 
 ;;; Test Runner
 
