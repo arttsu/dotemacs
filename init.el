@@ -1078,37 +1078,44 @@ Returns inverted timestamp for DONE items, earliest date for TODO items."
                   (when (org-at-heading-p)
                     (org-get-heading t t t t))))  ; Strip priority, tags, TODO, and comments
               ;; Fallback to filename
-              (let* ((file-name (file-name-base (buffer-file-name)))
-                     ;; Strip timestamp pattern YYYY-MM-DD- from beginning
-                     (cleaned-name (replace-regexp-in-string "^[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}-" "" file-name)))
-                cleaned-name))))
+              (when (buffer-file-name)
+                (let* ((file-name (file-name-base (buffer-file-name)))
+                       ;; Strip timestamp pattern YYYY-MM-DD- from beginning
+                       (cleaned-name (replace-regexp-in-string "^[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}-" "" file-name)))
+                  cleaned-name)))))
         ;; Limit to 19 characters (or 18 + ellipsis if truncated)
-        (if (> (length category-name) 19)
+        (if (and category-name (> (length category-name) 19))
             (concat (substring category-name 0 18) "…")
-          category-name))))))
+          (or category-name "")))))))
 
-;; GTD day agenda definition
-(defconst my-gtd-day-agenda
+;; GTD day agenda builder function
+(defun my-gtd-build-day-agenda (local-dir local-areas local-projects shared-dir shared-areas shared-projects)
+  "Build day agenda command with specified directories."
   `("d" "Day" ((agenda "" ((org-agenda-span 1)
                            (org-agenda-skip-scheduled-if-done t)
                            (org-agenda-skip-deadline-if-done t)
                            (org-agenda-skip-timestamp-if-done t)))
                (todo "TODO" ((org-agenda-overriding-header "Local ad-hoc and high-prio project tasks")
                              (org-agenda-skip-function 'my-gtd-day-agenda-skip-todo-p)
-                             (org-agenda-files '(,my-gtd-local-dir ,my-gtd-local-areas ,my-gtd-local-projects))))
+                             (org-agenda-files '(,local-dir ,local-areas ,local-projects))))
                (tags "GTD_TYPE=\"project\"" ((org-agenda-overriding-header "Local projects")
                                  (org-tags-match-list-sublevels nil)
                                  (org-agenda-sorting-strategy '(priority-down))
                                  (org-agenda-skip-function 'my-gtd-day-agenda-skip-project-p)
-                                 (org-agenda-files '(,my-gtd-local-projects))))
+                                 (org-agenda-files '(,local-projects))))
                (todo "TODO" ((org-agenda-overriding-header "Shared ad-hoc and high-prio project tasks")
                              (org-agenda-skip-function 'my-gtd-day-agenda-skip-todo-p)
-                             (org-agenda-files '(,my-gtd-shared-dir ,my-gtd-shared-areas ,my-gtd-shared-projects))))
+                             (org-agenda-files '(,shared-dir ,shared-areas ,shared-projects))))
                (tags "GTD_TYPE=\"project\"" ((org-agenda-overriding-header "Shared projects")
                                  (org-tags-match-list-sublevels nil)
                                  (org-agenda-sorting-strategy '(priority-down))
                                  (org-agenda-skip-function 'my-gtd-day-agenda-skip-project-p)
-                                 (org-agenda-files '(,my-gtd-shared-projects)))))))
+                                 (org-agenda-files '(,shared-projects)))))))
+
+;; GTD day agenda definition using current directories
+(defconst my-gtd-day-agenda
+  (my-gtd-build-day-agenda my-gtd-local-dir my-gtd-local-areas my-gtd-local-projects
+                           my-gtd-shared-dir my-gtd-shared-areas my-gtd-shared-projects))
 
 (use-package org-node
   :ensure

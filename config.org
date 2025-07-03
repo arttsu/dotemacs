@@ -1269,28 +1269,34 @@ DEFAULT is returned if timestamp doesn't match expected format."
               (concat (substring category-name 0 18) "…")
             (or category-name ""))))))
 
-  ;; GTD day agenda definition
-  (defconst my-gtd-day-agenda
+  ;; GTD day agenda builder function
+  (defun my-gtd-build-day-agenda (local-dir local-areas local-projects shared-dir shared-areas shared-projects)
+    "Build day agenda command with specified directories."
     `("d" "Day" ((agenda "" ((org-agenda-span 1)
                              (org-agenda-skip-scheduled-if-done t)
                              (org-agenda-skip-deadline-if-done t)
                              (org-agenda-skip-timestamp-if-done t)))
                  (todo "TODO" ((org-agenda-overriding-header "Local ad-hoc and high-prio project tasks")
                                (org-agenda-skip-function 'my-gtd-day-agenda-skip-todo-p)
-                               (org-agenda-files '(,my-gtd-local-dir ,my-gtd-local-areas ,my-gtd-local-projects))))
+                               (org-agenda-files '(,local-dir ,local-areas ,local-projects))))
                  (tags "GTD_TYPE=\"project\"" ((org-agenda-overriding-header "Local projects")
                                    (org-tags-match-list-sublevels nil)
                                    (org-agenda-sorting-strategy '(priority-down))
                                    (org-agenda-skip-function 'my-gtd-day-agenda-skip-project-p)
-                                   (org-agenda-files '(,my-gtd-local-projects))))
+                                   (org-agenda-files '(,local-projects))))
                  (todo "TODO" ((org-agenda-overriding-header "Shared ad-hoc and high-prio project tasks")
                                (org-agenda-skip-function 'my-gtd-day-agenda-skip-todo-p)
-                               (org-agenda-files '(,my-gtd-shared-dir ,my-gtd-shared-areas ,my-gtd-shared-projects))))
+                               (org-agenda-files '(,shared-dir ,shared-areas ,shared-projects))))
                  (tags "GTD_TYPE=\"project\"" ((org-agenda-overriding-header "Shared projects")
                                    (org-tags-match-list-sublevels nil)
                                    (org-agenda-sorting-strategy '(priority-down))
                                    (org-agenda-skip-function 'my-gtd-day-agenda-skip-project-p)
-                                   (org-agenda-files '(,my-gtd-shared-projects)))))))
+                                   (org-agenda-files '(,shared-projects)))))))
+
+  ;; GTD day agenda definition using current directories
+  (defconst my-gtd-day-agenda
+    (my-gtd-build-day-agenda my-gtd-local-dir my-gtd-local-areas my-gtd-local-projects
+                             my-gtd-shared-dir my-gtd-shared-areas my-gtd-shared-projects))
 #+end_src
 
 ** Org Node
