@@ -1,0 +1,18 @@
+* %1$s %2$s
+:PROPERTIES:
+:ID: %3$s
+:GTD_TYPE: project
+:CREATED: %4$s
+:END:
+
+** Resources
+
+** To-dos
+:PROPERTIES:
+:STYLE: checklist
+:END:
+
+** Log
+:PROPERTIES:
+:STYLE: log
+:END:

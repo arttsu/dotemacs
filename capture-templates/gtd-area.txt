@@ -1,0 +1,18 @@
+* %1$s
+:PROPERTIES:
+:ID: %2$s
+:GTD_TYPE: area
+:CREATED: %3$s
+:END:
+
+** Resources
+
+** To-dos
+:PROPERTIES:
+:STYLE: checklist
+:END:
+
+** Log
+:PROPERTIES:
+:STYLE: log
+:END:

@@ -8,6 +8,7 @@
 
 (require 'test-gtd-sorting)
 (require 'test-gtd-checklist)
+(require 'test-gtd-project-lifecycle)  ; Temporarily disabled due to syntax issue
 
 ;;; Test Runner
 

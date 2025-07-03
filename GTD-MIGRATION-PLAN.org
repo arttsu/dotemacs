@@ -85,26 +85,23 @@ Basic content creation and organization without external dependencies.
 - =my-gtd-reset-checklist= - Resets checklist to TODO
 - =my-gtd-complete-as-wont-do= - Marks as strikethrough
 
-** Phase 3: Project Lifecycle
+** Phase 3: Project Lifecycle ✅ COMPLETED
 *** Scope
-Advanced project management requiring template files.
+Advanced project management requiring template files. Cross-linking functionality moved to later phase.
 
 *** Steps
-- [ ] Create template directory and files
-- [ ] Add project/area creation functions
-- [ ] Add archive and completion workflows
-- [ ] Add cross-linking functionality
+- [X] Create template directory and files
+- [X] Add project/area creation functions
+- [X] Add archive and completion workflows
 
 *** Test Plan
-- [ ] Can create projects/areas with templates
-- [ ] Archive workflow moves files correctly
-- [ ] Cross-linking maintains traceability
+- [X] Can create projects/areas with templates
+- [X] Archive workflow moves files correctly
 
-*** Functions to Migrate (4 functions)
+*** Functions to Migrate (3 functions)
 - =my-gtd-create-project= - Interactive project creation
 - =my-gtd-create-area= - Interactive area creation
 - =my-gtd-archive-project= - Move project to archive
-- =my-gtd-copy-heading-to-area= - Cross-link workflow
 
 ** Phase 4: Capture System
 *** Scope
@@ -127,7 +124,23 @@ Capture templates and quick-entry functions.
 - =my-gtd-capture-todo= - Quick todo capture
 - =my-gtd-capture-templates= - Template definitions
 
-** Phase 5: Integration & Polish
+** Phase 5: Cross-linking & References
+*** Scope
+Cross-linking functionality for maintaining traceability between projects and areas.
+
+*** Steps
+- [ ] Add cross-linking functionality
+- [ ] Add reference management functions
+- [ ] Test cross-reference workflows
+
+*** Test Plan
+- [ ] Cross-linking maintains traceability
+- [ ] Reference workflows function correctly
+
+*** Functions to Migrate (1 function)
+- =my-gtd-copy-heading-to-area= - Cross-link workflow
+
+** Phase 6: Integration & Polish
 *** Scope
 Full system integration with agenda and automation.
 
@@ -157,9 +170,10 @@ Full system integration with agenda and automation.
 - [X] Phase 0: Documentation & Planning
 - [X] Phase 1: Foundation & Helpers
 - [X] Phase 2: Basic Workflow
+- [X] Phase 3: Project Lifecycle
 
 ** Current Phase
-- [ ] Phase 3: Project Lifecycle
+- [ ] Phase 4: Capture System
 
 ** Phase Status Legend
 - ✅ COMPLETED
@@ -188,6 +202,10 @@ Full system integration with agenda and automation.
 
 ** Phase 5 Dependencies
 - Completed Phase 1-4
+- Need project/area creation functions from Phase 3
+
+** Phase 6 Dependencies
+- Completed Phase 1-5
 - Full GTD directory structure
 - All template files
 

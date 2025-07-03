@@ -624,12 +624,17 @@ We declare it explicitly to ensure we get a recent version, avoiding compatibili
     (("C-c a" . org-agenda)
      ("C-c c" . org-capture)
      ("C-c l" . org-store-link)
+     ;; GTD project lifecycle
+     ("C-c o p" . my-gtd-create-project)
+     ("C-c o A" . my-gtd-create-area)
      :map org-mode-map
      ("C-c o C-i" . org-id-get-create)
      ;; GTD workflow
      ("C-c o s" . my-gtd-sort-entries)
      ("C-c o r" . my-gtd-reset-checklist)
-     ("C-c o x" . my-gtd-complete-as-wont-do)))
+     ("C-c o x" . my-gtd-complete-as-wont-do)
+     ;; GTD project lifecycle
+     ("C-c o Z" . my-gtd-archive-project)))
 #+end_src
 
 ** Org Modern
@@ -878,6 +883,177 @@ DEFAULT is returned if timestamp doesn't match expected format."
           (unless (string-match "^\\+.+\\+$" heading)
             (org-edit-headline (format "+%s+" heading)))
           (message "Marked as won't do")))))
+#+end_src
+
+** GTD Project Lifecycle Functions
+
+#+begin_src elisp
+  ;; Template path resolver
+  (defun my-org-capture-template-path (name)
+    "Get full path to capture template file."
+    (expand-file-name (concat "capture-templates/" name ".txt") user-emacs-directory))
+
+  ;; Project creation
+  (defun my-gtd-create-project ()
+    "Create a new GTD project with interactive prompts."
+    (interactive)
+    (let* ((contexts '("Local" "Shared"))
+           (context (completing-read "Context: " contexts nil t))
+           (title (read-string "Project title: "))
+           (priority-char (read-char-choice "Priority [A-E, default D]: "
+                                            '(?A ?B ?C ?D ?E ?a ?b ?c ?d ?e ?\r ?\n)))
+           (priority (char-to-string (upcase (if (memq priority-char '(?\r ?\n)) ?D priority-char))))
+           (priority-cookie (format "[#%s]" priority))
+           (slug (replace-regexp-in-string
+                  "[^a-zA-Z0-9-]" ""
+                  (replace-regexp-in-string "\\s-+" "-" (downcase title))))
+           (filename (format "%s-%s.org"
+                            (format-time-string "%Y-%m-%d")
+                            slug))
+           (project-dir (if (string= context "Local")
+                           my-gtd-local-projects
+                         my-gtd-shared-projects))
+           (filepath (expand-file-name filename project-dir))
+           (org-id (org-id-new))
+           (timestamp (format-time-string "[%Y-%m-%d %a %H:%M]"))
+           (template-path (my-org-capture-template-path "gtd-project")))
+
+      ;; Validate inputs
+      (when (string-empty-p title)
+        (user-error "Project title cannot be empty"))
+
+      ;; Ensure project directory exists
+      (unless (file-exists-p project-dir)
+        (make-directory project-dir t))
+
+      ;; Read and format template
+      (unless (file-exists-p template-path)
+        (user-error "Template file not found: %s" template-path))
+
+      (let ((template-content (with-temp-buffer
+                                (insert-file-contents template-path)
+                                (buffer-string))))
+        ;; Create project file
+        (with-temp-buffer
+          (insert (format template-content priority-cookie title org-id timestamp))
+          (write-file filepath))
+
+        ;; Register org-id location
+        (org-id-add-location org-id filepath)
+
+        ;; Open the new project file
+        (find-file filepath)
+        (goto-char (point-min))
+        (re-search-forward "^\\* " nil t)
+        (end-of-line)
+
+        (message "Created project: %s" title))))
+
+  ;; Area creation
+  (defun my-gtd-create-area ()
+    "Create a new GTD area with interactive prompts."
+    (interactive)
+    (let* ((contexts '("Local" "Shared"))
+           (context (completing-read "Context: " contexts nil t))
+           (title (read-string "Area title: "))
+           (slug (replace-regexp-in-string
+                  "[^a-zA-Z0-9-]" "-"
+                  (replace-regexp-in-string "\\s-+" "-" (downcase title))))
+           (filename (format "%s.org" slug))
+           (area-dir (if (string= context "Local")
+                        my-gtd-local-areas
+                      my-gtd-shared-areas))
+           (filepath (expand-file-name filename area-dir))
+           (org-id (org-id-new))
+           (timestamp (format-time-string "[%Y-%m-%d %a %H:%M]"))
+           (template-path (my-org-capture-template-path "gtd-area")))
+
+      ;; Validate inputs
+      (when (string-empty-p title)
+        (user-error "Area title cannot be empty"))
+
+      ;; Ensure area directory exists
+      (unless (file-exists-p area-dir)
+        (make-directory area-dir t))
+
+      ;; Read and format template
+      (unless (file-exists-p template-path)
+        (user-error "Template file not found: %s" template-path))
+
+      (let ((template-content (with-temp-buffer
+                                (insert-file-contents template-path)
+                                (buffer-string))))
+        ;; Create area file
+        (with-temp-buffer
+          (insert (format template-content title org-id timestamp))
+          (write-file filepath))
+
+        ;; Register org-id location
+        (org-id-add-location org-id filepath)
+
+        ;; Open the new area file
+        (find-file filepath)
+        (goto-char (point-min))
+        (re-search-forward "^\\* " nil t)
+        (end-of-line)
+
+        (message "Created area: %s" title))))
+
+  ;; Project archiving
+  (defun my-gtd-archive-project ()
+    "Archive the current GTD project."
+    (interactive)
+    (unless (derived-mode-p 'org-mode)
+      (user-error "Not in an org-mode buffer"))
+
+    (let ((current-file (buffer-file-name)))
+      (unless current-file
+        (user-error "Buffer is not visiting a file"))
+
+      ;; Check if it's a GTD project
+      (save-excursion
+        (goto-char (point-min))
+        (unless (re-search-forward ":GTD_TYPE:.*project" nil t)
+          (user-error "Not a GTD project file")))
+
+      (when (yes-or-no-p "Archive this project? ")
+        (let* ((current-dir (file-name-directory current-file))
+               (archive-dir (expand-file-name "archive" current-dir))
+               (filename (file-name-nondirectory current-file))
+               (new-path (expand-file-name filename archive-dir)))
+
+          ;; Create archive directory if it doesn't exist
+          (unless (file-exists-p archive-dir)
+            (make-directory archive-dir t))
+
+          ;; Update project metadata
+          (save-excursion
+            (goto-char (point-min))
+            (when (re-search-forward "^\\* " nil t)
+              ;; Remove priority cookie from headline
+              (let ((heading (org-get-heading t t t t)))
+                (when (string-match "\\[#[A-E]\\]\\s-*\\(.*\\)" heading)
+                  (org-edit-headline (match-string 1 heading)))
+                ;; Also remove priority property if set
+                (org-entry-put (point) "PRIORITY" nil))
+              ;; Set ARCHIVED property
+              (org-entry-put (point) "ARCHIVED"
+                           (format-time-string "[%Y-%m-%d %a %H:%M]"))))
+
+          ;; Save changes before moving
+          (save-buffer)
+
+          ;; Move file to archive
+          (rename-file current-file new-path)
+
+          ;; Update org-id locations
+          (org-id-update-id-locations nil t)
+
+          ;; Update the visited file name
+          (set-visited-file-name new-path)
+          (set-buffer-modified-p nil)
+
+          (message "Project archived to: %s" new-path)))))
 #+end_src
 
 ** Org Node
