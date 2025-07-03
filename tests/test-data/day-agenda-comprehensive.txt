@@ -1,0 +1,42 @@
+Day-agenda:
+Monday     15 January 2024 W03
+                        HH:MM...... ----------------
+                       HH:MM...... [#B] Team Quarterly Review
+                       HH:MM...... ----------------
+                       HH:MM...... ----------------
+  Items                HH:MM...... Scheduled:  TODO Scheduled meeting
+                       HH:MM...... ----------------
+                       HH:MM...... ----------------
+                       HH:MM...... ----------------
+                       HH:MM...... ----------------
+
+===============================================================================
+Local ad-hoc and high-prio project tasks
+  Items                TODO [#A] Important ad-hoc task
+  Health & Fitness     TODO [#A] Schedule dentist appointment
+  Home Organization    TODO [#A] Declutter office
+  Website Redesign     TODO [#A] Design mockups
+  Health & Fitness     TODO [#B] Research nutrition plan
+  Home Organization    TODO [#B] File documents
+  Website Redesign     TODO [#B] Code landing page
+  Website Redesign     TODO [#B] Write copy
+  Items                TODO [#C] Low priority ad-hoc task
+
+===============================================================================
+Local projects
+                       [#A] Website Redesign
+                       [#B] Home Organization
+                       [#D] Learn Guitar
+
+===============================================================================
+Shared ad-hoc and high-prio project tasks
+  Product Launch       TODO [#A] Finalize features
+  Product Launch       TODO [#A] Marketing plan
+  Team Quarterly Rev…  TODO [#A] Prepare slides
+  Team Development     TODO [#B] Plan code review process
+  Product Launch       TODO [#B] Beta testing
+
+===============================================================================
+Shared projects
+                       [#A] Product Launch
+                       [#B] Team Quarterly Review

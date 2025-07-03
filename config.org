@@ -1267,7 +1267,7 @@ DEFAULT is returned if timestamp doesn't match expected format."
           ;; Limit to 19 characters (or 18 + ellipsis if truncated)
           (if (and category-name (> (length category-name) 19))
               (concat (substring category-name 0 18) "…")
-            (or category-name ""))))))
+            (or category-name "")))))))
 
   ;; GTD day agenda builder function
   (defun my-gtd-build-day-agenda (local-dir local-areas local-projects shared-dir shared-areas shared-projects)

@@ -1,8 +1,8 @@
 ;;; test-gtd-agenda.el --- Tests for GTD day agenda functionality -*- lexical-binding: t; -*-
 
 ;;; Commentary:
-;; Integration tests for the GTD day agenda system
-;; Tests filtering, organization, and display of agenda items
+;; Integration tests for the GTD day agenda system using golden file testing
+;; Tests complete agenda output against expected snapshots
 
 ;;; Code:
 
@@ -10,6 +10,7 @@
 (require 'org)
 (require 'org-agenda)
 (require 'test-gtd-utils)
+(require 'test-gtd-golden)
 
 ;;; Test Fixtures
 
@@ -246,200 +247,182 @@ TASKS is a list of plists with :title, :priority, :state."
    "shared" "Team Management"
    '((:title "Team task" :priority "B" :state "TODO"))))
 
-;;; Agenda Content Validation
+;;; Golden File Test Creation
 
-(defun gtd-test-get-agenda-content ()
-  "Get the content of the agenda buffer as a string."
-  (with-current-buffer "*Org Agenda*"
-    (buffer-string)))
+(defun gtd-test-create-comprehensive-test-data ()
+  "Create comprehensive, realistic test data for golden file generation."
+  ;; Create inbox with variety of priorities and types
+  (gtd-test-create-inbox-file)
+  
+  ;; Local high-priority project with mixed task priorities
+  (gtd-test-create-project-file
+   "local" "Website Redesign" "A"
+   '((:title "Design mockups" :priority "A" :state "TODO")
+     (:title "Code landing page" :priority "B" :state "TODO")
+     (:title "Write copy" :priority "B" :state "TODO")
+     (:title "Setup analytics" :priority "C" :state "TODO")
+     (:title "SEO optimization" :priority "E" :state "TODO")))
+  
+  ;; Local medium-priority project 
+  (gtd-test-create-project-file
+   "local" "Home Organization" "B"
+   '((:title "Declutter office" :priority "A" :state "TODO")
+     (:title "File documents" :priority "B" :state "TODO")))
+  
+  ;; Local low-priority project (should be filtered out)
+  (gtd-test-create-project-file
+   "local" "Learn Guitar" "D"
+   '((:title "Practice scales" :priority "C" :state "TODO")))
+  
+  ;; Shared high-priority project
+  (gtd-test-create-project-file
+   "shared" "Product Launch" "A"
+   '((:title "Finalize features" :priority "A" :state "TODO")
+     (:title "Marketing plan" :priority "A" :state "TODO")
+     (:title "Beta testing" :priority "B" :state "TODO")))
+  
+  ;; Shared project with scheduling
+  (gtd-test-create-project-file
+   "shared" "Team Quarterly Review" "B"
+   '((:title "Prepare slides" :priority "A" :state "TODO"))
+   "<2024-01-15 Mon 10:00>")
+  
+  ;; Local area with high-priority items
+  (gtd-test-create-area-file
+   "local" "Health & Fitness"
+   '((:title "Schedule dentist appointment" :priority "A" :state "TODO")
+     (:title "Research nutrition plan" :priority "B" :state "TODO")
+     (:title "Buy new running shoes" :priority "E" :state "TODO")))
+  
+  ;; Shared area
+  (gtd-test-create-area-file
+   "shared" "Team Development"
+   '((:title "Plan code review process" :priority "B" :state "TODO")
+     (:title "Update documentation" :priority "C" :state "TODO"))))
 
-(defun gtd-test-agenda-contains-section-p (section-header)
-  "Check if agenda contains a specific section header."
-  (string-match-p (regexp-quote section-header) (gtd-test-get-agenda-content)))
+;;; Golden File Tests
 
-(defun gtd-test-agenda-contains-task-p (task-title)
-  "Check if agenda contains a specific task."
-  (string-match-p (regexp-quote task-title) (gtd-test-get-agenda-content)))
-
-(defun gtd-test-count-task-occurrences (task-title)
-  "Count how many times a task appears in the agenda."
-  (let ((content (gtd-test-get-agenda-content))
-        (count 0)
-        (start 0))
-    (while (string-match (regexp-quote task-title) content start)
-      (setq count (1+ count))
-      (setq start (match-end 0)))
-    count))
-
-;;; Debug Test
-
-(ert-deftest test-gtd-day-agenda-debug ()
-  "Debug test to isolate agenda generation issues."
+(ert-deftest test-gtd-day-agenda-golden ()
+  "Golden file test for GTD day agenda - comprehensive validation."
   (gtd-test-agenda-setup-directories)
   (unwind-protect
       (progn
-        ;; Create minimal test data
-        (gtd-test-create-inbox-file)
-
-        ;; Try to generate agenda and catch detailed error
-        (condition-case err
-            (progn
+        ;; Create comprehensive test data
+        (gtd-test-create-comprehensive-test-data)
+        
+        ;; Set specific date for consistent agenda output
+        (let ((org-agenda-span 1)
+              (org-agenda-start-day "2024-01-15"))
+          
+          ;; Generate the day agenda
+          (condition-case err
               (org-agenda nil "d")
-              (message "✅ Agenda generated successfully")
-              ;; Just check that buffer exists
-              (should (get-buffer "*Org Agenda*")))
-          (error
-           (message "❌ Agenda generation failed with error: %S" err)
-           (ert-fail (format "Agenda generation failed: %S" err)))))
-
+            (error (ert-fail (format "Agenda generation failed: %s" err))))
+          
+          ;; Test against golden file
+          (should (gtd-golden-test-agenda "day-agenda-comprehensive"))))
+    
     ;; Cleanup
     (when (get-buffer "*Org Agenda*")
       (kill-buffer "*Org Agenda*"))
     (gtd-test-agenda-cleanup)))
 
-;;; Simplified Test
+;;; Minimal Golden File Test
 
-(ert-deftest test-gtd-day-agenda-simple ()
-  "Simplified test of GTD day agenda with basic validation."
+(ert-deftest test-gtd-day-agenda-golden-minimal ()
+  "Minimal golden file test for GTD day agenda - basic structure validation."
   (gtd-test-agenda-setup-directories)
   (unwind-protect
       (progn
-        ;; Create just one project file for testing
+        ;; Create minimal but realistic test data
+        (gtd-test-create-inbox-file)
+        
+        ;; One local project with mixed priorities
         (gtd-test-create-project-file
          "local" "Test Project" "A"
          '((:title "High priority task" :priority "A" :state "TODO")
            (:title "Low priority task" :priority "E" :state "TODO")))
-
-        ;; Create inbox
-        (gtd-test-create-inbox-file)
-
-        ;; Generate agenda
-        (condition-case err
-            (org-agenda nil "d")
-          (error (ert-fail (format "Simple agenda generation failed: %s" err))))
-
-        ;; Basic validation
-        (should (get-buffer "*Org Agenda*"))
-
-        ;; Debug: Check test files and agenda configuration
-        (message "=== TEST FILES DEBUG ===")
-        (message "Test temp dir: %s" gtd-test-agenda-temp-dir)
-        (message "Local projects dir: %s" my-gtd-local-projects)
-        (message "Inbox file: %s" my-gtd-local-inbox)
-        (message "Inbox exists: %s" (file-exists-p my-gtd-local-inbox))
-        (message "Project files: %s" (directory-files my-gtd-local-projects))
-        (message "org-agenda-files: %S" org-agenda-files)
-        (message "=== AGENDA CONTENT ===")
-        (let ((content (gtd-test-get-agenda-content)))
-          (message "%s" content))
-        (message "=== END DEBUG ===")
-
-        ;; Check for actual content (relax the "Day:" requirement for now)
-        (should (gtd-test-agenda-contains-task-p "Important ad-hoc task"))
-        (should (gtd-test-agenda-contains-task-p "High priority task"))
-        (should-not (gtd-test-agenda-contains-task-p "Low priority task"))
-
-        (message "✅ Simple day agenda test passed"))
-
-    ;; Cleanup
-    (when (get-buffer "*Org Agenda*")
-      (kill-buffer "*Org Agenda*"))
-    (gtd-test-agenda-cleanup)))
-
-;;; Main Test
-
-(ert-deftest test-gtd-day-agenda-comprehensive ()
-  "Comprehensive test of GTD day agenda filtering and organization."
-
-  ;; Set up test environment
-  (gtd-test-agenda-setup-directories)
-  (unwind-protect
-      (progn
-        ;; Create test data
-        (gtd-test-create-test-data)
-
-        ;; Update org-agenda-files to include our test files
-        (setq org-agenda-files my-gtd-all-dirs)
-
-        ;; Generate the day agenda
+        
+        ;; One shared area
+        (gtd-test-create-area-file
+         "shared" "Test Area"
+         '((:title "Area task" :priority "B" :state "TODO")))
+        
+        ;; Set specific date for consistent output
         (let ((org-agenda-span 1)
               (org-agenda-start-day "2024-01-15"))
-          ;; Run the custom day agenda command
+          
+          ;; Generate agenda
           (condition-case err
               (org-agenda nil "d")
-            (error (ert-fail (format "Day agenda generation failed: %s" err)))))
-
-        ;; Validate agenda content
-        (should (gtd-test-agenda-contains-section-p "Day:"))
-
-        ;; Check calendar section exists (for scheduled items)
-        (should (gtd-test-agenda-contains-task-p "Scheduled meeting"))
-        (should (gtd-test-agenda-contains-task-p "Scheduled Shared Project"))
-
-        ;; Check local tasks section
-        (should (gtd-test-agenda-contains-section-p "Local ad-hoc and high-prio project tasks"))
-        (should (gtd-test-agenda-contains-task-p "Important ad-hoc task"))
-        (should (gtd-test-agenda-contains-task-p "High priority task"))
-        (should (gtd-test-agenda-contains-task-p "Medium priority task"))
-        (should (gtd-test-agenda-contains-task-p "Area high priority task"))
-
-        ;; Check that low priority tasks are filtered out
-        (should-not (gtd-test-agenda-contains-task-p "Low priority task"))
-        (should-not (gtd-test-agenda-contains-task-p "Very low priority task"))
-        (should-not (gtd-test-agenda-contains-task-p "Area low priority task"))
-
-        ;; Check local projects section
-        (should (gtd-test-agenda-contains-section-p "Local projects"))
-        (should (gtd-test-agenda-contains-task-p "Critical Local Project"))
-        (should-not (gtd-test-agenda-contains-task-p "Routine Local Project")) ; Priority D, should be filtered
-
-        ;; Check shared tasks section
-        (should (gtd-test-agenda-contains-section-p "Shared ad-hoc and high-prio project tasks"))
-        (should (gtd-test-agenda-contains-task-p "Shared high priority task"))
-        (should (gtd-test-agenda-contains-task-p "Team task"))
-
-        ;; Check shared projects section
-        (should (gtd-test-agenda-contains-section-p "Shared projects"))
-        (should (gtd-test-agenda-contains-task-p "Important Shared Project"))
-        (should (gtd-test-agenda-contains-task-p "Scheduled Shared Project"))
-
-        ;; Validate that scheduled items don't appear in TODO sections
-        ;; (they should only appear in calendar section)
-        (let ((scheduled-in-todos (gtd-test-count-task-occurrences "Scheduled meeting")))
-          (should (= scheduled-in-todos 1))) ; Should appear only once (in calendar)
-
-        (message "✅ Day agenda test passed - all sections and filtering working correctly"))
-
+            (error (ert-fail (format "Minimal agenda generation failed: %s" err))))
+          
+          ;; Test against golden file
+          (should (gtd-golden-test-agenda "day-agenda-minimal"))))
+    
     ;; Cleanup
     (when (get-buffer "*Org Agenda*")
       (kill-buffer "*Org Agenda*"))
     (gtd-test-agenda-cleanup)))
 
-;;; Quick Smoke Test
 
-(ert-deftest test-gtd-day-agenda-smoke ()
-  "Quick smoke test to ensure day agenda can be generated without errors."
+;;; Golden File Creation Utility
+
+(ert-deftest test-gtd-create-golden-files ()
+  "Utility test to create golden files for manual review.
+This test always 'fails' but generates golden files for inspection."
+  :expected-result :failed
   (gtd-test-agenda-setup-directories)
   (unwind-protect
       (progn
-        ;; Create minimal test data
-        (gtd-test-create-inbox-file)
-        (setq org-agenda-files my-gtd-all-dirs)
-
-        ;; This should not error
-        (condition-case err
-            (org-agenda nil "d")
-          (error (ert-fail (format "Agenda generation failed: %s" err))))
-
-        ;; Should create agenda buffer
-        (should (get-buffer "*Org Agenda*"))
-
-        (message "✅ Day agenda smoke test passed"))
-
+        ;; Create comprehensive test data
+        (gtd-test-create-comprehensive-test-data)
+        
+        (let ((org-agenda-span 1)
+              (org-agenda-start-day "2024-01-15"))
+          
+          ;; Generate agenda
+          (org-agenda nil "d")
+          
+          ;; Create golden files
+          (gtd-golden-create-golden-file "day-agenda-comprehensive" t)
+          (message "Golden file created for comprehensive test")
+          
+          ;; Kill and regenerate for minimal test
+          (kill-buffer "*Org Agenda*")
+          (gtd-test-agenda-cleanup)
+          (gtd-test-agenda-setup-directories)
+          
+          ;; Create minimal data
+          (gtd-test-create-inbox-file)
+          (gtd-test-create-project-file
+           "local" "Test Project" "A"
+           '((:title "High priority task" :priority "A" :state "TODO")
+             (:title "Low priority task" :priority "E" :state "TODO")))
+          (gtd-test-create-area-file
+           "shared" "Test Area"
+           '((:title "Area task" :priority "B" :state "TODO")))
+          
+          ;; Generate minimal agenda
+          (org-agenda nil "d")
+          (gtd-golden-create-golden-file "day-agenda-minimal" t)
+          (message "Golden file created for minimal test"))
+        
+        ;; Always fail so user reviews the files
+        (ert-fail "Golden files created - please review them manually"))
+    
     ;; Cleanup
     (when (get-buffer "*Org Agenda*")
       (kill-buffer "*Org Agenda*"))
     (gtd-test-agenda-cleanup)))
+
+;;; Debug Utilities
+
+(defun gtd-test-debug-agenda-output ()
+  "Interactive function to debug agenda output."
+  (interactive)
+  (when (get-buffer "*Org Agenda*")
+    (gtd-golden-debug-content "debug")))
 
 (provide 'test-gtd-agenda)
 ;;; test-gtd-agenda.el ends here

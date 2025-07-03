@@ -1,0 +1,27 @@
+Day-agenda:
+Monday     15 January 2024 W03
+                        HH:MM...... ----------------
+                       HH:MM...... ----------------
+                       HH:MM...... ----------------
+  Items                HH:MM...... Scheduled:  TODO Scheduled meeting
+                       HH:MM...... ----------------
+                       HH:MM...... ----------------
+                       HH:MM...... ----------------
+                       HH:MM...... ----------------
+
+===============================================================================
+Local ad-hoc and high-prio project tasks
+  Items                TODO [#A] Important ad-hoc task
+  Test Project         TODO [#A] High priority task
+  Items                TODO [#C] Low priority ad-hoc task
+
+===============================================================================
+Local projects
+                       [#A] Test Project
+
+===============================================================================
+Shared ad-hoc and high-prio project tasks
+  Test Area            TODO [#B] Area task
+
+===============================================================================
+Shared projects
