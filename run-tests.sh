@@ -7,8 +7,9 @@ echo "================================="
 
 # Run the tests using batch mode
 emacs -batch \
+      -L tests \
       -l ert \
-      -l tests/test-gtd-integration.el \
+      -l test-gtd-integration \
       -f run-gtd-tests
 
 # Capture exit code
