@@ -473,8 +473,9 @@
   ;; GTD hooks
   (add-hook 'org-after-todo-state-change-hook 'my-org-remove-priority-when-done)
   (add-hook 'org-after-todo-state-change-hook 'my-gtd-checklist-auto-advance)
-  (add-hook 'org-after-refile-insert-hook 'my-gtd-add-blank-line-after-refile)
-  (add-hook 'org-after-refile-insert-hook 'my-gtd-sort-entries)
+  ;; Add sorting first, then blank line insertion
+  (add-hook 'org-after-refile-insert-hook 'my-gtd-add-blank-line-after-refile -10)
+  (add-hook 'org-after-refile-insert-hook 'my-gtd-sort-entries 90)
 
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -954,11 +955,7 @@ Returns inverted timestamp for DONE items, earliest date for TODO items."
   (when (org-at-heading-p)
     (save-excursion
       (org-end-of-subtree t t)
-      ;; Insert blank line if next character is a heading and we don't already have blank line
-      (when (and (not (eobp))
-                 (looking-at "\\*")
-                 (not (looking-back "\n\n" 2)))
-        (insert "\n")))))
+      (insert "\n"))))
 
 ;; Refile target verification function
 (defun my-gtd-refile-verify-target ()

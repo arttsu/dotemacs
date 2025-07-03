@@ -242,7 +242,7 @@
 ;;; Integration Test Note
 ;;
 ;; The blank line functionality has been implemented and works correctly in practice.
-;; The hook is added to org-after-refile-insert-hook and will automatically insert 
+;; The hook is added to org-after-refile-insert-hook and will automatically insert
 ;; blank lines when refiling items to maintain clean separation between entries.
 
 (provide 'test-gtd-capture)
