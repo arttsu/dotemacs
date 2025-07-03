@@ -978,12 +978,12 @@ Returns inverted timestamp for DONE items, earliest date for TODO items."
   (interactive)
   (unless (org-at-heading-p)
     (user-error "Not at a heading"))
-  
+
   ;; Check if current heading has STYLE: log
   (let ((style (org-entry-get (point) "STYLE")))
     (unless (string= style "log")
       (user-error "Current heading is not a log section (STYLE: log)")))
-  
+
   (let ((formatted-count 0))
     ;; Process all subheadings under current log heading
     (org-map-entries
@@ -995,7 +995,7 @@ Returns inverted timestamp for DONE items, earliest date for TODO items."
            (org-edit-headline (format "%s %s" created heading))
            (setq formatted-count (1+ formatted-count)))))
      nil 'tree)
-    
+
     (message "Formatted %d log entries with timestamps" formatted-count)))
 
 ;; Refile target verification function
