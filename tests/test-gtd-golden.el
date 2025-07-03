@@ -25,7 +25,7 @@
 (defun gtd-golden-get-file-path (test-name &optional suffix)
   "Get path for golden file for TEST-NAME with optional SUFFIX."
   (let ((dir (gtd-golden-ensure-test-data-dir)))
-    (expand-file-name 
+    (expand-file-name
      (format "%s%s.txt" test-name (or suffix ""))
      dir)))
 
@@ -40,37 +40,37 @@ Removes or standardizes dynamic elements like dates, paths, and timestamps."
                      "/tmp/[^/]+/gtd-agenda-test[^/]*"
                      "/test-temp"
                      normalized))
-    
+
     ;; Normalize actual dates to test date
     (setq normalized (replace-regexp-in-string
                      "\\[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\} [A-Za-z]\\{3\\}"
                      "2024-01-15 Mon"
                      normalized))
-    
+
     ;; Normalize "Day-agenda (W03):" style headers to just "Day-agenda:"
     (setq normalized (replace-regexp-in-string
                      "Day-agenda (W[0-9]+):"
                      "Day-agenda:"
                      normalized))
-    
+
     ;; Normalize time stamps in agenda
     (setq normalized (replace-regexp-in-string
                      "[0-9]\\{1,2\\}:[0-9]\\{2\\}"
                      "HH:MM"
                      normalized))
-    
+
     ;; Remove trailing whitespace from lines
     (setq normalized (replace-regexp-in-string
                      "[ \t]+$"
                      ""
                      normalized))
-    
+
     ;; Normalize multiple consecutive newlines
     (setq normalized (replace-regexp-in-string
                      "\n\n\n+"
                      "\n\n"
                      normalized))
-    
+
     ;; Trim final newlines for consistent comparison
     (string-trim normalized)))
 
@@ -78,7 +78,7 @@ Removes or standardizes dynamic elements like dates, paths, and timestamps."
   "Capture and normalize agenda buffer content."
   (unless (get-buffer "*Org Agenda*")
     (error "No agenda buffer found"))
-  
+
   (with-current-buffer "*Org Agenda*"
     (let ((raw-content (buffer-string)))
       (gtd-golden-normalize-agenda-content raw-content))))
@@ -104,7 +104,7 @@ Removes or standardizes dynamic elements like dates, paths, and timestamps."
     (let ((expected-lines (split-string expected "\n"))
           (actual-lines (split-string actual "\n"))
           (diffs '()))
-      
+
       ;; Simple line-by-line diff
       (let ((max-lines (max (length expected-lines) (length actual-lines))))
         (dotimes (i max-lines)
@@ -115,7 +115,7 @@ Removes or standardizes dynamic elements like dates, paths, and timestamps."
                          :expected (or exp-line "")
                          :actual (or act-line ""))
                     diffs)))))
-      
+
       (nreverse diffs))))
 
 (defun gtd-golden-format-diff (diffs)
@@ -142,20 +142,20 @@ Returns t if test passes, otherwise signals test failure with diff info."
          (failed-file (gtd-golden-get-file-path test-name ".FAILED"))
          (actual-content (gtd-golden-capture-agenda-buffer))
          (expected-content (gtd-golden-read-file golden-file)))
-    
+
     ;; Write actual content to .FAILED file for inspection
     (gtd-golden-write-file failed-file actual-content)
-    
+
     (if (null expected-content)
         (error "Golden file not found: %s\n\nActual output written to: %s\n\nTo create golden file, review the output and run:\ncp %s %s"
                golden-file failed-file failed-file golden-file)
-      
+
       (let ((diffs (gtd-golden-compare-content expected-content actual-content)))
         (if diffs
             (let ((diff-msg (gtd-golden-format-diff diffs)))
               (error "Golden file test failed for %s\n\n%s\nExpected: %s\nActual: %s\n\nTo update golden file if changes are intentional:\ncp %s %s"
                      test-name diff-msg golden-file failed-file failed-file golden-file))
-          
+
           ;; Test passed - clean up .FAILED file
           (when (file-exists-p failed-file)
             (delete-file failed-file))
@@ -168,11 +168,11 @@ Returns t if test passes, otherwise signals test failure with diff info."
 If FORCE is non-nil, overwrite existing golden file."
   (let* ((golden-file (gtd-golden-get-file-path test-name))
          (content (gtd-golden-capture-agenda-buffer)))
-    
-    (when (or force 
+
+    (when (or force
               (not (file-exists-p golden-file))
               (y-or-n-p (format "Golden file %s exists. Overwrite? " golden-file)))
-      
+
       (gtd-golden-write-file golden-file content)
       (message "Golden file created: %s" golden-file)
       golden-file)))
@@ -185,14 +185,14 @@ If FORCE is non-nil, overwrite existing golden file."
     (with-current-buffer "*Org Agenda*"
       (let ((raw (buffer-string))
             (normalized (gtd-golden-normalize-agenda-content (buffer-string))))
-        
+
         (with-current-buffer (get-buffer-create "*GTD Golden Debug*")
           (erase-buffer)
           (insert (format "=== RAW AGENDA CONTENT ===\n%s\n\n" raw))
           (insert (format "=== NORMALIZED CONTENT ===\n%s\n\n" normalized))
           (insert (format "=== GOLDEN FILE PATH ===\n%s\n" (gtd-golden-get-file-path test-name)))
           (goto-char (point-min)))
-        
+
         (display-buffer "*GTD Golden Debug*")))))
 
 (provide 'test-gtd-golden)

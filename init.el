@@ -418,6 +418,48 @@
   :bind
   ("M-+" . tempel-insert))
 
+(defun my-easysession-visible-buffer-list ()
+  "Return list of buffers visible in windows or tab bar tabs."
+  (let ((visible-buffers '()))
+    (dolist (buffer (buffer-list))
+      (when (or (get-buffer-window buffer 'visible)
+                (and (bound-and-true-p tab-bar-mode)
+                     (fboundp 'tab-bar-get-buffer-tab)
+                     (tab-bar-get-buffer-tab buffer t nil)))
+        (push buffer visible-buffers)))
+    visible-buffers))
+
+(defun my-easysession-setup-minimal ()
+  "Set up a minimal session environment for new sessions."
+  (when (and (boundp 'tab-bar-mode) tab-bar-mode)
+    (tab-bar-close-other-tabs)
+    (tab-bar-rename-tab "main"))
+  (delete-other-windows)
+  (scratch-buffer))
+
+(use-package easysession
+  :ensure
+  :custom
+  (easysession-mode-line-misc-info t)
+  (easysession-save-interval (* 5 60))  ; Auto-save every 5 minutes
+  (easysession-buffer-list-function 'my-easysession-visible-buffer-list)
+  (easysession-switch-to-exclude-current t)
+  :init
+  ;; Load last session and enable auto-save on startup (only in interactive mode)
+  (unless noninteractive
+    (add-hook 'emacs-startup-hook 'easysession-load-including-geometry 102)
+    (add-hook 'emacs-startup-hook 'easysession-save-mode 103))
+  :config
+  ;; Set up clean environment for new sessions
+  (add-hook 'easysession-new-session-hook 'my-easysession-setup-minimal)
+  ;; Save before switching sessions
+  (add-hook 'easysession-before-load-hook 'easysession-save)
+  :bind
+  (("<f12> <f12>" . easysession-switch-to)
+   ("<f12> s" . easysession-save)
+   ("<f12> S" . easysession-save-as)
+   ("<f12> k" . easysession-delete)))
+
 (use-package transient
   :ensure)
 
@@ -799,6 +841,29 @@ Returns inverted timestamp for DONE items, earliest date for TODO items."
       (goto-char (point-min))
       (re-search-forward "^\\* " nil t)
       (end-of-line)
+
+      ;; Ask about easysession switch
+      (when (and (fboundp 'easysession-save-as)
+                 (y-or-n-p "Switch to a new easysession for this project? "))
+        (let ((session-name slug))
+          ;; Switch to previous buffer before saving session
+          (when (> (length (buffer-list)) 1)
+            (switch-to-buffer (other-buffer (current-buffer) t)))
+
+          ;; Save current session (without the project file)
+          (when (fboundp 'easysession-save)
+            (easysession-save))
+
+          ;; Create new session
+          (easysession-save-as session-name)
+
+          ;; Clean up tabs - delete all other tabs and rename current to 'notes'
+          (when (and (boundp 'tab-bar-mode) tab-bar-mode)
+            (tab-bar-close-other-tabs)
+            (tab-bar-rename-tab "notes"))
+
+          ;; Ensure the project file is open in the new session
+          (find-file filepath)))
 
       (message "Created project: %s" title))))
 

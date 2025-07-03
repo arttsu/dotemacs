@@ -72,7 +72,9 @@
                  ((symbol-function 'find-file)
                   (lambda (file)
                     ;; Just set the buffer file name without actually opening
-                    (setq buffer-file-name file))))
+                    (setq buffer-file-name file)))
+                 ((symbol-function 'y-or-n-p)
+                  (lambda (&rest _) nil)))
 
          ;; Call the function
          (my-gtd-create-project)
@@ -111,7 +113,9 @@
                   (lambda (&rest _) priority))
                  ((symbol-function 'find-file)
                   (lambda (file)
-                    (setq buffer-file-name file))))
+                    (setq buffer-file-name file)))
+                 ((symbol-function 'y-or-n-p)
+                  (lambda (&rest _) nil)))
 
          (my-gtd-create-project)
 
@@ -141,7 +145,9 @@
                   (lambda (&rest _) priority))
                  ((symbol-function 'find-file)
                   (lambda (file)
-                    (setq buffer-file-name file))))
+                    (setq buffer-file-name file)))
+                 ((symbol-function 'y-or-n-p)
+                  (lambda (&rest _) nil)))
 
          (my-gtd-create-project)
 
@@ -168,7 +174,9 @@
                   (lambda (&rest _) priority))
                  ((symbol-function 'find-file)
                   (lambda (file)
-                    (setq buffer-file-name file))))
+                    (setq buffer-file-name file)))
+                 ((symbol-function 'y-or-n-p)
+                  (lambda (&rest _) nil)))
 
          (my-gtd-create-project)
 
@@ -195,7 +203,9 @@
                   (lambda (&rest _) priority))
                  ((symbol-function 'find-file)
                   (lambda (file)
-                    (setq buffer-file-name file))))
+                    (setq buffer-file-name file)))
+                 ((symbol-function 'y-or-n-p)
+                  (lambda (&rest _) nil)))
 
          (my-gtd-create-project)
 
@@ -211,7 +221,9 @@
                ((symbol-function 'read-string)
                 (lambda (&rest _) ""))
                ((symbol-function 'read-char-choice)
-                (lambda (&rest _) ?A)))
+                (lambda (&rest _) ?A))
+               ((symbol-function 'y-or-n-p)
+                (lambda (&rest _) nil)))
 
        (should-error (my-gtd-create-project) :type 'user-error)))))
 

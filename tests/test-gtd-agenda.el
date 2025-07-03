@@ -229,7 +229,7 @@ TASKS is a list of plists with :title, :priority, :state."
   "Create comprehensive, realistic test data for golden file generation."
   ;; Create inbox with variety of priorities and types
   (gtd-test-create-inbox-file)
-  
+
   ;; Local high-priority project with mixed task priorities
   (gtd-test-create-project-file
    "local" "Website Redesign" "A"
@@ -238,38 +238,38 @@ TASKS is a list of plists with :title, :priority, :state."
      (:title "Write copy" :priority "B" :state "TODO")
      (:title "Setup analytics" :priority "C" :state "TODO")
      (:title "SEO optimization" :priority "E" :state "TODO")))
-  
-  ;; Local medium-priority project 
+
+  ;; Local medium-priority project
   (gtd-test-create-project-file
    "local" "Home Organization" "B"
    '((:title "Declutter office" :priority "A" :state "TODO")
      (:title "File documents" :priority "B" :state "TODO")))
-  
+
   ;; Local low-priority project (should be filtered out)
   (gtd-test-create-project-file
    "local" "Learn Guitar" "D"
    '((:title "Practice scales" :priority "C" :state "TODO")))
-  
+
   ;; Shared high-priority project
   (gtd-test-create-project-file
    "shared" "Product Launch" "A"
    '((:title "Finalize features" :priority "A" :state "TODO")
      (:title "Marketing plan" :priority "A" :state "TODO")
      (:title "Beta testing" :priority "B" :state "TODO")))
-  
+
   ;; Shared project with scheduling
   (gtd-test-create-project-file
    "shared" "Team Quarterly Review" "B"
    '((:title "Prepare slides" :priority "A" :state "TODO"))
    "<2024-01-15 Mon 10:00>")
-  
+
   ;; Local area with high-priority items
   (gtd-test-create-area-file
    "local" "Health & Fitness"
    '((:title "Schedule dentist appointment" :priority "A" :state "TODO")
      (:title "Research nutrition plan" :priority "B" :state "TODO")
      (:title "Buy new running shoes" :priority "E" :state "TODO")))
-  
+
   ;; Shared area
   (gtd-test-create-area-file
    "shared" "Team Development"
@@ -285,19 +285,19 @@ TASKS is a list of plists with :title, :priority, :state."
       (progn
         ;; Create comprehensive test data
         (gtd-test-create-comprehensive-test-data)
-        
+
         ;; Set specific date for consistent agenda output
         (let ((org-agenda-span 1)
               (org-agenda-start-day "2024-01-15"))
-          
+
           ;; Generate the day agenda
           (condition-case err
               (org-agenda nil "d")
             (error (ert-fail (format "Agenda generation failed: %s" err))))
-          
+
           ;; Test against golden file
           (should (gtd-golden-test-agenda "day-agenda-comprehensive"))))
-    
+
     ;; Cleanup
     (when (get-buffer "*Org Agenda*")
       (kill-buffer "*Org Agenda*"))
@@ -312,30 +312,30 @@ TASKS is a list of plists with :title, :priority, :state."
       (progn
         ;; Create minimal but realistic test data
         (gtd-test-create-inbox-file)
-        
+
         ;; One local project with mixed priorities
         (gtd-test-create-project-file
          "local" "Test Project" "A"
          '((:title "High priority task" :priority "A" :state "TODO")
            (:title "Low priority task" :priority "E" :state "TODO")))
-        
+
         ;; One shared area
         (gtd-test-create-area-file
          "shared" "Test Area"
          '((:title "Area task" :priority "B" :state "TODO")))
-        
+
         ;; Set specific date for consistent output
         (let ((org-agenda-span 1)
               (org-agenda-start-day "2024-01-15"))
-          
+
           ;; Generate agenda
           (condition-case err
               (org-agenda nil "d")
             (error (ert-fail (format "Minimal agenda generation failed: %s" err))))
-          
+
           ;; Test against golden file
           (should (gtd-golden-test-agenda "day-agenda-minimal"))))
-    
+
     ;; Cleanup
     (when (get-buffer "*Org Agenda*")
       (kill-buffer "*Org Agenda*"))
@@ -354,22 +354,22 @@ or when agenda format changes intentionally."
       (progn
         ;; Create comprehensive test data
         (gtd-test-create-comprehensive-test-data)
-        
+
         (let ((org-agenda-span 1)
               (org-agenda-start-day "2024-01-15"))
-          
+
           ;; Generate agenda
           (org-agenda nil "d")
-          
+
           ;; Create golden files
           (gtd-golden-create-golden-file "day-agenda-comprehensive" t)
           (message "Golden file created for comprehensive test")
-          
+
           ;; Kill and regenerate for minimal test
           (kill-buffer "*Org Agenda*")
           (gtd-test-agenda-cleanup)
           (gtd-test-agenda-setup-directories)
-          
+
           ;; Create minimal data
           (gtd-test-create-inbox-file)
           (gtd-test-create-project-file
@@ -379,14 +379,14 @@ or when agenda format changes intentionally."
           (gtd-test-create-area-file
            "shared" "Test Area"
            '((:title "Area task" :priority "B" :state "TODO")))
-          
+
           ;; Generate minimal agenda
           (org-agenda nil "d")
           (gtd-golden-create-golden-file "day-agenda-minimal" t)
           (message "Golden file created for minimal test"))
-        
+
         (message "✅ Golden files created successfully!"))
-    
+
     ;; Cleanup
     (when (get-buffer "*Org Agenda*")
       (kill-buffer "*Org Agenda*"))
