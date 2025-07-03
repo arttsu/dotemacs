@@ -60,7 +60,7 @@ ITEMS should be a list of plists with :state, :priority, :heading, :created, etc
   (concat "* " title "\n"
           ":PROPERTIES:\n"
           ":STYLE: checklist\n"
-          ":END:\n\n"
+          ":END:\n"
           (mapconcat
            (lambda (item)
              (concat "** " (or (plist-get item :state) "TODO")
@@ -86,7 +86,7 @@ ENTRIES should be a list of plists with :heading and :created."
   (concat "* " title "\n"
           ":PROPERTIES:\n"
           ":STYLE: log\n"
-          ":END:\n\n"
+          ":END:\n"
           (mapconcat
            (lambda (entry)
              (concat "** " (plist-get entry :heading) "\n"

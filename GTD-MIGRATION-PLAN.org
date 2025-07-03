@@ -58,7 +58,7 @@ Core infrastructure needed for all other phases.
 - =my-gtd-checklist-auto-advance= - Hook for auto-advancing checklists
 - =my-gtd-require-at-heading= - Validates cursor position
 
-** Phase 2: Basic Workflow 🔄 IN PROGRESS
+** Phase 2: Basic Workflow ✅ COMPLETED
 *** Scope
 Basic content creation and organization without external dependencies.
 
@@ -75,8 +75,8 @@ Basic content creation and organization without external dependencies.
 - [X] No external template dependencies required
 
 *** Outstanding Items Before Phase 3
-- [ ] Fix checklist sorting to show DONE items in reverse chronological order
-- [ ] Enable sorting when called from child entries (should navigate to parent)
+- [X] Fix checklist sorting to show DONE items in reverse chronological order
+- [X] Enable sorting when called from child entries (should navigate to parent)
 
 *** Functions to Migrate (5 functions)
 - =my-gtd-sort-todos= - Sorts by priority/timestamp
@@ -159,7 +159,7 @@ Full system integration with agenda and automation.
 - [X] Phase 2: Basic Workflow
 
 ** Current Phase
-- [ ] Phase 2: Basic Workflow (finishing outstanding items)
+- [ ] Phase 3: Project Lifecycle
 
 ** Phase Status Legend
 - ✅ COMPLETED

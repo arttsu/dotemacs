@@ -37,9 +37,9 @@
       (should (equal (nth 2 headings) "First by timestamp"))   ; [#B] earlier
       (should (equal (nth 3 headings) "Second priority task")) ; [#B] later
       
-      ;; Then DONE items sorted by closed timestamp
-      (should (equal (nth 4 headings) "Completed task"))       ; Closed earlier
-      (should (equal (nth 5 headings) "Another completed task")) ; Closed later
+      ;; Then DONE items sorted by closed timestamp (newest first)
+      (should (equal (nth 4 headings) "Another completed task")) ; Closed later (2024-01-04)
+      (should (equal (nth 5 headings) "Completed task"))       ; Closed earlier (2024-01-03)
       
       ;; Verify TODO states are in correct order
       (should (equal states '(nil "TODO" "TODO" "TODO" "DONE" "DONE"))))))
@@ -69,19 +69,42 @@
       (should (equal (nth 3 headings) "Low priority")))))
 
 (ert-deftest test-gtd-sort-from-child-entry ()
-  "Test that sorting from child entry has limitations."
+  "Test that sorting from child entry navigates to parent and sorts."
   (with-gtd-test-buffer
       (gtd-test-create-checklist
        "Parent Checklist"
        '((:state "TODO" :heading "Second" :created "[2024-01-02 Mon 10:00]")
          (:state "TODO" :heading "First" :created "[2024-01-01 Mon 10:00]")))
     
+    ;; Debug: show the buffer content
+    ;; (message "Buffer before sort:\n%s" (buffer-string))
+    
     ;; Move to child entry
     (search-forward "Second")
     (beginning-of-line)
     
-    ;; Currently, sorting from child entry doesn't work reliably
-    ;; This documents the current behavior - user should sort from parent heading
+    ;; Sorting from child should work by navigating to parent
+    (my-gtd-sort-entries)
+    
+    ;; Check that items were sorted correctly
+    (goto-char (point-min))  ; Reset position for consistent results
+    (let ((headings (gtd-test-get-headings)))
+      (should (equal (nth 1 headings) "First"))
+      (should (equal (nth 2 headings) "Second")))))
+
+(ert-deftest test-gtd-sort-no-style-property ()
+  "Test that sorting without STYLE property gives appropriate error."
+  (with-gtd-test-buffer
+      "* Regular Heading
+** Child 1
+** Child 2"
+    ;; Try to sort from parent without STYLE
+    (goto-char (point-min))
+    (should-error (my-gtd-sort-entries) :type 'user-error)
+    
+    ;; Try to sort from child without STYLE
+    (search-forward "Child 1")
+    (beginning-of-line)
     (should-error (my-gtd-sort-entries) :type 'user-error)))
 
 ;;; Log Sorting Tests
