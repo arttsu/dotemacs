@@ -62,3 +62,42 @@ This file provides guidance to Claude Code when working with this Emacs configur
 ## GTD System Documentation
 
 For detailed documentation of the Getting Things Done system implementation, see [[file:GTD.org][GTD.org]].
+
+### Test-Driven Development for GTD
+
+**IMPORTANT**: When implementing changes to GTD workflow functions, follow a test-driven approach:
+
+1. **Run tests before changes** - Always run `./run-tests.sh` or `make test` to ensure current functionality works
+2. **Write/update tests first** - When adding new GTD functionality, write tests that define the expected behavior
+3. **Implement the changes** - Make the minimal changes needed to pass the tests
+4. **Run tests after changes** - Verify all tests pass before considering the work complete
+5. **Commit with confidence** - The comprehensive test suite ensures no regressions
+
+#### Running Tests
+
+```bash
+# Run all GTD tests
+./run-tests.sh
+# or
+make test
+
+# Test and tangle in one command
+make test-and-tangle
+```
+
+#### Testing Philosophy
+
+**Focus on user-facing behavior, not internal implementation:**
+
+- **Test workflows, not functions** - Test complete user interactions (e.g., "sort a checklist", "mark as won't do") rather than individual helper functions
+- **Test outcomes, not internals** - Verify final state (TODO items sorted correctly, properties set) rather than how the code achieves it  
+- **Integration over unit tests** - Use real org-mode buffers and actual interactive functions rather than mocking
+- **Document expected behavior** - Tests serve as executable documentation of how GTD features should work
+
+**Test organization:**
+- Group tests by user functionality (sorting, checklist management, etc.)
+- Use descriptive test names that explain the workflow being tested
+- Create reusable test utilities for common setup (creating test buffers, checklists, etc.)
+- Only test "user-facing" functions that are bound to keys or called interactively
+
+This approach makes tests more maintainable and meaningful - they catch real workflow regressions rather than breaking when internal implementation changes.
