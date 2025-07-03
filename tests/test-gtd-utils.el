@@ -61,6 +61,7 @@ ITEMS should be a list of plists with :state, :priority, :heading, :created, etc
           ":PROPERTIES:\n"
           ":STYLE: checklist\n"
           ":END:\n"
+          "\n"
           (mapconcat
            (lambda (item)
              (concat "** " (or (plist-get item :state) "TODO")
@@ -76,7 +77,8 @@ ITEMS should be a list of plists with :state, :priority, :heading, :created, etc
                                                    "[2024-01-01 Mon 10:00]"))
                      (when-let ((closed-as (plist-get item :closed-as)))
                        (format ":CLOSED_AS: %s\n" closed-as))
-                     ":END:\n"))
+                     ":END:\n"
+                     "\n"))
            items
            "\n")))
 
@@ -87,12 +89,14 @@ ENTRIES should be a list of plists with :heading and :created."
           ":PROPERTIES:\n"
           ":STYLE: log\n"
           ":END:\n"
+          "\n"
           (mapconcat
            (lambda (entry)
              (concat "** " (plist-get entry :heading) "\n"
                      ":PROPERTIES:\n"
                      (format ":CREATED: %s\n" (plist-get entry :created))
-                     ":END:\n"))
+                     ":END:\n"
+                     "\n"))
            entries
            "\n")))
 

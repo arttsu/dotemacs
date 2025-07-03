@@ -18,13 +18,15 @@ if [ ! -f "$CONFIG_FILE" ]; then
     exit 1
 fi
 
-echo "📝 Cleaning trailing whitespace from config.org..."
+echo "📝 Cleaning trailing whitespace from all *.org and *.el files..."
 emacs --batch \
     --eval "(progn
-              (find-file \"$CONFIG_FILE\")
-              (delete-trailing-whitespace)
-              (save-buffer)
-              (message \"✅ Cleaned trailing whitespace\"))" 2>/dev/null
+              (dolist (file (append (directory-files-recursively \"$EMACS_DIR\" \"\\\\.org$\")
+                                   (directory-files-recursively \"$EMACS_DIR\" \"\\\\.el$\")))
+                (find-file file)
+                (delete-trailing-whitespace)
+                (save-buffer)
+                (kill-buffer)))" 2>/dev/null
 
 echo "🔄 Tangling configuration..."
 emacs --batch \
@@ -35,5 +37,5 @@ emacs --batch \
               (message \"✅ Configuration tangled successfully\"))" 2>/dev/null
 
 echo "✅ Configuration updated successfully!"
-echo "   - config.org cleaned"
+echo "   - All *.org and *.el files cleaned of trailing whitespace"
 echo "   - init.el and early-init.el updated"

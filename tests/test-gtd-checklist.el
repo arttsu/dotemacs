@@ -22,16 +22,16 @@
        '((:state "TODO" :heading "Already TODO")
          (:state "DONE" :heading "Completed item" :closed "[2024-01-01 Mon 12:00]")
          (:state "DONE" :heading "+Won't do item+" :closed "[2024-01-01 Mon 13:00]" :closed-as "WONT_DO")))
-    
+
     ;; Simulate yes response
     (with-simulated-input t
       (my-gtd-reset-checklist))
-    
+
     ;; All items should be TODO
     (let ((states (gtd-test-get-todo-states))
           (headings (gtd-test-get-headings))
           (closed-as-props (gtd-test-get-properties "CLOSED_AS")))
-      
+
       (should (equal states '(nil "TODO" "TODO" "TODO")))
       ;; Strikethrough should be removed
       (should (equal (nth 3 headings) "Won't do item"))
@@ -44,11 +44,11 @@
       (gtd-test-create-checklist
        "Cancel Test"
        '((:state "DONE" :heading "Should stay done")))
-    
+
     ;; Simulate no response
     (with-simulated-input nil
       (my-gtd-reset-checklist))
-    
+
     ;; State should remain unchanged
     (let ((states (gtd-test-get-todo-states)))
       (should (equal states '(nil "DONE"))))))
@@ -57,7 +57,7 @@
   "Test reset on non-checklist should error."
   (with-gtd-test-buffer
       "* Not a checklist\n** TODO Some item"
-    
+
     (should-error (my-gtd-reset-checklist) :type 'error)))
 
 ;;; Won't Do Tests
@@ -71,7 +71,7 @@
 :END:
 "
     (my-gtd-complete-as-wont-do)
-    
+
     ;; Check state change
     (should (string= (org-get-todo-state) "DONE"))
     ;; Check property
@@ -92,7 +92,7 @@ CLOSED: [2024-01-01 Mon 12:00]
 :END:
 "
     (my-gtd-complete-as-wont-do)
-    
+
     ;; Check state change
     (should (string= (org-get-todo-state) "TODO"))
     ;; Check property removed
@@ -115,12 +115,12 @@ CLOSED: [2024-01-01 Mon 12:00]
     (my-gtd-complete-as-wont-do)
     (should (string= (org-get-todo-state) "DONE"))
     (should (gtd-test-heading-has-strikethrough-p))
-    
+
     ;; Second toggle - back to TODO
     (my-gtd-complete-as-wont-do)
     (should (string= (org-get-todo-state) "TODO"))
     (should-not (gtd-test-heading-has-strikethrough-p))
-    
+
     ;; Third toggle - won't do again
     (my-gtd-complete-as-wont-do)
     (should (string= (org-get-todo-state) "DONE"))
@@ -136,15 +136,15 @@ CLOSED: [2024-01-01 Mon 12:00]
        '((:state "TODO" :heading "First item")
          (:state "TODO" :heading "Second item")
          (:state "TODO" :heading "Third item")))
-    
+
     ;; Move to first item
     (search-forward "First item")
     (beginning-of-line)
-    
+
     ;; Complete it - this triggers the hook
     (let ((org-after-todo-state-change-hook '(my-gtd-checklist-auto-advance)))
       (org-todo 'done))
-    
+
     ;; We can't easily test cursor movement in batch mode,
     ;; but we can verify the hook runs without error
     (should t)))

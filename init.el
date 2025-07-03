@@ -620,8 +620,7 @@ Returns inverted timestamp for DONE items, earliest date for TODO items."
   (org-sort-entries nil ?f 'my-gtd-extract-closed-timestamp)
   (org-sort-entries nil ?p)
   (org-sort-entries nil ?o)
-  (org-cycle)
-  (org-cycle))
+  (org-fold-show-children))
 
 (defun my-gtd-sort-checklist ()
   "Sort checklist items: TODO by priority/timestamp, DONE by closed time (newest first)."
@@ -636,8 +635,7 @@ Returns inverted timestamp for DONE items, earliest date for TODO items."
   (org-sort-entries nil ?f 'my-gtd-extract-closed-timestamp-for-reverse-sort)
   ;; 4. Finally sort by TODO state to separate TODO from DONE
   (org-sort-entries nil ?o)
-  (org-cycle)
-  (org-cycle))
+  (org-fold-show-children))
 
 
 (defun my-gtd-sort-by-style ()
@@ -650,8 +648,7 @@ Returns inverted timestamp for DONE items, earliest date for TODO items."
       (my-gtd-sort-checklist))
      ((string= style "log")
       (org-sort-entries nil ?f 'my-gtd-extract-created-timestamp-for-reverse-sort)
-      (org-cycle)
-      (org-cycle))
+      (org-fold-show-children))
      (t
       (user-error "No supported STYLE property found")))))
 
