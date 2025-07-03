@@ -271,6 +271,15 @@
       (should (string-match "^\\[2025-01-01 Mon 12:00\\] Test Entry" heading))
       (should-not (string-match "\\[.*\\].*\\[.*\\]" heading)))))
 
+(ert-deftest test-gtd-log-entry-link-heading ()
+  "Test that timestamp is added to link headings."
+  (with-gtd-test-buffer "* Parent\n:PROPERTIES:\n:STYLE: log\n:END:\n\n** [[https://example.com][Test Link]]\n:PROPERTIES:\n:CREATED: [2025-01-01 Mon 12:00]\n:END:\nSome content"
+    (goto-char (point-min))
+    (org-next-visible-heading 1) ; Go to link heading
+    (my-gtd-format-log-entry-after-refile)
+    (let ((heading (org-get-heading t t t t)))
+      (should (string-match "^\\[2025-01-01 Mon 12:00\\] \\[\\[https://example.com\\]\\[Test Link\\]\\]" heading)))))
+
 (ert-deftest test-gtd-log-entry-non-log-section ()
   "Test that timestamp is not added when not under log section."
   (with-gtd-test-buffer "* Parent\n:PROPERTIES:\n:STYLE: checklist\n:END:\n\n** Test Entry\n:PROPERTIES:\n:CREATED: [2025-01-01 Mon 12:00]\n:END:\nSome content"
