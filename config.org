@@ -791,10 +791,10 @@ DEFAULT is returned if timestamp doesn't match expected format."
     (let ((style (org-entry-get (point) "STYLE" t)))
       (if (member style '("checklist" "log"))
           (my-gtd-sort-by-style)
-        (org-up-heading-safe)
-        (let ((parent-style (org-entry-get (point) "STYLE" t)))
-          (when (member parent-style '("checklist" "log"))
-            (my-gtd-sort-by-style))))))
+        (when (org-up-heading-safe)
+          (let ((parent-style (org-entry-get (point) "STYLE" t)))
+            (when (member parent-style '("checklist" "log"))
+              (my-gtd-sort-by-style)))))))
 
   ;; Checklist management
   (defun my-gtd-reset-checklist ()
