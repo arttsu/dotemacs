@@ -1,4 +1,4 @@
 * %?
 :PROPERTIES:
- :CREATED: %U
+:CREATED: %U
 :END:

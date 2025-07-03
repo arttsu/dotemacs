@@ -583,6 +583,7 @@ We declare it explicitly to ensure we get a recent version, avoiding compatibili
     (org-hide-drawer-startup nil)
     (org-startup-indented nil)
     (org-startup-with-inline-images t)
+    (org-cycle-separator-lines 1)
 
     ;; Editing behavior
     (org-fold-catch-invisible-edits 'show-and-error)
@@ -601,7 +602,10 @@ We declare it explicitly to ensure we get a recent version, avoiding compatibili
 
     ;; Linking and ID settings
     (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
-    (org-refile-targets '((org-agenda-files :level . 2)))
+    (org-refile-targets my-gtd-refile-targets)
+    (org-refile-target-verify-function 'my-gtd-refile-verify-target)
+    (org-refile-use-outline-path t)
+    (org-outline-path-complete-in-steps nil)
 
     ;; Habit settings
     (org-habit-graph-column 80)
@@ -618,6 +622,8 @@ We declare it explicitly to ensure we get a recent version, avoiding compatibili
     ;; GTD hooks
     (add-hook 'org-after-todo-state-change-hook 'my-org-remove-priority-when-done)
     (add-hook 'org-after-todo-state-change-hook 'my-gtd-checklist-auto-advance)
+    (add-hook 'org-after-refile-insert-hook 'my-gtd-add-blank-line-after-refile)
+    (add-hook 'org-after-refile-insert-hook 'my-gtd-sort-entries)
 
     (org-babel-do-load-languages
      'org-babel-load-languages
@@ -1066,7 +1072,7 @@ DEFAULT is returned if timestamp doesn't match expected format."
 
 #+begin_src elisp
   ;; Capture template definitions
-  (defconst my-gtd-local-inbox-target `(file+headline ,my-gtd-local-inbox "Inbox items"))
+  (defconst my-gtd-local-inbox-target `(file+headline ,my-gtd-local-inbox "Items"))
 
   (defconst my-gtd-capture-templates
     `(("i" "Inbox")
@@ -1089,6 +1095,53 @@ DEFAULT is returned if timestamp doesn't match expected format."
     (cond ((equal prefix nil) (org-capture nil "iI"))
           ((equal prefix '(4)) (org-capture nil "iL"))
           (t (error "Invalid prefix argument: %s" prefix))))
+#+end_src
+
+** GTD Refile System
+
+#+begin_src elisp
+  ;; Refile target configuration
+  (defun my-gtd-get-refile-targets ()
+    "Get all GTD files for refile targets, excluding archive directories."
+    (let ((all-files '()))
+      ;; Add inbox files
+      (when (file-exists-p my-gtd-local-inbox)
+        (push my-gtd-local-inbox all-files))
+
+      ;; Get all .org files from GTD directories, excluding archives
+      (dolist (dir (list my-gtd-local-areas my-gtd-local-projects
+                         my-gtd-shared-areas my-gtd-shared-projects))
+        (when (file-exists-p dir)
+          (let ((org-files (directory-files-recursively dir "\\.org\\'" nil
+                                                        (lambda (subdir)
+                                                          ;; Exclude archive directories
+                                                          (not (string-match-p "/archive/" subdir))))))
+            (setq all-files (append org-files all-files)))))
+
+      ;; Remove duplicates and return
+      (delete-dups all-files)))
+
+  ;; Configure refile targets
+  (defconst my-gtd-refile-targets
+    `((my-gtd-get-refile-targets :level . 2)))
+
+  ;; Hook to add blank line after refile
+  (defun my-gtd-add-blank-line-after-refile ()
+    "Add a blank line after the refiled item."
+    (when (org-at-heading-p)
+      (save-excursion
+        (org-end-of-subtree t t)
+        ;; Insert blank line if next character is a heading and we don't already have blank line
+        (when (and (not (eobp))
+                   (looking-at "\\*")
+                   (not (looking-back "\n\n" 2)))
+          (insert "\n")))))
+
+  ;; Refile target verification function
+  (defun my-gtd-refile-verify-target ()
+    "Verify that refile target is a level 2 heading."
+    (and (org-at-heading-p)
+         (= (org-current-level) 2)))
 #+end_src
 
 ** Org Node
