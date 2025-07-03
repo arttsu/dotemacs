@@ -14,7 +14,11 @@
 (defun run-gtd-tests ()
   "Run all GTD integration tests."
   (interactive)
-  (ert-run-tests-batch-and-exit "test-gtd-"))
+  (let ((result (ert-run-tests-batch "test-gtd-")))
+    (princ "\n")
+    (if (and result (= (ert--stats-failed-unexpected result) 0))
+        (princ "✅ All tests passed!\n")
+      (princ "❌ Some tests failed!\n"))))
 
 (provide 'test-gtd-integration)
 ;;; test-gtd-integration.el ends here
