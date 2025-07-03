@@ -42,21 +42,28 @@ test-agenda:
 		-l ert -l test-gtd-integration \
 		--eval "(ert-run-tests-batch-and-exit \"test-gtd-day-agenda\")"
 
-# Create golden files (for initial setup or review)
+# Create golden files (for initial setup or when format changes intentionally)
 create-golden-files:
-	@echo "📋 Creating Golden Files for Review..."
-	@echo "====================================="
-	@emacs --batch -L tests \
-		--eval "(setq warning-suppress-types '((emacs) (org)))" \
-		--eval "(setq warning-suppress-log-types '((emacs) (org)))" \
-		-l ert -l test-gtd-integration \
-		--eval "(ert-run-tests-batch-and-exit \"test-gtd-create-golden-files\")" || true
+	@echo "📋 Creating Golden Files (Manual Process)..."
+	@echo "==========================================="
+	@echo "⚠️  This will overwrite existing golden files!"
+	@echo "⚠️  Only run this when agenda format changes are intentional."
 	@echo ""
-	@echo "📁 Golden files created in tests/test-data/"
-	@echo "📝 Please review the files before committing:"
-	@ls -la tests/test-data/*.txt
-	@echo ""
-	@echo "💡 If the output looks correct, these files will be used as the expected output for future tests."
+	@read -p "Are you sure you want to recreate golden files? [y/N] " -n 1 -r; \
+	echo; \
+	if [[ $$REPLY =~ ^[Yy]$$ ]]; then \
+		emacs --batch -L tests \
+			--eval "(setq warning-suppress-types '((emacs) (org)))" \
+			--eval "(setq warning-suppress-log-types '((emacs) (org)))" \
+			-l test-gtd-agenda \
+			--eval "(gtd-create-golden-files-manually)"; \
+		echo ""; \
+		echo "📁 Golden files recreated in tests/test-data/"; \
+		echo "📝 Please review the files before committing:"; \
+		ls -la tests/test-data/*.txt; \
+	else \
+		echo "❌ Cancelled golden file creation."; \
+	fi
 
 # Update golden files after intentional changes
 update-golden-files:
@@ -90,14 +97,15 @@ help:
 	@echo "  tangle             - Tangle config.org to init.el/early-init.el"
 	@echo "  test               - Run all GTD integration tests"
 	@echo "  test-agenda        - Run only GTD agenda tests"
-	@echo "  create-golden-files - Create/recreate golden files for agenda tests"
-	@echo "  update-golden-files - Update golden files from .FAILED versions after review"
+	@echo "  create-golden-files - Recreate golden files (destructive, manual only)"
+	@echo "  update-golden-files - Accept .FAILED files as new golden files after review"
 	@echo "  clean              - Remove compiled .elc files"
 	@echo "  test-and-tangle    - Legacy: run tests then tangle"
 	@echo "  help               - Show this help message"
 	@echo ""
 	@echo "Golden File Testing Workflow:"
-	@echo "  1. When agenda tests fail, .FAILED files are created for manual review"
-	@echo "  2. Compare .FAILED files with expected golden files"
-	@echo "  3. If changes are intentional, run 'make update-golden-files'"
-	@echo "  4. Run 'make test-agenda' to verify tests now pass"
+	@echo "  1. Tests automatically fail when agenda output changes"
+	@echo "  2. .FAILED files show actual output for manual review"
+	@echo "  3. Compare .FAILED with golden files to assess changes"
+	@echo "  4. If intentional: 'make update-golden-files' to accept"
+	@echo "  5. If regression: fix code and 'make test-agenda' to verify"

@@ -20,30 +20,6 @@
 (defvar gtd-test-agenda-orig-vars nil
   "Original values of GTD directory variables.")
 
-;; Define the agenda builder function for testing
-;; (This mirrors the one in config.org but is available for tests)
-(defun my-gtd-build-day-agenda (local-dir local-areas local-projects shared-dir shared-areas shared-projects)
-  "Build day agenda command with specified directories."
-  `("d" "Day" ((agenda "" ((org-agenda-span 1)
-                           (org-agenda-skip-scheduled-if-done t)
-                           (org-agenda-skip-deadline-if-done t)
-                           (org-agenda-skip-timestamp-if-done t)))
-               (todo "TODO" ((org-agenda-overriding-header "Local ad-hoc and high-prio project tasks")
-                             (org-agenda-skip-function 'my-gtd-day-agenda-skip-todo-p)
-                             (org-agenda-files '(,local-dir ,local-areas ,local-projects))))
-               (tags "GTD_TYPE=\"project\"" ((org-agenda-overriding-header "Local projects")
-                                 (org-tags-match-list-sublevels nil)
-                                 (org-agenda-sorting-strategy '(priority-down))
-                                 (org-agenda-skip-function 'my-gtd-day-agenda-skip-project-p)
-                                 (org-agenda-files '(,local-projects))))
-               (todo "TODO" ((org-agenda-overriding-header "Shared ad-hoc and high-prio project tasks")
-                             (org-agenda-skip-function 'my-gtd-day-agenda-skip-todo-p)
-                             (org-agenda-files '(,shared-dir ,shared-areas ,shared-projects))))
-               (tags "GTD_TYPE=\"project\"" ((org-agenda-overriding-header "Shared projects")
-                                 (org-tags-match-list-sublevels nil)
-                                 (org-agenda-sorting-strategy '(priority-down))
-                                 (org-agenda-skip-function 'my-gtd-day-agenda-skip-project-p)
-                                 (org-agenda-files '(,shared-projects)))))))
 
 (defun gtd-test-agenda-setup-directories ()
   "Set up temporary directories and files for agenda testing."
@@ -368,10 +344,11 @@ TASKS is a list of plists with :title, :priority, :state."
 
 ;;; Golden File Creation Utility
 
-(ert-deftest test-gtd-create-golden-files ()
-  "Utility test to create golden files for manual review.
-This test always 'fails' but generates golden files for inspection."
-  :expected-result :failed
+(defun gtd-create-golden-files-manually ()
+  "Utility function to create golden files manually.
+This should only be run when setting up golden files for the first time
+or when agenda format changes intentionally."
+  (interactive)
   (gtd-test-agenda-setup-directories)
   (unwind-protect
       (progn
@@ -408,8 +385,7 @@ This test always 'fails' but generates golden files for inspection."
           (gtd-golden-create-golden-file "day-agenda-minimal" t)
           (message "Golden file created for minimal test"))
         
-        ;; Always fail so user reviews the files
-        (ert-fail "Golden files created - please review them manually"))
+        (message "✅ Golden files created successfully!"))
     
     ;; Cleanup
     (when (get-buffer "*Org Agenda*")
