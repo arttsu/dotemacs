@@ -465,6 +465,14 @@
   ;; Capture templates
   (org-capture-templates my-gtd-capture-templates)
 
+  ;; Agenda configuration
+  (org-agenda-files my-gtd-all-dirs)
+  (org-agenda-custom-commands `(,my-gtd-day-agenda))
+  (org-agenda-prefix-format '((agenda . " %i %-20(my-org-agenda-category-short) %?-12t% s")
+                               (todo . " %i %-20(my-org-agenda-category-short) ")
+                               (tags . " %i %-20(my-org-agenda-category-short) ")
+                               (search . " %i %-20(my-org-agenda-category-short) ")))
+
   :config
   (require 'org-attach)
   (require 'org-id)
@@ -1003,6 +1011,104 @@ Returns inverted timestamp for DONE items, earliest date for TODO items."
   "Verify that refile target is a level 2 heading."
   (and (org-at-heading-p)
        (= (org-current-level) 2)))
+
+;; Agenda skip functions for filtering items
+(defun my-gtd-day-agenda-skip-todo-p ()
+  "Skip function for GTD day agenda TODO items."
+  (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+        (scheduled (org-get-scheduled-time (point)))
+        (deadline (org-get-deadline-time (point)))
+        (priority (org-get-priority (thing-at-point 'line t)))
+        (gtd-type (org-entry-get-with-inheritance "GTD_TYPE"))
+        (tags (org-get-tags-at)))
+    (cond
+     ;; Skip scheduled/deadline items - they'll show in the calendar section
+     ((or scheduled deadline) subtree-end)
+     ;; For ad-hoc todos (not in projects/areas): show unless priority is E
+     ((and (not (member gtd-type '("project" "area")))
+           (not (member "PROJECT" tags))
+           (not (member "AREA" tags))
+           (not (= priority 0))) nil)  ; E priority = 0
+     ;; For project/area todos: show only if priority is A or B
+     ((and (or (member gtd-type '("project" "area"))
+               (member "PROJECT" tags)
+               (member "AREA" tags))
+           (or (= priority 4000)  ; A priority
+               (= priority 3000))) nil)  ; B priority
+     ;; Skip everything else
+     (t subtree-end))))
+
+(defun my-gtd-day-agenda-skip-project-p ()
+  "Skip function for GTD day agenda project listings."
+  (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+        (priority (org-get-priority (thing-at-point 'line t))))
+    (when (< priority 1000)
+      subtree-end)))
+
+;; Custom category function for agenda display
+(defun my-org-agenda-category-short ()
+  "Return project/area name for tasks within projects/areas, or shortened name for other files."
+  (let ((gtd-type-current (org-entry-get (point) "GTD_TYPE"))
+        (gtd-type-inherited (org-entry-get-with-inheritance "GTD_TYPE")))
+    (cond
+     ;; If current heading has GTD_TYPE (i.e., it's the project/area heading itself), return empty
+     ((member gtd-type-current '("project" "area"))
+      "")
+     ;; If we're inside a project/area (inherited GTD_TYPE), show the project/area name
+     ((member gtd-type-inherited '("project" "area"))
+      (let ((project-name (save-excursion
+                            (save-restriction
+                              (widen)
+                              (goto-char (point-min))
+                              (when (org-at-heading-p)
+                                (org-get-heading t t t t))))))  ; Strip priority, tags, TODO, and comments
+        ;; Limit to 19 characters (or 18 + ellipsis if truncated)
+        (if (and project-name (> (length project-name) 19))
+            (concat (substring project-name 0 18) "…")
+          (or project-name ""))))
+     ;; For non-project/area files, show category based on filename or top-level heading
+     (t
+      (let ((category-name
+             (or
+              ;; Try to get the top-level heading
+              (save-excursion
+                (save-restriction
+                  (widen)
+                  (goto-char (point-min))
+                  (when (org-at-heading-p)
+                    (org-get-heading t t t t))))  ; Strip priority, tags, TODO, and comments
+              ;; Fallback to filename
+              (let* ((file-name (file-name-base (buffer-file-name)))
+                     ;; Strip timestamp pattern YYYY-MM-DD- from beginning
+                     (cleaned-name (replace-regexp-in-string "^[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}-" "" file-name)))
+                cleaned-name))))
+        ;; Limit to 19 characters (or 18 + ellipsis if truncated)
+        (if (> (length category-name) 19)
+            (concat (substring category-name 0 18) "…")
+          category-name))))))
+
+;; GTD day agenda definition
+(defconst my-gtd-day-agenda
+  `("d" "Day" ((agenda "" ((org-agenda-span 1)
+                           (org-agenda-skip-scheduled-if-done t)
+                           (org-agenda-skip-deadline-if-done t)
+                           (org-agenda-skip-timestamp-if-done t)))
+               (todo "TODO" ((org-agenda-overriding-header "Local ad-hoc and high-prio project tasks")
+                             (org-agenda-skip-function 'my-gtd-day-agenda-skip-todo-p)
+                             (org-agenda-files '(,my-gtd-local-dir ,my-gtd-local-areas ,my-gtd-local-projects))))
+               (tags "GTD_TYPE=\"project\"" ((org-agenda-overriding-header "Local projects")
+                                 (org-tags-match-list-sublevels nil)
+                                 (org-agenda-sorting-strategy '(priority-down))
+                                 (org-agenda-skip-function 'my-gtd-day-agenda-skip-project-p)
+                                 (org-agenda-files '(,my-gtd-local-projects))))
+               (todo "TODO" ((org-agenda-overriding-header "Shared ad-hoc and high-prio project tasks")
+                             (org-agenda-skip-function 'my-gtd-day-agenda-skip-todo-p)
+                             (org-agenda-files '(,my-gtd-shared-dir ,my-gtd-shared-areas ,my-gtd-shared-projects))))
+               (tags "GTD_TYPE=\"project\"" ((org-agenda-overriding-header "Shared projects")
+                                 (org-tags-match-list-sublevels nil)
+                                 (org-agenda-sorting-strategy '(priority-down))
+                                 (org-agenda-skip-function 'my-gtd-day-agenda-skip-project-p)
+                                 (org-agenda-files '(,my-gtd-shared-projects)))))))
 
 (use-package org-node
   :ensure
