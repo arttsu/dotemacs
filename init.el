@@ -625,6 +625,10 @@
   (require 'org-id)
   (require 'org-habit)
 
+  ;; Suppress spurious org-element warnings during agenda generation
+  (add-to-list 'warning-suppress-types '(org-element))
+  (add-to-list 'warning-suppress-log-types '(org-element))
+
   ;; GTD hooks
   (add-hook 'org-after-todo-state-change-hook 'my-org-remove-priority-when-done)
   (add-hook 'org-after-todo-state-change-hook 'my-gtd-checklist-auto-advance)
@@ -759,14 +763,28 @@ DEFAULT is returned if timestamp doesn't match expected format."
 
   (defun my-gtd-checklist-auto-advance ()
     "Auto-advance to next item when completing checklist items."
-    (when (and (not (eq this-command 'org-agenda-todo))
-               (string= org-state "DONE"))
-      (let* ((current-element (org-element-at-point))
-             (parent (org-element-property :parent current-element))
-             (parent-style-prop (and parent (org-entry-get parent "STYLE")))
-             (parent-style (or parent-style-prop "")))
-        (when (string= parent-style "checklist")
-          (run-with-idle-timer 0 nil 'my-gtd-checklist-do-auto-advance)))))
+    ;; Only proceed if we're truly in an org file buffer, not during agenda operations
+    (when (and (string= org-state "DONE")
+               (not (eq this-command 'org-agenda-todo)))
+      ;; Save the current buffer context and work in the actual org buffer
+      (let ((orig-buffer (current-buffer)))
+        (when (and (with-current-buffer orig-buffer
+                     (and (derived-mode-p 'org-mode)
+                          (buffer-file-name)
+                          (not (derived-mode-p 'org-agenda-mode))
+                          (not (string-match-p "\\*Org Agenda" (buffer-name)))
+                          (org-at-heading-p))))
+          (with-current-buffer orig-buffer
+            (condition-case err
+                (let* ((current-element (org-element-at-point))
+                       (parent (org-element-property :parent current-element))
+                       (parent-style-prop (and parent (org-entry-get parent "STYLE")))
+                       (parent-style (or parent-style-prop "")))
+                  (when (string= parent-style "checklist")
+                    (run-with-idle-timer 0 nil 'my-gtd-checklist-do-auto-advance)))
+              (error 
+               (message "GTD checklist auto-advance error: %s in buffer %s (mode: %s)" 
+                        err (buffer-name) major-mode))))))))
 
 ;; Sorting functions
 (defun my-gtd-extract-closed-timestamp-for-reverse-sort ()
