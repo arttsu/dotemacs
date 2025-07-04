@@ -803,11 +803,11 @@ Returns inverted timestamp for DONE items, earliest date for TODO items."
                 "[^a-zA-Z0-9-]" ""
                 (replace-regexp-in-string "\\s-+" "-" (downcase title))))
          (filename (format "%s-%s.org"
-                          (format-time-string "%Y-%m-%d")
-                          slug))
+                           (format-time-string "%Y-%m-%d")
+                           slug))
          (project-dir (if (string= context "Local")
-                         my-gtd-local-projects
-                       my-gtd-shared-projects))
+                          my-gtd-local-projects
+                        my-gtd-shared-projects))
          (filepath (expand-file-name filename project-dir))
          (org-id (org-id-new))
          (timestamp (format-time-string "[%Y-%m-%d %a %H:%M]"))
@@ -879,8 +879,8 @@ Returns inverted timestamp for DONE items, earliest date for TODO items."
                 (replace-regexp-in-string "\\s-+" "-" (downcase title))))
          (filename (format "%s.org" slug))
          (area-dir (if (string= context "Local")
-                      my-gtd-local-areas
-                    my-gtd-shared-areas))
+                       my-gtd-local-areas
+                     my-gtd-shared-areas))
          (filepath (expand-file-name filename area-dir))
          (org-id (org-id-new))
          (timestamp (format-time-string "[%Y-%m-%d %a %H:%M]"))
@@ -956,7 +956,7 @@ Returns inverted timestamp for DONE items, earliest date for TODO items."
               (org-entry-put (point) "PRIORITY" nil))
             ;; Set ARCHIVED property
             (org-entry-put (point) "ARCHIVED"
-                         (format-time-string "[%Y-%m-%d %a %H:%M]"))))
+                           (format-time-string "[%Y-%m-%d %a %H:%M]"))))
 
         ;; Save changes before moving
         (save-buffer)
@@ -970,6 +970,30 @@ Returns inverted timestamp for DONE items, earliest date for TODO items."
         ;; Update the visited file name
         (set-visited-file-name new-path)
         (set-buffer-modified-p nil)
+
+        ;; Handle easysession cleanup if available
+        (when (fboundp 'easysession-delete)
+          (let* ((project-slug (replace-regexp-in-string
+                                "^[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}-" ""
+                                (file-name-base filename)))
+                 (current-session (easysession-get-session-name))
+                 (is-current-session (string= current-session project-slug)))
+
+            ;; Check if session exists using easysession's own function
+            (when (condition-case nil
+                    (member project-slug (easysession--get-all-names))
+                  (error nil))
+              ;; Session exists, ask to delete
+              (when (y-or-n-p (format "Delete easysession '%s'? " project-slug))
+                ;; If it's the current session, switch to main first
+                (when is-current-session
+                  (condition-case nil
+                      (easysession-switch-to "main")
+                    (error
+                     ;; If main doesn't exist, create a new default session
+                     (easysession-save-as "main"))))
+                ;; Delete the project session
+                (easysession-delete project-slug)))))
 
         (message "Project archived to: %s" new-path)))))
 

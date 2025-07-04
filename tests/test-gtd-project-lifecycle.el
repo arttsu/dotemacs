@@ -307,7 +307,13 @@
        ;; Open the file and archive it
        (with-current-buffer (find-file-noselect project-file)
          (cl-letf (((symbol-function 'yes-or-no-p)
-                    (lambda (&rest _) t)))
+                    (lambda (&rest _) t))
+                   ((symbol-function 'y-or-n-p)
+                    (lambda (&rest _) nil))
+                   ((symbol-function 'easysession--get-sessions)
+                    (lambda () '()))
+                   ((symbol-function 'easysession-delete)
+                    (lambda (&rest _) nil)))
 
            (my-gtd-archive-project)
 
