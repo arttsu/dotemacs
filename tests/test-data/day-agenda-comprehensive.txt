@@ -15,6 +15,7 @@ Inbox items
   Items                TODO [#A] Important ad-hoc task
   Items                TODO [#C] Low priority ad-hoc task
   Items                TODO Scheduled meeting
+  Shared inbox         TODO Look into Claude Code hooks
   Items                TODO [#E] Very low priority task
 
 ===============================================================================

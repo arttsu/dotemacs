@@ -635,7 +635,7 @@
   ;; Refile hooks in order: blank line, format log entry, then sort
   (add-hook 'org-after-refile-insert-hook 'my-gtd-add-blank-line-after-refile -10)
   (add-hook 'org-after-refile-insert-hook 'my-gtd-format-log-entry-after-refile 50)
-  (add-hook 'org-after-refile-insert-hook 'my-gtd-sort-entries 90)
+  (add-hook 'org-after-refile-insert-hook 'my-gtd-sort-entries-hook 90)
 
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -782,130 +782,145 @@ DEFAULT is returned if timestamp doesn't match expected format."
                        (parent-style (or parent-style-prop "")))
                   (when (string= parent-style "checklist")
                     (run-with-idle-timer 0 nil 'my-gtd-checklist-do-auto-advance)))
-              (error 
-               (message "GTD checklist auto-advance error: %s in buffer %s (mode: %s)" 
+              (error
+               (message "GTD checklist auto-advance error: %s in buffer %s (mode: %s)"
                         err (buffer-name) major-mode))))))))
 
 ;; Sorting functions
-(defun my-gtd-extract-closed-timestamp-for-reverse-sort ()
-  "Extract CLOSED timestamp for reverse chronological sorting.
-Returns inverted timestamp for DONE items, earliest date for TODO items."
-  (save-excursion
-    (save-restriction
-      (org-narrow-to-subtree)
-      (goto-char (point-min))
-      (let ((todo-state (org-get-todo-state)))
-        (if (member todo-state org-done-keywords)
-            ;; For DONE items, invert the timestamp for reverse sorting
-            (if (re-search-forward "CLOSED: \\(\\[.*?\\]\\)" nil t)
-                (my-gtd-invert-timestamp-for-reverse-sort
-                 (match-string 1)
-                 "[9999-12-31 Mon 23:59]")  ; Latest possible for missing timestamps
-              "[9999-12-31 Mon 23:59]")
-          ;; For TODO items, return earliest date so they sort first
-          "[1900-01-01 Mon 00:00]")))))
+  (defun my-gtd-extract-closed-timestamp-for-reverse-sort ()
+    "Extract CLOSED timestamp for reverse chronological sorting.
+  Returns inverted timestamp for DONE items, earliest date for TODO items."
+    (save-excursion
+      (save-restriction
+        (org-narrow-to-subtree)
+        (goto-char (point-min))
+        (let ((todo-state (org-get-todo-state)))
+          (if (member todo-state org-done-keywords)
+              ;; For DONE items, invert the timestamp for reverse sorting
+              (if (re-search-forward "CLOSED: \\(\\[.*?\\]\\)" nil t)
+                  (my-gtd-invert-timestamp-for-reverse-sort
+                   (match-string 1)
+                   "[9999-12-31 Mon 23:59]")  ; Latest possible for missing timestamps
+                "[9999-12-31 Mon 23:59]")
+            ;; For TODO items, return earliest date so they sort first
+            "[1900-01-01 Mon 00:00]")))))
 
-(defun my-gtd-sort-todos ()
-  "Sort TODOs by created timestamp, closed timestamp, priority, and todo state."
-  (interactive)
-  (my-org-require-at-heading)
-  (org-sort-entries nil ?f 'my-gtd-extract-created-timestamp)
-  (org-sort-entries nil ?f 'my-gtd-extract-closed-timestamp)
-  (org-sort-entries nil ?p)
-  (org-sort-entries nil ?o)
-  (org-fold-show-children))
+  (defun my-gtd-sort-todos ()
+    "Sort TODOs by created timestamp, closed timestamp, priority, and todo state."
+    (interactive)
+    (my-org-require-at-heading)
+    (org-sort-entries nil ?f 'my-gtd-extract-created-timestamp)
+    (org-sort-entries nil ?f 'my-gtd-extract-closed-timestamp)
+    (org-sort-entries nil ?p)
+    (org-sort-entries nil ?o)
+    (org-fold-show-children))
 
-(defun my-gtd-sort-checklist ()
-  "Sort checklist items: TODO by priority/timestamp, DONE by closed time (newest first)."
-  (interactive)
-  (my-org-require-at-heading)
-  ;; Apply sorts in reverse order of importance (least important first)
-  ;; 1. Sort by created timestamp (affects TODO items)
-  (org-sort-entries nil ?f 'my-gtd-extract-created-timestamp)
-  ;; 2. Sort by priority (affects TODO items with priorities)
-  (org-sort-entries nil ?p)
-  ;; 3. Sort by closed timestamp for reverse chronological (affects DONE items)
-  (org-sort-entries nil ?f 'my-gtd-extract-closed-timestamp-for-reverse-sort)
-  ;; 4. Finally sort by TODO state to separate TODO from DONE
-  (org-sort-entries nil ?o)
-  (org-fold-show-children))
+  (defun my-gtd-sort-checklist ()
+    "Sort checklist items: TODO by priority/timestamp, DONE by closed time (newest first)."
+    (interactive)
+    (my-org-require-at-heading)
+    ;; Apply sorts in reverse order of importance (least important first)
+    ;; 1. Sort by created timestamp (affects TODO items)
+    (org-sort-entries nil ?f 'my-gtd-extract-created-timestamp)
+    ;; 2. Sort by priority (affects TODO items with priorities)
+    (org-sort-entries nil ?p)
+    ;; 3. Sort by closed timestamp for reverse chronological (affects DONE items)
+    (org-sort-entries nil ?f 'my-gtd-extract-closed-timestamp-for-reverse-sort)
+    ;; 4. Finally sort by TODO state to separate TODO from DONE
+    (org-sort-entries nil ?o)
+    (org-fold-show-children))
 
 
-(defun my-gtd-sort-by-style ()
-  "Sort entries based on their STYLE property."
-  (interactive)
-  (my-org-require-at-heading)
-  (let ((style (org-entry-get (point) "STYLE" t)))
-    (cond
-     ((string= style "checklist")
-      (my-gtd-sort-checklist))
-     ((string= style "log")
-      (org-sort-entries nil ?f 'my-gtd-extract-created-timestamp-for-reverse-sort)
-      (org-fold-show-children))
-     (t
-      (user-error "No supported STYLE property found")))))
-
-(defun my-gtd-sort-entries ()
-  "Smart sort that checks current entry or parent for sorting style."
-  (interactive)
-  (my-org-require-at-heading)
-  ;; Check if STYLE is directly on current entry (not inherited)
-  (let ((style (org-entry-get (point) "STYLE" nil)))
-    (if (or (string= style "checklist") (string= style "log"))
-        (my-gtd-sort-by-style)
-      ;; No direct STYLE property, try parent
-      (if (org-up-heading-safe)
-          (let ((parent-style (org-entry-get (point) "STYLE" nil)))
-            (if (or (string= parent-style "checklist") (string= parent-style "log"))
-                (my-gtd-sort-by-style)
-              (user-error "No supported STYLE property found")))
+  (defun my-gtd-sort-by-style ()
+    "Sort entries based on their STYLE property."
+    (interactive)
+    (my-org-require-at-heading)
+    (let ((style (org-entry-get (point) "STYLE" t)))
+      (cond
+       ((string= style "checklist")
+        (my-gtd-sort-checklist))
+       ((string= style "log")
+        (org-sort-entries nil ?f 'my-gtd-extract-created-timestamp-for-reverse-sort)
+        (org-fold-show-children))
+       (t
         (user-error "No supported STYLE property found")))))
 
-;; Checklist management
-(defun my-gtd-reset-checklist ()
-  "Reset all items in a checklist to TODO state."
-  (interactive)
-  (my-org-require-at-heading)
-  (let ((style (org-entry-get (point) "STYLE" t)))
-    (if (not (my-gtd-checklist-p))
-        (error "Not at a checklist")
-      (when (yes-or-no-p "Reset the checklist?")
-        (org-map-entries (lambda ()
-                           (org-todo "TODO")
-                           ;; Remove strikethrough if present
-                           (let ((heading (org-get-heading t t t t)))
-                             (when (string-match "^\\+\\(.+\\)\\+$" heading)
-                               (org-edit-headline (match-string 1 heading))))
-                           ;; Remove CLOSED_AS property
-                           (org-delete-property "CLOSED_AS"))
-                         nil
-                         'tree)
-        (org-todo "")))))
+  (defun my-gtd-sort-entries (&optional no-error)
+    "Smart sort that checks current entry or parent for sorting style.
+With NO-ERROR, fail silently instead of throwing user-error."
+    (interactive)
+    (my-org-require-at-heading)
+    ;; Check if STYLE is directly on current entry (not inherited)
+    (let ((style (org-entry-get (point) "STYLE" nil)))
+      (if (or (string= style "checklist") (string= style "log"))
+          (my-gtd-sort-by-style)
+        ;; No direct STYLE property, try parent
+        (if (org-up-heading-safe)
+            (let ((parent-style (org-entry-get (point) "STYLE" nil)))
+              (if (or (string= parent-style "checklist") (string= parent-style "log"))
+                  (my-gtd-sort-by-style)
+                ;; Show error unless NO-ERROR is set
+                (unless no-error
+                  (user-error "No supported STYLE property found"))))
+          ;; Show error unless NO-ERROR is set
+          (unless no-error
+            (user-error "No supported STYLE property found"))))))
 
-(defun my-gtd-complete-as-wont-do ()
-  "Toggle entry between won't-do and todo states."
-  (interactive)
-  (my-org-require-at-heading)
-  (let ((heading (org-get-heading t t t t))
-        (closed-as (org-entry-get (point) "CLOSED_AS")))
-    ;; Toggle between won't-do and TODO states
-    (if (string= closed-as "WONT_DO")
-        ;; Currently marked as won't do - undo it
+  (defun my-gtd-sort-entries-hook ()
+    "Wrapper for my-gtd-sort-entries for use in hooks. Fails silently on error."
+    (condition-case err
+        (when (and (derived-mode-p 'org-mode)
+                   (org-at-heading-p))
+          (message "GTD: Running sort-entries hook at %s" (org-get-heading t t t t))
+          (my-gtd-sort-entries t))
+      (error
+       (message "GTD: Sort-entries hook error: %s" err))))
+
+  ;; Checklist management
+  (defun my-gtd-reset-checklist ()
+    "Reset all items in a checklist to TODO state."
+    (interactive)
+    (my-org-require-at-heading)
+    (let ((style (org-entry-get (point) "STYLE" t)))
+      (if (not (my-gtd-checklist-p))
+          (error "Not at a checklist")
+        (when (yes-or-no-p "Reset the checklist?")
+          (org-map-entries (lambda ()
+                             (org-todo "TODO")
+                             ;; Remove strikethrough if present
+                             (let ((heading (org-get-heading t t t t)))
+                               (when (string-match "^\\+\\(.+\\)\\+$" heading)
+                                 (org-edit-headline (match-string 1 heading))))
+                             ;; Remove CLOSED_AS property
+                             (org-delete-property "CLOSED_AS"))
+                           nil
+                           'tree)
+          (org-todo "")))))
+
+  (defun my-gtd-complete-as-wont-do ()
+    "Toggle entry between won't-do and todo states."
+    (interactive)
+    (my-org-require-at-heading)
+    (let ((heading (org-get-heading t t t t))
+          (closed-as (org-entry-get (point) "CLOSED_AS")))
+      ;; Toggle between won't-do and TODO states
+      (if (string= closed-as "WONT_DO")
+          ;; Currently marked as won't do - undo it
+          (progn
+            (org-todo "TODO")
+            (org-delete-property "CLOSED_AS")
+            ;; Remove strikethrough if present
+            (when (string-match "^\\+\\(.+\\)\\+$" heading)
+              (org-edit-headline (match-string 1 heading)))
+            (message "Unmarked as won't do"))
+        ;; Not marked as won't do - mark it
         (progn
-          (org-todo "TODO")
-          (org-delete-property "CLOSED_AS")
-          ;; Remove strikethrough if present
-          (when (string-match "^\\+\\(.+\\)\\+$" heading)
-            (org-edit-headline (match-string 1 heading)))
-          (message "Unmarked as won't do"))
-      ;; Not marked as won't do - mark it
-      (progn
-        (org-todo 'done)
-        (org-entry-put (point) "CLOSED_AS" "WONT_DO")
-        ;; Only add strikethrough if not already present
-        (unless (string-match "^\\+.+\\+$" heading)
-          (org-edit-headline (format "+%s+" heading)))
-        (message "Marked as won't do")))))
+          (org-todo 'done)
+          (org-entry-put (point) "CLOSED_AS" "WONT_DO")
+          ;; Only add strikethrough if not already present
+          (unless (string-match "^\\+.+\\+$" heading)
+            (org-edit-headline (format "+%s+" heading)))
+          (message "Marked as won't do")))))
 
 ;; Template path resolver
 (defun my-org-capture-template-path (name)

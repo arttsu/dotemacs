@@ -816,7 +816,7 @@ We declare it explicitly to ensure we get a recent version, avoiding compatibili
     ;; Refile hooks in order: blank line, format log entry, then sort
     (add-hook 'org-after-refile-insert-hook 'my-gtd-add-blank-line-after-refile -10)
     (add-hook 'org-after-refile-insert-hook 'my-gtd-format-log-entry-after-refile 50)
-    (add-hook 'org-after-refile-insert-hook 'my-gtd-sort-entries 90)
+    (add-hook 'org-after-refile-insert-hook 'my-gtd-sort-entries-hook 90)
 
     (org-babel-do-load-languages
      'org-babel-load-languages
@@ -975,8 +975,8 @@ DEFAULT is returned if timestamp doesn't match expected format."
                        (parent-style (or parent-style-prop "")))
                   (when (string= parent-style "checklist")
                     (run-with-idle-timer 0 nil 'my-gtd-checklist-do-auto-advance)))
-              (error 
-               (message "GTD checklist auto-advance error: %s in buffer %s (mode: %s)" 
+              (error
+               (message "GTD checklist auto-advance error: %s in buffer %s (mode: %s)"
                         err (buffer-name) major-mode))))))))
 #+end_src
 
@@ -1042,8 +1042,9 @@ DEFAULT is returned if timestamp doesn't match expected format."
        (t
         (user-error "No supported STYLE property found")))))
 
-  (defun my-gtd-sort-entries ()
-    "Smart sort that checks current entry or parent for sorting style."
+  (defun my-gtd-sort-entries (&optional no-error)
+    "Smart sort that checks current entry or parent for sorting style.
+With NO-ERROR, fail silently instead of throwing user-error."
     (interactive)
     (my-org-require-at-heading)
     ;; Check if STYLE is directly on current entry (not inherited)
@@ -1055,8 +1056,22 @@ DEFAULT is returned if timestamp doesn't match expected format."
             (let ((parent-style (org-entry-get (point) "STYLE" nil)))
               (if (or (string= parent-style "checklist") (string= parent-style "log"))
                   (my-gtd-sort-by-style)
-                (user-error "No supported STYLE property found")))
-          (user-error "No supported STYLE property found")))))
+                ;; Show error unless NO-ERROR is set
+                (unless no-error
+                  (user-error "No supported STYLE property found"))))
+          ;; Show error unless NO-ERROR is set
+          (unless no-error
+            (user-error "No supported STYLE property found"))))))
+
+  (defun my-gtd-sort-entries-hook ()
+    "Wrapper for my-gtd-sort-entries for use in hooks. Fails silently on error."
+    (condition-case err
+        (when (and (derived-mode-p 'org-mode)
+                   (org-at-heading-p))
+          (message "GTD: Running sort-entries hook at %s" (org-get-heading t t t t))
+          (my-gtd-sort-entries t))
+      (error
+       (message "GTD: Sort-entries hook error: %s" err))))
 
   ;; Checklist management
   (defun my-gtd-reset-checklist ()
