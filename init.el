@@ -175,7 +175,15 @@
                                   ((my-macos-p) "gls")
                                   (t "ls")))
   (dired-listing-switches (cond ((my-windows-p) dired-listing-switches)
-                                (t "-alh --group-directories-first"))))
+                                (t "-alh --group-directories-first")))
+  :bind
+  (("<f7>" . dired-jump)
+   :map dired-mode-map
+   ("o" . crux-open-with)
+   ("<tab>" . dired-find-file-other-window)))
+
+(use-package dired-du
+  :ensure)
 
 (use-package project
   :config
