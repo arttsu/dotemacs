@@ -433,9 +433,15 @@
   "Set up a minimal session environment for new sessions."
   (when (and (boundp 'tab-bar-mode) tab-bar-mode)
     (tab-bar-close-other-tabs)
-    (tab-bar-rename-tab "main"))
+    (tab-bar-rename-tab ""))
   (delete-other-windows)
   (scratch-buffer))
+
+(defun my-easysession-reset-session ()
+  "Reset the current session to a minimal state."
+  (interactive)
+  (when (yes-or-no-p "Reset session?")
+    (my-easysession-setup-minimal)))
 
 (use-package easysession
   :ensure
@@ -458,7 +464,8 @@
   (("<f12> <f12>" . easysession-switch-to)
    ("<f12> s" . easysession-save)
    ("<f12> S" . easysession-save-as)
-   ("<f12> k" . easysession-delete)))
+   ("<f12> k" . easysession-delete)
+   ("<f12> r" . my-easysession-reset-session)))
 
 (use-package transient
   :ensure)
