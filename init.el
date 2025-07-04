@@ -683,6 +683,7 @@
 
 (defconst my-org-shared-dir (expand-file-name "~/org-shared"))
 (defconst my-gtd-shared-dir (expand-file-name "gtd" my-org-shared-dir))
+(defconst my-gtd-shared-inbox (expand-file-name "inbox.org" my-gtd-shared-dir))
 (defconst my-gtd-shared-projects (expand-file-name "projects" my-gtd-shared-dir))
 (defconst my-gtd-shared-areas (expand-file-name "areas" my-gtd-shared-dir))
 
@@ -1289,6 +1290,8 @@ Returns inverted timestamp for DONE items, earliest date for TODO items."
                            (org-agenda-skip-scheduled-if-done t)
                            (org-agenda-skip-deadline-if-done t)
                            (org-agenda-skip-timestamp-if-done t)))
+               (todo "TODO" ((org-agenda-overriding-header "Inbox items")
+                             (org-agenda-files '(,my-gtd-local-inbox ,my-gtd-shared-inbox))))
                (todo "TODO" ((org-agenda-overriding-header "Local ad-hoc and high-prio project tasks")
                              (org-agenda-skip-function 'my-gtd-day-agenda-skip-todo-p)
                              (org-agenda-files '(,local-dir ,local-areas ,local-projects))))

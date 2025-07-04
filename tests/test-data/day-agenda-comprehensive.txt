@@ -11,6 +11,13 @@ Monday     15 January 2024 W03
                        HH:MM...... ----------------
 
 ===============================================================================
+Inbox items
+  Items                TODO [#A] Important ad-hoc task
+  Items                TODO [#C] Low priority ad-hoc task
+  Items                TODO Scheduled meeting
+  Items                TODO [#E] Very low priority task
+
+===============================================================================
 Local ad-hoc and high-prio project tasks
   Items                TODO [#A] Important ad-hoc task
   Health & Fitness     TODO [#A] Schedule dentist appointment
