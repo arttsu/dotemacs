@@ -13,6 +13,8 @@
 (setq my-font-height 125)
 
 (setq my-vterm-shell nil)
+(setq my-use-ripgrep nil)
+(setq my-use-copilot nil)
 
 (let ((path-to-local-config (expand-file-name "local.el" user-emacs-directory)))
   (if (file-exists-p path-to-local-config)
@@ -174,6 +176,16 @@
                                   (t "ls")))
   (dired-listing-switches (cond ((my-windows-p) dired-listing-switches)
                                 (t "-alh --group-directories-first"))))
+
+(use-package project
+  :config
+  (add-to-list 'project-switch-commands '(project-dired "Dired" "<return>") t))
+
+(use-package flymake
+  :bind
+  (:map prog-mode-map
+        ("C-c ! n" . flymake-goto-next-error)
+        ("C-c ! p" . flymake-goto-prev-error)))
 
 (use-package modus-themes
   :ensure
@@ -469,6 +481,9 @@
    ("<f12> k" . easysession-delete)
    ("<f12> r" . my-easysession-reset-session)))
 
+(use-package hydra
+  :ensure)
+
 (use-package transient
   :ensure)
 
@@ -542,6 +557,13 @@
    ("N" . kubel-set-namespace)
    ("v" . kubel-exec-vterm-pod)
    ("P" . kubel-port-forward-pod)))
+
+(use-package rg
+  :when my-use-ripgrep
+  :ensure
+  :bind
+  (("M-s R" . rg)
+   ("C-x p g" . rg-project)))
 
 (use-package org
   :ensure
@@ -1294,6 +1316,16 @@ Returns inverted timestamp for DONE items, earliest date for TODO items."
   (("M-s M-f" . org-node-find)
    ("M-s M-i" . org-node-insert-link)))
 
+(use-package envrc
+  :ensure
+  :hook (elpaca-after-init . envrc-global-mode))
+
+(use-package tree-sitter
+  :ensure
+  :unless (my-windows-p)
+  :custom
+  (treesit-font-lock-level 4))
+
 (defun lsp-corfu-setup ()
   "Configure Corfu for LSP completions."
   (setq-local completion-styles '(orderless)
@@ -1304,7 +1336,10 @@ Returns inverted timestamp for DONE items, earliest date for TODO items."
   :custom
   (lsp-keymap-prefix "<f5>")
   (lsp-completion-provider :none)
+  (lsp-pylsp-plugins-black-enabled t)
   :hook
+  (python-mode . lsp)
+  (python-ts-mode . lsp)
   (lsp-mode . lsp-corfu-setup)
   :commands lsp
   :bind
@@ -1329,3 +1364,46 @@ Returns inverted timestamp for DONE items, earliest date for TODO items."
   :bind
   (:map scala-ts-mode-map
         ("<f5> I" . lsp-metals-build-import)))
+
+(use-package pet
+  :ensure
+  :after envrc
+  :config
+  (add-hook 'python-base-mode-hook 'pet-mode -10))
+
+(use-package jarchive
+  :ensure
+  :unless (my-windows-p)
+  :config
+  (jarchive-setup))
+
+(use-package copilot
+  :ensure
+  :when my-use-copilot
+  :after hydra
+  :custom
+  (copilot-idle-delay 0.3)
+  :custom-face
+  (copilot-overlay-face ((t (:foreground "DarkOrchid1" :slant italic))))
+  :config
+  (add-to-list 'warning-suppress-log-types '(copilot copilot-no-mode-indent))
+  (defhydra my-copilot-accept-completion (copilot-mode-map "C-M-<tab>")
+    "Accept Copilot completion"
+    ("C-M-<tab>" copilot-accept-completion "Accept" :color blue)
+    ("C-M-f" copilot-accept-completion-by-word "By word")
+    ("C-M-e" copilot-accept-completion-by-line "By line"))
+  :hook
+  (prog-mode . copilot-mode))
+
+(use-package yaml-mode
+  :ensure)
+
+(use-package markdown-mode
+  :ensure
+  :interpreter "markdown")
+
+(use-package dockerfile-mode
+  :ensure)
+
+(use-package graphql-mode
+  :ensure)

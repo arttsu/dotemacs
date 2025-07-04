@@ -35,6 +35,8 @@
   (setq my-font-height 125)
 
   (setq my-vterm-shell nil)
+  (setq my-use-ripgrep nil)
+  (setq my-use-copilot nil)
 #+end_src
 
 *** Load Local Config
@@ -232,6 +234,24 @@
                                     (t "ls")))
     (dired-listing-switches (cond ((my-windows-p) dired-listing-switches)
                                   (t "-alh --group-directories-first"))))
+#+end_src
+
+** Project
+
+#+begin_src elisp
+  (use-package project
+    :config
+    (add-to-list 'project-switch-commands '(project-dired "Dired" "<return>") t))
+#+end_src
+
+** Flymake
+
+#+begin_src elisp
+  (use-package flymake
+    :bind
+    (:map prog-mode-map
+          ("C-c ! n" . flymake-goto-next-error)
+          ("C-c ! p" . flymake-goto-prev-error)))
 #+end_src
 
 * Appearance
@@ -606,6 +626,13 @@
 
 * Tools
 
+** Hydra
+
+#+begin_src elisp
+  (use-package hydra
+    :ensure)
+#+end_src
+
 ** Transient
 
 Transient is a dependency of Magit that provides its interactive command interfaces.
@@ -697,6 +724,17 @@ We declare it explicitly to ensure we get a recent version, avoiding compatibili
      ("N" . kubel-set-namespace)
      ("v" . kubel-exec-vterm-pod)
      ("P" . kubel-port-forward-pod)))
+#+end_src
+
+** Ripgrep
+
+#+begin_src elisp
+  (use-package rg
+    :when my-use-ripgrep
+    :ensure
+    :bind
+    (("M-s R" . rg)
+     ("C-x p g" . rg-project)))
 #+end_src
 
 * Org & GTD
@@ -1494,6 +1532,24 @@ DEFAULT is returned if timestamp doesn't match expected format."
 
 * Programming
 
+** envrc
+
+#+begin_src elisp
+  (use-package envrc
+    :ensure
+    :hook (elpaca-after-init . envrc-global-mode))
+#+end_src
+
+** Tree-sitter
+
+#+begin_src elisp
+  (use-package tree-sitter
+    :ensure
+    :unless (my-windows-p)
+    :custom
+    (treesit-font-lock-level 4))
+#+end_src
+
 ** LSP Mode
 
 #+begin_src elisp
@@ -1507,7 +1563,10 @@ DEFAULT is returned if timestamp doesn't match expected format."
     :custom
     (lsp-keymap-prefix "<f5>")
     (lsp-completion-provider :none)
+    (lsp-pylsp-plugins-black-enabled t)
     :hook
+    (python-mode . lsp)
+    (python-ts-mode . lsp)
     (lsp-mode . lsp-corfu-setup)
     :commands lsp
     :bind
@@ -1540,4 +1599,77 @@ DEFAULT is returned if timestamp doesn't match expected format."
     :bind
     (:map scala-ts-mode-map
           ("<f5> I" . lsp-metals-build-import)))
+#+end_src
+
+** Python Tools
+
+#+begin_src elisp
+  (use-package pet
+    :ensure
+    :after envrc
+    :config
+    (add-hook 'python-base-mode-hook 'pet-mode -10))
+#+end_src
+
+** Java Archive Support
+
+#+begin_src elisp
+  (use-package jarchive
+    :ensure
+    :unless (my-windows-p)
+    :config
+    (jarchive-setup))
+#+end_src
+
+** Copilot
+
+#+begin_src elisp
+  (use-package copilot
+    :ensure
+    :when my-use-copilot
+    :after hydra
+    :custom
+    (copilot-idle-delay 0.3)
+    :custom-face
+    (copilot-overlay-face ((t (:foreground "DarkOrchid1" :slant italic))))
+    :config
+    (add-to-list 'warning-suppress-log-types '(copilot copilot-no-mode-indent))
+    (defhydra my-copilot-accept-completion (copilot-mode-map "C-M-<tab>")
+      "Accept Copilot completion"
+      ("C-M-<tab>" copilot-accept-completion "Accept" :color blue)
+      ("C-M-f" copilot-accept-completion-by-word "By word")
+      ("C-M-e" copilot-accept-completion-by-line "By line"))
+    :hook
+    (prog-mode . copilot-mode))
+#+end_src
+
+** Major Modes
+
+*** YAML
+
+#+begin_src elisp
+  (use-package yaml-mode
+    :ensure)
+#+end_src
+
+*** Markdown
+
+#+begin_src elisp
+  (use-package markdown-mode
+    :ensure
+    :interpreter "markdown")
+#+end_src
+
+*** Dockerfile
+
+#+begin_src elisp
+  (use-package dockerfile-mode
+    :ensure)
+#+end_src
+
+*** GraphQL
+
+#+begin_src elisp
+  (use-package graphql-mode
+    :ensure)
 #+end_src
