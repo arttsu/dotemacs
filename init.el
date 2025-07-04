@@ -1136,8 +1136,8 @@ Returns inverted timestamp for DONE items, earliest date for TODO items."
       (push my-gtd-local-inbox all-files))
 
     ;; Get all .org files from GTD directories, excluding archives
-    (dolist (dir (list my-gtd-local-areas my-gtd-local-projects
-                       my-gtd-shared-areas my-gtd-shared-projects))
+    (dolist (dir (list my-gtd-local-dir my-gtd-local-areas my-gtd-local-projects
+                       my-gtd-shared-dir my-gtd-shared-areas my-gtd-shared-projects))
       (when (file-exists-p dir)
         (let ((org-files (directory-files-recursively dir "\\.org\\'" nil
                                                       (lambda (subdir)
