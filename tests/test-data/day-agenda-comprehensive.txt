@@ -43,6 +43,7 @@ Shared ad-hoc and high-prio project tasks
   Team Quarterly Rev…  TODO [#A] Prepare slides
   Team Development     TODO [#B] Plan code review process
   Product Launch       TODO [#B] Beta testing
+  Shared inbox         TODO Look into Claude Code hooks
 
 ===============================================================================
 Shared projects

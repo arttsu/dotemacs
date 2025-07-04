@@ -32,6 +32,7 @@
           (my-gtd-local-areas . ,my-gtd-local-areas)
           (my-gtd-local-inbox . ,my-gtd-local-inbox)
           (my-gtd-shared-dir . ,my-gtd-shared-dir)
+          (my-gtd-shared-inbox . ,my-gtd-shared-inbox)
           (my-gtd-shared-projects . ,my-gtd-shared-projects)
           (my-gtd-shared-areas . ,my-gtd-shared-areas)
           (my-gtd-all-dirs . ,my-gtd-all-dirs)
@@ -45,6 +46,7 @@
   (setq my-gtd-local-inbox (expand-file-name "inbox.org" my-gtd-local-dir))
 
   (setq my-gtd-shared-dir (expand-file-name "shared" gtd-test-agenda-temp-dir))
+  (setq my-gtd-shared-inbox (expand-file-name "inbox.org" my-gtd-shared-dir))
   (setq my-gtd-shared-projects (expand-file-name "projects" my-gtd-shared-dir))
   (setq my-gtd-shared-areas (expand-file-name "areas" my-gtd-shared-dir))
 
@@ -183,10 +185,22 @@ TASKS is a list of plists with :title, :priority, :state."
     (insert ":CREATED: [2024-01-15 Mon 07:00]\n")
     (insert ":END:\n\n")))
 
+(defun gtd-test-create-shared-inbox-file ()
+  "Create test shared inbox file with items."
+  (with-temp-file my-gtd-shared-inbox
+    (insert "* Shared inbox\n\n")
+
+    ;; Item that appears in the golden file
+    (insert "** TODO Look into Claude Code hooks\n")
+    (insert ":PROPERTIES:\n")
+    (insert ":CREATED: [2024-01-15 Mon 10:00]\n")
+    (insert ":END:\n\n")))
+
 (defun gtd-test-create-test-data ()
   "Create comprehensive test data for agenda testing."
-  ;; Create inbox
+  ;; Create inbox files
   (gtd-test-create-inbox-file)
+  (gtd-test-create-shared-inbox-file)
 
   ;; Create local high-priority project
   (gtd-test-create-project-file
@@ -227,8 +241,9 @@ TASKS is a list of plists with :title, :priority, :state."
 
 (defun gtd-test-create-comprehensive-test-data ()
   "Create comprehensive, realistic test data for golden file generation."
-  ;; Create inbox with variety of priorities and types
+  ;; Create inbox files with variety of priorities and types
   (gtd-test-create-inbox-file)
+  (gtd-test-create-shared-inbox-file)
 
   ;; Local high-priority project with mixed task priorities
   (gtd-test-create-project-file
@@ -312,6 +327,7 @@ TASKS is a list of plists with :title, :priority, :state."
       (progn
         ;; Create minimal but realistic test data
         (gtd-test-create-inbox-file)
+        (gtd-test-create-shared-inbox-file)
 
         ;; One local project with mixed priorities
         (gtd-test-create-project-file
@@ -372,6 +388,7 @@ or when agenda format changes intentionally."
 
           ;; Create minimal data
           (gtd-test-create-inbox-file)
+          (gtd-test-create-shared-inbox-file)
           (gtd-test-create-project-file
            "local" "Test Project" "A"
            '((:title "High priority task" :priority "A" :state "TODO")

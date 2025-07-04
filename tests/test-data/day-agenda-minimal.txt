@@ -30,6 +30,7 @@ Local projects
 ===============================================================================
 Shared ad-hoc and high-prio project tasks
   Test Area            TODO [#B] Area task
+  Shared inbox         TODO Look into Claude Code hooks
 
 ===============================================================================
 Shared projects
