@@ -37,6 +37,7 @@
   (setq my-vterm-shell nil)
   (setq my-use-ripgrep nil)
   (setq my-use-copilot nil)
+  (setq my-use-jinx nil)
 #+end_src
 
 *** Load Local Config
@@ -168,7 +169,6 @@
 
     ;; Essential modes
     (global-auto-revert-mode)
-    (savehist-mode)
     (global-subword-mode)
     (tab-bar-mode)
     (tab-bar-history-mode)
@@ -264,6 +264,14 @@
     (:map prog-mode-map
           ("C-c ! n" . flymake-goto-next-error)
           ("C-c ! p" . flymake-goto-prev-error)))
+#+end_src
+
+** Savehist
+
+#+begin_src elisp
+  (use-package savehist
+    :config
+    (savehist-mode))
 #+end_src
 
 * Appearance
@@ -429,6 +437,16 @@
   (use-package embark-consult
     :ensure
     :after (embark consult))
+#+end_src
+
+** Link Hint
+
+#+begin_src elisp
+  (use-package link-hint
+    :ensure
+    :bind
+    (("C-c f" . link-hint-open-link)
+     ("C-c y" . link-hint-copy-link)))
 #+end_src
 
 ** Smartparens
@@ -749,6 +767,117 @@ We declare it explicitly to ensure we get a recent version, avoiding compatibili
      ("C-x p g" . rg-project)))
 #+end_src
 
+** Jinx
+
+#+begin_src elisp
+  (use-package jinx
+    :ensure
+    :when my-use-jinx
+    :custom
+    (jinx-languages "en_US de_DE ru")
+    :hook
+    (emacs-startup . global-jinx-mode)
+    :bind
+    (("M-$" . jinx-correct)
+     ("C-M-$" . jinx-languages)))
+#+end_src
+
+** GPTel
+
+*** GPTel Helper Functions
+
+#+begin_src elisp
+  (defun my-gptel-auto-fill-response (begin end)
+    "Auto-fill GPTel responses in org-mode."
+    (when (and (not (eq begin end)) (eq major-mode 'org-mode))
+      (save-excursion
+        (goto-char begin)
+        (while (not (>= (point) end))
+          (org-forward-sentence)
+          (let ((elem (org-element-at-point)))
+            (when (member (org-element-type elem) '(paragraph item))
+              (save-excursion
+                (goto-char (org-element-property :begin elem))
+                (fill-paragraph))))))))
+
+  (defun my-gptel-clear-buffer ()
+    "Clear GPTel buffer and insert starter text."
+    (interactive)
+    (erase-buffer)
+    (insert "*** "))
+
+  (defun my-gptel-send ()
+    "Send GPTel request and position cursor."
+    (interactive)
+    (goto-char (point-max))
+    (gptel-send)
+    (org-back-to-heading)
+    (recenter-top-bottom 0))
+
+  (define-derived-mode my-gptel-mode org-mode "GPTel")
+
+  (defun my-gptel-mode-setup ()
+    "Setup GPTel mode."
+    (interactive)
+    (org-mode)
+    (gptel-mode))
+#+end_src
+
+*** GPTel Use-package
+
+#+begin_src elisp
+  (use-package gptel
+    :ensure
+    :demand
+    :custom
+    (gptel-model 'gpt-4o)
+    (gptel-default-mode 'org-mode)
+    :config
+    (add-hook 'gptel-mode-hook 'toggle-truncate-lines)
+    (add-hook 'gptel-post-response-functions 'my-gptel-auto-fill-response)
+    (add-hook 'my-gptel-mode-hook 'my-gptel-mode-setup)
+    (add-to-list 'auto-mode-alist '("\\.gptel\\'" . my-gptel-mode))
+    :bind
+    (("C-c SPC" . gptel)
+     :map gptel-mode-map
+     ("C-c C-c" . my-gptel-send)
+     ("C-c k" . gptel-abort)
+     ("C-c d h" . my-gptel-clear-buffer)))
+#+end_src
+
+** EMMS
+
+#+begin_src elisp
+  (use-package emms
+    :ensure
+    :custom
+    (emms-player-list '(emms-player-mpv))
+    (emms-player-mpv-update-metadata t)
+    (emms-streams-file (expand-file-name "streams.emms" user-emacs-directory))
+    :config
+    (emms-all)
+    :bind
+    (("C-c r r" . emms-streams)
+     ("C-c r p" . emms-pause)
+     ("C-c r k" . emms-stop)))
+#+end_src
+
+** Ledger
+
+#+begin_src elisp
+  (defun my-ledger--bal-period (period)
+    "Generate ledger balance command for PERIOD."
+    (format "%%(binary) -f %%(ledger-file) --invert --period \"%s\" -S amount bal ^Income ^Expenses" period))
+
+  (use-package ledger-mode
+    :ensure
+    :custom
+    (ledger-default-date-format "%Y-%m-%d")
+    :config
+    (ledger-reports-add "bal-this-month" (my-ledger--bal-period "this month"))
+    (ledger-reports-add "bal-last-month" (my-ledger--bal-period "last month")))
+#+end_src
+
 * Org & GTD
 
 ** Org
@@ -862,6 +991,31 @@ We declare it explicitly to ensure we get a recent version, avoiding compatibili
     (org-modern-tag ((t (:foreground "White" :background "CornflowerBlue" :slant italic))))
     :config
     (global-org-modern-mode))
+#+end_src
+
+** Auto-tangle
+
+#+begin_src elisp
+  (use-package org-auto-tangle
+    :ensure
+    :hook
+    (org-mode . org-auto-tangle-mode))
+#+end_src
+
+** ob-restclient
+
+#+begin_src elisp
+  (use-package ob-restclient
+    :ensure
+    :after org)
+#+end_src
+
+** ox-gfm
+
+#+begin_src elisp
+  (use-package ox-gfm
+    :ensure
+    :after org)
 #+end_src
 
 ** GTD Directory Structure
@@ -1719,5 +1873,19 @@ With NO-ERROR, fail silently instead of throwing user-error."
 
 #+begin_src elisp
   (use-package graphql-mode
+    :ensure)
+#+end_src
+
+*** Fish Mode
+
+#+begin_src elisp
+  (use-package fish-mode
+    :ensure)
+#+end_src
+
+*** Just Mode
+
+#+begin_src elisp
+  (use-package just-mode
     :ensure)
 #+end_src

@@ -15,6 +15,7 @@
 (setq my-vterm-shell nil)
 (setq my-use-ripgrep nil)
 (setq my-use-copilot nil)
+(setq my-use-jinx nil)
 
 (let ((path-to-local-config (expand-file-name "local.el" user-emacs-directory)))
   (if (file-exists-p path-to-local-config)
@@ -118,7 +119,6 @@
 
   ;; Essential modes
   (global-auto-revert-mode)
-  (savehist-mode)
   (global-subword-mode)
   (tab-bar-mode)
   (tab-bar-history-mode)
@@ -194,6 +194,10 @@
   (:map prog-mode-map
         ("C-c ! n" . flymake-goto-next-error)
         ("C-c ! p" . flymake-goto-prev-error)))
+
+(use-package savehist
+  :config
+  (savehist-mode))
 
 (use-package modus-themes
   :ensure
@@ -323,6 +327,12 @@
 (use-package embark-consult
   :ensure
   :after (embark consult))
+
+(use-package link-hint
+  :ensure
+  :bind
+  (("C-c f" . link-hint-open-link)
+   ("C-c y" . link-hint-copy-link)))
 
 (use-package smartparens
   :ensure
@@ -573,6 +583,95 @@
   (("M-s R" . rg)
    ("C-x p g" . rg-project)))
 
+(use-package jinx
+  :ensure
+  :when my-use-jinx
+  :custom
+  (jinx-languages "en_US de_DE ru")
+  :hook
+  (emacs-startup . global-jinx-mode)
+  :bind
+  (("M-$" . jinx-correct)
+   ("C-M-$" . jinx-languages)))
+
+(defun my-gptel-auto-fill-response (begin end)
+  "Auto-fill GPTel responses in org-mode."
+  (when (and (not (eq begin end)) (eq major-mode 'org-mode))
+    (save-excursion
+      (goto-char begin)
+      (while (not (>= (point) end))
+        (org-forward-sentence)
+        (let ((elem (org-element-at-point)))
+          (when (member (org-element-type elem) '(paragraph item))
+            (save-excursion
+              (goto-char (org-element-property :begin elem))
+              (fill-paragraph))))))))
+
+(defun my-gptel-clear-buffer ()
+  "Clear GPTel buffer and insert starter text."
+  (interactive)
+  (erase-buffer)
+  (insert "*** "))
+
+(defun my-gptel-send ()
+  "Send GPTel request and position cursor."
+  (interactive)
+  (goto-char (point-max))
+  (gptel-send)
+  (org-back-to-heading)
+  (recenter-top-bottom 0))
+
+(define-derived-mode my-gptel-mode org-mode "GPTel")
+
+(defun my-gptel-mode-setup ()
+  "Setup GPTel mode."
+  (interactive)
+  (org-mode)
+  (gptel-mode))
+
+(use-package gptel
+  :ensure
+  :demand
+  :custom
+  (gptel-model 'gpt-4o)
+  (gptel-default-mode 'org-mode)
+  :config
+  (add-hook 'gptel-mode-hook 'toggle-truncate-lines)
+  (add-hook 'gptel-post-response-functions 'my-gptel-auto-fill-response)
+  (add-hook 'my-gptel-mode-hook 'my-gptel-mode-setup)
+  (add-to-list 'auto-mode-alist '("\\.gptel\\'" . my-gptel-mode))
+  :bind
+  (("C-c SPC" . gptel)
+   :map gptel-mode-map
+   ("C-c C-c" . my-gptel-send)
+   ("C-c k" . gptel-abort)
+   ("C-c d h" . my-gptel-clear-buffer)))
+
+(use-package emms
+  :ensure
+  :custom
+  (emms-player-list '(emms-player-mpv))
+  (emms-player-mpv-update-metadata t)
+  (emms-streams-file (expand-file-name "streams.emms" user-emacs-directory))
+  :config
+  (emms-all)
+  :bind
+  (("C-c r r" . emms-streams)
+   ("C-c r p" . emms-pause)
+   ("C-c r k" . emms-stop)))
+
+(defun my-ledger--bal-period (period)
+  "Generate ledger balance command for PERIOD."
+  (format "%%(binary) -f %%(ledger-file) --invert --period \"%s\" -S amount bal ^Income ^Expenses" period))
+
+(use-package ledger-mode
+  :ensure
+  :custom
+  (ledger-default-date-format "%Y-%m-%d")
+  :config
+  (ledger-reports-add "bal-this-month" (my-ledger--bal-period "this month"))
+  (ledger-reports-add "bal-last-month" (my-ledger--bal-period "last month")))
+
 (use-package org
   :ensure
   :custom
@@ -677,6 +776,19 @@
   (org-modern-tag ((t (:foreground "White" :background "CornflowerBlue" :slant italic))))
   :config
   (global-org-modern-mode))
+
+(use-package org-auto-tangle
+  :ensure
+  :hook
+  (org-mode . org-auto-tangle-mode))
+
+(use-package ob-restclient
+  :ensure
+  :after org)
+
+(use-package ox-gfm
+  :ensure
+  :after org)
 
 ;; GTD directory structure with local/shared naming
 (defconst my-org-local-dir (expand-file-name "~/org-local"))
@@ -1450,4 +1562,10 @@ With NO-ERROR, fail silently instead of throwing user-error."
   :ensure)
 
 (use-package graphql-mode
+  :ensure)
+
+(use-package fish-mode
+  :ensure)
+
+(use-package just-mode
   :ensure)
