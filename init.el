@@ -520,12 +520,28 @@
   (vterm-max-scrollback 50000)
   (vterm-clear-scrollback-when-clearing t)
   :config
+  (require 'project)
   (add-hook 'vterm-mode-hook 'my-vterm-unbind-keys)
   (add-to-list 'project-switch-commands '(my-vterm-project "Vterm" "V") t)
   :bind
   (("C-x v" . vterm)
    ("C-x 4 v" . vterm-other-window)
    ("C-x p v" . my-vterm-project)))
+
+(use-package kubel
+  :ensure
+  :unless (my-windows-p)
+  :after vterm
+  :config
+  (add-to-list 'vterm-tramp-shells '("kubectl" "/bin/bash"))
+  :bind
+  (("C-c K" . kubel)
+   :map kubel-mode-map
+   ("n" . next-line)
+   ("p" . previous-line)
+   ("N" . kubel-set-namespace)
+   ("v" . kubel-exec-vterm-pod)
+   ("P" . kubel-port-forward-pod)))
 
 (use-package org
   :ensure
@@ -1277,3 +1293,39 @@ Returns inverted timestamp for DONE items, earliest date for TODO items."
   :bind
   (("M-s M-f" . org-node-find)
    ("M-s M-i" . org-node-insert-link)))
+
+(defun lsp-corfu-setup ()
+  "Configure Corfu for LSP completions."
+  (setq-local completion-styles '(orderless)
+              completion-category-defaults nil))
+
+(use-package lsp-mode
+  :ensure
+  :custom
+  (lsp-keymap-prefix "<f5>")
+  (lsp-completion-provider :none)
+  :hook
+  (lsp-mode . lsp-corfu-setup)
+  :commands lsp
+  :bind
+  (:map lsp-mode-map
+        ([M-down-mouse-1] . mouse-set-point)
+        ([M-mouse-1] . lsp-find-definition)
+        ([M-mouse-3] . xref-go-back)))
+
+(use-package lsp-ui
+  :ensure
+  :commands lsp-ui-mode)
+
+(use-package scala-ts-mode
+  :ensure
+  :interpreter "scala"
+  :mode "\\.\\(scala\\|sbt\\|worksheet\\.sc\\)\\'"
+  :hook (scala-ts-mode . lsp))
+
+(use-package lsp-metals
+  :ensure
+  :after (lsp-mode scala-ts-mode)
+  :bind
+  (:map scala-ts-mode-map
+        ("<f5> I" . lsp-metals-build-import)))
