@@ -125,7 +125,7 @@
   (repeat-mode)
 
   ;; Simplify prompts
-  ;; (fset 'yes-or-no-p 'y-or-n-p)
+  (fset 'yes-or-no-p 'y-or-n-p)
 
   ;; Only in programming buffers to avoid clutter in text modes
   (add-hook 'prog-mode-hook 'display-line-numbers-mode)
