@@ -719,6 +719,9 @@
                                (tags . " %i %-20(my-org-agenda-category-short) ")
                                (search . " %i %-20(my-org-agenda-category-short) ")))
 
+  ;; Attachments
+  (org-attach-id-dir (expand-file-name "attachments" my-org-local-dir))
+
   :config
   (require 'org-attach)
   (require 'org-id)
