@@ -38,6 +38,7 @@
   (setq my-use-ripgrep nil)
   (setq my-use-copilot nil)
   (setq my-use-jinx nil)
+  (setq my-modus-themes-default 'modus-operandi)
 #+end_src
 
 *** Load Local Config
@@ -292,7 +293,7 @@
                              (t . (extrabold))))
     (modus-themes-variable-pitch-ui t)
     :config
-    (modus-themes-load-theme 'modus-operandi))
+    (modus-themes-load-theme my-modus-themes-default))
 #+end_src
 
 * Interface & Editing

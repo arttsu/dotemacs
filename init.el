@@ -16,6 +16,7 @@
 (setq my-use-ripgrep nil)
 (setq my-use-copilot nil)
 (setq my-use-jinx nil)
+(setq my-modus-themes-default 'modus-operandi)
 
 (let ((path-to-local-config (expand-file-name "local.el" user-emacs-directory)))
   (if (file-exists-p path-to-local-config)
@@ -212,7 +213,7 @@
                            (t . (extrabold))))
   (modus-themes-variable-pitch-ui t)
   :config
-  (modus-themes-load-theme 'modus-operandi))
+  (modus-themes-load-theme my-modus-themes-default))
 
 (use-package vertico
   :ensure
