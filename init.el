@@ -224,6 +224,8 @@
   (vertico-mode)
   (vertico-multiform-mode)
   ;; Configure multiform for specific commands
+  (add-to-list 'vertico-multiform-categories
+               '(jinx grid (vertico-grid-annotate . 20)))
   (add-to-list 'vertico-multiform-commands
                '(consult-ripgrep buffer indexed))
   :bind
