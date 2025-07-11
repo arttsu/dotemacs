@@ -1395,14 +1395,15 @@ With NO-ERROR, fail silently instead of throwing user-error."
     (when (file-exists-p my-gtd-local-inbox)
       (push my-gtd-local-inbox all-files))
 
-    ;; Get all .org files from GTD directories, excluding archives
+    ;; Get all .org files from GTD directories
     (dolist (dir (list my-gtd-local-dir my-gtd-local-areas my-gtd-local-projects
                        my-gtd-shared-dir my-gtd-shared-areas my-gtd-shared-projects))
       (when (file-exists-p dir)
-        (let ((org-files (directory-files-recursively dir "\\.org\\'" nil
-                                                      (lambda (subdir)
-                                                        ;; Exclude archive directories
-                                                        (not (string-match-p "/archive/" subdir))))))
+        (let ((org-files (directory-files-recursively dir "\\.org\\'")))
+          ;; Filter out files in archive directories
+          (setq org-files (cl-remove-if (lambda (file)
+                                          (string-match-p "/archive/" file))
+                                        org-files))
           (setq all-files (append org-files all-files)))))
 
     ;; Remove duplicates and return
