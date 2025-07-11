@@ -1072,12 +1072,13 @@ With NO-ERROR, fail silently instead of throwing user-error."
              (attachments (when attachments
                             (cl-remove-if (lambda (f) (member (file-name-nondirectory f) '("." ".."))) attachments))))
 
-        ;; Step 4: Sort attachments by modification time (newest first)
+        ;; Step 4: Sort attachments alphabetically
         (when attachments
           (setq attachments
-                (mapcar #'car
-                        (sort (mapcar (lambda (f) (cons f (file-attribute-modification-time (file-attributes f)))) attachments)
-                              (lambda (a b) (time-less-p (cdr b) (cdr a)))))))
+                (sort attachments
+                      (lambda (a b)
+                        (string< (downcase (file-name-nondirectory a))
+                                 (downcase (file-name-nondirectory b)))))))
 
         ;; Step 5: Locate and manage the top-level * Attachments heading
         (let ((attachments-heading-pos nil))
