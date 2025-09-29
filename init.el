@@ -49,7 +49,7 @@
   (elpaca-use-package-mode))
 
 ;;; TODO: Local init.el
-;;; TODO: Custom filek
+;;; TODO: Custom file
 
 ;;; TODO: MacOS exec path from shell setup
 
