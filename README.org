@@ -1,1 +1,1 @@
-* Emacs Config
+* arttsu's .emacs.d
