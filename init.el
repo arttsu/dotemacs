@@ -48,6 +48,22 @@
 (elpaca elpaca-use-package
   (elpaca-use-package-mode))
 
+;;; TODO: Local init.el
+;;; TODO: Custom filek
+
+;;; TODO: MacOS exec path from shell setup
+
+;;; Core setup
+
+(use-package emacs
+  :custom
+  (inhibit-startup-message t)
+  (initial-major-mode 'text-mode)
+  (initial-scratch-message "✅ All systems go!")
+
+  (create-lockfiles nil)
+  (make-backup-files nil))
+
 ;;; page-break-lines
 
 ;; https://github.com/purcell/page-break-lines
