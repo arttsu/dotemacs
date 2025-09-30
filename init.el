@@ -49,6 +49,7 @@
   (elpaca-use-package-mode))
 
 ;;; Platform helpers
+
 (defun my-linux-p ()
   (eq system-type 'gnu/linux))
 
