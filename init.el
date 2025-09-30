@@ -69,14 +69,19 @@
 
 ;;;; Load local init
 
-(let ((local-init-path (expand-file-name "local-init.el" user-emacs-directory)))
-  (if (file-exists-p local-init-path)
+(let ((local-init (expand-file-name "local-init.el" user-emacs-directory)))
+  (if (file-exists-p local-init)
       (progn
-        (load local-init-path)
+        (load local-init)
         (message "Loaded local init."))
     (message "No local init.")))
 
-;;; TODO: Custom file
+;;; Custom file
+
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+
+(when (file-exists-p custom-file)
+  (load custom-file))
 
 ;;; TODO: MacOS exec path from shell setup
 
