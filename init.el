@@ -48,7 +48,34 @@
 (elpaca elpaca-use-package
   (elpaca-use-package-mode))
 
-;;; TODO: Local init.el
+;;; Platform helpers
+(defun my-linux-p ()
+  (eq system-type 'gnu/linux))
+
+(defun my-macos-p ()
+  (eq system-type 'darwin))
+
+(defun my-windows-p ()
+  (eq system-type 'windows-nt))
+
+;;; Local init.el
+
+;;;; Set default values for local variables
+
+(setq my-font (cond ((my-linux-p) "Liberation Mono")
+                    ((my-macos-p) "Menlo")
+                    ((my-windows-p) "Cascadia Code")))
+(setq my-font-height 125)
+
+;;;; Load local init
+
+(let ((local-init-path (expand-file-name "local-init.el" user-emacs-directory)))
+  (if (file-exists-p local-init-path)
+      (progn
+        (load local-init-path)
+        (message "Loaded local init."))
+    (message "No local init.")))
+
 ;;; TODO: Custom file
 
 ;;; TODO: MacOS exec path from shell setup
@@ -62,7 +89,7 @@
   (global-auto-revert-non-file-buffers t)
   (inhibit-startup-message t)
   (initial-major-mode 'text-mode)
-  (initial-scratch-message "✅ All systems go!")
+  (initial-scratch-message "✅ All systems go! 🚀🪐✨")
   (visible-bell t)
   (indent-tabs-mode nil)
   (tab-width 4)
@@ -71,7 +98,17 @@
   (epg-pinentry-mode 'loopback)
   (diabled-command-function nil)
   (switch-to-buffer-in-dedicated-window 'pop)
-  (switch-to-buffer-obey-display-actions t))
+  (switch-to-buffer-obey-display-actions t)
+  :config
+  (scroll-bar-mode -1)
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+  (tooltip-mode -1)
+  (set-fringe-mode 10)
+  (set-face-attribute 'default nil :font my-font :height my-font-height)
+  (set-frame-font my-font nil t)
+  (when (my-windows-p)
+    (set-fontset-font t 'unicode "Segoe UI Emoji" nil 'append)))
 
 ;;; page-break-lines
 
