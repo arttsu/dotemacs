@@ -87,6 +87,18 @@
 
 ;;; Core setup
 
+;;;; Core helpers
+
+(defun my-jump-home ()
+  (interactive)
+  (find-file "~/"))
+
+(defun my-pop-mark ()
+  (interactive)
+  (set-mark-command '(4)))
+
+;;;; use-package Emacs
+
 (use-package emacs
   :custom
   (create-lockfiles nil)
@@ -113,7 +125,20 @@
   (set-face-attribute 'default nil :font my-font :height my-font-height)
   (set-frame-font my-font nil t)
   (when (my-windows-p)
-    (set-fontset-font t 'unicode "Segoe UI Emoji" nil 'append)))
+    (set-fontset-font t 'unicode "Segoe UI Emoji" nil 'append))
+  (global-auto-revert-mode)
+  (global-subword-mode)
+  (tab-bar-mode)
+  (tab-bar-history-mode)
+  (repeat-mode)
+  (fset 'yes-or-no-p 'y-or-n-p)
+  (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+  :bind
+  (("C-c j x" . scratch-buffer)
+   ("C-c j h" . my-jump-home)
+   ("<f8>" . my-pop-mark)
+   ("M-g w" . forward-to-word)
+   ("M-g W" . backward-to-word)))
 
 ;;; page-break-lines
 
