@@ -57,12 +57,21 @@
 
 (use-package emacs
   :custom
+  (create-lockfiles nil)
+  (make-backup-files nil)
+  (global-auto-revert-non-file-buffers t)
   (inhibit-startup-message t)
   (initial-major-mode 'text-mode)
   (initial-scratch-message "✅ All systems go!")
-
-  (create-lockfiles nil)
-  (make-backup-files nil))
+  (visible-bell t)
+  (indent-tabs-mode nil)
+  (tab-width 4)
+  (require-final-newline t)
+  (save-interprogram-paste-before-kill t)
+  (epg-pinentry-mode 'loopback)
+  (diabled-command-function nil)
+  (switch-to-buffer-in-dedicated-window 'pop)
+  (switch-to-buffer-obey-display-actions t))
 
 ;;; page-break-lines
 
