@@ -210,6 +210,16 @@
   (:map vertico-map
         ("C-;" . vertico-quick-insert)))
 
+;;; Orderless
+
+;; https://github.com/oantolin/orderless
+
+(use-package orderless
+  :ensure
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles partial-completion)))))
+
 ;;; page-break-lines
 
 ;; https://github.com/purcell/page-break-lines
