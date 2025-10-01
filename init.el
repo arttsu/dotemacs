@@ -190,6 +190,26 @@
   :config
   (modus-themes-load-theme my-modus-themes-startup-theme))
 
+;;; Vertico
+
+;; https://github.com/minad/vertico
+
+(use-package vertico
+  :ensure
+  :demand
+  :custom
+  (vertico-cycle t)
+  :config
+  (vertico-mode)
+  (vertico-multiform-mode)
+  (add-to-list 'vertico-multiform-categories
+               '(jinx grid (vertico-grid-annotate . 20)))
+  (add-to-list 'vertico-multiform-categories
+               '(consult-ripgrep buffer indexed))
+  :bind
+  (:map vertico-map
+        ("C-;" . vertico-quick-insert)))
+
 ;;; page-break-lines
 
 ;; https://github.com/purcell/page-break-lines
