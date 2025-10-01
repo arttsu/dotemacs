@@ -247,6 +247,29 @@
         ("C-SPC" . corfu-insert-separator)
         ("C-;" . corfu-quick-insert)))
 
+;;; Consult
+
+;; https://github.com/minad/consult
+
+;; TODO: Use 'consult-flymake'?
+(use-package consult
+  :ensure
+  :config
+  ;; Don't live preview buffers to avoid triggering package loading (esp. Org)
+  (consult-customize consult-buffer :preview-key "M-.")
+  :bind
+  (("C-x b" . consult-buffer)
+   ("C-x 4 b" . consult-buffer-other-window)
+   ("C-x t b" . consult-buffer-other-tab)
+   ("C-x 5 b" . consult-buffer-other-frame)
+   ("C-x p b" . consult-project-buffer)
+   ("M-g M-g" . consult-goto-line)
+   ("M-g o" . consult-outline)
+   ("M-s l" . consult-line)
+   ("M-s k" . consult-keep-lines)
+   ("M-s f" . consult-focus-lines)
+   ("M-s r" . consult-ripgrep)))
+
 ;;; page-break-lines
 
 ;; https://github.com/purcell/page-break-lines
