@@ -68,6 +68,8 @@
                     ((my-windows-p) "Cascadia Code")))
 (setq my-font-height 150)
 
+(setq my-modus-themes-startup-theme 'modus-operandi)
+
 ;;;; Load local init
 
 (let ((local-init (expand-file-name "local-init.el" user-emacs-directory)))
@@ -168,6 +170,25 @@
 (use-package project
   :config
   (add-to-list 'project-switch-commands '(project-dired "Dired" "<return>") t))
+
+;;; Modus Themes
+
+;; https://protesilaos.com/emacs/modus-themes
+
+(use-package modus-themes
+  :ensure
+  :custom
+  (modus-themes-italic-constructs t)
+  (modus-themes-org-blocks 'gray-background)
+  (modus-themes-headings '((0 . (ultrabold 1.9))
+                           (1 . (ultrabold 1.7))
+                           (2 . (extrabold 1.5))
+                           (3 . (extrabold 1.3))
+                           (4 . (extrabold 1.1))
+                           (t . (extrabold))))
+  (modus-themes-variable-pitch-ui t)
+  :config
+  (modus-themes-load-theme my-modus-themes-startup-theme))
 
 ;;; page-break-lines
 
