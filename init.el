@@ -190,6 +190,12 @@
   :config
   (modus-themes-load-theme my-modus-themes-startup-theme))
 
+;;; Savehist
+
+(use-package savehist
+  :config
+  (savehist-mode))
+
 ;;; Vertico
 
 ;; https://github.com/minad/vertico
