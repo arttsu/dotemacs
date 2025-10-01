@@ -43,7 +43,7 @@
 (add-hook 'after-init-hook #'elpaca-process-queues)
 (elpaca `(,@elpaca-order))
 
-;;;; Enable Elpaca use-package support
+;;;; Enable Elpaca's use-package support
 
 (elpaca elpaca-use-package
   (elpaca-use-package-mode))
@@ -60,15 +60,6 @@
   (eq system-type 'windows-nt))
 
 ;;; Local init.el
-
-;;;; Set default values for local variables
-
-(setq my-font (cond ((my-linux-p) "Liberation Mono")
-                    ((my-macos-p) "Menlo")
-                    ((my-windows-p) "Cascadia Code")))
-(setq my-font-height 125)
-
-;;;; Load local init
 
 (let ((local-init (expand-file-name "local-init.el" user-emacs-directory)))
   (if (file-exists-p local-init)
