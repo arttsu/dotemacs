@@ -163,6 +163,12 @@
    ;; TODO: crux open with
    ("<tab>" . dired-find-file-other-window)))
 
+;;; Project
+
+(use-package project
+  :config
+  (add-to-list 'project-switch-commands '(project-dired "Dired" "<return>") t))
+
 ;;; page-break-lines
 
 ;; https://github.com/purcell/page-break-lines
