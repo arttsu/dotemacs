@@ -226,6 +226,27 @@
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles partial-completion)))))
 
+;;; Corfu
+
+;; https://github.com/minad/corfu
+
+(use-package corfu
+  :ensure
+  :demand
+  :custom
+  (corfu-cycle t)
+  (corfu-auto t)
+  (corfu-auto-prefix 2)
+  (corfu-quit-at-boundary 'separator)
+  (corfu-quit-no-match t)
+  :config
+  (global-corfu-mode)
+  (corfu-history-mode)
+  :bind
+  (:map corfu-map
+        ("C-SPC" . corfu-insert-separator)
+        ("C-;" . corfu-quick-insert)))
+
 ;;; page-break-lines
 
 ;; https://github.com/purcell/page-break-lines
