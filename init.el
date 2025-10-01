@@ -287,6 +287,45 @@
    ("M-s f" . consult-focus-lines)
    ("M-s r" . consult-ripgrep)))
 
+;;; Avy
+
+;; https://github.com/abo-abo/avy
+
+(use-package avy
+  :ensure
+  :custom
+  (avy-single-candidate-jump t)
+  :config
+  (setf (alist-get ?. avy-dispatch-alist) 'my-avy-embark-act)
+  (setf (alist-get ?\; avy-dispatch-alist) 'my-avy-embark-dwim)
+  :bind
+  (("C-;" . avy-goto-char-timer)
+   ("M-;" . avy-pop-mark)
+   ("M-g g" . avy-goto-line)
+   ("M-g G" . avy-goto-end-of-line)
+   ("M-g h" . avy-goto-heading-timer)
+   ("M-g s" . avy-goto-word-1)
+   ("C-M-; c" . avy-copy-line)
+   ("C-M-; C" . avy-copy-region)
+   ("C-M-; m" . avy-move-line)
+   ("C-M-; M" . avy-move-region)
+   ("C-M-; k" . avy-kill-whole-line)
+   ("C-M-; K" . avy-kill-region)
+   ("C-M-; s" . avy-kill-ring-save-whole-line)
+   ("C-M-; S" . avy-kill-ring-save-region)
+   :map isearch-mode-map
+   ("C-;" . avy-isearch)))
+
+;;;; Avy Embark actions
+
+(defun my-avy-embark-act (target-point)
+  (goto-char target-point)
+  (embark-act))
+
+(defun my-avy-embark-dwim (target-point)
+  (goto-char target-point)
+  (embark-dwim))
+
 ;;; page-break-lines
 
 ;; https://github.com/purcell/page-break-lines
