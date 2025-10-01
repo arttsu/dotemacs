@@ -147,6 +147,22 @@
    ("M-z" . zap-up-to-char)
    ("M-Z" . zap-to-char)))
 
+;;; Dired
+
+(use-package dired
+  :custom
+  (dired-dwim-target t)
+  (insert-directory-program (cond ((my-windows-p) insert-directory-program)
+                                  ((my-macos-p) "gls")
+                                  (t "ls")))
+  (dired-listing-switches (cond ((my-windows-p) dired-listing-switches)
+                                (t "-alh --group-directories-first")))
+  :bind
+  (("<f7>" . dired-jump)
+   :map dired-mode-map
+   ;; TODO: crux open with
+   ("<tab>" . dired-find-file-other-window)))
+
 ;;; page-break-lines
 
 ;; https://github.com/purcell/page-break-lines
