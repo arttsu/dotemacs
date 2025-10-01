@@ -171,6 +171,21 @@
   :config
   (add-to-list 'project-switch-commands '(project-dired "Dired" "<return>") t))
 
+;;; Imenu
+
+(defun my-elisp-imenu-index ()
+  (let* ((my-generic '(("Sections" "^;;; \\(.*\\)$" 1)
+                       ("Subsections" "^;;;; \\(.*\\)$" 1)
+                       ("Use-packages" "^\\s-*(use-package!?\\s-+\\(\\(?:\\sw\\|\\s_\\)+\\)" 1)))
+         (generic (save-excursion (imenu--generic-function my-generic)))
+         (default (save-excursion (imenu-default-create-index-function))))
+    (append generic default)))
+
+(defun my-elisp-imenu-setup ()
+  (setq-local imenu-create-index-function 'my-elisp-imenu-index))
+
+(add-hook 'emacs-lisp-mode-hook 'my-elisp-imenu-setup)
+
 ;;; Modus Themes
 
 ;; https://protesilaos.com/emacs/modus-themes
@@ -264,6 +279,8 @@
    ("C-x 5 b" . consult-buffer-other-frame)
    ("C-x p b" . consult-project-buffer)
    ("M-g M-g" . consult-goto-line)
+   ("M-g i" . consult-imenu)
+   ("M-g I" . consult-imenu-multi)
    ("M-g o" . consult-outline)
    ("M-s l" . consult-line)
    ("M-s k" . consult-keep-lines)
