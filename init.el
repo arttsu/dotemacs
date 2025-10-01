@@ -61,6 +61,15 @@
 
 ;;; Local init.el
 
+;;;; Set default values for local variables
+
+(setq my-font (cond ((my-linux-p) "Liberation Mono")
+                    ((my-macos-p) "Menlo")
+                    ((my-windows-p) "Cascadia Code")))
+(setq my-font-height 150)
+
+;;;; Load local init
+
 (let ((local-init (expand-file-name "local-init.el" user-emacs-directory)))
   (if (file-exists-p local-init)
       (progn
@@ -100,6 +109,11 @@
   (initial-major-mode 'text-mode)
   (initial-scratch-message "✅ All systems go! 🚀🪐✨")
   (visible-bell t)
+  (when (and my-font my-font-height)
+    (set-face-attribute 'default nil :font font :height 130)
+    (set-frame-font font nil t))
+  (when (my-windows-p)
+    (set-fontset-font t 'unicode "Segoe UI Emoji" nil 'append))
   (indent-tabs-mode nil)
   (tab-width 4)
   (require-final-newline t)
