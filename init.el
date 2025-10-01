@@ -125,8 +125,13 @@
   (("C-c j x" . scratch-buffer)
    ("C-c j h" . my-jump-home)
    ("<f8>" . my-pop-mark)
+   ("C-M-<return>" . tab-switch)
    ("M-g w" . forward-to-word)
-   ("M-g W" . backward-to-word)))
+   ("M-g W" . backward-to-word)
+   ("C-M-; d" . duplicate-dwim)
+   ("C-c d h" . erase-buffer)
+   ("M-z" . zap-up-to-char)
+   ("M-Z" . zap-to-char)))
 
 ;;; page-break-lines
 
