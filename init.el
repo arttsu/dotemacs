@@ -325,6 +325,22 @@
   (goto-char target-point)
   (embark-dwim))
 
+;;; Embark
+
+;; https://github.com/oantolin/embark
+
+(use-package embark
+  :ensure
+  :bind
+  (("C-." . embark-act)
+   ("M-." . embark-dwim)))
+
+;;;; Embark-Consult
+
+(use-package embark-consult
+  :ensure
+  :after (embark consult))
+
 ;;; page-break-lines
 
 ;; https://github.com/purcell/page-break-lines
