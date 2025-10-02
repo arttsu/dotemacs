@@ -185,6 +185,30 @@
 
 (add-hook 'emacs-lisp-mode-hook 'my-elisp-imenu-setup)
 
+;;; Savehist
+
+(use-package savehist
+  :config
+  (savehist-mode))
+
+;;; Super Save
+
+;; https://github.com/bbatsov/super-save
+
+(use-package super-save
+  :ensure
+  :custom
+  (super-save-all-buffers t)
+  (super-save-auto-save-when-idle t)
+  (super-save-delete-trailing-whitespace 'except-current-line)
+  (super-save-silent t)
+  (super-save-exclude '(".sbt"
+                        "project/"
+                        ".gpg"))
+  (auto-save-default nil)
+  :config
+  (super-save-mode))
+
 ;;; Modus Themes
 
 ;; https://protesilaos.com/emacs/modus-themes
@@ -203,12 +227,6 @@
   (modus-themes-variable-pitch-ui t)
   :config
   (modus-themes-load-theme my-modus-themes-startup-theme))
-
-;;; Savehist
-
-(use-package savehist
-  :config
-  (savehist-mode))
 
 ;;; Vertico
 
