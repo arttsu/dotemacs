@@ -210,6 +210,55 @@
   (add-to-list 'super-save-triggers 'ace-window)
   (super-save-mode))
 
+;;; easysession
+
+;; https://github.com/jamescherti/easysession.el
+
+(defun my-easysession-visible-buffer-list ()
+  (let ((visible-buffers '()))
+    (dolist (buffer (buffer-list))
+      (when (and (buffer-live-p buffer)
+                 (or
+                  (string= (buffer-name buffer) "*scratch*")
+                  (get-buffer-window buffer 'visible)
+                  (and (bound-and-true-p tab-bar-mode)
+                       (fboundp 'tab-bar-get-buffer-tab)
+                       (tab-bar-get-buffer-tab buffer t nil))))
+        (push buffer visible-buffers)))
+    visible-buffers))
+
+(defun my-easysession-empty ()
+  (when (and (boundp 'tab-bar-mode) tab-bar-mode)
+    (tab-bar-close-other-tabs)
+    (tab-bar-rename-tab ""))
+  (delete-other-windows)
+  (scratch-buffer))
+
+;; TODO: Custom load and save handlers for non-file-visiting buffers
+;; https://github.com/jamescherti/easysession.el?tab=readme-ov-file#how-to-create-custom-load-and-save-handlers-for-non-file-visiting-buffers
+
+;; TODO: try buffer-terminator and/or easysession-reset
+
+(use-package easysession
+  :ensure
+  :custom
+  (easysession-mode-line-misc-info t)
+  (easysession-save-interval (* 5 60))
+  (easysession-buffer-list-function 'my-easysession-visible-buffer-list)
+  (easysession-switch-to-exclude-current t)
+  :init
+  (unless noninteractive
+    (add-hook 'emacs-startup-hook 'easysession-load-including-geometry 102)
+    (add-hook 'emacs-startup-hook 'easysession-save-mode 103))
+  :config
+  (add-hook 'easysession-new-session-hook 'my-easysession-empty)
+  :bind
+  (("<f12> <f12>" . easysession-switch-to)
+   ("<f12> s" . easysession-save)
+   ("<f12> S" . easysession-save-as)
+   ("<f12> k" . easysession-delete)
+   ("<f12> r" . easysession-rename)))
+
 ;;; Modus Themes
 
 ;; https://protesilaos.com/emacs/modus-themes
@@ -470,6 +519,8 @@
    ("M-g T" . iy-go-up-to-char-backward)
    ("M-g ;" . iy-go-to-or-up-to-continue)
    ("M-g ," . iy-go-to-or-up-to-continue-backward)))
+
+;;; TODO: Tempel or Yasnippet
 
 ;;; page-break-lines
 
