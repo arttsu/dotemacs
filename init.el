@@ -72,6 +72,8 @@
 
 (setq my-vterm-shell nil)
 
+(setq my-use-ripgrep nil)
+
 ;;;; Load local init
 
 (let ((local-init (expand-file-name "local-init.el" user-emacs-directory)))
@@ -610,3 +612,16 @@
   (("C-x v" . vterm)
    ("C-x 4 v" . vterm-other-window)
    ("C-x p v" . my-vterm-project)))
+
+;;; Ripgrep
+
+;; https://github.com/dajva/rg.el
+
+(use-package rg
+  :when my-use-ripgrep
+  :ensure
+  :bind
+  (("M-s R" . rg)
+   ("C-x p g" . rg-project)))
+
+;;; TODO: Kubel
