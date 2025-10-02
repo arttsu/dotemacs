@@ -538,3 +538,21 @@
   :config
   (global-page-break-lines-mode))
 
+;;; Transient
+
+;; https://github.com/magit/transient
+
+;; Transient is a dependency of Magit. Installing it explicitly to
+;; ensure I get a recent version to avoid compatibility issues.
+
+(use-package transient
+  :ensure)
+
+;;; Magit
+
+;; https://magit.vc/
+
+(use-package magit
+  :ensure
+  :bind
+  (("C-c g" . magit-file-dispatch)))
