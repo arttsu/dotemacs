@@ -161,7 +161,7 @@
   :bind
   (("<f7>" . dired-jump)
    :map dired-mode-map
-   ;; TODO: crux open with
+   ("o" . crux-open-with)
    ("<tab>" . dired-find-file-other-window)))
 
 ;;; Project
@@ -380,6 +380,18 @@
         ("C-c p [" . sp-wrap-square)
         ("C-c p {" . sp-wrap-curly)
         ("C-c p r" . sp-rewrap-sexp)))
+
+;;; crux
+
+;; https://github.com/bbatsov/crux
+
+(use-package crux
+  :ensure
+  :bind
+  (("C-o" . crux-smart-open-line)
+   ("C-S-o" . crux-smart-open-line-above)
+   ("C-^" . crux-top-join-line)
+   ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region)))
 
 ;;; page-break-lines
 
