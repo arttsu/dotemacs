@@ -70,6 +70,8 @@
 
 (setq my-modus-themes-startup-theme 'modus-operandi)
 
+(setq my-vterm-shell nil)
+
 ;;;; Load local init
 
 (let ((local-init (expand-file-name "local-init.el" user-emacs-directory)))
@@ -556,3 +558,55 @@
   :ensure
   :bind
   (("C-c g" . magit-file-dispatch)))
+
+;;; Vterm
+
+;; https://github.com/akermu/emacs-libvterm
+
+(defun my-vterm-unbind-keys ()
+  (local-unset-key (kbd "<f1>"))
+  (local-unset-key (kbd "<f2>"))
+  (local-unset-key (kbd "<f3>"))
+  (local-unset-key (kbd "<f4>"))
+  (local-unset-key (kbd "<f5>"))
+  (local-unset-key (kbd "<f6>"))
+  (local-unset-key (kbd "<f7>"))
+  (local-unset-key (kbd "<f8>"))
+  (local-unset-key (kbd "<f9>"))
+  (local-unset-key (kbd "<f10>"))
+  (local-unset-key (kbd "<f11>"))
+  (local-unset-key (kbd "<f12>")))
+
+(defun my-vterm--new-project-buffer (name root)
+  (let ((default-directory root))
+    (vterm name)
+    (switch-to-buffer name)))
+
+(defun my-vterm-project (&optional prefix)
+  (interactive "P")
+  (if-let ((current-project (project-current)))
+      (let ((root (project-root current-project))
+            (target-buffer-name (format "*%s: vterm*" (project-name current-project))))
+        (if (get-buffer target-buffer-name)
+            (if prefix
+                (let ((new-buffer-name (generate-new-buffer-name target-buffer-name)))
+                  (my-vterm--new-project-buffer new-buffer-name root))
+              (switch-to-buffer target-buffer-name))
+          (my-vterm--new-project-buffer target-buffer-name root)))
+    (message "vterm-project: No current project.")))
+
+(use-package vterm
+  :when (bound-and-true-p my-vterm-shell)
+  :ensure
+  :demand
+  :custom
+  (vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
+  (vterm-shell my-vterm-shell)
+  (vterm-max-scrollback 50000)
+  (vterm-clear-scrollback-when-clearing t)
+  :config
+  (add-hook 'vterm-mode-hook 'my-vterm-unbind-keys)
+  :bind
+  (("C-x v" . vterm)
+   ("C-x 4 v" . vterm-other-window)
+   ("C-x p v" . my-vterm-project)))
