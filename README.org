@@ -1,1 +1,6 @@
 * arttsu's .emacs.d
+** Dependencies
+*** For Jinx
+**** On Fedora
+1. Install =enchant2-devel= via =dnf=.
+2. Install =hunspell-ru=, =hunspell-de=, and =hunspell-es-ES= via =dnf=.

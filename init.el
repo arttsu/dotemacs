@@ -74,6 +74,8 @@
 
 (setq my-use-ripgrep nil)
 
+(setq my-use-jinx nil)
+
 ;;;; Load local init
 
 (let ((local-init (expand-file-name "local-init.el" user-emacs-directory)))
@@ -623,5 +625,20 @@
   :bind
   (("M-s R" . rg)
    ("C-x p g" . rg-project)))
+
+;;; Jinx
+
+;; https://github.com/minad/jinx
+
+(use-package jinx
+  :when my-use-jinx
+  :ensure
+  :custom
+  (jinx-languages "en_US ru de_DE es_ES")
+  :hook
+  (emacs-startup . global-jinx-mode)
+  :bind
+  (("M-$" . jinx-correct)
+   ("C-M-$" . jinx-languages)))
 
 ;;; TODO: Kubel

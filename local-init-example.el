@@ -6,3 +6,5 @@
 (setq my-vterm-shell "/usr/bin/fish")
 
 (setq my-use-ripgrep t)
+
+(setq my-use-jinx t)
