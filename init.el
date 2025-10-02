@@ -522,6 +522,13 @@
 
 ;;; TODO: Tempel or Yasnippet
 
+;;; Hydra
+
+;; https://github.com/abo-abo/hydra
+
+(use-package hydra
+  :ensure)
+
 ;;; page-break-lines
 
 ;; https://github.com/purcell/page-break-lines
