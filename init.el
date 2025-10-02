@@ -207,6 +207,7 @@
                         ".gpg"))
   (auto-save-default nil)
   :config
+  (add-to-list 'super-save-triggers 'ace-window)
   (super-save-mode))
 
 ;;; Modus Themes
@@ -227,6 +228,18 @@
   (modus-themes-variable-pitch-ui t)
   :config
   (modus-themes-load-theme my-modus-themes-startup-theme))
+
+;;; Ace Window
+
+;; https://github.com/abo-abo/ace-window
+
+(use-package ace-window
+  :ensure
+  :custom
+  (aw-keys '(?a ?s ?d ?f ?g ?h ?k ?l))
+  (aw-scope 'frame)
+  :bind
+  ("M-o" . ace-window))
 
 ;;; Vertico
 
