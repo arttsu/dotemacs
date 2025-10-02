@@ -341,6 +341,16 @@
   :ensure
   :after (embark consult))
 
+;;; Link Hint
+
+;; https://github.com/noctuid/link-hint.el
+
+(use-package link-hint
+  :ensure
+  :bind
+  (("C-c f" . link-hint-open-link)
+   ("C-c y" . link-hint-copy-link)))
+
 ;;; page-break-lines
 
 ;; https://github.com/purcell/page-break-lines
