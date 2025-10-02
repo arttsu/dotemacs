@@ -393,6 +393,41 @@
    ("C-^" . crux-top-join-line)
    ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region)))
 
+;;; Expand Region
+
+;; https://github.com/magnars/expand-region.el
+
+(use-package expand-region
+  :ensure
+  :bind
+  (("C-=" . er/expand-region)))
+
+
+;;; Multiple Cursors
+
+;; https://github.com/magnars/multiple-cursors.el
+
+(use-package multiple-cursors
+  :ensure
+  :bind
+  (("C-c k l" . mc/edit-lines)
+   ("C-+" . mc/mark-next-like-this)
+   ("C-c k m" . mc/mark-all-dwim)
+   ("C-S-<mouse-1>" . mc/add-cursor-on-click)
+   ("C-<return>" . set-rectangular-region-anchor)))
+
+;;; Go to Char
+
+(use-package iy-go-to-char
+  :ensure (:host github :repo "arttsu/iy-go-to-char")
+  :bind
+  (("M-g f" . iy-go-to-char)
+   ("M-g F" . iy-go-to-char-backward)
+   ("M-g t" . iy-go-up-to-char)
+   ("M-g T" . iy-go-up-to-char-backward)
+   ("M-g ;" . iy-go-to-or-up-to-continue)
+   ("M-g ," . iy-go-to-or-up-to-continue-backward)))
+
 ;;; page-break-lines
 
 ;; https://github.com/purcell/page-break-lines
