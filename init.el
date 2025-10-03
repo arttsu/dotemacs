@@ -544,6 +544,14 @@
   :config
   (global-page-break-lines-mode))
 
+;;; Rainbow Delimiters
+
+;; https://github.com/Fanael/rainbow-delimiters
+
+(use-package rainbow-delimiters
+  :ensure
+  :hook (prog-mode . rainbow-delimiters-mode))
+
 ;;; Transient
 
 ;; https://github.com/magit/transient
@@ -668,5 +676,11 @@
    ("C-c m" . gptel-menu)
    :map gptel-mode-map
    ("C-c C-c" . gptel-send)))
+
+;;; TODO: EMMS
+
+;;; TODO: Ledger
+
+;;; TODO: Anki Editor
 
 ;;; TODO: Kubel
