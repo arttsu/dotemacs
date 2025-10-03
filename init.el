@@ -641,4 +641,32 @@
   (("M-$" . jinx-correct)
    ("C-M-$" . jinx-languages)))
 
+;;; GPTel
+
+;; https://github.com/karthink/gptel
+
+(define-derived-mode my-gptel-mode org-mode "MyGPT")
+
+(defun my-gptel-mode-setup ()
+  (org-mode)
+  (gptel-mode))
+
+(use-package gptel
+  :ensure
+  :demand
+  :custom
+  (gptel-model 'gpt-4o)
+  (gptel-default-mode 'org-mode)
+  :config
+  (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
+  (add-hook 'gptel-post-response-functions 'gptel-end-of-response)
+  (add-hook 'gptel-mode-hook 'toggle-truncate-lines)
+  (add-hook 'my-gptel-mode-hook 'my-gptel-mode-setup)
+  (add-to-list 'auto-mode-alist '("\\.gptel\\'" . my-gptel-mode))
+  :bind
+  (("C-c SPC" . gptel)
+   ("C-c m" . gptel-menu)
+   :map gptel-mode-map
+   ("C-c C-c" . gptel-send)))
+
 ;;; TODO: Kubel
