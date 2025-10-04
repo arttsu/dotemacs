@@ -127,7 +127,7 @@
   (require-final-newline t)
   (save-interprogram-paste-before-kill t)
   (epg-pinentry-mode 'loopback)
-  (diabled-command-function nil)
+  (disabled-command-function nil)
   (switch-to-buffer-in-dedicated-window 'pop)
   (switch-to-buffer-obey-display-actions t)
   :config
@@ -684,3 +684,39 @@
 ;;; TODO: Anki Editor
 
 ;;; TODO: Kubel
+
+;;; Org
+
+(setq my-org-local-dir "~/org-local-v2")
+
+(use-package org
+  :ensure
+  :custom
+  (org-startup-indented t)
+  (org-startup-with-inline-images t)
+  (org-fold-catch-invisible-edits 'show-and-error)
+  (org-special-ctrl-a/e t)
+  (org-hide-emphasis-markers t)
+  (org-pretty-entities t)
+  (org-use-speed-commands t)
+  (org-use-sub-superscripts '{})
+  (org-src-window-setup 'split-window-below)
+  (org-confirm-babel-evaluate nil)
+  (org-log-done 'time)
+  (org-priority-lowest 69)
+  (org-priority-default 68)
+  (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+  (org-refile-use-outline-path t)
+  (org-outline-path-complete-in-steps nil)
+  (org-habit-graph-column 60)
+  (org-habit-show-done-always-green t)
+  (org-attach-id-dir (expand-file-name "attachments" my-org-local-dir))
+  :config
+  (require 'org-attach)
+  (require 'org-id)
+  (require 'org-habit)
+  :bind
+  (("C-c a" . org-agenda)
+   ("C-c c" . org-capture)
+   ("C-c l" . org-store-link)
+   ("C-c o C-i" . org-id-get-create)))
