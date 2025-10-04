@@ -8,3 +8,5 @@
 (setq my-use-ripgrep t)
 
 (setq my-use-jinx t)
+
+(setq my-org-local-dir "~/org-local")

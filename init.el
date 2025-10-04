@@ -76,6 +76,8 @@
 
 (setq my-use-jinx nil)
 
+(setq my-org-local-dir "~/org-local")
+
 ;;;; Load local init
 
 (let ((local-init (expand-file-name "local-init.el" user-emacs-directory)))
@@ -687,7 +689,24 @@
 
 ;;; Org
 
-(setq my-org-local-dir "~/org-local-v2")
+;;;; Org Capture
+
+(defun my-inbox-path (org-dir) (expand-file-name "agenda/inbox.org" org-dir))
+
+(defun my-capture-template-path (name)
+  (expand-file-name (concat "capture-templates/" name ".txt") user-emacs-directory))
+
+(defun my-capture-templates (org-dir)
+  (let ((inbox-target `(file+headline ,(my-inbox-path org-dir) "Items")))
+    `(("i" "Inbox")
+      ("ii" "note" entry ,inbox-target (file ,(my-capture-template-path "note")))
+      ("iI" "todo" entry ,inbox-target (file ,(my-capture-template-path "todo"))))))
+
+(defun my-agenda-files (org-dir)
+  (list (expand-file-name "agenda" org-dir)
+        (expand-file-name "agenda/projects" org-dir)))
+
+;;;; Org Config
 
 (use-package org
   :ensure
@@ -711,6 +730,9 @@
   (org-habit-graph-column 60)
   (org-habit-show-done-always-green t)
   (org-attach-id-dir (expand-file-name "attachments" my-org-local-dir))
+  (org-capture-templates (my-capture-templates my-org-local-dir))
+  (org-agenda-files (my-agenda-files my-org-local-dir))
+  (org-refile-targets '((org-agenda-files :level . 2)))
   :config
   (require 'org-attach)
   (require 'org-id)
