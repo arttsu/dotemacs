@@ -10,3 +10,4 @@
 (setq my-use-jinx t)
 
 (setq my-org-local-dir "~/org-local")
+(setq my-org-shared-dir "~/org-shared")

@@ -77,6 +77,7 @@
 (setq my-use-jinx nil)
 
 (setq my-org-local-dir "~/org-local")
+(setq my-org-shared-dir "~/org-shared")
 
 ;;;; Load local init
 
@@ -764,3 +765,20 @@
   (org-modern-tag ((t (:background "CornflowerBlue" :foreground "White" :slant italic))))
   :config
   (global-org-modern-mode))
+
+;;; Org Node
+
+;; https://github.com/meedstrom/org-node
+
+(use-package org-node
+  :ensure
+  :custom
+  (org-mem-do-sync-with-org-id t)
+  (org-mem-watch-dirs (list my-org-local-dir my-org-shared-dir))
+  :config
+  (org-mem-updater-mode)
+  (org-node-cache-mode)
+  (org-node-backlink-mode)
+  :bind
+  (("M-s M-f" . org-node-find)
+   ("M-s M-i" . org-node-insert-link)))
