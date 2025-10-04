@@ -706,7 +706,8 @@
 
 (defun my-agenda-files (org-dir)
   (list (expand-file-name "agenda" org-dir)
-        (expand-file-name "agenda/projects" org-dir)))
+        (expand-file-name "agenda/projects" org-dir)
+        (expand-file-name "agenda/areas" org-dir)))
 
 ;;;; Org Config
 
@@ -733,7 +734,7 @@
   (org-habit-show-done-always-green t)
   (org-attach-id-dir (expand-file-name "attachments" my-org-local-dir))
   (org-capture-templates (my-capture-templates my-org-local-dir))
-  (org-agenda-files (my-agenda-files my-org-local-dir))
+  (org-agenda-files (append (my-agenda-files my-org-local-dir) (my-agenda-files my-org-shared-dir)))
   (org-refile-targets '((org-agenda-files :level . 2)))
   :config
   (require 'org-attach)
