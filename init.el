@@ -1,3 +1,5 @@
+(require 'cl-lib)
+
 ;;; Elpaca
 
 ;; https://github.com/progfolio/elpaca
@@ -715,6 +717,51 @@
         (expand-file-name "agenda/projects" org-dir)
         (expand-file-name "agenda/areas" org-dir)))
 
+;;;; Day Agenda
+
+(defun my-org-entry-scheduled-or-deadline (point)
+  (or (org-get-scheduled-time (point)) (org-get-deadline-time (point))))
+
+(defun my-org-entry-low-prio ()
+  (let ((priority (org-get-priority (thing-at-point 'line t)))
+        (type (org-entry-get-with-inheritance "MY_TYPE")))
+    (or (= priority 0)
+        (and type (<= priority 2000)))))
+
+(defun my-day-agenda-skip-todo ()
+  (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+    (when (or (my-org-entry-scheduled-or-deadline (point))
+              (my-org-entry-low-prio))
+      subtree-end)))
+
+(defun my-day-agenda (files)
+  `((agenda "" ((org-agenda-span 1)
+                (org-agenda-skip-scheduled-if-done t)
+                (org-agenda-skip-deadline-if-done t)
+                (org-agenda-skip-timestamp-if-done t)
+                (org-agenda-files ',files)))
+    (todo "TODO" ((org-agenda-overriding-header "Non-scheduled To-dos")
+                  (org-agenda-skip-function 'my-day-agenda-skip-todo)
+                  (org-agenda-files ',files)))))
+
+(defun my-org-get-top-level-heading ()
+  (save-excursion
+    (save-restriction
+      (widen)
+      (goto-char (point-min))
+      (when (org-at-heading-p)
+        (org-get-heading t t t t)))))
+
+(defun my-agenda-category-short ()
+  (let ((type (org-entry-get (point) "MY_TYPE"))) ;; TODO: if-let
+    (if type
+        "" ; Project or area - no category necessary.
+      (if-let ((top-level-heading (my-org-get-top-level-heading)))
+          (if (> (length top-level-heading) 19)
+              (concat (substring top-level-heading 0 18) "…")
+            top-level-heading)
+        (buffer-file-name)))))
+
 ;;;; Org Config
 
 (use-package org
@@ -742,6 +789,13 @@
   (org-capture-templates (my-capture-templates my-org-local-dir))
   (org-agenda-files (append (my-agenda-files my-org-local-dir) (my-agenda-files my-org-shared-dir)))
   (org-refile-targets '((org-agenda-files :level . 2)))
+  (org-agenda-custom-commands `(("d" "Day" ,(my-day-agenda (my-agenda-files my-org-local-dir)))
+                                ("D" "Day w/ shared" ,(my-day-agenda (append (my-agenda-files my-org-local-dir)
+                                                                             (my-agenda-files my-org-shared-dir))))))
+  (org-agenda-prefix-format '((agenda . " %i %-20(my-agenda-category-short) %?-12t% s")
+                              (todo . " %i %-20(my-agenda-category-short) ")
+                              (tags . " %i %-20(my-agenda-category-short) ")
+                              (search . " %i %-20(my-agenda-category-short) ")))
   :config
   (require 'org-attach)
   (require 'org-id)
