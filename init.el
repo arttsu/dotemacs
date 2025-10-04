@@ -155,7 +155,8 @@
    ("C-M-; d" . duplicate-dwim)
    ("C-c d h" . erase-buffer)
    ("M-z" . zap-up-to-char)
-   ("M-Z" . zap-to-char)))
+   ("M-Z" . zap-to-char)
+   ("C-x K" . crux-delete-file-and-buffer)))
 
 ;;; Dired
 
