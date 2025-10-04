@@ -244,6 +244,11 @@
   (delete-other-windows)
   (scratch-buffer))
 
+(defun my-easysession-reset ()
+  (interactive)
+  (when (yes-or-no-p "Reset current session?")
+    (my-easysession-empty)))
+
 ;; TODO: Custom load and save handlers for non-file-visiting buffers
 ;; https://github.com/jamescherti/easysession.el?tab=readme-ov-file#how-to-create-custom-load-and-save-handlers-for-non-file-visiting-buffers
 
@@ -267,7 +272,8 @@
    ("<f12> s" . easysession-save)
    ("<f12> S" . easysession-save-as)
    ("<f12> k" . easysession-delete)
-   ("<f12> r" . easysession-rename)))
+   ("<f12> r" . easysession-rename)
+   ("<f12> x" . my-easysession-reset)))
 
 ;;; Modus Themes
 
