@@ -720,3 +720,25 @@
    ("C-c c" . org-capture)
    ("C-c l" . org-store-link)
    ("C-c o C-i" . org-id-get-create)))
+
+;;; Org Modern
+
+;; https://github.com/minad/org-modern
+
+(use-package org-modern
+  :ensure
+  :after org
+  :custom
+  (org-auto-align-tags nil)
+  (org-tags-column 0)
+  (org-agenda-tags-column 0)
+  (org-modern-priority-faces '((?A :background "Firebrick3" :foreground "White")
+                               (?B :background "Goldenrod" :foreground "White")
+                               (?C :background "SeaGreen" :foreground "White")
+                               (?D :background "MediumOrchid" :foreground "White")
+                               (?E :background "Seashell3" :foreground "Black")))
+  (org-modern-table nil)
+  :custom-face
+  (org-modern-tag ((t (:background "CornflowerBlue" :foreground "White" :slant italic))))
+  :config
+  (global-org-modern-mode))
