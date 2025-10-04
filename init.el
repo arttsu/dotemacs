@@ -753,14 +753,13 @@
         (org-get-heading t t t t)))))
 
 (defun my-agenda-category-short ()
-  (let ((type (org-entry-get (point) "MY_TYPE"))) ;; TODO: if-let
-    (if type
-        "" ; Project or area - no category necessary.
-      (if-let ((top-level-heading (my-org-get-top-level-heading)))
-          (if (> (length top-level-heading) 19)
-              (concat (substring top-level-heading 0 18) "…")
-            top-level-heading)
-        (buffer-file-name)))))
+  (if-let ((type (org-entry-get (point) "MY_TYPE")))
+      "" ; Project or area - no category necessary.
+    (if-let ((top-level-heading (my-org-get-top-level-heading)))
+        (if (> (length top-level-heading) 19)
+            (concat (substring top-level-heading 0 18) "…")
+          top-level-heading)
+      (buffer-file-name))))
 
 ;;;; Org Config
 
