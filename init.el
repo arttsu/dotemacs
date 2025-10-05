@@ -817,6 +817,26 @@
    ("C-c c" . org-capture)
    ("C-c l" . org-store-link)
    ("C-c o C-i" . org-id-get-create)))
+
+;;;; Org Side Windows
+
+(add-to-list 'display-buffer-alist
+             '("Agenda"
+               display-buffer-in-side-window
+               (side . right)
+               (slot . 0)
+               (window-parameters . ((no-delete-other-windows . t)))
+               (window-width . 100)
+               (dedicated . t)))
+
+(add-to-list 'display-buffer-alist
+             '("\\`CAPTURE"
+               display-buffer-in-direction
+               (direction . bottom)
+               (window . root)
+               (window-height . 0.3)
+               (dedicated . t)))
+
 
 ;;; Org Modern
 
