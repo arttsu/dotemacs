@@ -791,7 +791,7 @@
           top-level-heading)
       (buffer-file-name))))
 
-;;;; Create project
+;;;; Create Project
 
 (defconst my-org-contexts '("Local" "Shared"))
 
@@ -830,6 +830,8 @@
              (path (expand-file-name filename dir)))
         (with-temp-buffer (insert (my-create-project-content title priority)) (write-file path))
         (message "Project created: %s" path)))))
+
+;; Create Area
 
 (defun my-create-area-content (title)
   (let ((template (with-temp-buffer (insert-file-contents (my-capture-template-path "area")) (buffer-string)))
