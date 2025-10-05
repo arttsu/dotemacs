@@ -873,6 +873,21 @@
                 ((eq choice ?t) (find-file-other-tab path))
                 ((eq choice ?d) nil)))))))
 
+;;;; Checklist
+
+(defun my-org-require-at-heading ()
+  (unless (org-at-heading-p) (error "Must be at a heading")))
+
+(defun my-reset-checklist ()
+  (interactive)
+  (my-org-require-at-heading)
+  (when (not (string= (org-entry-get (point) "STYLE") "checklist"))
+    (error "Reset checklist: Not a checklist"))
+  (when (yes-or-no-p "Reset the checklist?")
+    (org-map-entries (lambda () (org-todo "TODO")) nil 'tree)
+    ; Remove "TODO" set by 'org-map-entries' on the checklist heading itself.
+    (org-todo "")))
+
 ;;;; Org Config
 
 (use-package org
@@ -919,7 +934,8 @@
    ("C-c I" . my-capture-todo)
    ("C-c o C-i" . org-id-get-create)
    ("C-c o c p" . my-create-project)
-   ("C-c o c a" . my-create-area)))
+   ("C-c o c a" . my-create-area)
+   ("C-c o r" . my-reset-checklist)))
 
 ;;;; Org Side Windows
 
