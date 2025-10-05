@@ -158,7 +158,8 @@
    ("C-c d h" . erase-buffer)
    ("M-z" . zap-up-to-char)
    ("M-Z" . zap-to-char)
-   ("C-x K" . crux-delete-file-and-buffer)))
+   ("C-x K" . crux-delete-file-and-buffer)
+   ("C-x E" . eval-buffer)))
 
 ;;; Dired
 
@@ -789,6 +790,45 @@
             (concat (substring top-level-heading 0 18) "…")
           top-level-heading)
       (buffer-file-name))))
+
+;;;; Create project
+
+(defconst my-org-contexts '("Local" "Shared"))
+
+(defun my-org-context-dir (context)
+  (cond ((string= context "Local") my-org-local-dir)
+        ((string= context "Shared") my-org-shared-dir)
+        (t (error "Invalid context: %s" context))))
+
+(defun my-org-priority-char-to-cookie (priority-char)
+  (let ((char (cond ((memq priority-char '(?\r ?\n)) ?D)
+                    ((and (>= priority-char ?a) (<= priority-char ?e)) (upcase priority-char))
+                    ((and (>= priority-char ?A) (<= priority-char ?E)) priority-char)
+                    (t ?D))))
+    (format "[#%c]" char)))
+
+(defun my-org-now-timestamp ()
+  (format-time-string "[%Y-%m-%d %a %H:%M]"))
+
+(defun my-create-project-content (title priority-char)
+  (let ((template (with-temp-buffer (insert-file-contents (my-capture-template-path "project")) (buffer-string)))
+        (priority-cookie (my-org-priority-char-to-cookie priority-char))
+        (id (org-id-new))
+        (timestamp (my-org-now-timestamp)))
+    (format template priority-cookie title id timestamp)))
+
+(defun my-create-project ()
+  (interactive)
+  (let ((context (completing-read "Context: " my-org-contexts nil t))
+        (title (read-string "Title: "))
+        (priority (read-char-choice "Priority [A-E, default D]: " '(?A ?B ?C ?D ?E ?a ?b ?c ?d ?e ?\r ?\n))))
+    (when (string-empty-p title) (error "Create project: Title cannot be empty"))
+    (let ((dir (expand-file-name "agenda/projects" (my-org-context-dir context))))
+      (unless (file-directory-p dir) (make-directory dir t))
+      (let* ((filename (org-node-title-to-basename title))
+             (path (expand-file-name filename dir)))
+        (with-temp-buffer (insert (my-create-project-content title priority)) (write-file path))
+        (message "Project created: %s" path)))))
 
 ;;;; Org Config
 
