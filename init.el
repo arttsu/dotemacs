@@ -879,7 +879,7 @@
 ;;;; Org Side Windows
 
 (add-to-list 'display-buffer-alist
-             '("Agenda"
+             `(,(rx (or "*Org Agenda*" "*Agenda Commands*"))
                display-buffer-in-side-window
                (side . right)
                (slot . 0)
@@ -888,7 +888,7 @@
                (dedicated . t)))
 
 (add-to-list 'display-buffer-alist
-             '("\\`CAPTURE"
+             `(,(rx string-start "CAPTURE-")
                display-buffer-in-direction
                (direction . bottom)
                (window . root)
