@@ -710,7 +710,23 @@
   (let ((inbox-target `(file+headline ,(my-inbox-path org-dir) "Items")))
     `(("i" "Inbox")
       ("ii" "note" entry ,inbox-target (file ,(my-capture-template-path "note")))
-      ("iI" "todo" entry ,inbox-target (file ,(my-capture-template-path "todo"))))))
+      ("il" "note link" entry ,inbox-target (file ,(my-capture-template-path "note-link")))
+      ("iI" "todo" entry ,inbox-target (file ,(my-capture-template-path "todo")))
+      ("iL" "todo link" entry ,inbox-target (file ,(my-capture-template-path "todo-link"))))))
+
+(defun my-capture-note (&optional prefix)
+  (interactive "P")
+  (cond ((equal prefix nil) (org-capture nil "ii"))
+        ((equal prefix '(4)) (org-capture nil "il"))
+        (t (error "Capture note: Invalid prefix argument: %s" prefix))))
+
+(defun my-capture-todo (&optional prefix)
+  (interactive "P")
+  (cond ((equal prefix nil) (org-capture nil "iI"))
+        ((equal prefix '(4)) (org-capture nil "iL"))
+        (t (error "Capture to-do: Invalid prefix argument: %s" prefix))))
+
+;;;; Org Agenda
 
 (defun my-agenda-files (org-dir)
   (list (expand-file-name "agenda" org-dir)
@@ -816,6 +832,8 @@
   (("C-c a" . org-agenda)
    ("C-c c" . org-capture)
    ("C-c l" . org-store-link)
+   ("C-c i" . my-capture-note)
+   ("C-c I" . my-capture-todo)
    ("C-c o C-i" . org-id-get-create)))
 
 ;;;; Org Side Windows

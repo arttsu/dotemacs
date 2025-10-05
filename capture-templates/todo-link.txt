@@ -1,0 +1,4 @@
+* TODO [[%c][%?]]
+:PROPERTIES:
+:CREATED: %U
+:END:
