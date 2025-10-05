@@ -1,0 +1,16 @@
+* %1$s
+:PROPERTIES:
+:ID: %2$s
+:MY_TYPE: area
+:CREATED: %3$s
+:END:
+** Resources
+*** Attachments
+** Todos
+:PROPERTIES:
+:STYLE: checklist
+:END:
+** Log
+:PROPERTIES:
+:STYLE: log
+:END:

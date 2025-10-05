@@ -825,10 +825,30 @@
     (when (string-empty-p title) (error "Create project: Title cannot be empty"))
     (let ((dir (expand-file-name "agenda/projects" (my-org-context-dir context))))
       (unless (file-directory-p dir) (make-directory dir t))
+      (require 'org-node)
       (let* ((filename (org-node-title-to-basename title))
              (path (expand-file-name filename dir)))
         (with-temp-buffer (insert (my-create-project-content title priority)) (write-file path))
         (message "Project created: %s" path)))))
+
+(defun my-create-area-content (title)
+  (let ((template (with-temp-buffer (insert-file-contents (my-capture-template-path "area")) (buffer-string)))
+        (id (org-id-new))
+        (timestamp (my-org-now-timestamp)))
+    (format template title id timestamp)))
+
+(defun my-create-area ()
+  (interactive)
+  (let ((context (completing-read "Context: " my-org-contexts nil t))
+        (title (read-string "Title: ")))
+    (when (string-empty-p title) (error "Create area: Title cannot be empty"))
+    (let ((dir (expand-file-name "agenda/areas" (my-org-context-dir context))))
+      (unless (file-directory-p dir) (make-directory dir t))
+      (require 'org-node)
+      (let* ((filename (org-node-title-to-basename title))
+             (path (expand-file-name filename dir)))
+        (with-temp-buffer (insert (my-create-area-content title)) (write-file path))
+        (message "Area created: %s" path)))))
 
 ;;;; Org Config
 
@@ -874,7 +894,9 @@
    ("C-c l" . org-store-link)
    ("C-c i" . my-capture-note)
    ("C-c I" . my-capture-todo)
-   ("C-c o C-i" . org-id-get-create)))
+   ("C-c o C-i" . org-id-get-create)
+   ("C-c o c p" . my-create-project)
+   ("C-c o c a" . my-create-area)))
 
 ;;;; Org Side Windows
 
@@ -894,7 +916,6 @@
                (window . root)
                (window-height . 0.3)
                (dedicated . t)))
-
 
 ;;; Org Modern
 
