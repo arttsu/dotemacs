@@ -734,6 +734,12 @@
               (my-org-entry-low-prio))
       subtree-end)))
 
+(defun my-day-agenda-skip-project ()
+  (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+        (priority (org-get-priority (thing-at-point 'line t))))
+    (when (= priority 0)
+      subtree-end)))
+
 (defun my-day-agenda (files)
   `((agenda "" ((org-agenda-span 1)
                 (org-agenda-skip-scheduled-if-done t)
@@ -742,7 +748,14 @@
                 (org-agenda-files ',files)))
     (todo "TODO" ((org-agenda-overriding-header "Non-scheduled To-dos")
                   (org-agenda-skip-function 'my-day-agenda-skip-todo)
-                  (org-agenda-files ',files)))))
+                  (org-agenda-files ',files)))
+    (tags "MY_TYPE=\"project\"" ((org-agenda-overriding-header "Projects")
+                                 (org-tags-match-list-sublevels nil)
+                                 (org-agenda-sorting-strategy '(priority-down))
+                                 (org-agenda-skip-function 'my-day-agenda-skip-project)
+                                 (org-agenda-files ',files)))))
+
+;;;; Agenda Short Category
 
 (defun my-org-get-top-level-heading ()
   (save-excursion
