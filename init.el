@@ -700,9 +700,50 @@
 
 ;;; Org
 
-;;;; Org Capture
-
 (defun my-inbox-path (org-dir) (expand-file-name "agenda/inbox.org" org-dir))
+
+(defun my-org-entry-scheduled-or-deadline (point)
+  (or (org-get-scheduled-time (point)) (org-get-deadline-time (point))))
+
+(defun my-org-get-top-level-heading ()
+  (save-excursion
+    (save-restriction
+      (widen)
+      (goto-char (point-min))
+      (when (org-at-heading-p)
+        (org-get-heading t t t t)))))
+
+(defconst my-org-contexts '("Local" "Shared"))
+
+(defun my-org-context-dir (context)
+  (cond ((string= context "Local") my-org-local-dir)
+        ((string= context "Shared") my-org-shared-dir)
+        (t (error "Invalid context: %s" context))))
+
+(defun my-org-now-timestamp ()
+  (format-time-string "[%Y-%m-%d %a %H:%M]"))
+
+(defun my-org-priority-char-to-cookie (priority-char)
+  (let ((char (cond ((memq priority-char '(?\r ?\n)) ?D)
+                    ((and (>= priority-char ?a) (<= priority-char ?e)) (upcase priority-char))
+                    ((and (>= priority-char ?A) (<= priority-char ?E)) priority-char)
+                    (t ?D))))
+    (format "[#%c]" char)))
+
+(defun my-org-require-at-heading ()
+  (unless (org-at-heading-p) (error "Must be at a heading")))
+
+(defun my-reset-checklist ()
+  (interactive)
+  (my-org-require-at-heading)
+  (when (not (string= (org-entry-get (point) "STYLE") "checklist"))
+    (error "Reset checklist: Not a checklist"))
+  (when (yes-or-no-p "Reset the checklist?")
+    (org-map-entries (lambda () (org-todo "TODO")) nil 'tree)
+    ; Remove "TODO" set by 'org-map-entries' on the checklist heading itself.
+    (org-todo "")))
+
+;;;; Org Capture
 
 (defun my-capture-template-path (name)
   (expand-file-name (concat "capture-templates/" name ".txt") user-emacs-directory))
@@ -734,12 +775,16 @@
         (expand-file-name "agenda/projects" org-dir)
         (expand-file-name "agenda/areas" org-dir)))
 
-;;;; Day Agenda
+(defun my-agenda-category-short ()
+  (if-let ((type (org-entry-get (point) "MY_TYPE")))
+      "" ; Project or area - no category necessary.
+    (if-let ((top-level-heading (my-org-get-top-level-heading)))
+        (if (> (length top-level-heading) 19)
+            (concat (substring top-level-heading 0 18) "…")
+          top-level-heading)
+      (buffer-file-name))))
 
-(defun my-org-entry-scheduled-or-deadline (point)
-  (or (org-get-scheduled-time (point)) (org-get-deadline-time (point))))
-
-(defun my-org-entry-low-prio ()
+(defun my-day-agenda-low-prio-todo ()
   (let ((priority (org-get-priority (thing-at-point 'line t)))
         (type (org-entry-get-with-inheritance "MY_TYPE")))
     (or (= priority 0)
@@ -748,7 +793,7 @@
 (defun my-day-agenda-skip-todo ()
   (let ((subtree-end (save-excursion (org-end-of-subtree t))))
     (when (or (my-org-entry-scheduled-or-deadline (point))
-              (my-org-entry-low-prio))
+              (my-day-agenda-low-prio-todo))
       subtree-end)))
 
 (defun my-day-agenda-skip-project ()
@@ -772,43 +817,7 @@
                                  (org-agenda-skip-function 'my-day-agenda-skip-project)
                                  (org-agenda-files ',files)))))
 
-;;;; Agenda Short Category
-
-(defun my-org-get-top-level-heading ()
-  (save-excursion
-    (save-restriction
-      (widen)
-      (goto-char (point-min))
-      (when (org-at-heading-p)
-        (org-get-heading t t t t)))))
-
-(defun my-agenda-category-short ()
-  (if-let ((type (org-entry-get (point) "MY_TYPE")))
-      "" ; Project or area - no category necessary.
-    (if-let ((top-level-heading (my-org-get-top-level-heading)))
-        (if (> (length top-level-heading) 19)
-            (concat (substring top-level-heading 0 18) "…")
-          top-level-heading)
-      (buffer-file-name))))
-
 ;;;; Create Project
-
-(defconst my-org-contexts '("Local" "Shared"))
-
-(defun my-org-context-dir (context)
-  (cond ((string= context "Local") my-org-local-dir)
-        ((string= context "Shared") my-org-shared-dir)
-        (t (error "Invalid context: %s" context))))
-
-(defun my-org-priority-char-to-cookie (priority-char)
-  (let ((char (cond ((memq priority-char '(?\r ?\n)) ?D)
-                    ((and (>= priority-char ?a) (<= priority-char ?e)) (upcase priority-char))
-                    ((and (>= priority-char ?A) (<= priority-char ?E)) priority-char)
-                    (t ?D))))
-    (format "[#%c]" char)))
-
-(defun my-org-now-timestamp ()
-  (format-time-string "[%Y-%m-%d %a %H:%M]"))
 
 (defun my-create-project-content (title priority-char)
   (let ((template (with-temp-buffer (insert-file-contents (my-capture-template-path "project")) (buffer-string)))
@@ -872,21 +881,6 @@
                 ((eq choice ?o) (find-file-other-window path))
                 ((eq choice ?t) (find-file-other-tab path))
                 ((eq choice ?d) nil)))))))
-
-;;;; Checklist
-
-(defun my-org-require-at-heading ()
-  (unless (org-at-heading-p) (error "Must be at a heading")))
-
-(defun my-reset-checklist ()
-  (interactive)
-  (my-org-require-at-heading)
-  (when (not (string= (org-entry-get (point) "STYLE") "checklist"))
-    (error "Reset checklist: Not a checklist"))
-  (when (yes-or-no-p "Reset the checklist?")
-    (org-map-entries (lambda () (org-todo "TODO")) nil 'tree)
-    ; Remove "TODO" set by 'org-map-entries' on the checklist heading itself.
-    (org-todo "")))
 
 ;;;; Org Config
 
