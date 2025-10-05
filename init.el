@@ -817,6 +817,12 @@
         (timestamp (my-org-now-timestamp)))
     (format template priority-cookie title id timestamp)))
 
+(defun my-open-project-new-session (path)
+  (let ((name (file-name-sans-extension (file-name-nondirectory path))))
+    (easysession-save)
+    (easysession-switch-to name)
+    (find-file path)))
+
 (defun my-create-project ()
   (interactive)
   (let ((context (completing-read "Context: " my-org-contexts nil t))
@@ -829,7 +835,15 @@
       (let* ((filename (org-node-title-to-basename title))
              (path (expand-file-name filename dir)))
         (with-temp-buffer (insert (my-create-project-content title priority)) (write-file path))
-        (message "Project created: %s" path)))))
+        (message "Project created: %s" path)
+        (let ((choice (read-char-choice
+                       "Open project: [c]urrent window, [o]ther window, new [t]ab, new [s]ession, [d]on't open: "
+                       '(?c ?o ?t ?s ?d))))
+          (cond ((eq choice ?c) (find-file path))
+                ((eq choice ?o) (find-file-other-window path))
+                ((eq choice ?t) (find-file-other-tab path))
+                ((eq choice ?s) (my-open-project-new-session path))
+                ((eq choice ?d) nil)))))))
 
 ;; Create Area
 
@@ -850,7 +864,14 @@
       (let* ((filename (org-node-title-to-basename title))
              (path (expand-file-name filename dir)))
         (with-temp-buffer (insert (my-create-area-content title)) (write-file path))
-        (message "Area created: %s" path)))))
+        (message "Area created: %s" path)
+        (let ((choice (read-char-choice
+                       "Open area: [c]urrent window, [o]ther window, new [t]ab, [d]on't open: "
+                       '(?c ?o ?t ?d))))
+          (cond ((eq choice ?c) (find-file path))
+                ((eq choice ?o) (find-file-other-window path))
+                ((eq choice ?t) (find-file-other-tab path))
+                ((eq choice ?d) nil)))))))
 
 ;;;; Org Config
 
