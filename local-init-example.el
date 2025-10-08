@@ -11,3 +11,5 @@
 
 (setq my-org-local-dir "~/org-local")
 (setq my-org-shared-dir "~/org-shared")
+
+(setq my-day-agenda-include-shared-by-default t)

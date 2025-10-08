@@ -81,6 +81,8 @@
 (setq my-org-local-dir "~/org-local")
 (setq my-org-shared-dir "~/org-shared")
 
+(setq my-day-agenda-include-shared-by-default nil)
+
 ;;;; Load local init
 
 (let ((local-init (expand-file-name "local-init.el" user-emacs-directory)))
@@ -831,6 +833,15 @@
                                  (org-agenda-skip-function 'my-day-agenda-skip-project)
                                  (org-agenda-files ',files)))))
 
+(defun my-day-agenda-commands ()
+  (let* ((all-files (append (my-agenda-files my-org-local-dir) (my-agenda-files my-org-shared-dir)))
+         (local-files (my-agenda-files my-org-local-dir))
+         (default-files (if my-day-agenda-include-shared-by-default all-files local-files))
+         (secondary-files (if my-day-agenda-include-shared-by-default local-files all-files))
+         (secondary-label (if my-day-agenda-include-shared-by-default "Day w/o shared" "Day w/ shared")))
+    `(("d" "Day" ,(my-day-agenda default-files))
+      ("D" ,secondary-label ,(my-day-agenda secondary-files)))))
+
 ;;;; Create Project
 
 (defun my-create-project-content (title priority-char)
@@ -923,9 +934,7 @@
   (org-capture-templates (my-capture-templates my-org-local-dir))
   (org-agenda-files (append (my-agenda-files my-org-local-dir) (my-agenda-files my-org-shared-dir)))
   (org-refile-targets '((org-agenda-files :level . 2)))
-  (org-agenda-custom-commands `(("d" "Day" ,(my-day-agenda (my-agenda-files my-org-local-dir)))
-                                ("D" "Day w/ shared" ,(my-day-agenda (append (my-agenda-files my-org-local-dir)
-                                                                             (my-agenda-files my-org-shared-dir))))))
+  (org-agenda-custom-commands (my-day-agenda-commands))
   (org-agenda-prefix-format '((agenda . " %i %-20(my-agenda-category-short) %?-12t% s")
                               (todo . " %i %-20(my-agenda-category-short) ")
                               (tags . " %i %-20(my-agenda-category-short) ")
