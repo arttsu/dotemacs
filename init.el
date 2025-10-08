@@ -692,7 +692,21 @@
 
 ;;; TODO: EMMS
 
-;;; TODO: Ledger
+;;; Ledger
+
+;; https://github.com/ledger/ledger-mode
+
+(use-package ledger-mode
+  :ensure
+  :custom
+  (ledger-default-date-format "%Y-%m-%d")
+  :config
+  (ledger-reports-add "bal-this-month" "%(binary) -f %(ledger-file) --invert -p \"this month\" -S amount bal ^income ^expenses")
+  (ledger-reports-add "bal-last-month" "%(binary) -f %(ledger-file) --invert -p \"last month\" -S amount bal ^income ^expenses")
+  (ledger-reports-add "bal-this-month-vs-budget" "%(binary) -f %(ledger-file) --monthly -p \"this month\" --budget bal ^expenses")
+  (ledger-reports-add "bal-last-month-vs-budget" "%(binary) -f %(ledger-file) --monthly -p \"last month\" --budget bal ^expenses")
+  (ledger-reports-add "this-month-unbudgeted" "%(binary) -f %(ledger-file) --monthly -p \"this month\" --unbudgeted bal ^expenses")
+  (ledger-reports-add "last-month-unbudgeted" "%(binary) -f %(ledger-file) --monthly -p \"last month\" --unbudgeted bal ^expenses"))
 
 ;;; TODO: Anki Editor
 
