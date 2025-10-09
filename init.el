@@ -756,8 +756,20 @@
     (error "Reset checklist: Not a checklist"))
   (when (yes-or-no-p "Reset the checklist?")
     (org-map-entries (lambda () (org-todo "TODO")) nil 'tree)
-    ; Remove "TODO" set by 'org-map-entries' on the checklist heading itself.
+                                        ; Remove "TODO" set by 'org-map-entries' on the checklist heading itself.
     (org-todo "")))
+
+(defun my-checklist-do-auto-advance ()
+  (let ((point-before (point)))
+    (org-forward-heading-same-level 1)
+    (when (= (point) point-before)
+      (org-up-heading-safe))))
+
+(defun my-checklist-auto-advance ()
+  (when (and (derived-mode-p 'org-mode)
+             (string= (org-entry-get-with-inheritance "STYLE") "checklist")
+             (string= org-state "DONE"))
+    (run-with-idle-timer 0 nil 'my-checklist-do-auto-advance)))
 
 (defconst my-org-default-timestamp "[1900-01-01 Mon 00:00]")
 
@@ -865,13 +877,13 @@
 
 (defun my-agenda-category-short ()
   (if (derived-mode-p 'org-mode)
-    (if-let ((type (org-entry-get (point) "MY_TYPE")))
-        "" ; Project or area - no category necessary.
-      (if-let ((top-level-heading (my-org-get-top-level-heading)))
-          (if (> (length top-level-heading) 19)
-              (concat (substring top-level-heading 0 18) "…")
-            top-level-heading)
-        (buffer-file-name)))
+      (if-let ((type (org-entry-get (point) "MY_TYPE")))
+          "" ; Project or area - no category necessary.
+        (if-let ((top-level-heading (my-org-get-top-level-heading)))
+            (if (> (length top-level-heading) 19)
+                (concat (substring top-level-heading 0 18) "…")
+              top-level-heading)
+          (buffer-file-name)))
     ""))
 
 (defun my-day-agenda-low-prio-todo ()
@@ -1018,6 +1030,7 @@
   (require 'org-id)
   (require 'org-habit)
   (add-hook 'org-after-refile-insert-hook 'my-org-auto-format)
+  (add-hook 'org-after-todo-state-change-hook 'my-checklist-auto-advance)
   :bind
   (("C-c a" . org-agenda)
    ("C-c c" . org-capture)
