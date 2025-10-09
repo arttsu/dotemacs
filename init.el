@@ -721,6 +721,8 @@
 
 ;;; Org
 
+;; TODO: Split into pages
+
 (defun my-inbox-path (org-dir) (expand-file-name "agenda/inbox.org" org-dir))
 
 (defun my-org-entry-scheduled-or-deadline (point)
