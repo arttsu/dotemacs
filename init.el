@@ -826,9 +826,10 @@
 
 (defun my-org-auto-format ()
   (interactive)
-  (org-map-entries (lambda () (org-map-entries 'my-org-add-created-timestamp-to-heading nil 'tree)) "STYLE=\"log\"" 'file)
-  (org-map-entries 'my-sort-entries "STYLE=\"checklist\"|STYLE=\"log\"" 'file)
-  (org-map-entries 'my-org-update-attachments-heading "+SYNC_ATTACH" 'file))
+  (ignore-errors
+    (org-map-entries (lambda () (org-map-entries 'my-org-add-created-timestamp-to-heading nil 'tree)) "STYLE=\"log\"" 'file)
+    (org-map-entries 'my-sort-entries "STYLE=\"checklist\"|STYLE=\"log\"" 'file)
+    (org-map-entries 'my-org-update-attachments-heading "+SYNC_ATTACH" 'file)))
 
 ;;;; Org Capture
 
@@ -863,13 +864,15 @@
         (expand-file-name "agenda/areas" org-dir)))
 
 (defun my-agenda-category-short ()
-  (if-let ((type (org-entry-get (point) "MY_TYPE")))
-      "" ; Project or area - no category necessary.
-    (if-let ((top-level-heading (my-org-get-top-level-heading)))
-        (if (> (length top-level-heading) 19)
-            (concat (substring top-level-heading 0 18) "…")
-          top-level-heading)
-      (buffer-file-name))))
+  (if (derived-mode-p 'org-mode)
+    (if-let ((type (org-entry-get (point) "MY_TYPE")))
+        "" ; Project or area - no category necessary.
+      (if-let ((top-level-heading (my-org-get-top-level-heading)))
+          (if (> (length top-level-heading) 19)
+              (concat (substring top-level-heading 0 18) "…")
+            top-level-heading)
+        (buffer-file-name)))
+    ""))
 
 (defun my-day-agenda-low-prio-todo ()
   (let ((priority (org-get-priority (thing-at-point 'line t)))
