@@ -759,6 +759,38 @@
     ; Remove "TODO" set by 'org-map-entries' on the checklist heading itself.
     (org-todo "")))
 
+(defconst my-org-default-timestamp "[1900-01-01 Mon 00:00]")
+
+(defun my-org-extract-created-timestamp ()
+  (or (org-entry-get (point) "CREATED") my-org-default-timestamp))
+
+(defun my-org-extract-closed-timestamp ()
+  (save-excursion
+    (save-restriction
+      (org-narrow-to-subtree)
+      (goto-char (point-min))
+      (if (re-search-forward (rx "CLOSED: " (group "[" (1+ (not "]")) "]")) nil t)
+          (match-string-no-properties 1)
+        my-org-default-timestamp))))
+
+(defun my-sort-checklist ()
+  (interactive)
+  (my-org-require-at-heading)
+  (org-sort-entries nil ?f 'my-org-extract-created-timestamp)
+  (org-sort-entries nil ?f 'my-org-extract-closed-timestamp)
+  ;; By priority.
+  (org-sort-entries nil ?p)
+  ;; By TODO state.
+  (org-sort-entries nil ?o))
+
+;; TODO: Use 'user-error' in other places where appropriate.
+(defun my-sort-entries ()
+  (interactive)
+  (my-org-require-at-heading)
+  (let ((style (org-entry-get (point) "STYLE")))
+    (cond ((string= style "checklist") (my-sort-checklist))
+          (t (user-error "Sort Entries: No supported STYLE property found.")))))
+
 ;;;; Org Capture
 
 (defun my-capture-template-path (name)
