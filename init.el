@@ -766,10 +766,16 @@
       (org-up-heading-safe))))
 
 (defun my-checklist-auto-advance ()
-  (when (and (derived-mode-p 'org-mode)
-             (string= (org-entry-get-with-inheritance "STYLE") "checklist")
-             (string= org-state "DONE"))
-    (run-with-idle-timer 0 nil 'my-checklist-do-auto-advance)))
+  (ignore-errors
+    (when (and (not (eq this-command 'org-agenda-todo))
+               (string= (org-entry-get-with-inheritance "STYLE") "checklist")
+               (string= org-state "DONE"))
+      (run-with-idle-timer 0 nil 'my-checklist-do-auto-advance))))
+
+(defun my-org-remove-priority-when-done ()
+  (ignore-errors
+    (when (string= org-state "DONE")
+      (org-entry-put (point) "PRIORITY" nil))))
 
 (defconst my-org-default-timestamp "[1900-01-01 Mon 00:00]")
 
@@ -1030,7 +1036,8 @@
   (require 'org-id)
   (require 'org-habit)
   (add-hook 'org-after-refile-insert-hook 'my-org-auto-format)
-  (add-hook 'org-after-todo-state-change-hook 'my-checklist-auto-advance)
+  (add-hook 'org-after-todo-state-change-hook 'my-org-remove-priority-when-done -10)
+  (add-hook 'org-after-todo-state-change-hook 'my-checklist-auto-advance 10)
   :bind
   (("C-c a" . org-agenda)
    ("C-c c" . org-capture)
