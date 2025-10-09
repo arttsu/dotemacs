@@ -810,10 +810,25 @@
     (unless (string= timestamp my-org-default-timestamp)
       (org-edit-headline (format "%s %s" timestamp clean-heading)))))
 
+(defun my-org-update-attachments-heading ()
+  (my-org-require-at-heading)
+  (save-excursion
+    (org-mark-subtree)
+    (forward-line)
+    (delete-region (region-beginning) (region-end))
+    (deactivate-mark)
+    (let ((dir (org-attach-dir-from-id (org-entry-get-with-inheritance "ID"))))
+      (when (file-directory-p dir)
+        (let* ((attachments (directory-files dir t))
+               (clean-attachments (cl-remove-if (lambda (path) (member (file-name-nondirectory path) '("." ".."))) attachments)))
+          (dolist (attachment clean-attachments)
+            (insert (format "- [[file:%s][%s]]\n" attachment (file-name-nondirectory attachment)))))))))
+
 (defun my-org-auto-format ()
   (interactive)
   (org-map-entries (lambda () (org-map-entries 'my-org-add-created-timestamp-to-heading nil 'tree)) "STYLE=\"log\"" 'file)
-  (org-map-entries 'my-sort-entries "STYLE=\"checklist\"|STYLE=\"log\"" 'file))
+  (org-map-entries 'my-sort-entries "STYLE=\"checklist\"|STYLE=\"log\"" 'file)
+  (org-map-entries 'my-org-update-attachments-heading "+SYNC_ATTACH" 'file))
 
 ;;;; Org Capture
 

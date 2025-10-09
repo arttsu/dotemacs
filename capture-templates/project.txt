@@ -5,7 +5,7 @@
 :CREATED: %4$s
 :END:
 ** Resources
-*** Attachments
+*** Attachments :SYNC_ATTACH:
 ** Todos
 :PROPERTIES:
 :STYLE: checklist
