@@ -819,9 +819,9 @@
     (deactivate-mark)
     (let ((dir (org-attach-dir-from-id (org-entry-get-with-inheritance "ID"))))
       (when (file-directory-p dir)
-        (let* ((attachments (directory-files dir t))
-               (clean-attachments (cl-remove-if (lambda (path) (member (file-name-nondirectory path) '("." ".."))) attachments)))
-          (dolist (attachment clean-attachments)
+        (let* ((paths (directory-files dir t))
+               (attachments (cl-remove-if (lambda (path) (member (file-name-nondirectory path) '("." ".."))) paths)))
+          (dolist (attachment attachments)
             (insert (format "- [[file:%s][%s]]\n" attachment (file-name-nondirectory attachment)))))))))
 
 (defun my-org-auto-format ()
@@ -1014,6 +1014,7 @@
   (require 'org-attach)
   (require 'org-id)
   (require 'org-habit)
+  (add-hook 'org-after-refile-insert-hook 'my-org-auto-format)
   :bind
   (("C-c a" . org-agenda)
    ("C-c c" . org-capture)
@@ -1023,7 +1024,8 @@
    ("C-c o C-i" . org-id-get-create)
    ("C-c o c p" . my-create-project)
    ("C-c o c a" . my-create-area)
-   ("C-c o r" . my-reset-checklist)))
+   ("C-c o r" . my-reset-checklist)
+   ("C-c o f" . my-org-auto-format)))
 
 ;;;; Org Side Windows
 
