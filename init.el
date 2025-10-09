@@ -756,7 +756,7 @@
     (error "Reset checklist: Not a checklist"))
   (when (yes-or-no-p "Reset the checklist?")
     (org-map-entries (lambda () (org-todo "TODO")) nil 'tree)
-                                        ; Remove "TODO" set by 'org-map-entries' on the checklist heading itself.
+    ;; Remove "TODO" set by 'org-map-entries' on the checklist heading itself.
     (org-todo "")))
 
 (defun my-checklist-do-auto-advance ()
@@ -776,6 +776,21 @@
   (ignore-errors
     (when (string= org-state "DONE")
       (org-entry-put (point) "PRIORITY" nil))))
+
+(defun my-org-complete-as-wont-do ()
+  (interactive)
+  (my-org-require-at-heading)
+  (when (not (string= (org-get-todo-state) "DONE"))
+    (let ((heading (org-get-heading t t t t)))
+      (org-todo 'done)
+      (org-edit-headline (format "+%s+" heading)))))
+
+(defun my-org-undo-wont-do ()
+  (ignore-errors
+    (when (not (string= org-state "DONE"))
+      (let ((heading (org-get-heading t t t t)))
+        (when (string-match (rx string-start "+" (group (1+ anychar)) "+" string-end) heading)
+          (org-edit-headline (match-string 1 heading)))))))
 
 (defconst my-org-default-timestamp "[1900-01-01 Mon 00:00]")
 
@@ -1037,6 +1052,7 @@
   (require 'org-habit)
   (add-hook 'org-after-refile-insert-hook 'my-org-auto-format)
   (add-hook 'org-after-todo-state-change-hook 'my-org-remove-priority-when-done -10)
+  (add-hook 'org-after-todo-state-change-hook 'my-org-undo-wont-do -10)
   (add-hook 'org-after-todo-state-change-hook 'my-checklist-auto-advance 10)
   :bind
   (("C-c a" . org-agenda)
@@ -1048,7 +1064,8 @@
    ("C-c o c p" . my-create-project)
    ("C-c o c a" . my-create-area)
    ("C-c o r" . my-reset-checklist)
-   ("C-c o f" . my-org-auto-format)))
+   ("C-c o f" . my-org-auto-format)
+   ("C-c o x" . my-org-complete-as-wont-do)))
 
 ;;;; Org Side Windows
 
