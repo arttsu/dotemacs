@@ -783,12 +783,19 @@
   ;; By TODO state.
   (org-sort-entries nil ?o))
 
+(defun my-sort-log ()
+  (interactive)
+  (my-org-require-at-heading)
+  ;; Reverse sort by 'CREATED' timestamp.
+  (org-sort-entries nil ?f (lambda () (- (org-time-string-to-seconds (my-org-extract-created-timestamp))))))
+
 ;; TODO: Use 'user-error' in other places where appropriate.
 (defun my-sort-entries ()
   (interactive)
   (my-org-require-at-heading)
   (let ((style (org-entry-get (point) "STYLE")))
     (cond ((string= style "checklist") (my-sort-checklist))
+          ((string= style "log") (my-sort-log))
           (t (user-error "Sort Entries: No supported STYLE property found.")))))
 
 ;;;; Org Capture
