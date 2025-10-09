@@ -798,6 +798,23 @@
           ((string= style "log") (my-sort-log))
           (t (user-error "Sort Entries: No supported STYLE property found.")))))
 
+;;;; Org Auto-format
+
+(defun my-org-add-created-timestamp-to-heading ()
+  (my-org-require-at-heading)
+  (let* ((timestamp (my-org-extract-created-timestamp))
+         (heading (org-get-heading t t t t))
+         (clean-heading (replace-regexp-in-string (rx string-start "[" (= 4 digit) "-" (= 2 digit) "-" (= 2 digit) space (= 3 letter) space (= 2 digit) ":" (= 2 digit) "] ")
+                                                  ""
+                                                  heading)))
+    (unless (string= timestamp my-org-default-timestamp)
+      (org-edit-headline (format "%s %s" timestamp clean-heading)))))
+
+(defun my-org-auto-format ()
+  (interactive)
+  (org-map-entries (lambda () (org-map-entries 'my-org-add-created-timestamp-to-heading nil 'tree)) "STYLE=\"log\"" 'file)
+  (org-map-entries 'my-sort-entries "STYLE=\"checklist\"|STYLE=\"log\"" 'file))
+
 ;;;; Org Capture
 
 (defun my-capture-template-path (name)
