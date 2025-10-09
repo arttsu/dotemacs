@@ -1060,9 +1060,10 @@
    ("C-c l" . org-store-link)
    ("C-c i" . my-capture-note)
    ("C-c I" . my-capture-todo)
-   ("C-c o C-i" . org-id-get-create)
    ("C-c o c p" . my-create-project)
    ("C-c o c a" . my-create-area)
+   :map org-mode-map
+   ("C-c o C-i" . org-id-get-create)
    ("C-c o r" . my-reset-checklist)
    ("C-c o f" . my-org-auto-format)
    ("C-c o x" . my-org-complete-as-wont-do)))
