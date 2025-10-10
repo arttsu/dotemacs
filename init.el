@@ -1089,7 +1089,9 @@
    ("C-c o C-i" . org-id-get-create)
    ("C-c o r" . my-reset-checklist)
    ("C-c o f" . my-org-auto-format)
-   ("C-c o x" . my-org-complete-as-wont-do)))
+   ("C-c o x" . my-org-complete-as-wont-do)
+   ("C-c o C-r" . my-org-refile-note)
+   ("C-c o M-r" . my-org-refile-copy-note)))
 
 ;;;; Org Side Windows
 
