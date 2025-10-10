@@ -864,6 +864,29 @@
     (org-map-entries 'my-sort-entries "STYLE=\"checklist\"|STYLE=\"log\"" 'file)
     (org-map-entries 'my-org-update-attachments-heading "+SYNC_ATTACH" 'file)))
 
+(defun my-list-org-files (dir)
+  (directory-files dir t (rx ".org" string-end)))
+
+;;;; Org Refile Note
+
+(defun my-org-do-refile-note (refile-f)
+  (let ((original-targets org-refile-targets))
+    (unwind-protect
+        (let* ((local-note-files (my-list-org-files (expand-file-name "notes" my-org-local-dir)))
+               (shared-note-files (my-list-org-files (expand-file-name "notes" my-org-shared-dir)))
+               (note-targets (append local-note-files shared-note-files)))
+          (setq org-refile-targets `((,note-targets :maxlevel 3)))
+          (apply refile-f ()))
+      (setq org-refile-targets original-targets))))
+
+(defun my-org-refile-note ()
+  (interactive)
+  (my-org-do-refile-note 'org-refile))
+
+(defun my-org-refile-copy-note ()
+  (interactive)
+  (my-org-do-refile-note 'org-refile-copy))
+
 ;;;; Org Capture
 
 (defun my-capture-template-path (name)
