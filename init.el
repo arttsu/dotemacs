@@ -115,6 +115,10 @@
 
 ;;;; use-package Emacs
 
+(defun my-disabled-window-toggle-side-windows ()
+  (interactive)
+  (user-error "window-toggle-side-window: Disabled, as it seems to be breaking easysessions."))
+
 (use-package emacs
   :custom
   (create-lockfiles nil)
@@ -161,7 +165,8 @@
    ("M-z" . zap-up-to-char)
    ("M-Z" . zap-to-char)
    ("C-x K" . crux-delete-file-and-buffer)
-   ("C-x E" . eval-buffer)))
+   ("C-x E" . eval-buffer)
+   ("C-x w s" . my-disabled-window-toggle-side-windows)))
 
 ;;; Dired
 
@@ -831,6 +836,16 @@
           ((string= style "log") (my-sort-log))
           (t (user-error "Sort Entries: No supported STYLE property found.")))))
 
+(defun my-easysession-from-heading ()
+  (interactive)
+  (my-org-require-at-heading)
+  (require 'org-node)
+  (let* ((heading (org-get-heading t t t t))
+         (session-title (file-name-sans-extension (org-node-title-to-basename heading)))
+         (file-to-open (when (not (easysession--exists session-title)) buffer-file-name)))
+    (easysession-switch-to-and-restore-geometry session-title)
+    (when file-to-open (find-file file-to-open))))
+
 ;;;; Org Auto-format
 
 (defun my-org-add-created-timestamp-to-heading ()
@@ -985,8 +1000,7 @@
 
 (defun my-open-project-new-session (path)
   (let ((name (file-name-sans-extension (file-name-nondirectory path))))
-    (easysession-save)
-    (easysession-switch-to name)
+    (easysession-switch-to-and-restore-geometry name)
     (find-file path)))
 
 (defun my-create-project ()
