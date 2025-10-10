@@ -1,0 +1,5 @@
+* %1$s
+:PROPERTIES:
+:ID: %2$s
+:CREATED: %3$s
+:END:

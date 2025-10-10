@@ -992,7 +992,7 @@
   (let ((context (completing-read "Context: " my-org-contexts nil t))
         (title (read-string "Title: "))
         (priority (read-char-choice "Priority [A-E, default D]: " '(?A ?B ?C ?D ?E ?a ?b ?c ?d ?e ?\r ?\n))))
-    (when (string-empty-p title) (error "Create project: Title cannot be empty"))
+    (when (string-empty-p title) (user-error "Create project: Title cannot be empty"))
     (let ((dir (expand-file-name "agenda/projects" (my-org-context-dir context))))
       (unless (file-directory-p dir) (make-directory dir t))
       (require 'org-node)
@@ -1021,7 +1021,7 @@
   (interactive)
   (let ((context (completing-read "Context: " my-org-contexts nil t))
         (title (read-string "Title: ")))
-    (when (string-empty-p title) (error "Create area: Title cannot be empty"))
+    (when (string-empty-p title) (user-error "Create area: Title cannot be empty"))
     (let ((dir (expand-file-name "agenda/areas" (my-org-context-dir context))))
       (unless (file-directory-p dir) (make-directory dir t))
       (require 'org-node)
@@ -1031,6 +1031,36 @@
         (message "Area created: %s" path)
         (let ((choice (read-char-choice
                        "Open area: [c]urrent window, [o]ther window, new [t]ab, [d]on't open: "
+                       '(?c ?o ?t ?d))))
+          (cond ((eq choice ?c) (find-file path))
+                ((eq choice ?o) (find-file-other-window path))
+                ((eq choice ?t) (find-file-other-tab path))
+                ((eq choice ?d) nil)))))))
+
+;;;; Create Notes
+
+;; TODO: Extract reading a file to a string to a helper.
+(defun my-create-notes-content (title)
+  (let ((template (with-temp-buffer (insert-file-contents (my-capture-template-path "notes")) (buffer-string)))
+        (id (org-id-new))
+        (timestamp (my-org-now-timestamp)))
+    (format template title id timestamp)))
+
+(defun my-create-notes ()
+  (interactive)
+  (let ((context (completing-read "Context: " my-org-contexts nil t))
+        (title (read-string "Title: ")))
+    (when (string-empty-p title) (user-error "Create notes: Title cannot be empty"))
+    (let ((dir (expand-file-name "notes" (my-org-context-dir context)))
+          (full-title (concat title " Notes")))
+      (unless (file-directory-p dir) (make-directory dir t))
+      (require 'org-node)
+      (let* ((filename (org-node-title-to-basename full-title))
+             (path (expand-file-name filename dir)))
+        (with-temp-buffer (insert (my-create-notes-content full-title)) (write-file path))
+        (message "Notes created: %s" path)
+        (let ((choice (read-char-choice
+                       "Open notes: [c]urrent window, [o]ther window, new [t]ab, [d]on't open: "
                        '(?c ?o ?t ?d))))
           (cond ((eq choice ?c) (find-file path))
                 ((eq choice ?o) (find-file-other-window path))
@@ -1085,6 +1115,7 @@
    ("C-c I" . my-capture-todo)
    ("C-c o c p" . my-create-project)
    ("C-c o c a" . my-create-area)
+   ("C-c o c n" . my-create-notes)
    :map org-mode-map
    ("C-c o C-i" . org-id-get-create)
    ("C-c o r" . my-reset-checklist)
