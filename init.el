@@ -922,7 +922,7 @@
 (defun my-agenda-category-short ()
   (if (derived-mode-p 'org-mode)
       (if-let ((type (org-entry-get (point) "MY_TYPE")))
-          "" ; Project or area - no category necessary.
+          "" ;; Project or area - no category necessary.
         (if-let ((top-level-heading (my-org-get-top-level-heading)))
             (if (> (length top-level-heading) 19)
                 (concat (substring top-level-heading 0 18) "…")
