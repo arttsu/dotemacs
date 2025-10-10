@@ -1182,4 +1182,5 @@
   (org-node-backlink-mode)
   :bind
   (("M-s M-f" . org-node-find)
-   ("M-s M-i" . org-node-insert-link)))
+   ("M-s M-i" . org-node-insert-link)
+   ("M-s M-t" . org-node-add-tags-here)))
