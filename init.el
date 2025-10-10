@@ -860,9 +860,11 @@
 (defun my-org-auto-format ()
   (interactive)
   (ignore-errors
-    (org-map-entries (lambda () (org-map-entries 'my-org-add-created-timestamp-to-heading nil 'tree)) "STYLE=\"log\"" 'file)
-    (org-map-entries 'my-sort-entries "STYLE=\"checklist\"|STYLE=\"log\"" 'file)
-    (org-map-entries 'my-org-update-attachments-heading "+SYNC_ATTACH" 'file)))
+    (org-map-entries (lambda () (org-map-entries 'my-org-add-created-timestamp-to-heading nil 'tree)) "STYLE=\"log\"" 'file))
+  (ignore-errors
+    (org-map-entries 'my-sort-entries "STYLE=\"checklist\"|STYLE=\"log\"" 'file))
+  (ignore-errors
+    (org-map-entries 'my-org-update-attachments-heading "SYNC_ATTACH" 'file)))
 
 (defun my-list-org-files (dir)
   (directory-files dir t (rx ".org" string-end)))
