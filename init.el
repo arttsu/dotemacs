@@ -134,7 +134,7 @@
   (switch-to-buffer-obey-display-actions t)
   :config
   (when (and my-font my-font-height)
-    (set-face-attribute 'default nil :font my-font :height 130)
+    (set-face-attribute 'default nil :font my-font :height my-font-height)
     (set-frame-font my-font nil t))
   (when (my-windows-p)
     (set-fontset-font t 'unicode "Segoe UI Emoji" nil 'append))
