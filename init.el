@@ -1075,7 +1075,7 @@
   :ensure
   :custom
   (org-startup-indented t)
-  (org-startup-with-inline-images t)
+  (org-startup-with-inline-images nil)
   (org-fold-catch-invisible-edits 'show-and-error)
   (org-special-ctrl-a/e t)
   (org-hide-emphasis-markers t)
