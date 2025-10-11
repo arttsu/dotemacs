@@ -1272,3 +1272,14 @@
   :ensure
   :interpreter "scala"
   :mode (rx "." (or "scala" "sbt" "worksheet" "sc") string-end))
+
+;;;; LSP Metals
+
+;; https://github.com/emacs-lsp/lsp-metals
+
+(use-package lsp-metals
+  :ensure
+  :after (lsp-mode scala-ts-mode)
+  :bind
+  (:map scala-ts-mode-map
+        ("<f5> I" . lsp-metals-build-import)))
