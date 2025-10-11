@@ -87,6 +87,8 @@
 
 (setq my-use-jarchive nil)
 
+(setq my-use-copilot nil)
+
 ;;;; Load local init
 
 (let ((local-init (expand-file-name "local-init.el" user-emacs-directory)))
@@ -1305,3 +1307,27 @@
   :after envrc
   :config
   (add-hook 'python-base-mode-hook 'pet-mode -10))
+
+;;; Copilot
+
+;; https://github.com/copilot-emacs/copilot.el
+
+(defun my-copilot-accept-completion-hydra ()
+  (defhydra my-copilot-accept-completion (copilot-mode-map "C-M-<tab>")
+    ("C-M-<tab>" copilot-accept-completion "Accept" :color blue)
+    ("C-M-f" copilot-accept-completion-by-word "By word")
+    ("C-M-e" copilot-accept-completion-by-line "By line")))
+
+(use-package copilot
+  :ensure
+  :when my-use-copilot
+  :after hydra
+  :custom
+  (copilot-idle-delay 0.3)
+  :custom-face
+  (copilot-overlay-face ((t (:foreground "DarkOrchid1" :slant italic))))
+  :config
+  (add-to-list 'warning-suppress-log-types '(copilot copilot-no-mode-indent))
+  (my-copilot-accept-completion-hydra)
+  :hook
+  (prog-mode . copilot-mode))

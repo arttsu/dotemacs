@@ -17,3 +17,5 @@
 (setq my-use-tree-sitter t)
 
 (setq my-use-jarchive t)
+
+(setq my-use-copilot t)
