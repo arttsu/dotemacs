@@ -13,3 +13,5 @@
 (setq my-org-shared-dir "~/org-shared")
 
 (setq my-day-agenda-include-shared-by-default t)
+
+(setq my-use-tree-sitter t)

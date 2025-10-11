@@ -83,6 +83,8 @@
 
 (setq my-day-agenda-include-shared-by-default nil)
 
+(setq my-use-tree-sitter nil)
+
 ;;;; Load local init
 
 (let ((local-init (expand-file-name "local-init.el" user-emacs-directory)))
@@ -1216,3 +1218,13 @@
 (use-package envrc
   :ensure
   :hook (elpaca-after-init . envrc-global-mode))
+
+;;; Tree-Sitter
+
+;; https://emacs-tree-sitter.github.io/
+
+(use-package tree-sitter
+  :ensure
+  :when my-use-tree-sitter
+  :custom
+  (treesit-font-lock-level 4))
