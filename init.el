@@ -1331,3 +1331,48 @@
   (my-copilot-accept-completion-hydra)
   :hook
   (prog-mode . copilot-mode))
+
+;;; Major Modes
+
+;;;; YAML Mode
+
+;; https://github.com/yoshiki/yaml-mode
+
+(use-package yaml-mode
+  :ensure)
+
+;;;; Markdown Mode
+
+;; https://github.com/jrblevin/markdown-mode
+
+(use-package markdown-mode
+  :ensure
+  :interpreter "markdown")
+
+;;;; Dockerfile Mode
+
+;; https://github.com/spotify/dockerfile-mode
+
+(use-package dockerfile-mode
+  :ensure)
+
+;;;; GraphQL Mode
+
+;; https://github.com/davazp/graphql-mode
+
+(use-package graphql-mode
+  :ensure)
+
+;;;; Fish Mode
+
+;; https://github.com/emacsmirror/fish-mode
+
+(use-package fish-mode
+  :ensure)
+
+;;;; Just Mode
+
+;; https://github.com/leon-barrett/just-mode.el
+
+(use-package just-mode
+  :ensure)
