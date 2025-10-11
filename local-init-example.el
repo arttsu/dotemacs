@@ -15,3 +15,5 @@
 (setq my-day-agenda-include-shared-by-default t)
 
 (setq my-use-tree-sitter t)
+
+(setq my-use-jarchive t)

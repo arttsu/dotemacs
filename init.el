@@ -85,6 +85,8 @@
 
 (setq my-use-tree-sitter nil)
 
+(setq my-use-jarchive nil)
+
 ;;;; Load local init
 
 (let ((local-init (expand-file-name "local-init.el" user-emacs-directory)))
@@ -1283,3 +1285,11 @@
   :bind
   (:map scala-ts-mode-map
         ("<f5> I" . lsp-metals-build-import)))
+
+;;;; Jarchive
+
+(use-package jarchive
+  :ensure
+  :when my-use-jarchive
+  :config
+  (jarchive-setup))
