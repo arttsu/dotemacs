@@ -89,6 +89,8 @@
 
 (setq my-use-copilot nil)
 
+(setq my-use-kubel nil)
+
 ;;;; Load local init
 
 (let ((local-init (expand-file-name "local-init.el" user-emacs-directory)))
@@ -731,7 +733,24 @@
 
 ;;; TODO: Anki Editor
 
-;;; TODO: Kubel
+;;; Kubel
+
+;; https://github.com/abrochard/kubel
+
+(use-package kubel
+  :ensure
+  :when my-use-kubel
+  :after vterm
+  :config
+  (add-to-list 'vterm-tramp-shells '("kubectl" "/bin/bash"))
+  :bind
+  (("C-c K" . kubel)
+   :map kubel-mode-map
+   ("n" . next-line)
+   ("p" . previous-line)
+   ("N" . kubel-set-namespace)
+   ("v" . kubel-exec-vterm-pod)
+   ("P" . kubel-port-forward-pod)))
 
 ;;; Org
 
