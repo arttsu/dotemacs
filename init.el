@@ -1228,3 +1228,36 @@
   :when my-use-tree-sitter
   :custom
   (treesit-font-lock-level 4))
+
+;;; LSP Mode
+
+;; https://github.com/emacs-lsp/lsp-mode
+
+(defun my-lsp-corfu-setup ()
+  (setq-local completion-styles '(orderless)
+              completion-category-defaults nil))
+
+(use-package lsp-mode
+  :ensure
+  :custom
+  (lsp-keymap-prefix "<f5>")
+  (lsp-completion-provider :none)
+  (lsp-pylsp-plugins-black-enabled t)
+  (lsp-clojure-custom-server-command "~/.local/bin/clojure-lsp")
+  :hook
+  (python-mode . lsp)
+  (python-ts-mode . lsp)
+  (scala-mode . lsp)
+  (scala-ts-mode .lsp)
+  (clojure-mode . lsp)
+  (lsp-mode . my-lsp-corfu-setup)
+  :commands lsp
+  :bind
+  (:map lsp-mode-map
+        ([M-down-mouse-1] . mouse-set-point)
+        ([M-mouse-1] . lsp-find-definition)
+        ([M-mouse-3] . xref-go-back)))
+
+(use-package lsp-ui
+  :ensure
+  :commands lsp-ui-mode)
