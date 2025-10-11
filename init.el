@@ -1261,3 +1261,14 @@
 (use-package lsp-ui
   :ensure
   :commands lsp-ui-mode)
+
+;;; Scala
+
+;;;; Scala TS Mode
+
+;; https://github.com/KaranAhlawat/scala-ts-mode
+
+(use-package scala-ts-mode
+  :ensure
+  :interpreter "scala"
+  :mode (rx "." (or "scala" "sbt" "worksheet" "sc") string-end))
