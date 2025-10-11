@@ -99,7 +99,15 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
-;;; TODO: MacOS exec path from shell setup
+;;; MacOS Exec Path From Shell
+
+;; https://github.com/purcell/exec-path-from-shell
+
+(use-package exec-path-from-shell
+  :ensure
+  :when (my-macos-p)
+  :config
+  (exec-path-from-shell-initialize))
 
 ;;; Core setup
 
@@ -1200,3 +1208,11 @@
   (("M-s M-f" . org-node-find)
    ("M-s M-i" . org-node-insert-link)
    ("M-s M-t" . org-node-add-tags-here)))
+
+;;; envrc
+
+;; https://github.com/purcell/envrc
+
+(use-package envrc
+  :ensure
+  :hook (elpaca-after-init . envrc-global-mode))
