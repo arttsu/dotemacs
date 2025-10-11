@@ -1293,3 +1293,15 @@
   :when my-use-jarchive
   :config
   (jarchive-setup))
+
+;;; Python
+
+;;;; Python Pet
+
+;; https://github.com/wyuenho/emacs-pet
+
+(use-package pet
+  :ensure
+  :after envrc
+  :config
+  (add-hook 'python-base-mode-hook 'pet-mode -10))
