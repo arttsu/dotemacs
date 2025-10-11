@@ -572,6 +572,8 @@
   (yas-snippet-dirs (list (expand-file-name "snippets" user-emacs-directory)))
   :config
   (yas-global-mode))
+
+;; TODO: Try https://github.com/elken/yasnippet-capf.
 
 ;;; Hydra
 
