@@ -1194,6 +1194,16 @@
                (window-height . 0.3)
                (dedicated . t)))
 
+;;; Org Export
+
+;;;; Org Export to GitHub-flavored Markdown
+
+;; https://github.com/larstvei/ox-gfm
+
+(use-package ox-gfm
+  :ensure
+  :after org)
+
 ;;; Org Modern
 
 ;; https://github.com/minad/org-modern
@@ -1233,6 +1243,14 @@
   (("M-s M-f" . org-node-find)
    ("M-s M-i" . org-node-insert-link)
    ("M-s M-t" . org-node-add-tags-here)))
+
+;;; Babel Restclient
+
+;; https://github.com/alf/ob-restclient.el
+
+(use-package ob-restclient
+  :ensure
+  :after org)
 
 ;;; envrc
 
