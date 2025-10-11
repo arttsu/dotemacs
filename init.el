@@ -562,7 +562,16 @@
    ("M-g ;" . iy-go-to-or-up-to-continue)
    ("M-g ," . iy-go-to-or-up-to-continue-backward)))
 
-;;; TODO: Tempel or Yasnippet
+;;; Yasnippet
+
+;; https://github.com/joaotavora/yasnippet
+
+(use-package yasnippet
+  :ensure
+  :custom
+  (yas-snippet-dirs (list (expand-file-name "snippets" user-emacs-directory)))
+  :config
+  (yas-global-mode))
 
 ;;; Hydra
 
