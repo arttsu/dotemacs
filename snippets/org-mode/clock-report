@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: clock-report
+# key: clkrep
+# --
+#+BEGIN: clocktable :maxlevel 3 :scope agenda :block today :fileskip0 t :hidefiles t :compact t
+#+END
