@@ -1161,6 +1161,8 @@
                               (todo . " %i %-20(my-agenda-category-short) ")
                               (tags . " %i %-20(my-agenda-category-short) ")
                               (search . " %i %-20(my-agenda-category-short) ")))
+  (org-clock-persist 'history)
+  (org-clock-auto-clockout-timer 600)
   :config
   (require 'org-attach)
   (require 'org-id)
@@ -1169,6 +1171,8 @@
   (add-hook 'org-after-todo-state-change-hook 'my-org-remove-priority-when-done -10)
   (add-hook 'org-after-todo-state-change-hook 'my-org-undo-wont-do -10)
   (add-hook 'org-after-todo-state-change-hook 'my-checklist-auto-advance 10)
+  (org-clock-persistence-insinuate)
+  (org-clock-auto-clockout-insinuate)
   :bind
   (("C-c a" . org-agenda)
    ("C-c c" . org-capture)
