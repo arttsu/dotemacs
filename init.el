@@ -1163,6 +1163,7 @@
                               (search . " %i %-20(my-agenda-category-short) ")))
   (org-clock-persist 'history)
   (org-clock-auto-clockout-timer 600)
+  (org-log-into-drawer t)
   :config
   (require 'org-attach)
   (require 'org-id)
