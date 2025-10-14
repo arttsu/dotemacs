@@ -1071,7 +1071,39 @@
                 ((eq choice ?s) (my-open-project-new-session path))
                 ((eq choice ?d) nil)))))))
 
-;; Create Area
+;;;; Archive Project
+
+(defun my-archive-project ()
+  (interactive)
+  (let ((file-path (buffer-file-name)))
+    (when (yes-or-no-p "Archive this project?")
+      (let* ((title (my-org-get-top-level-heading))
+             (project-dir (file-name-directory file-path))
+             (archive-dir (expand-file-name "archive" project-dir))
+             (file-name (file-name-nondirectory file-path))
+             (archive-path (expand-file-name file-name archive-dir)))
+        (unless (file-directory-p archive-dir) (make-directory archive-dir t))
+        (with-temp-buffer
+          (insert-file-contents file-path)
+          (goto-char (point-min))
+          (org-mode)
+          (when (org-at-heading-p)
+            (org-entry-put (point) "PRIORITY" nil)
+            (org-entry-put (point) "ARCHIVED" (my-org-now-timestamp)))
+          (write-region (point-min) (point-max) file-path))
+        (rename-file file-path archive-path)
+        (set-visited-file-name archive-path)
+        (set-buffer-modified-p nil)
+        (revert-buffer t t)
+        (message "Project archived: %s" archive-path)
+        (let ((session-name (file-name-sans-extension file-name)))
+          (cond ((string= (easysession-get-session-name) session-name) (when (yes-or-no-p "Delete the session and switch to 'main'?")
+                                                                         (easysession-switch-to-and-restore-geometry "main")
+                                                                         (easysession-delete session-name)))
+                ((easysession--exists session-name) (when (yes-or-no-p (format "Delete the session '%s'? " session-name))
+                                                      (easysession-delete session-name)))))))))
+
+;;;; Create Area
 
 (defun my-create-area-content (title)
   (let ((template (with-temp-buffer (insert-file-contents (my-capture-template-path "area")) (buffer-string)))
