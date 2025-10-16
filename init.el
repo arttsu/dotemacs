@@ -892,6 +892,14 @@
     (easysession-switch-to-and-restore-geometry session-title)
     (when file-to-open (find-file file-to-open))))
 
+(defun my-org-add-update ()
+  (interactive)
+  (condition-case nil
+      (org-back-to-heading)
+    (error (user-error "Point is not inside a heading.")))
+  (org-end-of-subtree)
+  (insert (concat "\n" "-----" "\n" "Update " (my-org-now-timestamp) ": ")))
+
 ;;;; Org Auto-format
 
 (defun my-org-add-created-timestamp-to-heading ()
@@ -1222,7 +1230,8 @@
    ("C-c o f" . my-org-auto-format)
    ("C-c o x" . my-org-complete-as-wont-do)
    ("C-c o C-r" . my-org-refile-note)
-   ("C-c o M-r" . my-org-refile-copy-note)))
+   ("C-c o M-r" . my-org-refile-copy-note)
+   ("C-c o u" . my-org-add-update)))
 
 ;;;; Org Side Windows
 
@@ -1270,6 +1279,7 @@
                                (?D :background "MediumOrchid" :foreground "White")
                                (?E :background "Seashell3" :foreground "Black")))
   (org-modern-table nil)
+  (org-modern-horizontal-rule nil)
   :custom-face
   (org-modern-tag ((t (:background "CornflowerBlue" :foreground "White" :slant italic))))
   :config
