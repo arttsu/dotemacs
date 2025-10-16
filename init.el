@@ -1404,6 +1404,25 @@
   :config
   (add-hook 'python-base-mode-hook 'pet-mode -10))
 
+;;; Clojure
+
+;;;; Clojure Mode
+
+;; https://github.com/clojure-emacs/clojure-mode
+
+(use-package clojure-mode
+  :ensure)
+
+;;;; CIDER
+
+;; https://github.com/clojure-emacs/cider
+
+(use-package cider
+  :ensure
+  :hook (clojure-mode . cider-mode)
+  :custom
+  (cider-save-file-on-load t))
+
 ;;; Copilot
 
 ;; https://github.com/copilot-emacs/copilot.el

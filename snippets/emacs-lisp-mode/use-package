@@ -1,0 +1,5 @@
+# key: use
+# name: use-package
+# --
+(use-package $1
+  :ensure$0)
