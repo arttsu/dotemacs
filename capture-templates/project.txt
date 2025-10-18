@@ -5,6 +5,8 @@
 :CREATED: %4$s
 :END:
 ** Resources
+*** Info
+- Area ::
 *** Attachments :SYNC_ATTACH:
 ** Todos
 :PROPERTIES:
