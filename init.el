@@ -1266,6 +1266,22 @@
 
 ;; https://github.com/minad/org-modern
 
+(defface my-done-checkbox-face
+  '((t (:inherit org-done)))
+  "Face for a 'done' Org mode checkbox.")
+
+(defconst my-done-checkbox-rx (rx line-start
+                                  (* space)
+                                  (any "-" "+" "*")
+                                  (+ space)
+                                  "[X]"
+                                  (* (not "\n"))))
+
+(defun my-org-modern-font-lock-done-checkbox ()
+  (font-lock-add-keywords 'org-mode
+                          `((,my-done-checkbox-rx 0 'my-done-checkbox-face prepend))
+                          'append))
+
 (use-package org-modern
   :ensure
   :after org
@@ -1283,7 +1299,8 @@
   :custom-face
   (org-modern-tag ((t (:background "CornflowerBlue" :foreground "White" :slant italic))))
   :config
-  (global-org-modern-mode))
+  (global-org-modern-mode)
+  (my-org-modern-font-lock-done-checkbox))
 
 ;;; Org Node
 
