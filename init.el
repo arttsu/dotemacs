@@ -742,7 +742,12 @@
   (ledger-reports-add "this-month-unbudgeted" "%(binary) -f %(ledger-file) --monthly -p \"this month\" --unbudgeted bal ^expenses")
   (ledger-reports-add "last-month-unbudgeted" "%(binary) -f %(ledger-file) --monthly -p \"last month\" --unbudgeted bal ^expenses"))
 
-;;; TODO: Anki Editor
+;;; Anki Editor
+
+;; https://github.com/louietan/anki-editor
+
+(use-package anki-editor
+  :ensure)
 
 ;;; Kubel
 
@@ -1180,7 +1185,7 @@
   (org-special-ctrl-a/e t)
   (org-hide-emphasis-markers t)
   (org-pretty-entities t)
-  (org-use-speed-commands t)
+  (org-use-speed-commands nil)
   (org-use-sub-superscripts '{})
   (org-src-window-setup 'split-window-below)
   (org-confirm-babel-evaluate nil)
