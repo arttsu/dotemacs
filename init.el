@@ -1174,6 +1174,18 @@
                 ((eq choice ?t) (find-file-other-tab path))
                 ((eq choice ?d) nil)))))))
 
+;;;; Org Ctrl-C Ctrl-C
+
+(defun my-org-ctrl-c-ctrl-c-heading ()
+  (cond ((string= (org-get-todo-state) "TODO") (org-todo 'done))
+        ((string= (org-get-todo-state) "DONE") (org-todo 'todo))))
+
+(defun my-org-ctrl-c-ctrl-c ()
+  (interactive)
+  (if (org-at-heading-p)
+      (my-org-ctrl-c-ctrl-c-heading)
+    (call-interactively #'org-ctrl-c-ctrl-c)))
+
 ;;;; Org Config
 
 (use-package org
@@ -1236,7 +1248,8 @@
    ("C-c o x" . my-org-complete-as-wont-do)
    ("C-c o C-r" . my-org-refile-note)
    ("C-c o M-r" . my-org-refile-copy-note)
-   ("C-c o u" . my-org-add-update)))
+   ("C-c o u" . my-org-add-update)
+   ("C-c C-c" . my-org-ctrl-c-ctrl-c)))
 
 ;;;; Org Side Windows
 
