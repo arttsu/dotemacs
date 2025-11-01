@@ -1203,7 +1203,7 @@
   (org-special-ctrl-a/e t)
   (org-hide-emphasis-markers t)
   (org-pretty-entities t)
-  (org-use-speed-commands nil)
+  (org-use-speed-commands t)
   (org-use-sub-superscripts '{})
   (org-src-window-setup 'split-window-below)
   (org-confirm-babel-evaluate nil)
