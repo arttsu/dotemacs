@@ -772,7 +772,7 @@
 
 ;; TODO: Split into pages
 
-(defun my-inbox-path (org-dir) (expand-file-name "agenda/inbox.org" org-dir))
+(defun my-inbox-path (org-dir) (expand-file-name "agenda/local-inbox.org" org-dir))
 
 (defun my-org-entry-scheduled-or-deadline (point)
   (or (org-get-scheduled-time (point)) (org-get-deadline-time (point))))
@@ -1531,4 +1531,12 @@
 ;; https://github.com/leon-barrett/just-mode.el
 
 (use-package just-mode
+  :ensure)
+
+;;; Lambda World
+
+(use-package haskell-mode
+  :ensure)
+
+(use-package q-mode
   :ensure)
