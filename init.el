@@ -1320,6 +1320,7 @@
                                (?E :background "Seashell3" :foreground "Black")))
   (org-modern-table nil)
   (org-modern-horizontal-rule nil)
+  (org-modern-tag-faces '(("SYNC_ATTACH" :background "SlateGrey" :foreground "GhostWhite" :slant normal)))
   :custom-face
   (org-modern-tag ((t (:background "CornflowerBlue" :foreground "White" :slant italic))))
   :config
