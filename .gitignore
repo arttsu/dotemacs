@@ -17,3 +17,5 @@
 /tree-sitter/
 /workspace/
 /org-clock-save.el
+/.dap-breakpoints
+/url/
