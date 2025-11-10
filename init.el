@@ -1238,6 +1238,8 @@
   (add-hook 'org-after-todo-state-change-hook 'my-checklist-auto-advance 10)
   (org-clock-persistence-insinuate)
   (org-clock-auto-clockout-insinuate)
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               '((shell . t)))
   :bind
   (("C-c a" . org-agenda)
    ("C-c c" . org-capture)
