@@ -8,7 +8,7 @@
 *** Info
 - Area ::
 *** Attachments :SYNC_ATTACH:
-** Todos
+** Tasks
 :PROPERTIES:
 :STYLE: checklist
 :END:

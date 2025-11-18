@@ -6,7 +6,7 @@
 :END:
 ** Resources
 *** Attachments :SYNC_ATTACH:
-** Todos
+** Tasks
 :PROPERTIES:
 :STYLE: checklist
 :END:
