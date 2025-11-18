@@ -1543,3 +1543,12 @@
 
 (use-package q-mode
   :ensure)
+
+;;; Elfeed
+
+;; https://github.com/skeeto/elfeed
+
+(use-package elfeed
+  :ensure
+  :custom
+  (elfeed-feeds '("https://pluralistic.net/feed/")))
