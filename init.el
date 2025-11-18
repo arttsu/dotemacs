@@ -1254,8 +1254,8 @@
    ("C-c o r" . my-reset-checklist)
    ("C-c o f" . my-org-auto-format)
    ("C-c o x" . my-org-complete-as-wont-do)
-   ("C-c o C-r" . my-org-refile-note)
-   ("C-c o M-r" . my-org-refile-copy-note)
+   ("C-c o C-w" . my-org-refile-note)
+   ("C-c o M-w" . my-org-refile-copy-note)
    ("C-c o u" . my-org-add-update)
    ("C-c C-c" . my-org-ctrl-c-ctrl-c)))
 
