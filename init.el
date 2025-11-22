@@ -746,8 +746,24 @@
 
 ;; https://github.com/louietan/anki-editor
 
+(define-derived-mode my-anki-mode org-mode "Anki")
+
+(add-to-list 'auto-mode-alist '("\\.anki\\'" . my-anki-mode))
+
+(defun my-anki-editor-mode-enable ()
+  (let ((major-mode 'org-mode)) ;; anki-editor requires 'org-mode' major mode
+    (anki-editor-mode 1)))
+
 (use-package anki-editor
-  :ensure)
+  :ensure
+  :hook (my-anki-mode . my-anki-editor-mode-enable)
+  :bind
+  (:map my-anki-mode-map
+        ("C-<return>" . anki-editor-insert-note)
+        ("C-c p p" . anki-editor-push-note-at-point)
+        ("C-c p P" . anki-editor-push-notes)
+        ("C-c p n" . anki-editor-push-new-notes)
+        ("C-c p r" . anki-editor-retry-failure-notes)))
 
 ;;; Kubel
 
