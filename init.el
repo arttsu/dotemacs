@@ -1363,6 +1363,15 @@
    ("M-s M-i" . org-node-insert-link)
    ("M-s M-t" . org-node-add-tags-here)))
 
+;;; Org Exporters
+
+;;;; Org Slack Exporter
+
+;; https://github.com/titaniumbones/ox-slack
+
+(use-package ox-slack
+  :ensure)
+
 ;;; Babel Restclient
 
 ;; https://github.com/alf/ob-restclient.el
