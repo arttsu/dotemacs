@@ -1577,3 +1577,22 @@
   :ensure
   :custom
   (elfeed-feeds '("https://pluralistic.net/feed/")))
+
+;;; Pulsar
+
+;; https://protesilaos.com/emacs/pulsar
+
+(use-package pulsar
+  :ensure
+  :custom
+  (pulsar-delay 0.055)
+  (pulsar-iterations 10)
+  (pulsar-face 'pulsar-green)
+  (pulsar-region-face 'pulsar-yellow)
+  (pulsar-highlight-face 'pulsar-magenta)
+  :config
+  (pulsar-global-mode 1)
+  :bind
+  (:map global-map
+        ("C-x l" . pulsar-pulse-line)
+        ("C-x L" . pulsar-highlight-temporarily)))
