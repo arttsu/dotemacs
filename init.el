@@ -131,9 +131,9 @@
 
 ;;;; use-package Emacs
 
-(defun my-disabled-window-toggle-side-windows ()
-  (interactive)
-  (user-error "window-toggle-side-window: Disabled, as it seems to be breaking easysessions."))
+;; (defun my-disabled-window-toggle-side-windows ()
+;;   (interactive)
+;;   (user-error "window-toggle-side-window: Disabled, as it seems to be breaking easysessions."))
 
 (use-package emacs
   :custom
@@ -181,8 +181,7 @@
    ("M-z" . zap-up-to-char)
    ("M-Z" . zap-to-char)
    ("C-x K" . crux-delete-file-and-buffer)
-   ("C-x E" . eval-buffer)
-   ("C-x w s" . my-disabled-window-toggle-side-windows)))
+   ("C-x E" . eval-buffer)))
 
 ;;; Dired
 
@@ -790,7 +789,17 @@
 
 ;; TODO: Split into pages
 
-(defun my-inbox-path (org-dir) (expand-file-name "agenda/local-inbox.org" org-dir))
+(defun my-org-has-any-tag (&rest tags)
+  (let ((entry-tags (org-get-tags)))
+    (seq-some (lambda (tag) (member tag entry-tags)) tags)))
+
+(defun my-org-direct-parent-has-any-tag (&rest tags)
+  (save-excursion
+    (let ((parent-pos (org-up-heading-safe)))
+      (when parent-pos
+        (apply 'my-org-has-any-tag tags)))))
+
+(defun my-inbox-path (org-dir) (expand-file-name "agenda/inbox.org" org-dir))
 
 (defun my-org-entry-scheduled-or-deadline (point)
   (or (org-get-scheduled-time (point)) (org-get-deadline-time (point))))
@@ -826,7 +835,7 @@
 (defun my-reset-checklist ()
   (interactive)
   (my-org-require-at-heading)
-  (when (not (string= (org-entry-get (point) "STYLE") "checklist"))
+  (when (not (my-org-has-any-tag "CHECKLIST"))
     (error "Reset checklist: Not a checklist"))
   (when (yes-or-no-p "Reset the checklist?")
     (org-map-entries (lambda () (org-todo "TODO")) nil 'tree)
@@ -842,7 +851,7 @@
 (defun my-checklist-auto-advance ()
   (ignore-errors
     (when (and (not (eq this-command 'org-agenda-todo))
-               (string= (org-entry-get-with-inheritance "STYLE") "checklist")
+               (my-org-direct-parent-has-any-tag "CHECKLIST")
                (string= org-state "DONE"))
       (run-with-idle-timer 0 nil 'my-checklist-do-auto-advance))))
 
@@ -868,8 +877,17 @@
 
 (defconst my-org-default-timestamp "[1900-01-01 Mon 00:00]")
 
+;; (defun my-org-extract-created-timestamp ()
+;;   (or (org-entry-get (point) "CREATED") my-org-default-timestamp))
+
 (defun my-org-extract-created-timestamp ()
-  (or (org-entry-get (point) "CREATED") my-org-default-timestamp))
+  (save-excursion
+    (save-restriction
+      (org-narrow-to-subtree)
+      (goto-char (point-min))
+      (if (re-search-forward (rx "Created: " (group "[" (1+ (not "]")) "]")) nil t)
+          (match-string-no-properties 1)
+        my-org-default-timestamp))))
 
 (defun my-org-extract-closed-timestamp ()
   (save-excursion
@@ -880,7 +898,18 @@
           (match-string-no-properties 1)
         my-org-default-timestamp))))
 
-(defun my-sort-checklist ()
+;; (defun my-sort-checklist ()
+;;   (interactive)
+;;   (my-org-require-at-heading)
+;;   (org-sort-entries nil ?f 'my-org-extract-created-timestamp)
+;;   (org-sort-entries nil ?f 'my-org-extract-closed-timestamp)
+;;   ;; By priority.
+;;   (org-sort-entries nil ?p)
+;;   ;; By TODO state.
+;;   (org-sort-entries nil ?o))
+
+
+(defun my-org-sort-entries ()
   (interactive)
   (my-org-require-at-heading)
   (org-sort-entries nil ?f 'my-org-extract-created-timestamp)
@@ -890,11 +919,11 @@
   ;; By TODO state.
   (org-sort-entries nil ?o))
 
-(defun my-sort-log ()
-  (interactive)
-  (my-org-require-at-heading)
-  ;; Reverse sort by 'CREATED' timestamp.
-  (org-sort-entries nil ?f (lambda () (- (org-time-string-to-seconds (my-org-extract-created-timestamp))))))
+;; (defun my-sort-log ()
+;;   (interactive)
+;;   (my-org-require-at-heading)
+;;   ;; Reverse sort by 'CREATED' timestamp.
+;;   (org-sort-entries nil ?f (lambda () (- (org-time-string-to-seconds (my-org-extract-created-timestamp))))))
 
 (defun my-org-has-children ()
   (my-org-require-at-heading)
@@ -902,14 +931,13 @@
     (org-goto-first-child)))
 
 ;; TODO: Use 'user-error' in other places where appropriate.
-(defun my-sort-entries ()
-  (interactive)
-  (my-org-require-at-heading)
-  (when (my-org-has-children)
-    (let ((style (org-entry-get (point) "STYLE")))
-      (cond ((string= style "checklist") (my-sort-checklist))
-            ((string= style "log") (my-sort-log))
-            (t (user-error "Sort Entries: No supported STYLE property found."))))))
+;; (defun my-sort-entries ()
+;;   (interactive)
+;;   (my-org-require-at-heading)
+;;   (when (my-org-has-children)
+;;     (cond ((my-org-has-any-tag "CHECKLIST") (my-sort-checklist))
+;;           ((my-org-has-any-tag "LOG") (my-sort-log))
+;;           (t (user-error "Sort Entries: No supported tag found.")))))
 
 (defun my-easysession-from-heading ()
   (interactive)
@@ -927,19 +955,19 @@
       (org-back-to-heading)
     (error (user-error "Point is not inside a heading.")))
   (org-end-of-subtree)
-  (insert (concat "\n" "-----" "\n" "Update " (my-org-now-timestamp) ": ")))
+  (insert (concat "\n" "-----" "\n" "Updated: " (my-org-now-timestamp) "\n\n")))
 
 ;;;; Org Auto-format
 
-(defun my-org-add-created-timestamp-to-heading ()
-  (my-org-require-at-heading)
-  (let* ((timestamp (my-org-extract-created-timestamp))
-         (heading (org-get-heading t t t t))
-         (clean-heading (replace-regexp-in-string (rx string-start "[" (= 4 digit) "-" (= 2 digit) "-" (= 2 digit) space (= 3 letter) space (= 2 digit) ":" (= 2 digit) "] ")
-                                                  ""
-                                                  heading)))
-    (unless (string= timestamp my-org-default-timestamp)
-      (org-edit-headline (format "%s %s" timestamp clean-heading)))))
+;; (defun my-org-add-created-timestamp-to-heading ()
+;;   (my-org-require-at-heading)
+;;   (let* ((timestamp (my-org-extract-created-timestamp))
+;;          (heading (org-get-heading t t t t))
+;;          (clean-heading (replace-regexp-in-string (rx string-start "[" (= 4 digit) "-" (= 2 digit) "-" (= 2 digit) space (= 3 letter) space (= 2 digit) ":" (= 2 digit) "] ")
+;;                                                   ""
+;;                                                   heading)))
+;;     (unless (string= timestamp my-org-default-timestamp)
+;;       (org-edit-headline (format "%s %s" timestamp clean-heading)))))
 
 (defun my-org-update-attachments-heading ()
   (my-org-require-at-heading)
@@ -955,14 +983,21 @@
           (dolist (attachment attachments)
             (insert (format "- [[file:%s][%s]]\n" attachment (file-name-nondirectory attachment)))))))))
 
+;; (defun my-org-auto-format ()
+;;   (interactive)
+;;   (ignore-errors
+;;     (org-map-entries (lambda () (org-map-entries 'my-org-add-created-timestamp-to-heading nil 'tree)) "LOG" 'file))
+;;   (ignore-errors
+;;     (org-map-entries 'my-sort-entries "CHECKLIST|LOG" 'file))
+;;   (ignore-errors
+;;     (org-map-entries 'my-org-update-attachments-heading "ATTACHMENTS" 'file)))
+
 (defun my-org-auto-format ()
   (interactive)
   (ignore-errors
-    (org-map-entries (lambda () (org-map-entries 'my-org-add-created-timestamp-to-heading nil 'tree)) "STYLE=\"log\"" 'file))
+    (org-map-entries 'my-org-sort-entries "SORT" 'file))
   (ignore-errors
-    (org-map-entries 'my-sort-entries "STYLE=\"checklist\"|STYLE=\"log\"" 'file))
-  (ignore-errors
-    (org-map-entries 'my-org-update-attachments-heading "SYNC_ATTACH" 'file)))
+    (org-map-entries 'my-org-update-attachments-heading "ATTACHMENTS" 'file)))
 
 (defun my-list-org-files (dir)
   (directory-files dir t (rx ".org" string-end)))
@@ -975,7 +1010,7 @@
         (let* ((local-note-files (my-list-org-files (expand-file-name "notes" my-org-local-dir)))
                (shared-note-files (my-list-org-files (expand-file-name "notes" my-org-shared-dir)))
                (note-targets (append local-note-files shared-note-files)))
-          (setq org-refile-targets `((,note-targets :maxlevel 3)))
+          (setq org-refile-targets `((,note-targets :tag "REFILE")))
           (apply refile-f ()))
       (setq org-refile-targets original-targets))))
 
@@ -1014,6 +1049,9 @@
 
 ;;;; Org Agenda
 
+(defun my-project-or-area-p ()
+  (my-org-has-any-tag "PROJECT" "AREA"))
+
 (defun my-agenda-files (org-dir)
   (list (expand-file-name "agenda" org-dir)
         (expand-file-name "agenda/projects" org-dir)
@@ -1021,8 +1059,8 @@
 
 (defun my-agenda-category-short ()
   (if (derived-mode-p 'org-mode)
-      (if-let ((type (org-entry-get (point) "MY_TYPE")))
-          "" ;; Project or area - no category necessary.
+      (if (my-project-or-area-p)
+          ""
         (if-let ((top-level-heading (my-org-get-top-level-heading)))
             (if (> (length top-level-heading) 19)
                 (concat (substring top-level-heading 0 18) "…")
@@ -1031,10 +1069,9 @@
     ""))
 
 (defun my-day-agenda-low-prio-todo ()
-  (let ((priority (org-get-priority (thing-at-point 'line t)))
-        (type (org-entry-get-with-inheritance "MY_TYPE")))
+  (let ((priority (org-get-priority (thing-at-point 'line t))))
     (or (= priority 0)
-        (and type (<= priority 2000)))))
+        (and (<= priority 2000) (not (my-org-direct-parent-has-any-tag "XPRIO"))))))
 
 (defun my-day-agenda-skip-todo ()
   (let ((subtree-end (save-excursion (org-end-of-subtree t))))
@@ -1057,11 +1094,11 @@
     (todo "TODO" ((org-agenda-overriding-header "Non-scheduled To-dos")
                   (org-agenda-skip-function 'my-day-agenda-skip-todo)
                   (org-agenda-files ',files)))
-    (tags "MY_TYPE=\"project\"" ((org-agenda-overriding-header "Projects")
-                                 (org-tags-match-list-sublevels nil)
-                                 (org-agenda-sorting-strategy '(priority-down))
-                                 (org-agenda-skip-function 'my-day-agenda-skip-project)
-                                 (org-agenda-files ',files)))))
+    (tags "PROJECT" ((org-agenda-overriding-header "Projects")
+                     (org-tags-match-list-sublevels nil)
+                     (org-agenda-sorting-strategy '(priority-down))
+                     (org-agenda-skip-function 'my-day-agenda-skip-project)
+                     (org-agenda-files ',files)))))
 
 (defun my-day-agenda-commands ()
   (let* ((all-files (append (my-agenda-files my-org-local-dir) (my-agenda-files my-org-shared-dir)))
@@ -1236,7 +1273,7 @@
   (org-attach-id-dir (expand-file-name "attachments" my-org-local-dir))
   (org-capture-templates (my-capture-templates my-org-local-dir))
   (org-agenda-files (append (my-agenda-files my-org-local-dir) (my-agenda-files my-org-shared-dir)))
-  (org-refile-targets '((org-agenda-files :level . 2)))
+  (org-refile-targets '((org-agenda-files :tag . "REFILE")))
   (org-agenda-custom-commands (my-day-agenda-commands))
   (org-agenda-prefix-format '((agenda . " %i %-20(my-agenda-category-short) %?-12t% s")
                               (todo . " %i %-20(my-agenda-category-short) ")
@@ -1246,6 +1283,8 @@
   (org-clock-auto-clockout-timer 600)
   (org-clock-out-remove-zero-time-clocks t)
   (org-log-into-drawer t)
+  (org-tags-exclude-from-inheritance '("CHECKLIST" "SORT" "ATTACHMENTS" "PROJECT" "AREA" "REFILE" "XPRIO"))
+  (org-agenda-hide-tags-regexp (rx (or "PROJECT" "ATTACH")))
   :config
   (require 'org-attach)
   (require 'org-id)
@@ -1279,22 +1318,22 @@
 
 ;;;; Org Side Windows
 
-(add-to-list 'display-buffer-alist
-             `(,(rx (or "*Org Agenda*" "*Agenda Commands*"))
-               display-buffer-in-side-window
-               (side . right)
-               (slot . 0)
-               (window-parameters . ((no-delete-other-windows . t)))
-               (window-width . 100)
-               (dedicated . t)))
+;; (add-to-list 'display-buffer-alist
+;;              `(,(rx (or "*Org Agenda*" "*Agenda Commands*"))
+;;                display-buffer-in-side-window
+;;                (side . right)
+;;                (slot . 0)
+;;                (window-parameters . ((no-delete-other-windows . t)))
+;;                (window-width . 100)
+;;                (dedicated . t)))
 
-(add-to-list 'display-buffer-alist
-             `(,(rx string-start "CAPTURE-")
-               display-buffer-in-direction
-               (direction . bottom)
-               (window . root)
-               (window-height . 0.3)
-               (dedicated . t)))
+;; (add-to-list 'display-buffer-alist
+;;              `(,(rx string-start "CAPTURE-")
+;;                display-buffer-in-direction
+;;                (direction . bottom)
+;;                (window . root)
+;;                (window-height . 0.3)
+;;                (dedicated . t)))
 
 ;;; Org Export
 
@@ -1340,7 +1379,14 @@
                                (?E :background "Seashell3" :foreground "Black")))
   (org-modern-table nil)
   (org-modern-horizontal-rule nil)
-  (org-modern-tag-faces '(("SYNC_ATTACH" :background "SlateGrey" :foreground "GhostWhite" :slant normal)))
+  (org-modern-tag-faces '(("CHECKLIST" :inherit default :height 0.75 :slant normal)
+                          ("SORT" :inherit default :height 0.75 :slant normal)
+                          ("ATTACHMENTS" :inherit default :height 0.75 :slant normal)
+                          ("PROJECT" :inherit default :height 0.75 :slant normal)
+                          ("AREA" :inherit default :height 0.75 :slant normal)
+                          ("REFILE" :inherit default :height 0.75 :slant normal)
+                          ("XPRIO" :inherit default :height 0.75 :slant normal)
+                          ("ATTACH" :background "HotPink" :foreground "White")))
   :custom-face
   (org-modern-tag ((t (:background "CornflowerBlue" :foreground "White" :slant italic))))
   :config
@@ -1586,6 +1632,7 @@
 
 (use-package pulsar
   :ensure
+  :demand
   :custom
   (pulsar-delay 0.055)
   (pulsar-iterations 10)

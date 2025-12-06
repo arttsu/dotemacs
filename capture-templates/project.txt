@@ -1,18 +1,10 @@
-* %1$s %2$s
+* %1$s %2$s :PROJECT:
 :PROPERTIES:
 :ID: %3$s
-:MY_TYPE: project
-:CREATED: %4$s
 :END:
-** Resources
-*** Info
-- Area ::
-*** Attachments :SYNC_ATTACH:
-** Tasks
-:PROPERTIES:
-:STYLE: checklist
-:END:
-** Log
-:PROPERTIES:
-:STYLE: log
-:END:
+** Info
+Created: %4$s Area:
+** Tasks :REFILE:SORT:CHECKLIST:
+** Notes :REFILE:SORT:
+** Links :REFILE:SORT:
+** Attachments :ATTACHMENTS:
