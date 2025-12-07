@@ -5,3 +5,5 @@
 ** Info
 Created: %3$s
 ** Notes :REFILE:SORT:
+** Links :REFILE:SORT:
+** Attachments :ATTACHMENTS:
