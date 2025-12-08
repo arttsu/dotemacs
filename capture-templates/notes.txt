@@ -1,4 +1,4 @@
-* %1$s
+* %1$s :NOTES:
 :PROPERTIES:
 :ID: %2$s
 :END:
