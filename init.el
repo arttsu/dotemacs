@@ -1283,8 +1283,8 @@
   (org-clock-auto-clockout-timer 600)
   (org-clock-out-remove-zero-time-clocks t)
   (org-log-into-drawer t)
-  (org-tags-exclude-from-inheritance '("CHECKLIST" "SORT" "ATTACHMENTS" "PROJECT" "AREA" "REFILE" "XPRIO"))
-  (org-agenda-hide-tags-regexp (rx (or "PROJECT" "ATTACH" "XPRIO")))
+  (org-tags-exclude-from-inheritance '("CHECKLIST" "SORT" "ATTACHMENTS" "PROJECT" "AREA" "REFILE" "XPRIO" "NOTES" "NODE"))
+  (org-agenda-hide-tags-regexp (rx (or "PROJECT" "ATTACH" "XPRIO" "NODE")))
   :config
   (require 'org-attach)
   (require 'org-id)
@@ -1386,6 +1386,8 @@
                           ("AREA" :inherit default :height 0.75 :slant normal)
                           ("REFILE" :inherit default :height 0.75 :slant normal)
                           ("XPRIO" :inherit default :height 0.75 :slant normal)
+                          ("NOTES" :inherit default :height 0.75 :slant normal)
+                          ("NODE" :inherit default :height 0.75 :slant normal)
                           ("ATTACH" :background "HotPink" :foreground "White")))
   :custom-face
   (org-modern-tag ((t (:background "CornflowerBlue" :foreground "White" :slant italic))))
@@ -1396,6 +1398,9 @@
 ;;; Org Node
 
 ;; https://github.com/meedstrom/org-node
+
+(defun my-org-node-filter-fn ()
+  (my-org-has-any-tag "PROJECT" "AREA" "NOTES" "NODE"))
 
 (use-package org-node
   :ensure
