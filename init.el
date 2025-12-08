@@ -1399,14 +1399,22 @@
 
 ;; https://github.com/meedstrom/org-node
 
-(defun my-org-node-filter-fn ()
-  (my-org-has-any-tag "PROJECT" "AREA" "NOTES" "NODE"))
+(setq my-org-node-tag-allowlist (make-hash-table :test 'equal))
+(puthash "PROJECT" t my-org-node-tag-allowlist)
+(puthash "AREA" t my-org-node-tag-allowlist)
+(puthash "NOTES" t my-org-node-tag-allowlist)
+(puthash "NODE" t my-org-node-tag-allowlist)
+
+(defun my-org-node-filter-fn (node)
+  (let ((node-tags (org-mem-tags node)))
+    (seq-some (lambda (tag) (gethash tag my-org-node-tag-allowlist)) node-tags)))
 
 (use-package org-node
   :ensure
   :custom
   (org-mem-do-sync-with-org-id t)
   (org-mem-watch-dirs (list my-org-local-dir my-org-shared-dir))
+  (org-node-filter-fn 'my-org-node-filter-fn)
   :config
   (org-mem-updater-mode)
   (org-node-cache-mode)
