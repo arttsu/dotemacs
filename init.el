@@ -1071,7 +1071,7 @@
 (defun my-day-agenda-low-prio-todo ()
   (let ((priority (org-get-priority (thing-at-point 'line t))))
     (or (= priority 0)
-        (and (<= priority 2000) (not (my-org-direct-parent-has-any-tag "XPRIO"))))))
+        (and (<= priority 2000) (not (my-org-has-any-tag "XPRIO")) (not (my-org-direct-parent-has-any-tag "XPRIO"))))))
 
 (defun my-day-agenda-skip-todo ()
   (let ((subtree-end (save-excursion (org-end-of-subtree t))))
@@ -1284,7 +1284,7 @@
   (org-clock-out-remove-zero-time-clocks t)
   (org-log-into-drawer t)
   (org-tags-exclude-from-inheritance '("CHECKLIST" "SORT" "ATTACHMENTS" "PROJECT" "AREA" "REFILE" "XPRIO"))
-  (org-agenda-hide-tags-regexp (rx (or "PROJECT" "ATTACH")))
+  (org-agenda-hide-tags-regexp (rx (or "PROJECT" "ATTACH" "XPRIO")))
   :config
   (require 'org-attach)
   (require 'org-id)
