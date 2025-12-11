@@ -351,6 +351,20 @@
   (:map vertico-map
         ("C-;" . vertico-quick-insert)))
 
+;;; Marginalia
+
+;; https://github.com/minad/marginalia
+
+(use-package marginalia
+  :ensure
+  :after vertico
+  :demand
+  :config
+  (marginalia-mode)
+  :bind
+  (:map minibuffer-local-map
+        ("M-A" . marginalia-cycle)))
+
 ;;; Orderless
 
 ;; https://github.com/oantolin/orderless
