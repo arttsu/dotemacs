@@ -183,6 +183,15 @@
    ("C-x K" . crux-delete-file-and-buffer)
    ("C-x E" . eval-buffer)))
 
+;;; Repeat maps
+
+;; https://karthinks.com/software/it-bears-repeating/
+
+(defvar-keymap tab-bar-history-repeat-map
+  :repeat t
+  "<right>" #'tab-bar-history-forward
+  "<left>" #'tab-bar-history-back)
+
 ;;; Dired
 
 (use-package dired
