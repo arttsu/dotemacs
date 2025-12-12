@@ -158,6 +158,8 @@
     (set-frame-font my-font nil t))
   (when (my-windows-p)
     (set-fontset-font t 'unicode "Segoe UI Emoji" nil 'append))
+  (when (my-macos-p)
+    (setq mac-right-option-modifier 'none))
   (scroll-bar-mode -1)
   (tool-bar-mode -1)
   (menu-bar-mode -1)
