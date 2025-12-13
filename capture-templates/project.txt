@@ -1,10 +1,11 @@
-* %1$s %2$s :PROJECT:
+* %1$s %2$s :project:
 :PROPERTIES:
 :ID: %3$s
 :END:
 ** Info
-Created: %4$s Area:
-** Tasks :REFILE:SORT:CHECKLIST:
-** Notes :REFILE:SORT:
-** Links :REFILE:SORT:
-** Attachments :ATTACHMENTS:
+Created: %4$s \\
+Parents: \\
+** Tasks :refile:sort:checklist:
+** Notes :refile:
+** Links :refile:
+** Attachments :attachments:

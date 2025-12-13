@@ -1,9 +1,0 @@
-* %1$s :NOTES:
-:PROPERTIES:
-:ID: %2$s
-:END:
-** Info
-Created: %3$s
-** Notes :REFILE:SORT:
-** Links :REFILE:SORT:
-** Attachments :ATTACHMENTS:

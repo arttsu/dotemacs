@@ -1,10 +1,11 @@
-* %1$s :AREA:
+* %1$s :area:
 :PROPERTIES:
 :ID: %2$s
 :END:
 ** Info
-Created: %3$s
-** Tasks :REFILE:SORT:CHECKLIST:
-** Notes :REFILE:SORT:
-** Links :REFILE:SORT:
-** Attachments :ATTACHMENTS:
+Created: %3$s \\
+Parents: \\
+** Someday :refile:sort:checklist:
+** Notes :refile:
+** Links :refile:
+** Attachments :attachments:

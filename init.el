@@ -824,7 +824,7 @@
       (when parent-pos
         (apply 'my-org-has-any-tag tags)))))
 
-(defun my-inbox-path (org-dir) (expand-file-name "agenda/inbox.org" org-dir))
+(defun my-inbox-path (org-dir) (expand-file-name "gtd/inbox.org" org-dir))
 
 (defun my-org-entry-scheduled-or-deadline (point)
   (or (org-get-scheduled-time (point)) (org-get-deadline-time (point))))
@@ -860,7 +860,7 @@
 (defun my-reset-checklist ()
   (interactive)
   (my-org-require-at-heading)
-  (when (not (my-org-has-any-tag "CHECKLIST"))
+  (when (not (my-org-has-any-tag "checklist"))
     (error "Reset checklist: Not a checklist"))
   (when (yes-or-no-p "Reset the checklist?")
     (org-map-entries (lambda () (org-todo "TODO")) nil 'tree)
@@ -876,7 +876,7 @@
 (defun my-checklist-auto-advance ()
   (ignore-errors
     (when (and (not (eq this-command 'org-agenda-todo))
-               (my-org-direct-parent-has-any-tag "CHECKLIST")
+               (my-org-direct-parent-has-any-tag "checklist")
                (string= org-state "DONE"))
       (run-with-idle-timer 0 nil 'my-checklist-do-auto-advance))))
 
@@ -1020,7 +1020,7 @@
 (defun my-org-auto-format ()
   (interactive)
   (ignore-errors
-    (org-map-entries 'my-org-sort-entries "SORT" 'file))
+    (org-map-entries 'my-org-sort-entries "sort" 'file))
   (ignore-errors
     (org-map-entries 'my-org-update-attachments-heading "ATTACHMENTS" 'file)))
 
@@ -1032,10 +1032,10 @@
 (defun my-org-do-refile-note (refile-f)
   (let ((original-targets org-refile-targets))
     (unwind-protect
-        (let* ((local-note-files (my-list-org-files (expand-file-name "notes" my-org-local-dir)))
-               (shared-note-files (my-list-org-files (expand-file-name "notes" my-org-shared-dir)))
-               (note-targets (append local-note-files shared-note-files)))
-          (setq org-refile-targets `((,note-targets :tag "REFILE")))
+        (let* ((local-area-files (my-list-org-files (expand-file-name "notes/areas" my-org-local-dir)))
+               (shared-area-files (my-list-org-files (expand-file-name "notes/areas" my-org-shared-dir)))
+               (note-targets (append local-area-files shared-area-files)))
+          (setq org-refile-targets `((,note-targets :tag "refile")))
           (apply refile-f ()))
       (setq org-refile-targets original-targets))))
 
@@ -1075,12 +1075,11 @@
 ;;;; Org Agenda
 
 (defun my-project-or-area-p ()
-  (my-org-has-any-tag "PROJECT" "AREA"))
+  (my-org-has-any-tag "project" "area"))
 
 (defun my-agenda-files (org-dir)
-  (list (expand-file-name "agenda" org-dir)
-        (expand-file-name "agenda/projects" org-dir)
-        (expand-file-name "agenda/areas" org-dir)))
+  (list (expand-file-name "gtd" org-dir)
+        (expand-file-name "gtd/projects" org-dir)))
 
 (defun my-agenda-category-short ()
   (if (derived-mode-p 'org-mode)
@@ -1096,7 +1095,7 @@
 (defun my-day-agenda-low-prio-todo ()
   (let ((priority (org-get-priority (thing-at-point 'line t))))
     (or (= priority 0)
-        (and (<= priority 2000) (not (my-org-has-any-tag "XPRIO")) (not (my-org-direct-parent-has-any-tag "XPRIO"))))))
+        (and (<= priority 2000) (not (my-org-direct-parent-has-any-tag "agenda"))))))
 
 (defun my-day-agenda-skip-todo ()
   (let ((subtree-end (save-excursion (org-end-of-subtree t))))
@@ -1119,7 +1118,7 @@
     (todo "TODO" ((org-agenda-overriding-header "Non-scheduled To-dos")
                   (org-agenda-skip-function 'my-day-agenda-skip-todo)
                   (org-agenda-files ',files)))
-    (tags "PROJECT" ((org-agenda-overriding-header "Projects")
+    (tags "project" ((org-agenda-overriding-header "Projects")
                      (org-tags-match-list-sublevels nil)
                      (org-agenda-sorting-strategy '(priority-down))
                      (org-agenda-skip-function 'my-day-agenda-skip-project)
@@ -1154,7 +1153,7 @@
         (title (read-string "Title: "))
         (priority (read-char-choice "Priority [A-E, default D]: " '(?A ?B ?C ?D ?E ?a ?b ?c ?d ?e ?\r ?\n))))
     (when (string-empty-p title) (user-error "Create project: Title cannot be empty"))
-    (let ((dir (expand-file-name "agenda/projects" (my-org-context-dir context))))
+    (let ((dir (expand-file-name "gtd/projects" (my-org-context-dir context))))
       (unless (file-directory-p dir) (make-directory dir t))
       (require 'org-node)
       (let* ((filename (org-node-title-to-basename title))
@@ -1215,7 +1214,7 @@
   (let ((context (completing-read "Context: " my-org-contexts nil t))
         (title (read-string "Title: ")))
     (when (string-empty-p title) (user-error "Create area: Title cannot be empty"))
-    (let ((dir (expand-file-name "agenda/areas" (my-org-context-dir context))))
+    (let ((dir (expand-file-name "notes/areas" (my-org-context-dir context))))
       (unless (file-directory-p dir) (make-directory dir t))
       (require 'org-node)
       (let* ((filename (org-node-title-to-basename title))
@@ -1298,7 +1297,7 @@
   (org-attach-id-dir (expand-file-name "attachments" my-org-local-dir))
   (org-capture-templates (my-capture-templates my-org-local-dir))
   (org-agenda-files (append (my-agenda-files my-org-local-dir) (my-agenda-files my-org-shared-dir)))
-  (org-refile-targets '((org-agenda-files :tag . "REFILE")))
+  (org-refile-targets '((org-agenda-files :tag . "refile")))
   (org-agenda-custom-commands (my-day-agenda-commands))
   (org-agenda-prefix-format '((agenda . " %i %-20(my-agenda-category-short) %?-12t% s")
                               (todo . " %i %-20(my-agenda-category-short) ")
@@ -1308,8 +1307,8 @@
   (org-clock-auto-clockout-timer 600)
   (org-clock-out-remove-zero-time-clocks t)
   (org-log-into-drawer t)
-  (org-tags-exclude-from-inheritance '("CHECKLIST" "SORT" "ATTACHMENTS" "PROJECT" "AREA" "REFILE" "XPRIO" "NOTES" "NODE"))
-  (org-agenda-hide-tags-regexp (rx (or "PROJECT" "ATTACH" "XPRIO" "NODE")))
+  (org-tags-exclude-from-inheritance '("checklist" "sort" "refile" "project" "area" "node" "attachments" "agenda"))
+  (org-agenda-hide-tags-regexp (rx (or "project" "node" "agenda" "ATTACH")))
   :config
   (require 'org-attach)
   (require 'org-id)
@@ -1404,18 +1403,19 @@
                                (?E :background "Seashell3" :foreground "Black")))
   (org-modern-table nil)
   (org-modern-horizontal-rule nil)
-  (org-modern-tag-faces '(("CHECKLIST" :inherit default :height 0.75 :slant normal)
-                          ("SORT" :inherit default :height 0.75 :slant normal)
-                          ("ATTACHMENTS" :inherit default :height 0.75 :slant normal)
-                          ("PROJECT" :inherit default :height 0.75 :slant normal)
-                          ("AREA" :inherit default :height 0.75 :slant normal)
-                          ("REFILE" :inherit default :height 0.75 :slant normal)
-                          ("XPRIO" :inherit default :height 0.75 :slant normal)
-                          ("NOTES" :inherit default :height 0.75 :slant normal)
-                          ("NODE" :inherit default :height 0.75 :slant normal)
+  (org-modern-tag-faces '(("refile" :inherit default :height 0.75 :slant normal)
+                          ("sort" :inherit default :height 0.75 :slant normal)
+                          ("checklist" :inherit default :height 0.75 :slant normal)
+                          ("agenda" :inherit default :height 0.75 :slant normal)
+                          ("project" :inherit default :height 0.75 :slant normal)
+                          ("area" :inherit default :height 0.75 :slant normal)
+                          ("node" :inherit default :height 0.75 :slant normal)
+                          ("attachments" :inherit default :height 0.75 :slant normal)
+                          ("log" :background "CornflowerBlue" :foreground "White" :height 0.9 :slant normal)
+                          ("legacy" :background "Sienna" :foreground "White" :height 0.9 :slant normal)
                           ("ATTACH" :background "HotPink" :foreground "White")))
   :custom-face
-  (org-modern-tag ((t (:background "CornflowerBlue" :foreground "White" :slant italic))))
+  (org-modern-tag ((t (:background "AntiqueWhite" :foreground "Black" :slant italic))))
   :config
   (global-org-modern-mode)
   (my-org-modern-font-lock-done-checkbox))
@@ -1425,10 +1425,9 @@
 ;; https://github.com/meedstrom/org-node
 
 (setq my-org-node-tag-allowlist (make-hash-table :test 'equal))
-(puthash "PROJECT" t my-org-node-tag-allowlist)
-(puthash "AREA" t my-org-node-tag-allowlist)
-(puthash "NOTES" t my-org-node-tag-allowlist)
-(puthash "NODE" t my-org-node-tag-allowlist)
+(puthash "project" t my-org-node-tag-allowlist)
+(puthash "area" t my-org-node-tag-allowlist)
+(puthash "node" t my-org-node-tag-allowlist)
 
 (defun my-org-node-filter-fn (node)
   (let ((node-tags (org-mem-tags node)))
