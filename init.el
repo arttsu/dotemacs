@@ -309,7 +309,8 @@
    ("<f12> S" . easysession-save-as)
    ("<f12> k" . easysession-delete)
    ("<f12> r" . easysession-rename)
-   ("<f12> x" . my-easysession-reset)))
+   ("<f12> x" . my-easysession-reset)
+   ("<f12> h" . my-easysession-from-heading)))
 
 ;;; Modus Themes
 
