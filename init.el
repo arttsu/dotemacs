@@ -29,15 +29,13 @@
   :hook
   (prog-mode . display-line-numbers-mode)
   (emacs-lisp-mode . flymake-mode)
-  :bind
-  (:map global-map
-        ("C-c j x" . scratch-buffer)))
+  :bind (:map global-map
+              ("C-c j x" . scratch-buffer)))
 
 (use-package my-emacs
-  :bind
-  (:map global-map
-        ("C-c j h" . my-jump-home)
-        ("<f8>" . my-pop-mark)))
+  :bind (:map global-map
+              ("C-c j h" . my-jump-home)
+              ("<f8>" . my-pop-mark)))
 
 ;;; Transient
 ;; https://github.com/magit/transient
@@ -53,9 +51,8 @@
 
 (use-package magit
   :ensure
-  :bind
-  (:map global-map
-        ("C-c g" . magit-file-dispatch)))
+  :bind (:map global-map
+              ("C-c g" . magit-file-dispatch)))
 
 ;;; Smartparens
 ;; https://github.com/Fuco1/smartparens
@@ -68,35 +65,33 @@
   (require 'smartparens-config)
   :hook
   (prog-mode . smartparens-mode)
-  :bind
-  (:map smartparens-mode-map
-        ("C-<right>" . sp-forward-slurp-sexp)
-        ("C-<left>" . sp-backward-slurp-sexp)
-        ("M-<right>" . sp-forward-barf-sexp)
-        ("M-<left>" . sp-backward-barf-sexp)
-        ("M-a" . sp-beginning-of-sexp)
-        ("M-e" . sp-end-of-sexp)
-        ("C-M-u" . sp-up-sexp)
-        ("C-M-S-u" . sp-backward-up-sexp)
-        ("C-M-d" . sp-down-sexp)
-        ("C-M-S-d" . sp-backward-down-sexp)
-        ("C-c p u" . sp-unwrap-sexp)
-        ("C-c p (" . sp-wrap-round)
-        ("C-c p [" . sp-wrap-square)
-        ("C-c p {" . sp-wrap-curly)
-        ("C-c p r" . sp-rewrap-sexp)))
+  :bind (:map smartparens-mode-map
+              ("C-<right>" . sp-forward-slurp-sexp)
+              ("C-<left>" . sp-backward-slurp-sexp)
+              ("M-<right>" . sp-forward-barf-sexp)
+              ("M-<left>" . sp-backward-barf-sexp)
+              ("M-a" . sp-beginning-of-sexp)
+              ("M-e" . sp-end-of-sexp)
+              ("C-M-u" . sp-up-sexp)
+              ("C-M-S-u" . sp-backward-up-sexp)
+              ("C-M-d" . sp-down-sexp)
+              ("C-M-S-d" . sp-backward-down-sexp)
+              ("C-c p u" . sp-unwrap-sexp)
+              ("C-c p (" . sp-wrap-round)
+              ("C-c p [" . sp-wrap-square)
+              ("C-c p {" . sp-wrap-curly)
+              ("C-c p r" . sp-rewrap-sexp)))
 
 ;;; Crux
 ;; https://github.com/bbatsov/crux
 
 (use-package crux
   :ensure
-  :bind
-  (:map global-map
-        ("C-o" . crux-smart-open-line)
-        ("C-S-o" . crux-smart-open-line-above)
-        ("C-^" . crux-top-join-line)
-        ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region)))
+  :bind (:map global-map
+              ("C-o" . crux-smart-open-line)
+              ("C-S-o" . crux-smart-open-line-above)
+              ("C-^" . crux-top-join-line)
+              ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region)))
 
 ;;; Whole Line or Region
 ;; https://github.com/purcell/whole-line-or-region
@@ -106,8 +101,8 @@
   :demand
   :config
   (whole-line-or-region-global-mode +1)
-  :bind
-  ("M-/" . whole-line-or-region-comment-dwim))
+  :bind (:map global-map
+              ("M-/" . whole-line-or-region-comment-dwim)))
 
 ;;; Rainbow Delimiters
 ;; https://github.com/Fanael/rainbow-delimiters
@@ -130,9 +125,8 @@
   :config
   (vertico-mode +1)
   (vertico-multiform-mode +1)
-  :bind
-  (:map vertico-map
-        ("C-;" . vertico-quick-insert)))
+  :bind (:map vertico-map
+              ("C-;" . vertico-quick-insert)))
 
 ;;; Orderless
 ;; https://github.com/oantolin/orderless
@@ -158,10 +152,9 @@
   :config
   (global-corfu-mode +1)
   (corfu-history-mode +1)
-  :bind
-  (:map corfu-map
-        ("C-SPC" . corfu-insert-separator)
-        ("C-;" . corfu-quick-select)))
+  :bind (:map corfu-map
+              ("C-SPC" . corfu-insert-separator)
+              ("C-;" . corfu-quick-select)))
 
 ;;; Consult
 ;; https://github.com/minad/consult
@@ -173,20 +166,19 @@
   ;; Don't live-preview buffers to avoid triggering package loading
   ;; (especially Org).
   (consult-customize consult-buffer :preview-key "M-.")
-  :bind
-  (:map global-map
-        ("C-x b" . consult-buffer)
-        ("C-x 4 b" . consult-buffer-other-window)
-        ("C-x t b" . consult-buffer-other-tab)
-        ("C-x 5 b" . consult-buffer-other-frame)
-        ("C-x p b" . consult-project-buffer)
-        ("M-g M-g" . consult-goto-line)
-        ("M-g i" . consult-imenu)
-        ("M-g I" . consult-imenu-multi)
-        ("M-g o" . consult-outline)
-        ("M-s l" . consult-line)
-        ("M-s k" . consult-keep-lines)
-        ("M-s f" . consult-focus-lines)))
+  :bind (:map global-map
+              ("C-x b" . consult-buffer)
+              ("C-x 4 b" . consult-buffer-other-window)
+              ("C-x t b" . consult-buffer-other-tab)
+              ("C-x 5 b" . consult-buffer-other-frame)
+              ("C-x p b" . consult-project-buffer)
+              ("M-g M-g" . consult-goto-line)
+              ("M-g i" . consult-imenu)
+              ("M-g I" . consult-imenu-multi)
+              ("M-g o" . consult-outline)
+              ("M-s l" . consult-line)
+              ("M-s k" . consult-keep-lines)
+              ("M-s f" . consult-focus-lines)))
 
 ;;; Avy
 ;; https://github.com/abo-abo/avy
