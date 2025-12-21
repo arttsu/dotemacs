@@ -1,5 +1,17 @@
 ;;; -*- lexical-binding: t; -*-
 
+(defun my-macos-p ()
+  "Return t if the host system is macOS."
+  (eq system-type 'darwin))
+
+(defun my-linux-p ()
+  "Return t if the host system is GNU/Linux."
+  (eq system-type 'gnu/linux))
+
+(defun my-windows-p ()
+  "Return t if the host system is Windows."
+  (eq system-type 'windows-nt))
+
 (use-package emacs
   :custom
   (create-lockfiles nil)
@@ -36,6 +48,20 @@
   :bind (:map global-map
               ("C-c j h" . my-jump-home)
               ("<f8>" . my-pop-mark)))
+
+(use-package dired
+  :demand
+  :custom
+  (dired-dwim-target t)
+  (insert-directory-program (cond ((my-windows-p) insert-directory-program)
+                                  ((my-macos-p) "gls")
+                                  (t "ls")))
+  (dired-listing-switches (cond ((my-windows-p) dired-listing-switches)
+                                (t "-alh --group-directories-first")))
+  :bind (:map global-map
+              ("<f7>" . dired-jump))
+  :bind (:map dired-mode-map
+              ("<tab>" . dired-find-file-other-window)))
 
 ;;; Modus Themes
 ;; https://protesilaos.com/emacs/modus-themes
@@ -107,7 +133,9 @@
               ("C-o" . crux-smart-open-line)
               ("C-S-o" . crux-smart-open-line-above)
               ("C-^" . crux-top-join-line)
-              ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region)))
+              ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region))
+  :bind (:map dired-mode-map
+              ("o" . crux-open-with)))
 
 ;;; Whole Line or Region
 ;; https://github.com/purcell/whole-line-or-region
