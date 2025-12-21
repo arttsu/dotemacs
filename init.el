@@ -1,4 +1,6 @@
-;;; -*- lexical-binding: t; -*-
+;; -*- lexical-binding: t; -*-
+
+;;; System Type Helpers
 
 (defun my-macos-p ()
   "Return t if the host system is macOS."
@@ -11,6 +13,8 @@
 (defun my-windows-p ()
   "Return t if the host system is Windows."
   (eq system-type 'windows-nt))
+
+;;; Emacs
 
 (use-package emacs
   :custom
@@ -49,12 +53,14 @@
               ("C-c j h" . my-jump-home)
               ("<f8>" . my-pop-mark)))
 
+;;; Dired
+
 (use-package dired
   :demand
   :custom
   (dired-dwim-target t)
   (insert-directory-program (cond ((my-windows-p) insert-directory-program)
-                                  ((my-macos-p) "gls")
+                                  ((my-macos-p) "gls") ; TODO: Use executable-find and 'ls' as fallback.
                                   (t "ls")))
   (dired-listing-switches (cond ((my-windows-p) dired-listing-switches)
                                 (t "-alh --group-directories-first")))
@@ -63,9 +69,27 @@
   :bind (:map dired-mode-map
               ("<tab>" . dired-find-file-other-window)))
 
+;;; Project
+
 (use-package project
   :config
   (add-to-list 'project-switch-commands '(project-dired "Dired" "<return>") t))
+
+;;; Imenu
+
+(use-package imenu
+  :preface
+  (defun my-imenu-elisp-index ()
+    "Return an Imenu index for Emacs Lisp buffers."
+    (let* ((section-regex (rx line-start (>= 3 ";") (+ blank) (group (* not-newline)) line-end))
+           (section-rules `(("Sections" ,section-regex 1))))
+      (append (imenu--generic-function section-rules)
+              (imenu-default-create-index-function))))
+  (defun my-imenu-setup-elisp ()
+    "Use custom Imenu index in Emacs Lisp Mode."
+    (setq-local imenu-create-index-function #'my-imenu-elisp-index))
+  :hook
+  (emacs-lisp-mode . my-imenu-setup-elisp))
 
 ;;; Modus Themes
 ;; https://protesilaos.com/emacs/modus-themes
