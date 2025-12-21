@@ -5,3 +5,5 @@
 /multisession/
 /transient/
 /projects
+/local.el
+/tramp

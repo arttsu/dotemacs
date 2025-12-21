@@ -37,6 +37,22 @@
               ("C-c j h" . my-jump-home)
               ("<f8>" . my-pop-mark)))
 
+;;; Modus Themes
+;; https://protesilaos.com/emacs/modus-themes
+
+(use-package modus-themes
+  :ensure
+  :custom
+  (modus-themes-italic-constructs t)
+  (modus-themes-org-blocks 'gray-background)
+  (modus-themes-headings '((0 . (ultrabold 1.9))
+                           (1 . (ultrabold 1.7))
+                           (2 . (extrabold 1.5))
+                           (3 . (extrabold 1.3))
+                           (4 . (extrabold 1.1))
+                           (t . (extrabold))))
+  (modus-themes-variable-pitch-ui t))
+
 ;;; Transient
 ;; https://github.com/magit/transient
 
