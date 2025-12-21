@@ -187,3 +187,28 @@
         ("M-s l" . consult-line)
         ("M-s k" . consult-keep-lines)
         ("M-s f" . consult-focus-lines)))
+
+;;; Avy
+;; https://github.com/abo-abo/avy
+
+(use-package avy
+  :ensure
+  :custom
+  (avy-single-candidate-jump t)
+  :bind (:map global-map
+              ("C-;" . avy-goto-char-timer)
+              ("M-;" . avy-pop-mark)
+              ("M-g g" . avy-goto-line)
+              ("M-g G" . avy-goto-end-of-line)
+              ("M-g h" . avy-goto-heading-timer)
+              ("M-g s" . avy-goto-word-1)
+              ("C-M-; c" . avy-copy-line)
+              ("C-M-; C" . avy-copy-region)
+              ("C-M-; m" . avy-move-line)
+              ("C-M-; M" . avy-move-region)
+              ("C-M-; k" . avy-kill-whole-line)
+              ("C-M-; K" . avy-kill-region)
+              ("C-M-; s" . avy-kill-ring-save-whole-line)
+              ("C-M-; S" . avy-kill-ring-save-region))
+  :bind (:map isearch-mode-map
+              ("C-;" . avy-isearch)))
