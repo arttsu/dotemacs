@@ -1,0 +1,9 @@
+* %^{Title}
+- Added   :: %U
+- Type    :: %^{Type|Social|Workshop|Lesson}
+- Dancers :: %^{Dancers}
+- Style   :: %^{Style|Cuban|Casino|On1|On2|Linear}
+- Song    :: %^{Song}
+- Artist  :: %^{Artist}
+- Link    :: %^{Link}
+- File    :: file:%(read-file-name "File: ")

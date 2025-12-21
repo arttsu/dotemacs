@@ -1,0 +1,9 @@
+* %<%Y-%m-%d %a>
+| Exercise                     | Set 1 kg | Set 1 reps | Set 2 kg | Set 2 reps | Set 3 kg | Set 3 reps | Notes |
+|------------------------------+----------+------------+----------+------------+----------+------------+-------|
+| Barbell Squat                | %?       |            |          |            |          |            |       |
+| Incline DB Press (bench 30°) |          |            |          |            |          |            |       |
+| Cable Row                    |          |            |          |            |          |            |       |
+| Triceps Pushdowns            |          |            |          |            |          |            |       |
+| DB Lateral Raise             |          |            |          |            |          |            |       |
+| Hammer Curl                  |          |            |          |            |          |            |       |
