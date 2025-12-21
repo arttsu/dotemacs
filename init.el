@@ -97,3 +97,14 @@
         ("C-S-o" . crux-smart-open-line-above)
         ("C-^" . crux-top-join-line)
         ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region)))
+
+;;; Whole Line or Region
+;; https://github.com/purcell/whole-line-or-region
+
+(use-package whole-line-or-region
+  :ensure
+  :demand
+  :config
+  (whole-line-or-region-global-mode +1)
+  :bind
+  ("M-/" . whole-line-or-region-comment-dwim))
