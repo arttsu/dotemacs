@@ -116,3 +116,20 @@
   :ensure
   :hook
   (prog-mode . rainbow-delimiters-mode))
+
+;;; Vertico
+;; https://github.com/minad/vertico
+
+;; TODO: Add multiform categories for Jinx.
+;; TODO: Add multiform categories for Consult Ripgrep.
+(use-package vertico
+  :ensure
+  :demand
+  :custom
+  (vertico-cycle t)
+  :config
+  (vertico-mode +1)
+  (vertico-multiform-mode +1)
+  :bind
+  (:map vertico-map
+        ("C-;" . vertico-quick-insert)))
