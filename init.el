@@ -162,3 +162,28 @@
   (:map corfu-map
         ("C-SPC" . corfu-insert-separator)
         ("C-;" . corfu-quick-select)))
+
+;;; Consult
+;; https://github.com/minad/consult
+
+;; TODO: Bind consult-ripgrep.
+(use-package consult
+  :ensure
+  :config
+  ;; Don't live-preview buffers to avoid triggering package loading
+  ;; (especially Org).
+  (consult-customize consult-buffer :preview-key "M-.")
+  :bind
+  (:map global-map
+        ("C-x b" . consult-buffer)
+        ("C-x 4 b" . consult-buffer-other-window)
+        ("C-x t b" . consult-buffer-other-tab)
+        ("C-x 5 b" . consult-buffer-other-frame)
+        ("C-x p b" . consult-project-buffer)
+        ("M-g M-g" . consult-goto-line)
+        ("M-g i" . consult-imenu)
+        ("M-g I" . consult-imenu-multi)
+        ("M-g o" . consult-outline)
+        ("M-s l" . consult-line)
+        ("M-s k" . consult-keep-lines)
+        ("M-s f" . consult-focus-lines)))
