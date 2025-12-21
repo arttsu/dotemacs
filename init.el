@@ -108,3 +108,11 @@
   (whole-line-or-region-global-mode +1)
   :bind
   ("M-/" . whole-line-or-region-comment-dwim))
+
+;;; Rainbow Delimiters
+;; https://github.com/Fanael/rainbow-delimiters
+
+(use-package rainbow-delimiters
+  :ensure
+  :hook
+  (prog-mode . rainbow-delimiters-mode))
