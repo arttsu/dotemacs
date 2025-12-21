@@ -1,0 +1,54 @@
+* My Emacs Config
+** Setup
+1. Clone the repo and copy the example local variables file.
+   #+begin_src shell
+     git clone git@github.com:arttsu/dotemacs.git ~/.emacs.d
+     cp ~/.emacs.d/local.example.el ~/.emacs.d/local.el
+   #+end_src
+
+2. Edit =local.el=.
+
+*** Vterm
+**** 1. Install dependencies:
+***** macOS
+Install =cmake= and =libtool= via brew.
+
+**** 2. Set my-use-vterm to t in =local.el=:
+
+*** Jinx
+**** macOS
+1. Install Enchant:
+#+begin_src shell
+  brew install enchant
+#+end_src
+
+2. Set =my-jinx-languages= in =local.el=:
+   #+begin_src elisp
+     (setq my-jinx-languages "en_US ru de_DE en_ES")
+   #+end_src
+
+*** Ledger
+**** macOS
+Install =ledger= via brew.
+
+*** Anki Editor
+1. Install Anki.
+
+2. Add [[https://git.sr.ht/~foosoft/anki-connect][Anki-Connect]] plugin.
+
+**** Generating audio
+Requires Microsoft Edge and edge-tts Python module.
+
+***** macOS
+#+begin_src shell
+  brew install microsoft-edge
+  brew install pipx # Make sure to add 'bin' dir to PATH.
+  pipx install edge-tts
+#+end_src
+
+**** Playing audio
+Needs =mpv=. Install via a package manager (e.g. Homebrew).
+
+*** LaTeX
+**** macOS
+Install =mactex= via brew.

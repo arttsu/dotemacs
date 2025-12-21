@@ -1,0 +1,12 @@
+#+STARTUP: content
+* %1$s %2$s :project:
+:PROPERTIES:
+:ID: %3$s
+:CREATED_AT: %4$s
+:END:
+** Info
+:PROPERTIES:
+:VISIBILITY: all
+:END:
+** Tasks :refile:sort:checklist:
+** Notes :refile:sort:checklist:
