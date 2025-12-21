@@ -63,6 +63,10 @@
   :bind (:map dired-mode-map
               ("<tab>" . dired-find-file-other-window)))
 
+(use-package project
+  :config
+  (add-to-list 'project-switch-commands '(project-dired "Dired" "<return>") t))
+
 ;;; Modus Themes
 ;; https://protesilaos.com/emacs/modus-themes
 
