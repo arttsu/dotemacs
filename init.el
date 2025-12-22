@@ -133,8 +133,8 @@
   (super-save-exclude '(".gpg" ".sbt" "project/"))
   (auto-save-default nil)
   :config
-  ;; TODO: Add Ace Window to the list of triggers.
-  (super-save-mode))
+  (add-to-list 'super-save-triggers 'ace-window) ; Must be before enabling 'super-save-mode'!
+  (super-save-mode +1))
 
 ;;; Smartparens
 ;; https://github.com/Fuco1/smartparens
@@ -193,6 +193,17 @@
   :ensure
   :hook
   (prog-mode . rainbow-delimiters-mode))
+
+;;; Ace Window
+;; https://github.com/abo-abo/ace-window
+
+(use-package ace-window
+  :ensure
+  :custom
+  (aw-keys '(?a ?s ?d ?f ?g ?h ?k ?l))
+  (aw-scope 'frame)
+  :bind
+  ("M-o" . ace-window))
 
 ;;; Vertico
 ;; https://github.com/minad/vertico
