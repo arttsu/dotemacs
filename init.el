@@ -91,6 +91,12 @@
   :hook
   (emacs-lisp-mode . my-imenu-setup-elisp))
 
+;;; Savehist
+
+(use-package savehist
+  :config
+  (savehist-mode))
+
 ;;; Modus Themes
 ;; https://protesilaos.com/emacs/modus-themes
 
