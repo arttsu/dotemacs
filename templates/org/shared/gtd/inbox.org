@@ -1,2 +1,2 @@
-* %s Inbox
+* Shared Inbox
 ** Items :refile:

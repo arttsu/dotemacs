@@ -43,11 +43,12 @@ ORG-DIR is the path to the GTD & Knowledge Management directory."
         (expand-file-name "shared/gtd/projects" org-dir)))
 
 (defun my-org-setup-gtd-and-knowledge-management (org-dir)
-  "Create the Org directory if it doesn't exist with required
-subdirectories and files. Set capture templates, refile targets, and
-custom agenda commands.
+  "Create the GTD & Knowledge Management directory if it doesn't exist. Set
+capture templates and agenda files.
 
 ORG-DIR is the path to the GTD & Knowledge Management directory."
+  (unless (file-directory-p org-dir)
+    (copy-directory (expand-file-name "templates/org" user-emacs-directory) org-dir))
   (setq org-capture-templates (my-org-capture-templates org-dir))
   (setq org-agenda-files (my-org-agenda-files org-dir)))
 
