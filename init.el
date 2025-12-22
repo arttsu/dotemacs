@@ -32,6 +32,7 @@
   (epg-pinentry-mode 'loopback)
   (disabled-command-function nil)
   :config
+  (require 'my-emacs)
   (scroll-bar-mode -1)
   (tool-bar-mode -1)
   (menu-bar-mode -1)
@@ -46,17 +47,13 @@
   (prog-mode . display-line-numbers-mode)
   (emacs-lisp-mode . flymake-mode)
   :bind (:map global-map
-              ("C-c j x" . scratch-buffer)))
-
-(use-package my-emacs
-  :bind (:map global-map
+              ("C-c j x" . scratch-buffer)
               ("C-c j h" . my-jump-home)
               ("<f8>" . my-pop-mark)))
 
 ;;; Dired
 
 (use-package dired
-  :demand
   :custom
   (dired-dwim-target t)
   (insert-directory-program (cond ((my-windows-p) insert-directory-program)
@@ -67,7 +64,8 @@
   :bind (:map global-map
               ("<f7>" . dired-jump))
   :bind (:map dired-mode-map
-              ("<tab>" . dired-find-file-other-window)))
+              ("<tab>" . dired-find-file-other-window)
+              ("o" . crux-open-with)))
 
 ;;; Project
 
@@ -78,16 +76,8 @@
 ;;; Imenu
 
 (use-package imenu
-  :preface
-  (defun my-imenu-elisp-index ()
-    "Return an Imenu index for Emacs Lisp buffers."
-    (let* ((section-regex (rx line-start (>= 3 ";") (+ blank) (group (* not-newline)) line-end))
-           (section-rules `(("Sections" ,section-regex 1))))
-      (append (imenu--generic-function section-rules)
-              (imenu-default-create-index-function))))
-  (defun my-imenu-setup-elisp ()
-    "Use custom Imenu index in Emacs Lisp Mode."
-    (setq-local imenu-create-index-function #'my-imenu-elisp-index))
+  :config
+  (require 'my-imenu)
   :hook
   (emacs-lisp-mode . my-imenu-setup-elisp))
 
@@ -183,9 +173,7 @@
               ("C-o" . crux-smart-open-line)
               ("C-S-o" . crux-smart-open-line-above)
               ("C-^" . crux-top-join-line)
-              ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region))
-  :bind (:map dired-mode-map
-              ("o" . crux-open-with)))
+              ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region)))
 
 ;;; Whole Line or Region
 ;; https://github.com/purcell/whole-line-or-region

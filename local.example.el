@@ -1,2 +1,2 @@
 (require 'my-ui)
-(my-init-theme-and-font 'modus-operandi-tinted "Cascadia Mono" 120)
+(my-ui-set-theme-and-font 'modus-operandi-tinted "Cascadia Mono" 120)

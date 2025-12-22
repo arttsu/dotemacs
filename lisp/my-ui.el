@@ -5,7 +5,7 @@
 
 ;;; Code:
 
-(defun my-init-theme-and-font (modus-theme font font-height &optional emoji-font)
+(defun my-ui-set-theme-and-font (modus-theme font font-height &optional emoji-font)
   "Set Modus theme and font on startup.
 
 MODUS-THEME is the Modus theme symbol to load.
