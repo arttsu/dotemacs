@@ -145,6 +145,31 @@
   (add-to-list 'super-save-triggers 'ace-window) ; Must be before enabling 'super-save-mode'!
   (super-save-mode +1))
 
+;;; Easysession
+;; https://github.com/jamescherti/easysession.el
+
+(use-package easysession
+  :ensure
+  :custom
+  (easysession-mode-line-misc-info t)
+  (easysession-save-interval 60)
+  (easysession-buffer-list-function #'my-easysession-visible-buffer-list)
+  (easysession-switch-to-exclude-current t)
+  :init
+  (add-hook 'emacs-startup-hook #'easysession-load-including-geometry 102)
+  (add-hook 'emacs-startup-hook #'easysession-save-mode 103)
+  :hook
+  (easysession-new-session . my-easysession-do-reset)
+  :config
+  (require 'my-easysession)
+  :bind (:map global-map
+              ("<f12> <f12>" . easysession-switch-to)
+              ("<f12> s" . easysession-save)
+              ("<f12> S" . easysession-save-as)
+              ("<f12> k" . easysession-delete)
+              ("<f12> r" . easysession-rename)
+              ("<f12> x" . my-easysession-reset)))
+
 ;;; Smartparens
 ;; https://github.com/Fuco1/smartparens
 
