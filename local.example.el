@@ -1,5 +1,5 @@
 (require 'my-ui)
-(my-ui-set-theme-and-font 'modus-operandi-tinted "Cascadia Mono" 120)
+(my-ui-set-theme-and-font 'modus-operandi "Courier New" 100)
 
 (require 'my-org)
-(my-org-setup-gtd-and-knowledge-management "~/org-new")
+(my-org-setup-gtd-and-knowledge-management "~/org")
