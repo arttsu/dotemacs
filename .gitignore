@@ -1,11 +1,11 @@
 /auto-save-list/
-/bookmarks
+/easysession/
 /eln-cache/
 /elpaca/
 /multisession/
 /transient/
-/projects
-/local.el
-/tramp
+/bookmarks
 /history
-/easysession/
+/local.el
+/projects
+/tramp
