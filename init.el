@@ -57,7 +57,7 @@
   :custom
   (dired-dwim-target t)
   (insert-directory-program (cond ((my-windows-p) insert-directory-program)
-                                  ((my-macos-p) "gls") ; TODO: Use executable-find and 'ls' as fallback.
+                                  ((my-macos-p) (or (executable-find "gls") "ls"))
                                   (t "ls")))
   (dired-listing-switches (cond ((my-windows-p) dired-listing-switches)
                                 (t "-alh --group-directories-first")))
