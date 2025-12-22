@@ -87,6 +87,15 @@
   :config
   (savehist-mode))
 
+;;; macOS: Exec Path From Shell
+;; https://github.com/purcell/exec-path-from-shell
+
+(when (my-macos-p)
+  (use-package exec-path-from-shell
+    :ensure
+    :config
+    (exec-path-from-shell-initialize)))
+
 ;;; Modus Themes
 ;; https://protesilaos.com/emacs/modus-themes
 
