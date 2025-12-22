@@ -351,6 +351,8 @@
   (org-refile-use-outline-path t)
   (org-outline-path-complete-in-steps nil)
   (org-confirm-babel-evaluate nil)
+  (org-refile-targets '((org-agenda-files :tag . "refile")))
+  (org-tags-exclude-from-inheritance '("refile"))
   :config
   (require 'org-id)
   (require 'org-attach)
@@ -372,13 +374,14 @@
   (org-auto-align-tags nil)
   (org-tags-column 0)
   (org-agenda-tags-column 0)
+  (org-modern-table nil)
+  (org-modern-horizontal-rule nil)
   (org-modern-priority-faces '((?A :background "Firebrick3" :foreground "White")
                                (?B :background "Goldenrod" :foreground "White")
                                (?C :background "SeaGreen" :foreground "White")
                                (?D :background "MediumOrchid" :foreground "White")
                                (?E :background "Seashell3" :foreground "Black")))
-  (org-modern-table nil)
-  (org-modern-horizontal-rule nil)
+  (org-modern-tag-faces '(("refile" :inherit default :height 0.75 :slant normal)))
   :custom-face
   (org-modern-tag ((t (:background "AntiqueWhite" :foreground "Black" :slant italic))))
   :config

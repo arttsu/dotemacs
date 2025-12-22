@@ -33,13 +33,23 @@ ORG-DIR is the path to the GTD & Knowledge Management directory."
     ("it" "local to-do" entry ,(my-org-inbox-target org-dir "local") (file ,(my-org-template "todo")))
     ("iT" "shared to-do" entry ,(my-org-inbox-target org-dir "shared") (file ,(my-org-template "todo")))))
 
+(defun my-org-agenda-files (org-dir)
+  "Return a list of Org agenda files.
+
+ORG-DIR is the path to the GTD & Knowledge Management directory."
+  (list (expand-file-name "local/gtd" org-dir)
+        (expand-file-name "local/gtd/projects" org-dir)
+        (expand-file-name "shared/gtd" org-dir)
+        (expand-file-name "shared/gtd/projects" org-dir)))
+
 (defun my-org-setup-gtd-and-knowledge-management (org-dir)
   "Create the Org directory if it doesn't exist with required
 subdirectories and files. Set capture templates, refile targets, and
 custom agenda commands.
 
 ORG-DIR is the path to the GTD & Knowledge Management directory."
-  (setq org-capture-templates (my-org-capture-templates org-dir)))
+  (setq org-capture-templates (my-org-capture-templates org-dir))
+  (setq org-agenda-files (my-org-agenda-files org-dir)))
 
 (defun my-org-capture-note (&optional prefix)
   "Capture a note to the local inbox.
