@@ -276,3 +276,28 @@
               ("C-M-; S" . avy-kill-ring-save-region))
   :bind (:map isearch-mode-map
               ("C-;" . avy-isearch)))
+
+;;; Org
+
+(use-package org
+  :ensure
+  :custom
+  (org-startup-indented t)
+  (org-hide-emphasis-markers t)
+  (org-pretty-entities t)
+  (org-use-sub-superscripts '{})
+  (org-fold-catch-invisible-edits 'show-and-error)
+  (org-special-ctrl-a/e t)
+  (org-use-speed-commands t)
+  (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+  (org-log-done 'time)
+  (org-priority-lowest 69)
+  (org-priority-default 68)
+  (org-refile-use-outline-path t)
+  (org-outline-path-complete-in-steps nil)
+  (org-confirm-babel-evaluate nil)
+  :config
+  (require 'org-id)
+  (require 'org-attach)
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               '((shell . t))))
