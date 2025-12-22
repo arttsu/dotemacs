@@ -1,0 +1,3 @@
+* %s Tasks
+** Ad-hoc
+** Recurring

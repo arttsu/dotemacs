@@ -354,8 +354,13 @@
   :config
   (require 'org-id)
   (require 'org-attach)
+  (require 'my-org)
   (org-babel-do-load-languages 'org-babel-load-languages
-                               '((shell . t))))
+                               '((shell . t)))
+  :bind (:map global-map
+              ("C-c c" . org-capture)
+              ("C-c i" . my-org-capture-note)
+              ("C-c I" . my-org-capture-todo)))
 
 ;;;; Org Modern
 ;; https://github.com/minad/org-modern
