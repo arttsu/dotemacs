@@ -124,6 +124,22 @@
   :bind (:map global-map
               ("C-c g" . magit-file-dispatch)))
 
+;;; Super Save
+;; https://github.com/bbatsov/super-save
+
+(use-package super-save
+  :ensure
+  :custom
+  (super-save-all-buffers t)
+  (super-save-auto-save-when-idle t)
+  (super-save-delete-trailing-whitespace 'except-current-line)
+  (super-save-silent t)
+  (super-save-exclude '(".gpg" ".sbt" "project/"))
+  (auto-save-default nil)
+  :config
+  ;; TODO: Add Ace Window to the list of triggers.
+  (super-save-mode))
+
 ;;; Smartparens
 ;; https://github.com/Fuco1/smartparens
 
