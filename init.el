@@ -361,6 +361,7 @@
                                '((shell . t)))
   :bind (:map global-map
               ("C-c c" . org-capture)
+              ("C-c a" . org-agenda)
               ("C-c i" . my-org-capture-note)
               ("C-c I" . my-org-capture-todo)))
 
