@@ -378,6 +378,7 @@
   (org-auto-align-tags nil)
   (org-tags-column 0)
   (org-agenda-tags-column 0)
+  (org-modern-star 'replace)
   (org-modern-table nil)
   (org-modern-horizontal-rule nil)
   (org-modern-priority-faces '((?A :background "Firebrick3" :foreground "White")
