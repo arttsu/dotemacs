@@ -7,6 +7,8 @@
 
 ;; TODO: Function: Create Org directories.
 
+(defvar my-org-dir)
+
 (defun my-org-template (name)
   "Return the path to a template file.
 
@@ -101,6 +103,30 @@ logic is inversed."
     `(("d" "Day" ,(my-org-day-agenda-command default-files))
       ("D" ,secondary-label ,(my-org-day-agenda-command secondary-files)))))
 
+(defun my-org-list-files (dir)
+  "Return the list of all .org files in the directory specified by DIR."
+  (directory-files dir t (rx ".org" string-end)))
+
+(defun my-org-do-refile-note (refile-f)
+  "Perform the refiling operation specified by REFILE-F, temporarily overriding refile targets."
+  (let ((original-targets org-refile-targets))
+    (unwind-protect
+        (let ((targets (append (my-org-list-files (expand-file-name "local/notes" my-org-dir))
+                               (my-org-list-files (expand-file-name "shared/notes" my-org-dir)))))
+          (setq org-refile-targets `((,targets :tag "refile")))
+          (apply refile-f ()))
+      (setq org-refile-targets original-targets))))
+
+(defun my-org-refile-note ()
+  "Refile a tree to notes via move."
+  (interactive)
+  (my-org-do-refile-note 'org-refile))
+
+(defun my-org-refile-copy-note ()
+  "Refile a tree to notes via copy."
+  (interactive)
+  (my-org-do-refile-note 'org-refile-copy))
+
 (defun my-org-setup-gtd-and-knowledge-management (org-dir &optional include-shared-by-default-in-agenda)
   "Set up GTD & Knowledge Management.
 
@@ -112,6 +138,7 @@ ORG-DIR is the path to the GTD & Knowledge Management directory.
 See 'my-org-day-agenda-commands' for the meaning of INCLUDE-SHARED-BY-DEFAULT-IN-AGENDA."
   (unless (file-directory-p org-dir)
     (copy-directory (expand-file-name "templates/org" user-emacs-directory) org-dir))
+  (setq my-org-dir org-dir)
   (setq org-capture-templates (my-org-capture-templates org-dir))
   (setq org-agenda-files (append (my-org-agenda-files org-dir "local") (my-org-agenda-files org-dir "shared")))
   (setq org-agenda-custom-commands (my-org-day-agenda-commands org-dir include-shared-by-default-in-agenda)))

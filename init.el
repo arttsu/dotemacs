@@ -363,7 +363,10 @@
               ("C-c c" . org-capture)
               ("C-c a" . org-agenda)
               ("C-c i" . my-org-capture-note)
-              ("C-c I" . my-org-capture-todo)))
+              ("C-c I" . my-org-capture-todo))
+  :bind (:map org-mode-map
+              ("C-c C-S-w" . my-org-refile-note)
+              ("C-c M-W" . my-org-refile-copy-note)))
 
 ;;;; Org Modern
 ;; https://github.com/minad/org-modern
