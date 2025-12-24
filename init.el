@@ -31,6 +31,11 @@
   (save-interprogram-paste-before-kill t)
   (epg-pinentry-mode 'loopback)
   (disabled-command-function nil)
+  :init
+  ;; Make right option behave like AltGr, so that EurKEY layout works
+  ;; properly.
+  (when (my-macos-p)
+    (setq mac-right-option-modifier 'none))
   :config
   (require 'my-emacs)
   (scroll-bar-mode -1)
