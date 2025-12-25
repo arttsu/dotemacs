@@ -5,21 +5,14 @@
 
 ;;; Code:
 
-(defun my-ui-set-theme-and-font (modus-theme font font-height &optional emoji-font)
-  "Set Modus theme and font on startup.
-
-MODUS-THEME is the Modus theme symbol to load.
-
-FONT is the font family name, and FONT-HEIGHT is its height in 1/10pt
-units.
-
-If EMOJI-FONT is non-nil, use it for Unicode emoji glyphs (useful on
-Windows)."
-  (modus-themes-load-theme modus-theme)
-  (set-face-attribute 'default nil :font font :height font-height)
-  (set-frame-font font nil t)
-  (when emoji-font
-    (set-fontset-font t 'unicode emoji-font nil 'append)))
+(defun my-ui-set-theme-and-font ()
+  "Set Modus theme and font on startup."
+  (and my-ui-default-modus-theme (modus-themes-load-theme my-ui-default-modus-theme))
+  (when (and my-ui-default-font my-ui-default-font-height)
+    (set-face-attribute 'default nil :font my-ui-default-font :height my-ui-default-font-height)
+    (set-frame-font my-ui-default-font nil t))
+  (when my-ui-default-emoji-font
+    (set-fontset-font t 'unicode my-ui-default-emoji-font nil 'append)))
 
 (provide 'my-ui)
 

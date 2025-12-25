@@ -38,6 +38,7 @@
     (setq mac-right-option-modifier 'none))
   :config
   (require 'my-emacs)
+  (require 'my-ui)
   (scroll-bar-mode -1)
   (tool-bar-mode -1)
   (menu-bar-mode -1)
@@ -49,6 +50,7 @@
   (repeat-mode +1)
   (fset 'yes-or-no-p 'y-or-n-p)
   :hook
+  (elpaca-after-init . my-ui-set-theme-and-font)
   (prog-mode . display-line-numbers-mode)
   (emacs-lisp-mode . flymake-mode)
   :bind (:map global-map
@@ -362,6 +364,10 @@
   (require 'org-id)
   (require 'org-attach)
   (require 'my-org)
+  (my-org-setup-gtd-and-knowledge-management)
+  (setq org-capture-templates (my-org-capture-templates))
+  (setq org-agenda-files (append (my-org-agenda-files "local") (my-org-agenda-files "shared")))
+  (setq org-agenda-custom-commands (my-org-day-agenda-commands my-org-day-agenda-include-shared-by-default))
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((shell . t)))
   :bind (:map global-map
@@ -396,3 +402,20 @@
   (org-modern-tag ((t (:background "AntiqueWhite" :foreground "Black" :slant italic))))
   :config
   (global-org-modern-mode +1))
+
+;;;; Org Node
+;; https://github.com/meedstrom/org-node
+
+(use-package org-node
+  :ensure
+  :custom
+  (org-mem-do-sync-with-org-id t)
+  (org-mem-watch-dirs (list my-org-dir))
+  :config
+  (org-mem-updater-mode)
+  (org-node-cache-mode)
+  (org-node-backlink-mode)
+  :bind (:map global-map
+              ("M-s M-f" . org-node-find)
+              ("M-s M-i" . org-node-insert-link)
+              ("M-s M-t" . org-node-add-tags-here)))

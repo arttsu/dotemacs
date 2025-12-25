@@ -7,10 +7,22 @@
 (elpaca elpaca-use-package
   (elpaca-use-package-mode))
 
-(defun my-load-local-init ()
-  "Load local init file if exists."
-  (let ((file (expand-file-name "local.el" user-emacs-directory)))
-    (when (file-readable-p file)
-      (load file nil 'nomessage))))
+;;; Variables
 
-(add-hook 'elpaca-after-init-hook #'my-load-local-init)
+;;;; Org Variables
+
+(defvar my-org-dir nil)
+(defvar my-org-day-agenda-include-shared-by-default nil)
+
+;;;; UI Variables
+
+(defvar my-ui-default-modus-theme nil)
+(defvar my-ui-default-font nil)
+(defvar my-ui-default-font-height nil)
+(defvar my-ui-default-emoji-font nil)
+
+;;;; Load Local Overrides
+
+(let ((file (expand-file-name "local.el" user-emacs-directory)))
+  (when (file-readable-p file)
+    (load file nil 'nomessage)))

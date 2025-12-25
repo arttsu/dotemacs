@@ -7,41 +7,35 @@
 
 ;; TODO: Function: Create Org directories.
 
-(defvar my-org-dir)
-
 (defun my-org-template (name)
   "Return the path to a template file.
 
 NAME is the file name w/o the extension."
   (expand-file-name (concat "templates/" name ".txt") user-emacs-directory))
 
-(defun my-org-inbox-target (org-dir context)
+(defun my-org-inbox-target (context)
   "Return the capture target for the inbox in the specified context.
 
-ORG-DIR is the path to the GTD & Knowledge Management directory.
 CONTEXT should be either \"local\" or \"shared\""
-  (let ((file (expand-file-name (concat context "/gtd/inbox.org") org-dir)))
+  (let ((file (expand-file-name (concat context "/gtd/inbox.org") my-org-dir)))
     (unless (file-writable-p file)
       (error "%s is not writable" file))
     `(file+headline ,file "Items")))
 
-(defun my-org-capture-templates (org-dir)
-  "Return a list of Org capture templates.
-
-ORG-DIR is the path to the GTD & Knowledge Management directory."
+(defun my-org-capture-templates ()
+  "Return a list of Org capture templates."
   `(("i" "Inbox")
-    ("in" "local note" entry ,(my-org-inbox-target org-dir "local") (file ,(my-org-template "note")))
-    ("iN" "shared note" entry ,(my-org-inbox-target org-dir "shared") (file ,(my-org-template "note")))
-    ("it" "local to-do" entry ,(my-org-inbox-target org-dir "local") (file ,(my-org-template "todo")))
-    ("iT" "shared to-do" entry ,(my-org-inbox-target org-dir "shared") (file ,(my-org-template "todo")))))
+    ("in" "local note" entry ,(my-org-inbox-target "local") (file ,(my-org-template "note")))
+    ("iN" "shared note" entry ,(my-org-inbox-target "shared") (file ,(my-org-template "note")))
+    ("it" "local to-do" entry ,(my-org-inbox-target "local") (file ,(my-org-template "todo")))
+    ("iT" "shared to-do" entry ,(my-org-inbox-target "shared") (file ,(my-org-template "todo")))))
 
-(defun my-org-agenda-files (org-dir context)
+(defun my-org-agenda-files (context)
   "Return the list of Org agenda files in the specified context.
 
-ORG-DIR is the path to the GTD & Knowledge Management directory.
 CONTEXT should be either \"local\" or \"shared\""
-  (list (expand-file-name (concat context "/gtd") org-dir)
-        (expand-file-name (concat context "/gtd/projects") org-dir)))
+  (list (expand-file-name (concat context "/gtd") my-org-dir)
+        (expand-file-name (concat context "/gtd/projects") my-org-dir)))
 
 (defun my-org-capture-note (&optional prefix)
   "Capture a note to the local inbox.
@@ -86,17 +80,15 @@ FILES is a list of files to collect tasks and projects from."
                   (org-agenda-skip-function 'my-org-day-agenda-skip-task)
                   (org-agenda-files ',files)))))
 
-(defun my-org-day-agenda-commands (org-dir &optional include-shared-by-default)
+(defun my-org-day-agenda-commands (&optional include-shared-by-default)
   "Return \"Day\" and \"Day w/ or w/o Shared\" agenda commands.
-
-ORG-DIR is the path to the GTD & Knowledge Management directory.
 
 If INCLUDE-SHARED-BY-DEFAULT is truthy the \"Day\" command will include
 tasks and projects in the shared directory in addition to the local.
 The second returned command will be \"Day w/o Shared\".  Otherwise, the
 logic is inversed."
-  (let* ((local-files (my-org-agenda-files org-dir "local"))
-         (all-files (append local-files (my-org-agenda-files org-dir "shared")))
+  (let* ((local-files (my-org-agenda-files "local"))
+         (all-files (append local-files (my-org-agenda-files "shared")))
          (default-files (if include-shared-by-default all-files local-files))
          (secondary-files (if include-shared-by-default local-files all-files))
          (secondary-label (if include-shared-by-default "Day w/o Shared" "Day w/ Shared")))
@@ -127,21 +119,10 @@ logic is inversed."
   (interactive)
   (my-org-do-refile-note 'org-refile-copy))
 
-(defun my-org-setup-gtd-and-knowledge-management (org-dir &optional include-shared-by-default-in-agenda)
-  "Set up GTD & Knowledge Management.
-
-Create the directory if it doesn't exist.  Set capture templates and
-agenda files.
-
-ORG-DIR is the path to the GTD & Knowledge Management directory.
-
-See 'my-org-day-agenda-commands' for the meaning of INCLUDE-SHARED-BY-DEFAULT-IN-AGENDA."
-  (unless (file-directory-p org-dir)
-    (copy-directory (expand-file-name "templates/org" user-emacs-directory) org-dir))
-  (setq my-org-dir org-dir)
-  (setq org-capture-templates (my-org-capture-templates org-dir))
-  (setq org-agenda-files (append (my-org-agenda-files org-dir "local") (my-org-agenda-files org-dir "shared")))
-  (setq org-agenda-custom-commands (my-org-day-agenda-commands org-dir include-shared-by-default-in-agenda)))
+(defun my-org-setup-gtd-and-knowledge-management ()
+  "Create GTD & Knowledge Management directory if it doesn't exist."
+  (unless (file-directory-p my-org-dir)
+    (copy-directory (expand-file-name "templates/org" user-emacs-directory) my-org-dir)))
 
 (provide 'my-org)
 

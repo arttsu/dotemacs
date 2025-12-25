@@ -1,5 +1,11 @@
-(require 'my-ui)
-(my-ui-set-theme-and-font 'modus-operandi "Courier New" 100)
+;;;; Org Variables
 
-(require 'my-org)
-(my-org-setup-gtd-and-knowledge-management "~/org")
+(setq my-org-dir "~/org")
+(setq my-org-day-agenda-include-shared-by-default t)
+
+;;;; UI Variables
+
+(setq my-ui-default-modus-theme 'modus-operandi)
+(setq my-ui-default-font "Courier New")
+(setq my-ui-default-font-height 100)
+(setq my-ui-default-emoji-font nil) ; On Windows use "Segoe UI Emoji".
