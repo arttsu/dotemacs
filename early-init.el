@@ -26,3 +26,10 @@
 (let ((file (expand-file-name "local.el" user-emacs-directory)))
   (when (file-readable-p file)
     (load file nil 'nomessage)))
+
+;;; Load Custom File
+
+(defconst my-custom-file (expand-file-name "custom.el" user-emacs-directory))
+
+(when (file-readable-p my-custom-file)
+  (load-file my-custom-file))

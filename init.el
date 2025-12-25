@@ -31,6 +31,7 @@
   (save-interprogram-paste-before-kill t)
   (epg-pinentry-mode 'loopback)
   (disabled-command-function nil)
+  (custom-file my-custom-file)
   :init
   ;; Make right option behave like AltGr, so that EurKEY layout works
   ;; properly.
@@ -360,6 +361,7 @@
   (org-confirm-babel-evaluate nil)
   (org-refile-targets '((org-agenda-files :tag . "refile")))
   (org-tags-exclude-from-inheritance '("refile"))
+  (org-attach-id-dir (expand-file-name "local/attachments" my-org-dir))
   :config
   (require 'org-id)
   (require 'org-attach)
