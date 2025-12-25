@@ -1,0 +1,9 @@
+* %u
+| Exercise                 | Set 1 kg | Set 1 reps | Set 2 kg | Set 2 reps | Set 3 kg | Set 3 reps | Notes |
+|--------------------------+----------+------------+----------+------------+----------+------------+-------|
+| Lat Pulldown (wide grip) | %?       |            |          |            |          |            |       |
+| Romanian Deadlift        |          |            |          |            |          |            |       |
+| Seated DB Overhead Press |          |            |          |            |          |            |       |
+| Lunges                   |          |            |          |            |          |            |       |
+| Reverse Pec Deck         |          |            |          |            |          |            |       |
+| Standing EZ Bar Curl     |          |            |          |            |          |            |       |

@@ -22,13 +22,24 @@ CONTEXT should be either \"local\" or \"shared\""
       (error "%s is not writable" file))
     `(file+headline ,file "Items")))
 
+(defun my-org-gym-log-target (plan)
+  "Return the capture target for a gym plan session.
+
+PLAN should be either \"A\" or \"B\"."
+  (let ((file (expand-file-name "local/gym/gym-log.org" my-org-dir))
+        (heading (concat "Plan " plan)))
+    `(file+headline ,file ,heading)))
+
 (defun my-org-capture-templates ()
   "Return a list of Org capture templates."
   `(("i" "Inbox")
     ("in" "local note" entry ,(my-org-inbox-target "local") (file ,(my-org-template "note")))
     ("iN" "shared note" entry ,(my-org-inbox-target "shared") (file ,(my-org-template "note")))
     ("it" "local to-do" entry ,(my-org-inbox-target "local") (file ,(my-org-template "todo")))
-    ("iT" "shared to-do" entry ,(my-org-inbox-target "shared") (file ,(my-org-template "todo")))))
+    ("iT" "shared to-do" entry ,(my-org-inbox-target "shared") (file ,(my-org-template "todo")))
+    ("g" "Gym")
+    ("ga" "plan A session" entry ,(my-org-gym-log-target "A") (file ,(my-org-template "gym/plan-a")))
+    ("gb" "plan B session" entry ,(my-org-gym-log-target "B") (file ,(my-org-template "gym/plan-b")))))
 
 (defun my-org-agenda-files (context)
   "Return the list of Org agenda files in the specified context.
