@@ -1,2 +1,2 @@
 * Local Inbox
-** Items :refile:agenda:
+** Items :refile:agenda:sort:

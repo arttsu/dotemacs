@@ -189,6 +189,97 @@ logic is inversed."
     (when (string= org-state "DONE")
       (org-entry-put (point) "PRIORITY" nil))))
 
+(defun my-org-require-at-heading ()
+  "Throw user error unless the point is at a heading."
+  (unless (org-at-heading-p) (user-error "Must be at a heading")))
+
+(defconst my-org-default-timestamp "[1900-01-01 Mon 00:00]")
+
+(defun my-org-extract-created-timestamp ()
+  "Return the 'created on' timestamp of the entry at point."
+  (save-excursion
+    (save-restriction
+      (org-narrow-to-subtree) ; TODO: Narrow to element.
+      (goto-char (point-min))
+      (if (re-search-forward (rx "Created on " (group "[" (1+ (not "]")) "]")) nil t)
+          (match-string-no-properties 1)
+        my-org-default-timestamp))))
+
+(defun my-org-extract-closed-timestamp ()
+  "Return the 'CLOSED:' timestamp of the entry at point."
+  (save-excursion
+    (save-restriction
+      (org-narrow-to-subtree) ; TODO: Narrow to element.
+      (goto-char (point-min))
+      ;; TODO: DRY timestamp capture group.
+      (if (re-search-forward (rx "CLOSED: " (group "[" (1+ (not "]")) "]")) nil t)
+          (match-string-no-properties 1)
+        my-org-default-timestamp))))
+
+(defun my-org-sort-entries ()
+  "Sort entries of the subtree at point."
+  (interactive)
+  (my-org-require-at-heading)
+  (org-sort-entries nil ?f 'my-org-extract-created-timestamp)
+  (org-sort-entries nil ?f 'my-org-extract-closed-timestamp)
+  ;; By priority.
+  (org-sort-entries nil ?p)
+  ;; By to-do state.
+  (org-sort-entries nil ?o))
+
+(defun my-org-format-buffer ()
+  "Format the current buffer."
+  (interactive)
+  (ignore-errors
+    (org-map-entries #'my-org-sort-entries "sort" 'file)))
+
+(defconst my-org-contexts '("Local" "Shared"))
+
+(defun my-org-context-dir (context)
+  "Return path to the org directory in the specified CONTEXT."
+  (cond ((string= context "Local") (expand-file-name "local" my-org-dir))
+        ((string= context "Shared") (expand-file-name "shared" my-org-dir))
+        (t (error "Invalid context: %s" context))))
+
+(defun my-org-priority-char-to-cookie (char)
+  "Convert CHAR to a string representing Org priority."
+  (let ((clean-char (cond ((memq char '(?\r ?\n)) ?D)
+                          ((and (>= char ?a) (<= char ?e)) (upcase char))
+                          ((and (>= char ?A) (<= char ?E)) char)
+                          (t ?D))))
+    (format "[#%c]" clean-char)))
+
+(defun my-org-now-timestamp ()
+  "Return the current time formatted as Org timestamp."
+  (format-time-string "[%Y-%m-%d %a %H:%M]"))
+
+(defun my-org-create-project-contents (title priority)
+  "Return file contents for a new project.
+
+TITLE is the project title.
+
+PRIORITY is a character representing the priority of the project."
+  (let ((template (with-temp-buffer (insert-file-contents (my-org-template "project")) (buffer-string)))
+        (priority-cookie (my-org-priority-char-to-cookie priority))
+        (id (org-id-new))
+        (timestamp (my-org-now-timestamp)))
+    (format template priority-cookie title id timestamp)))
+
+(defun my-org-create-project ()
+  "Create a project from the template."
+  (interactive)
+  (let ((context (completing-read "Context: " my-org-contexts nil t))
+        (title (read-string "Title: "))
+        (priority (read-char-choice "Priority [A-E, default D]: " '(?A ?B ?C ?D ?E ?a ?b ?c ?d ?e ?\r ?\n))))
+    (when (string-empty-p title)
+      (user-error "Title cannot be empty"))
+    (let ((dir (expand-file-name "gtd/projects" (my-org-context-dir context))))
+      (require 'org-node)
+      (let* ((filename (org-node-title-to-basename title))
+             (path (expand-file-name filename dir)))
+        (with-temp-buffer (insert (my-org-create-project-contents title priority)) (write-file path))
+        (message "Project created: %s" path)))))
+
 (defun my-org-setup-gtd-and-knowledge-management ()
   "Create GTD & Knowledge Management directory if it doesn't exist."
   (unless (file-directory-p my-org-dir)

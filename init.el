@@ -393,7 +393,7 @@
   (org-outline-path-complete-in-steps nil)
   (org-confirm-babel-evaluate nil)
   (org-refile-targets '((org-agenda-files :tag . "refile")))
-  (org-tags-exclude-from-inheritance '("refile" "agenda" "project"))
+  (org-tags-exclude-from-inheritance '("refile" "agenda" "project" "sort"))
   (org-attach-id-dir (expand-file-name "local/attachments" my-org-dir))
   (org-agenda-prefix-format '((agenda . " %i %-20(my-org-agenda-category) %?-12t% s")
                               (todo . " %i %-20(my-org-agenda-category) ")
@@ -418,7 +418,9 @@
               ("C-c I" . my-org-capture-todo))
   :bind (:map org-mode-map
               ("C-c C-S-w" . my-org-refile-note)
-              ("C-c M-W" . my-org-refile-copy-note)))
+              ("C-c M-W" . my-org-refile-copy-note)
+              ("C-c o f" . my-org-format-buffer)
+              ("C-c o s" . my-org-sort-entries)))
 
 ;;;; Org Modern
 ;; https://github.com/minad/org-modern
@@ -440,7 +442,8 @@
                                (?E :background "Seashell3" :foreground "Black")))
   (org-modern-tag-faces '(("refile" :inherit default :height 0.75 :slant normal)
                           ("agenda" :inherit default :height 0.75 :slant normal)
-                          ("project" :inherit default :height 0.75 :slant normal)))
+                          ("project" :inherit default :height 0.75 :slant normal)
+                          ("sort" :inherit default :height 0.75 :slant normal)))
   :custom-face
   (org-modern-tag ((t (:background "AntiqueWhite" :foreground "Black" :slant italic))))
   :config
