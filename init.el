@@ -390,6 +390,15 @@
                 ("M-$" . jinx-correct)
                 ("C-M-$" . jinx-languages))))
 
+;;; Ledger
+;; https://github.com/ledger/ledger-mode
+
+(when (executable-find "ledger")
+  (use-package ledger-mode
+    :ensure
+    :custom
+    (ledger-default-date-format "%Y-%m-%d")))
+
 ;;; Org
 
 (use-package org

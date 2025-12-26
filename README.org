@@ -19,3 +19,7 @@
    #+begin_src elisp
      (setq my-jinx-languages "en_US ru de_DE en_ES")
    #+end_src
+
+*** Ledger
+**** macOS
+Install =ledger= via brew.
