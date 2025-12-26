@@ -89,11 +89,18 @@ With a PREFIX argument capture to the shared inbox."
         (and (<= priority 2000) (not (my-org-direct-parent-has-tag "agenda"))))))
 
 (defun my-org-day-agenda-skip-task ()
-  "Decide whether or not to display a task in a \"Day\" agenda."
+  "Decide whether or not to display the task at point in the \"Day\" agenda."
   (let ((subtree-end (save-excursion (org-end-of-subtree t))))
     ;; TODO: Skip low-prio tasks.
     (when (or (my-org-entry-scheduled-or-deadline-p (point))
               (my-org-day-agenda-task-priority-too-low-p))
+      subtree-end)))
+
+(defun my-org-day-agenda-skip-project ()
+  "Decide whether or not to display the project at point in the \"Day\" agenda."
+  (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+        (priority (org-get-priority (thing-at-point 'line t))))
+    (when (= priority 0)
       subtree-end)))
 
 (defun my-org-get-first-heading ()
@@ -131,7 +138,11 @@ FILES is a list of files to collect tasks and projects from."
                 (org-agenda-files ',files)))
     (todo "TODO" ((org-agenda-overriding-header "Non-scheduled Tasks")
                   (org-agenda-skip-function 'my-org-day-agenda-skip-task)
-                  (org-agenda-files ',files)))))
+                  (org-agenda-files ',files)))
+    (tags "project" ((org-agenda-overriding-header "Projects")
+                     (org-agenda-sorting-strategy '(priority-down))
+                     (org-agenda-skip-function 'my-org-day-agenda-skip-project)
+                     (org-agenda-files ',files)))))
 
 (defun my-org-day-agenda-commands (&optional include-shared-by-default)
   "Return \"Day\" and \"Day w/ or w/o Shared\" agenda commands.
