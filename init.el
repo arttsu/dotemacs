@@ -248,6 +248,19 @@
   :bind (:map global-map
               ("C-=" . er/expand-region)))
 
+;;; Go to Char
+;; https://github.com/arttsu/iy-go-to-char (forked from https://github.com/doitian/iy-go-to-char)
+
+(use-package iy-go-to-char
+  :ensure (:host github :repo "arttsu/iy-go-to-char")
+  :bind (:map global-map
+              ("M-g f" . iy-go-to-char)
+              ("M-g F" . iy-go-to-char-backward)
+              ("M-g t" . iy-go-up-to-char)
+              ("M-g T" . iy-go-up-to-char-backward)
+              ("M-g ;" . iy-go-to-or-up-to-continue)
+              ("M-g ," . iy-go-to-or-up-to-continue-backward)))
+
 ;;; Rainbow Delimiters
 ;; https://github.com/Fanael/rainbow-delimiters
 
