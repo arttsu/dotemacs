@@ -1,0 +1,9 @@
+* My Emacs Config
+** Setup
+1. Clone the repo and copy the example local variables file.
+   #+begin_src shell
+     git clone git@github.com:arttsu/dotemacs.git ~/.emacs.d
+     cp ~/.emacs.d/local.example.el ~/.emacs.d/local.el
+   #+end_src
+
+2. Edit =local.el=.
