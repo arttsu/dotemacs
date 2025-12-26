@@ -228,6 +228,18 @@
   :bind (:map global-map
               ("M-/" . whole-line-or-region-comment-dwim)))
 
+;;; Multiple Cursors
+;; https://github.com/magnars/multiple-cursors.el
+
+(use-package multiple-cursors
+  :ensure
+  :bind (:map global-map
+              ("C-c k l" . mc/edit-lines)
+              ("C-+" . mc/mark-next-like-this)
+              ("C-c k m" . mc/mark-all-dwim)
+              ("C-S-<mouse-1>" . mc/add-cursor-on-click)
+              ("C-<return>" . set-rectangular-region-anchor)))
+
 ;;; Rainbow Delimiters
 ;; https://github.com/Fanael/rainbow-delimiters
 
