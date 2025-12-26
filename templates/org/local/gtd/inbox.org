@@ -1,2 +1,2 @@
 * Local Inbox
-** Items :refile:
+** Items :refile:agenda:

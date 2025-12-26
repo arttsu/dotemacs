@@ -70,11 +70,30 @@ With a PREFIX argument capture to the shared inbox."
   "Return t if the entry at POINT is scheduled or has a deadline."
   (or (org-get-scheduled-time point) (org-get-deadline-time point)))
 
+(defun my-org-has-tag (&rest tags)
+  "Return t if the entry at point has at least one of the TAGS."
+  (let ((entry-tags (org-get-tags)))
+    (seq-some (lambda (tag) (member tag entry-tags)) tags)))
+
+(defun my-org-direct-parent-has-tag (&rest tags)
+  "Return t if the direct parent of the entry at point has at least one of the TAGS."
+  (save-excursion
+    (let ((parent-pos (org-up-heading-safe)))
+      (when parent-pos
+        (apply 'my-org-has-tag tags)))))
+
+(defun my-org-day-agenda-task-priority-too-low-p ()
+  "Return t if the task at point priority is too low to display in the \"Day\" agenda."
+  (let ((priority (org-get-priority (thing-at-point 'line t))))
+    (or (= priority 0)
+        (and (<= priority 2000) (not (my-org-direct-parent-has-tag "agenda"))))))
+
 (defun my-org-day-agenda-skip-task ()
   "Decide whether or not to display a task in a \"Day\" agenda."
   (let ((subtree-end (save-excursion (org-end-of-subtree t))))
     ;; TODO: Skip low-prio tasks.
-    (when (or (my-org-entry-scheduled-or-deadline-p (point)))
+    (when (or (my-org-entry-scheduled-or-deadline-p (point))
+              (my-org-day-agenda-task-priority-too-low-p))
       subtree-end)))
 
 (defun my-org-day-agenda-command (files)

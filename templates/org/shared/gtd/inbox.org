@@ -1,2 +1,2 @@
 * Shared Inbox
-** Items :refile:
+** Items :refile:agenda:
