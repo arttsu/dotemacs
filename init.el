@@ -408,6 +408,7 @@
   :bind (:map global-map
               ("C-c c" . org-capture)
               ("C-c a" . org-agenda)
+              ("C-c l" . org-store-link)
               ("C-c i" . my-org-capture-note)
               ("C-c I" . my-org-capture-todo))
   :bind (:map org-mode-map
