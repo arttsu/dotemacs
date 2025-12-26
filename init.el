@@ -240,6 +240,14 @@
               ("C-S-<mouse-1>" . mc/add-cursor-on-click)
               ("C-<return>" . set-rectangular-region-anchor)))
 
+;;; Expand Region
+;; https://github.com/magnars/expand-region.el
+
+(use-package expand-region
+  :ensure
+  :bind (:map global-map
+              ("C-=" . er/expand-region)))
+
 ;;; Rainbow Delimiters
 ;; https://github.com/Fanael/rainbow-delimiters
 
