@@ -395,6 +395,10 @@
   (org-refile-targets '((org-agenda-files :tag . "refile")))
   (org-tags-exclude-from-inheritance '("refile" "agenda" "project"))
   (org-attach-id-dir (expand-file-name "local/attachments" my-org-dir))
+  (org-agenda-prefix-format '((agenda . " %i %-20(my-org-agenda-category) %?-12t% s")
+                              (todo . " %i %-20(my-org-agenda-category) ")
+                              (tags . " %i %-20(my-org-agenda-category) ")
+                              (search . " %i %-20(my-org-agenda-category) ")))
   :config
   (require 'org-id)
   (require 'org-attach)

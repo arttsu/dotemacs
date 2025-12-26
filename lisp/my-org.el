@@ -96,6 +96,29 @@ With a PREFIX argument capture to the shared inbox."
               (my-org-day-agenda-task-priority-too-low-p))
       subtree-end)))
 
+(defun my-org-get-first-heading ()
+  "Return the first heading in the buffer."
+  (save-excursion
+    (save-restriction
+      (widen)
+      (goto-char (point-min))
+      (unless (org-at-heading-p)
+        (org-forward-heading-same-level 1))
+      (when (org-at-heading-p)
+        (org-get-heading t t t t)))))
+
+(defun my-org-agenda-category ()
+  "Return the category to display in the agenda for the entry at point."
+  (if (derived-mode-p 'org-mode)
+      (if (my-org-has-tag "project")
+          ""
+        (if-let ((top-level-heading (my-org-get-first-heading)))
+            (if (> (length top-level-heading) 19)
+                (concat (substring top-level-heading 0 18) "…")
+              top-level-heading)
+          (buffer-file-name)))
+    ""))
+
 (defun my-org-day-agenda-command (files)
   "Return \"Day\" agenda command.
 
