@@ -58,7 +58,9 @@
               ("C-c j x" . scratch-buffer)
               ("C-c j h" . my-jump-home)
               ("<f8>" . my-pop-mark)
-              ("C-M-; d" . duplicate-dwim)))
+              ("C-M-; d" . duplicate-dwim)
+              ("M-z" . zap-up-to-char)
+              ("M-Z" . zap-to-char)))
 
 ;;; Dired
 
