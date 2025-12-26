@@ -265,6 +265,12 @@ PRIORITY is a character representing the priority of the project."
         (timestamp (my-org-now-timestamp)))
     (format template priority-cookie title id timestamp)))
 
+(defun my-org-find-file-in-new-session (path)
+  "Find file in PATH in a new session."
+  (let ((name (file-name-sans-extension (file-name-nondirectory path))))
+    (easysession-switch-to-and-restore-geometry name)
+    (find-file path)))
+
 (defun my-org-create-project ()
   "Create a project from the template."
   (interactive)
@@ -278,7 +284,15 @@ PRIORITY is a character representing the priority of the project."
       (let* ((filename (org-node-title-to-basename title))
              (path (expand-file-name filename dir)))
         (with-temp-buffer (insert (my-org-create-project-contents title priority)) (write-file path))
-        (message "Project created: %s" path)))))
+        (message "Project created: %s" path)
+        (let ((choice (read-char-choice
+                       "Open project in [c]urrent window, [o]ther window, new [t]ab, new [s]ession, [d]on't open: "
+                       '(?c ?o ?t ?s ?d))))
+          (cond ((eq choice ?c) (find-file path))
+                ((eq choice ?o) (find-file-other-window path))
+                ((eq choice ?t) (find-file-other-tab path))
+                ((eq choice ?s) (my-org-find-file-in-new-session path))
+                ((eq choice ?d) nil)))))))
 
 (defun my-org-setup-gtd-and-knowledge-management ()
   "Create GTD & Knowledge Management directory if it doesn't exist."

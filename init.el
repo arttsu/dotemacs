@@ -415,7 +415,8 @@
               ("C-c a" . org-agenda)
               ("C-c l" . org-store-link)
               ("C-c i" . my-org-capture-note)
-              ("C-c I" . my-org-capture-todo))
+              ("C-c I" . my-org-capture-todo)
+              ("C-c o c p" . my-org-create-project))
   :bind (:map org-mode-map
               ("C-c C-S-w" . my-org-refile-note)
               ("C-c M-W" . my-org-refile-copy-note)
