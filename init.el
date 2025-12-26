@@ -57,7 +57,8 @@
   :bind (:map global-map
               ("C-c j x" . scratch-buffer)
               ("C-c j h" . my-jump-home)
-              ("<f8>" . my-pop-mark)))
+              ("<f8>" . my-pop-mark)
+              ("C-M-; d" . duplicate-dwim)))
 
 ;;; Dired
 
