@@ -178,6 +178,12 @@ logic is inversed."
   (interactive)
   (my-org-do-refile-note 'org-refile))
 
+(defun my-org-refile-capture-note ()
+  "Refile a tree to notes from Org capture buffer."
+  (interactive)
+  (my-org-do-refile-note 'org-refile)
+  (org-capture-finalize))
+
 (defun my-org-refile-copy-note ()
   "Refile a tree to notes via copy."
   (interactive)

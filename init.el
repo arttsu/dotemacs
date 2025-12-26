@@ -416,6 +416,8 @@
                               (todo . " %i %-20(my-org-agenda-category) ")
                               (tags . " %i %-20(my-org-agenda-category) ")
                               (search . " %i %-20(my-org-agenda-category) ")))
+  :init
+  (require 'org-capture)
   :config
   (require 'org-id)
   (require 'org-attach)
@@ -425,6 +427,7 @@
   (setq org-agenda-files (append (my-org-agenda-files "local") (my-org-agenda-files "shared")))
   (setq org-agenda-custom-commands (my-org-day-agenda-commands my-org-day-agenda-include-shared-by-default))
   (add-hook 'org-after-todo-state-change-hook #'my-org-remove-priority-when-done -10)
+  (add-hook 'org-after-refile-insert-hook #'my-org-format-buffer)
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((shell . t)))
   :bind (:map global-map
@@ -439,7 +442,9 @@
               ("C-c C-S-w" . my-org-refile-note)
               ("C-c M-W" . my-org-refile-copy-note)
               ("C-c o f" . my-org-format-buffer)
-              ("C-c o s" . my-org-sort-entries)))
+              ("C-c o s" . my-org-sort-entries))
+  :bind (:map org-capture-mode-map
+              ("C-c C-S-w" . my-org-refile-capture-note)))
 
 ;;;; Org Modern
 ;; https://github.com/minad/org-modern
