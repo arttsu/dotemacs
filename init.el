@@ -286,7 +286,6 @@
 ;;; Vertico
 ;; https://github.com/minad/vertico
 
-;; TODO: Add multiform categories for Jinx.
 ;; TODO: Add multiform categories for Consult Ripgrep.
 (use-package vertico
   :ensure
@@ -296,6 +295,7 @@
   :config
   (vertico-mode +1)
   (vertico-multiform-mode +1)
+  (add-to-list 'vertico-multiform-categories '(jinx grid (vertico-grid-annotate . 20)))
   :bind (:map vertico-map
               ("C-;" . vertico-quick-insert)))
 
@@ -375,6 +375,20 @@
               ("C-M-; S" . avy-kill-ring-save-region))
   :bind (:map isearch-mode-map
               ("C-;" . avy-isearch)))
+
+;;; Jinx
+;; https://github.com/minad/jinx
+
+(when my-jinx-languages
+  (use-package jinx
+    :ensure
+    :custom
+    (jinx-languages my-jinx-languages)
+    :hook
+    (emacs-startup . global-jinx-mode)
+    :bind (:map global-map
+                ("M-$" . jinx-correct)
+                ("C-M-$" . jinx-languages))))
 
 ;;; Org
 

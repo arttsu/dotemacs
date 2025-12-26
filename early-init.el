@@ -21,6 +21,10 @@
 (defvar my-ui-default-font-height nil)
 (defvar my-ui-default-emoji-font nil)
 
+;;;; Functionality Variables
+
+(defvar my-jinx-languages nil)
+
 ;;;; Load Local Overrides
 
 (let ((file (expand-file-name "local.el" user-emacs-directory)))
