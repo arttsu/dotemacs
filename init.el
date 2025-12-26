@@ -419,7 +419,7 @@
   (org-outline-path-complete-in-steps nil)
   (org-confirm-babel-evaluate nil)
   (org-refile-targets '((org-agenda-files :tag . "refile")))
-  (org-tags-exclude-from-inheritance '("refile" "agenda" "project" "sort"))
+  (org-tags-exclude-from-inheritance '("refile" "agenda" "project" "sort" "checklist"))
   (org-attach-id-dir (expand-file-name "local/attachments" my-org-dir))
   (org-agenda-prefix-format '((agenda . " %i %-20(my-org-agenda-category) %?-12t% s")
                               (todo . " %i %-20(my-org-agenda-category) ")
@@ -476,7 +476,8 @@
   (org-modern-tag-faces '(("refile" :inherit default :height 0.75 :slant normal)
                           ("agenda" :inherit default :height 0.75 :slant normal)
                           ("project" :inherit default :height 0.75 :slant normal)
-                          ("sort" :inherit default :height 0.75 :slant normal)))
+                          ("sort" :inherit default :height 0.75 :slant normal)
+                          ("checklist" :inherit default :height 0.75 :slant normal)))
   :custom-face
   (org-modern-tag ((t (:background "AntiqueWhite" :foreground "Black" :slant italic))))
   :config
