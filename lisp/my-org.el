@@ -284,7 +284,6 @@ PRIORITY is a character representing the priority of the project."
       (let* ((filename (org-node-title-to-basename title))
              (path (expand-file-name filename dir)))
         (with-temp-buffer (insert (my-org-create-project-contents title priority)) (write-file path))
-        (message "Project created: %s" path)
         (let ((choice (read-char-choice
                        "Open project in [c]urrent window, [o]ther window, new [t]ab, new [s]ession, [d]on't open: "
                        '(?c ?o ?t ?s ?d))))
@@ -292,7 +291,38 @@ PRIORITY is a character representing the priority of the project."
                 ((eq choice ?o) (find-file-other-window path))
                 ((eq choice ?t) (find-file-other-tab path))
                 ((eq choice ?s) (my-org-find-file-in-new-session path))
-                ((eq choice ?d) nil)))))))
+                ((eq choice ?d) nil)))
+        (message "Project created: %s" path)))))
+
+(defun my-org-create-area-contents (title)
+  "Return file contents for a new area.
+
+TITLE is the area title."
+  (let ((template (with-temp-buffer (insert-file-contents (my-org-template "area")) (buffer-string)))
+        (id (org-id-new))
+        (timestamp (my-org-now-timestamp)))
+    (format template title id timestamp)))
+
+(defun my-org-create-area ()
+  "Create an area from the template."
+  (interactive)
+  (let ((context (completing-read "Context: " my-org-contexts nil t))
+        (title (read-string "Title: ")))
+    (when (string-empty-p title)
+      (user-error "Title cannot be empty"))
+    (let ((dir (expand-file-name "notes" (my-org-context-dir context))))
+      (require 'org-node)
+      (let* ((filename (org-node-title-to-basename title))
+             (path (expand-file-name filename dir)))
+        (with-temp-buffer (insert (my-org-create-area-contents title)) (write-file path))
+        (let ((choice (read-char-choice
+                       "Open area in [c]urrent window, [o]ther window, new [t]ab, [d]on't open: "
+                       '(?c ?o ?t ?d))))
+          (cond ((eq choice ?c) (find-file path))
+                ((eq choice ?o) (find-file-other-window path))
+                ((eq choice ?t) (find-file-other-tab path))
+                ((eq choice ?d) nil)))
+        (message "Area created: %s" path)))))
 
 (defun my-org-setup-gtd-and-knowledge-management ()
   "Create GTD & Knowledge Management directory if it doesn't exist."

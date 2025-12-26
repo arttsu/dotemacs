@@ -1,0 +1,10 @@
+* %1$s
+:PROPERTIES:
+:ID: %2$s
+:END:
+** Info
+- Created on %3$s \\
+** Tasks :refile:sort:checklist:
+** Notes :refile:sort:
+** Links :refile:
+** Attachments :attachments:
