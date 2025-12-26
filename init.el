@@ -407,6 +407,7 @@
   (setq org-capture-templates (my-org-capture-templates))
   (setq org-agenda-files (append (my-org-agenda-files "local") (my-org-agenda-files "shared")))
   (setq org-agenda-custom-commands (my-org-day-agenda-commands my-org-day-agenda-include-shared-by-default))
+  (add-hook 'org-after-todo-state-change-hook #'my-org-remove-priority-when-done -10)
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((shell . t)))
   :bind (:map global-map

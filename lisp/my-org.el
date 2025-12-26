@@ -183,6 +183,12 @@ logic is inversed."
   (interactive)
   (my-org-do-refile-note 'org-refile-copy))
 
+(defun my-org-remove-priority-when-done ()
+  "Remove priority from the entry at point if its to-do state changed to \"DONE\"."
+  (ignore-errors
+    (when (string= org-state "DONE")
+      (org-entry-put (point) "PRIORITY" nil))))
+
 (defun my-org-setup-gtd-and-knowledge-management ()
   "Create GTD & Knowledge Management directory if it doesn't exist."
   (unless (file-directory-p my-org-dir)
