@@ -440,6 +440,7 @@
   (setq org-agenda-files (append (my-org-agenda-files "local") (my-org-agenda-files "shared")))
   (setq org-agenda-custom-commands (my-org-day-agenda-commands my-org-day-agenda-include-shared-by-default))
   (add-hook 'org-after-todo-state-change-hook #'my-org-remove-priority-when-done -10)
+  (add-hook 'org-after-todo-state-change-hook #'my-org-checklist-auto-advance +10)
   (add-hook 'org-after-refile-insert-hook #'my-org-format-buffer)
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((shell . t)))

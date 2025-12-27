@@ -330,6 +330,21 @@ TITLE is the area title."
                 ((eq choice ?d) nil)))
         (message "Area created: %s" path)))))
 
+(defun my-org-checklist-do-auto-advance ()
+  "Move to the next task in a checklist, or jump to the parent if there are no more tasks."
+  (let ((point-before (point)))
+    (org-forward-heading-same-level 1)
+    (when (= (point) point-before)
+      (org-up-heading-safe))))
+
+(defun my-org-checklist-auto-advance ()
+  "Perform auto-advance if entry state has changed to \"DONE\" and it's part of a checklist."
+  (ignore-errors
+    (when (and (not (eq this-command 'org-agenda-todo))
+               (string= org-state "DONE")
+               (my-org-direct-parent-has-tag "checklist"))
+      (run-with-idle-timer 0 nil #'my-org-checklist-do-auto-advance))))
+
 (defun my-org-setup-gtd-and-knowledge-management ()
   "Create GTD & Knowledge Management directory if it doesn't exist."
   (unless (file-directory-p my-org-dir)
