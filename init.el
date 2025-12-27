@@ -456,7 +456,8 @@
               ("C-c C-S-w" . my-org-refile-note)
               ("C-c M-W" . my-org-refile-copy-note)
               ("C-c o f" . my-org-format-buffer)
-              ("C-c o s" . my-org-sort-entries))
+              ("C-c o s" . my-org-sort-entries)
+              ("C-c o r" . my-org-checklist-reset))
   :bind (:map org-capture-mode-map
               ("C-c C-S-w" . my-org-refile-capture-note)))
 

@@ -345,6 +345,17 @@ TITLE is the area title."
                (my-org-direct-parent-has-tag "checklist"))
       (run-with-idle-timer 0 nil #'my-org-checklist-do-auto-advance))))
 
+(defun my-org-checklist-reset ()
+  "Set all task state within the checklist at point to \"TODO\"."
+  (interactive)
+  (my-org-require-at-heading)
+  (when (not (my-org-has-tag "checklist"))
+    (user-error "Not a checklist"))
+  (when (yes-or-no-p "Reset the checklist?")
+    (org-map-entries (lambda () (org-todo "TODO")) nil 'tree)
+    ;; Remove "TODO" state set by 'org-map-entries' on the checklist heading itself.
+    (org-todo "")))
+
 (defun my-org-setup-gtd-and-knowledge-management ()
   "Create GTD & Knowledge Management directory if it doesn't exist."
   (unless (file-directory-p my-org-dir)
