@@ -526,3 +526,18 @@
               ("M-s M-f" . org-node-find)
               ("M-s M-i" . org-node-insert-link)
               ("M-s M-t" . org-node-add-tags-here)))
+
+;;; Anki Editor
+;; https://github.com/louietan/anki-editor
+
+(use-package anki-editor
+  :ensure
+  :init
+  (require 'my-anki)
+  :bind (:map my-anki-mode-map
+              ("C-M-<return>" . anki-editor-insert-note)
+              ("C-c p p" . anki-editor-push-note-at-point)
+              ("C-c p P" . anki-editor-push-notes)
+              ("C-c p n" . anki-editor-push-new-notes)
+              ("C-c p r" . anki-editor-retry-failure-notes)
+              ("C-c M-z" . anki-editor-cloze-dwim)))

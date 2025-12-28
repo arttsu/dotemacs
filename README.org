@@ -23,3 +23,8 @@
 *** Ledger
 **** macOS
 Install =ledger= via brew.
+
+*** Anki Editor
+1. Install Anki.
+
+2. Add [[https://git.sr.ht/~foosoft/anki-connect][Anki-Connect]] plugin.
