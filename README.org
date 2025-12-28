@@ -28,3 +28,13 @@ Install =ledger= via brew.
 1. Install Anki.
 
 2. Add [[https://git.sr.ht/~foosoft/anki-connect][Anki-Connect]] plugin.
+
+**** Generating audio
+Requires Microsoft Edge and edge-tts Python module.
+
+***** macOS
+#+begin_src shell
+  brew install microsoft-edge
+  brew install pipx # Make sure to add 'bin' dir to PATH.
+  pipx install edge-tts
+#+end_src

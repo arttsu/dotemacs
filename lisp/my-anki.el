@@ -15,6 +15,81 @@
   (let ((major-mode 'org-mode))
     (anki-editor-mode +1)))
 
+(defun my-anki-region-no-clozes (start end)
+  "Return region text with all clozes replaced by their answers.
+
+START and END are region bounds.
+
+If called interactively, copy the text to the kill ring instead."
+  (interactive "r")
+  (let* ((raw-text (buffer-substring-no-properties start end))
+         (clean-text (replace-regexp-in-string
+                      (rx
+                      "{{"
+                      "c" (one-or-more digit) "::" ; Cloze number
+                      (group                       ; The answer
+                       (minimal-match
+                        (zero-or-more any)))
+                      (optional                    ; Optional hint section
+                       "::"
+                       (minimal-match
+                        (zero-or-more any)))
+                      "}}")
+                     "\\1" ; Replace match with group 1 (the answer)
+                     raw-text)))
+    (if (called-interactively-p 'interactive)
+        (progn
+          (kill-new clean-text)
+          (message "Copied text without clozes"))
+      clean-text)))
+
+(defconst my-anki-voices '(("German" . ("de-DE-KatjaNeural"
+                                        "de-DE-AmalaNeural"
+                                        "de-DE-ConradNeural"
+                                        "de-DE-KillianNeural"))
+                           ("Spanish" . ("es-ES-ElviraNeural"
+                                         "es-ES-AbrilNeural"
+                                         "es-ES-AlvaroNeural"
+                                         "es-ES-ArnauNeural"
+                                         "es-MX-DaliaNeural"
+                                         "es-MX-JorgeNeural"))))
+
+(defun my-anki-random-voice (language)
+  "Return random voice from the list defined in 'my-anki-voices' for LANGUAGE."
+  (if-let ((voices (cdr (assoc language my-anki-voices))))
+      (nth (random (length voices)) voices)
+    (user-error "Unknown language: %s" language)))
+
+(defun my-anki-cloze-generate-audio ()
+  "Generate audio for a Cloze note at point."
+  (interactive)
+  (let ((language (org-entry-get nil "ANKI_LANG" t))
+        (note-type (org-entry-get nil "ANKI_NOTE_TYPE")))
+    (unless language (user-error "ANKI_LANG property is missing"))
+    (unless (string= note-type "Cloze") ("ANKI_NOTE_TYPE must be 'Cloze'"))
+    (let* ((dir (org-attach-dir-get-create))
+           (file (expand-file-name "audio.mp3" dir))
+           (voice (my-anki-random-voice language)))
+      (org-node-add-tags-here '("ATTACH" "ROAM_EXCLUDE"))
+      (save-excursion
+        (save-restriction
+          (org-narrow-to-subtree)
+          (re-search-forward (rx (>= 1 "*") (+ blank) "Text" line-end))
+          (let ((text-start (point)))
+            (re-search-forward (rx (>= 1 "*") (+ blank) "Back Extra" line-end))
+            (beginning-of-line)
+            (let* ((text (my-anki-region-no-clozes text-start (point)))
+                   (shell-text (replace-regexp-in-string "\"" "\\\\\"" text)))
+              (message "Generating audio with %s" voice)
+              (async-shell-command (format "edge-tts --text \"%s\" --write-media \"%s\" --voice %s" shell-text file voice))
+              (org-end-of-subtree)
+              (insert "\n")
+              (insert "[[attachment:audio.mp3]]"))))))))
+
+;; TODO: Function to generate audio for many notes.
+
+;; TODO: Function to play generated audio for a note via mpv.
+
 (provide 'my-anki)
 
 ;;; my-anki.el ends here.
