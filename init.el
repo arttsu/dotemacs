@@ -301,6 +301,12 @@
               ("C-x l" . pulsar-pulse-line)
               ("C-x L" . pulsar-highlight-temporarily)))
 
+;;; Transpose Frame
+;; https://github.com/emacsorphanage/transpose-frame
+
+(use-package transpose-frame
+  :ensure)
+
 ;;; Vertico
 ;; https://github.com/minad/vertico
 
