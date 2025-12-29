@@ -400,6 +400,15 @@
   :bind (:map isearch-mode-map
               ("C-;" . avy-isearch)))
 
+;;; Link Hint
+;; https://github.com/noctuid/link-hint.el
+
+(use-package link-hint
+  :ensure
+  :bind (:map global-map
+              ("C-c f" . link-hint-open-link)
+              ("C-c y" . link-hint-copy-link)))
+
 ;;; Jinx
 ;; https://github.com/minad/jinx
 
