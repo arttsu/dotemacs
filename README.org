@@ -38,3 +38,7 @@ Requires Microsoft Edge and edge-tts Python module.
   brew install pipx # Make sure to add 'bin' dir to PATH.
   pipx install edge-tts
 #+end_src
+
+*** LaTeX
+**** macOS
+Install =mactex= via brew.

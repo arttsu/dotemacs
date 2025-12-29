@@ -547,3 +547,9 @@
               ("C-c p r" . anki-editor-retry-failure-notes)
               ("C-c M-z" . anki-editor-cloze-dwim)
               ("C-c v" . my-anki-cloze-generate-audio)))
+
+;;; AUCTeX
+;; https://www.gnu.org/software/auctex/
+
+(use-package auctex
+  :ensure)
