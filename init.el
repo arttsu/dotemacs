@@ -553,3 +553,11 @@
 
 (use-package auctex
   :ensure)
+
+;;; PDF Tools
+;; https://github.com/vedang/pdf-tools
+
+(use-package pdf-tools
+  :ensure
+  :custom
+  (TeX-view-program-selection '((output-pdf "PDF Tools"))))
