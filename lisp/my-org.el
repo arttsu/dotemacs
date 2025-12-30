@@ -5,8 +5,6 @@
 
 ;;; Code:
 
-;; TODO: Function: Create Org directories.
-
 (defun my-org-template (name)
   "Return the path to a template file.
 
@@ -91,7 +89,6 @@ With a PREFIX argument capture to the shared inbox."
 (defun my-org-day-agenda-skip-task ()
   "Decide whether or not to display the task at point in the \"Day\" agenda."
   (let ((subtree-end (save-excursion (org-end-of-subtree t))))
-    ;; TODO: Skip low-prio tasks.
     (when (or (my-org-entry-scheduled-or-deadline-p (point))
               (my-org-day-agenda-task-priority-too-low-p))
       subtree-end)))
@@ -130,7 +127,6 @@ With a PREFIX argument capture to the shared inbox."
   "Return \"Day\" agenda command.
 
 FILES is a list of files to collect tasks and projects from."
-  ;; TODO: Add projects.
   `((agenda "" ((org-agenda-span 1)
                 (org-agenda-skip-scheduled-if-done t)
                 (org-agenda-skip-deadline-if-done t)
