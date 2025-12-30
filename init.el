@@ -580,3 +580,9 @@
   :ensure
   :custom
   (TeX-view-program-selection '((output-pdf "PDF Tools"))))
+
+;;; Markdown Mode
+;; https://github.com/jrblevin/markdown-mode
+
+(use-package markdown-mode
+  :ensure)
