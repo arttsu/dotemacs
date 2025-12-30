@@ -378,6 +378,18 @@ TITLE is the area title."
         (when-let ((heading-clean (my-org-crossed-out-clean heading)))
           (org-edit-headline heading-clean))))))
 
+(defun my-org-paste-as-link ()
+  "Ask for link title and insert current clipboard contents as an Org link."
+  (interactive)
+  (let ((link (gui-get-selection 'CLIPBOARD))
+        (title (read-string "Link title: ")))
+    (unless (string-match (rx string-start "http" (optional "s") "://") link)
+      (user-error "Link must start with 'http(s)://'"))
+    (if (string-blank-p title)
+        (insert (format "[[%s]]" link))
+      (insert (format "[[%s][%s]]" link title)))
+    (message "Pasted link %s" link)))
+
 (defun my-org-setup-gtd-and-knowledge-management ()
   "Create GTD & Knowledge Management directory if it doesn't exist."
   (unless (file-directory-p my-org-dir)
