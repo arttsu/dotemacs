@@ -356,6 +356,28 @@ TITLE is the area title."
     ;; Remove "TODO" state set by 'org-map-entries' on the checklist heading itself.
     (org-todo "")))
 
+(defun my-org-crossed-out-clean (text)
+  "If TEXT is \"crossed out\" return clean text, otherwise return nil."
+  (when (string-match (rx string-start "+" (group (1+ anychar)) "+" string-end) text)
+    (match-string 1 text)))
+
+(defun my-org-complete-as-wont-do ()
+  "Complete the heading at point and \"cross it out\"."
+  (interactive)
+  (my-org-require-at-heading)
+  (when (not (string= (org-get-todo-state) "DONE"))
+    (let ((heading (org-get-heading t t t t)))
+      (org-todo 'done)
+      (org-edit-headline (format "+%s+" heading)))))
+
+(defun my-org-revert-wont-do ()
+  "When a heading state changes from \"DONE\" make sure that it's not \"crossed out\"."
+  (ignore-errors
+    (when (not (string= org-state "DONE"))
+      (let ((heading (org-get-heading t t t t)))
+        (when-let ((heading-clean (my-org-crossed-out-clean heading)))
+          (org-edit-headline heading-clean))))))
+
 (defun my-org-setup-gtd-and-knowledge-management ()
   "Create GTD & Knowledge Management directory if it doesn't exist."
   (unless (file-directory-p my-org-dir)

@@ -473,6 +473,7 @@
   (setq org-agenda-files (append (my-org-agenda-files "local") (my-org-agenda-files "shared")))
   (setq org-agenda-custom-commands (my-org-day-agenda-commands my-org-day-agenda-include-shared-by-default))
   (add-hook 'org-after-todo-state-change-hook #'my-org-remove-priority-when-done -10)
+  (add-hook 'org-after-todo-state-change-hook #'my-org-revert-wont-do -10)
   (add-hook 'org-after-todo-state-change-hook #'my-org-checklist-auto-advance +10)
   (add-hook 'org-after-refile-insert-hook #'my-org-format-buffer)
   (org-babel-do-load-languages 'org-babel-load-languages
@@ -491,7 +492,8 @@
               ("C-c o f" . my-org-format-buffer)
               ("C-c o s" . my-org-sort-entries)
               ("C-c o r" . my-org-checklist-reset)
-              ("C-c o C-i" . org-id-get-create))
+              ("C-c o C-i" . org-id-get-create)
+              ("C-c o x" . my-org-complete-as-wont-do))
   :bind (:map org-capture-mode-map
               ("C-c C-S-w" . my-org-refile-capture-note)))
 
