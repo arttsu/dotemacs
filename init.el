@@ -60,7 +60,8 @@
               ("<f8>" . my-pop-mark)
               ("C-M-; d" . duplicate-dwim)
               ("M-z" . zap-up-to-char)
-              ("M-Z" . zap-to-char)))
+              ("M-Z" . zap-to-char)
+              ("C-c d h" . erase-buffer)))
 
 ;;; Dired
 
