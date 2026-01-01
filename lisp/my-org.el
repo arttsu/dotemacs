@@ -391,6 +391,12 @@ TITLE is the area title."
   (unless (file-directory-p my-org-dir)
     (copy-directory (expand-file-name "templates/org" user-emacs-directory) my-org-dir)))
 
+(defun my-org-open-local-inbox ()
+  "Open the local inbox in other window."
+  (interactive)
+  (let ((path (expand-file-name "local/gtd/inbox.org" my-org-dir)))
+    (find-file-other-window path)))
+
 (provide 'my-org)
 
 ;;; my-org.el ends here.
