@@ -100,14 +100,17 @@ With a PREFIX argument capture to the shared inbox."
     (when (= priority 0)
       subtree-end)))
 
+(defun my-org-goto-first-heading ()
+  "Move to the first heading in the buffer."
+  (goto-char (point-min))
+  (unless (org-at-heading-p) (org-forward-heading-same-level 1)))
+
 (defun my-org-get-first-heading ()
   "Return the first heading in the buffer."
   (save-excursion
     (save-restriction
       (widen)
-      (goto-char (point-min))
-      (unless (org-at-heading-p)
-        (org-forward-heading-same-level 1))
+      (my-org-goto-first-heading)
       (when (org-at-heading-p)
         (org-get-heading t t t t)))))
 
@@ -295,6 +298,33 @@ PRIORITY is a character representing the priority of the project."
                 ((eq choice ?s) (my-org-find-file-in-new-session path))
                 ((eq choice ?d) nil)))
         (message "Project created: %s" path)))))
+
+(defun my-org-archive-project ()
+  "Archive the project in the the current buffer."
+  (interactive)
+  (when (yes-or-no-p "Archive this project?")
+    (my-org-goto-first-heading)
+    (unless (and (org-at-heading-p) (my-org-has-tag "project"))
+      (user-error "Not in a project buffer"))
+    (let* ((file-path (buffer-file-name))
+           (projects-dir (file-name-directory file-path))
+           (archive-dir (expand-file-name "archive" projects-dir))
+           (file-name (file-name-nondirectory file-path))
+           (archive-path (expand-file-name file-name archive-dir)))
+      (unless (file-directory-p archive-dir) (make-directory archive-dir))
+      (org-entry-put (point) "PRIORITY" nil)
+      (org-entry-put (point) "ARCHIVED" (my-org-now-timestamp))
+      (save-buffer)
+      (rename-file file-path archive-path)
+      (set-visited-file-name archive-path)
+      (set-buffer-modified-p nil)
+      (message "Project archived to %s" archive-path)
+      (let ((session-name (file-name-sans-extension file-name)))
+        (cond ((string= (easysession-get-session-name) session-name) (when (yes-or-no-p "Delete the session and switch to 'main'?")
+                                                                       (easysession-switch-to-and-restore-geometry "main")
+                                                                       (easysession-delete session-name)))
+              ((easysession--exists session-name) (when (yes-or-no-p (format "Delete session '%s'?" session-name))
+                                                    (easysession-delete session-name))))))))
 
 (defun my-org-create-area-contents (title)
   "Return file contents for a new area.

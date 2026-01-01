@@ -497,7 +497,8 @@
               ("C-c o r" . my-org-checklist-reset)
               ("C-c o C-i" . org-id-get-create)
               ("C-c o x" . my-org-complete-as-wont-do)
-              ("C-c L" . my-org-paste-as-link))
+              ("C-c L" . my-org-paste-as-link)
+              ("C-c o z" . my-org-archive-project))
   :bind (:map org-capture-mode-map
               ("C-c C-S-w" . my-org-refile-capture-note)))
 
