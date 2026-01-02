@@ -100,6 +100,23 @@ With a PREFIX argument capture to the shared inbox."
     (when (= priority 0)
       subtree-end)))
 
+(defun my-org-any-note-date (predicate)
+  "Call the PREDICATE on each note date until the end of the buffer.
+
+Return t as soon as the PREDICATE returns t for one of the notes."
+  (when (re-search-forward (rx "Note taken on [" (group (= 4 digit) "-" (= 2 digit) "-" (= 2 digit))) nil t)
+    (if (apply predicate (list (match-string-no-properties 1)))
+        t
+      (my-org-get-note-today))))
+
+(defun my-org-has-note-today ()
+  "Return t if the heading at point has a note from today."
+  (save-excursion
+    (save-restriction
+      (org-narrow-to-subtree)
+      (let ((today (format-time-string "%Y-%m-%d")))
+        (my-org-any-note-date (lambda (date) (string= date today)))))))
+
 (defun my-org-goto-first-heading ()
   "Move to the first heading in the buffer."
   (goto-char (point-min))
@@ -126,6 +143,12 @@ With a PREFIX argument capture to the shared inbox."
           (buffer-file-name)))
     ""))
 
+(defun my-org-day-agenda-skip-long-running ()
+  "Decide whether or not to display the long-running task at point in the \"Day\" agenda."
+  (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+    (when (my-org-has-note-today)
+      subtree-end)))
+
 (defun my-org-day-agenda-command (files)
   "Return \"Day\" agenda command.
 
@@ -138,7 +161,9 @@ FILES is a list of files to collect tasks and projects from."
     (todo "TODO" ((org-agenda-overriding-header "Non-scheduled Tasks")
                   (org-agenda-skip-function 'my-org-day-agenda-skip-task)
                   (org-agenda-files ',files)))
-    (tags-todo "long" ((org-agenda-overriding-header "Long-running Tasks")))
+    (tags-todo "long" ((org-agenda-overriding-header "Long-running Tasks")
+                       (org-agenda-skip-function 'my-org-day-agenda-skip-long-running)
+                       (org-agenda-files ',files)))
     (tags "project" ((org-agenda-overriding-header "Projects")
                      (org-agenda-sorting-strategy '(priority-down))
                      (org-agenda-skip-function 'my-org-day-agenda-skip-project)
