@@ -149,7 +149,7 @@
   :custom
   (super-save-all-buffers t)
   (super-save-auto-save-when-idle t)
-  (super-save-delete-trailing-whitespace 'except-current-line)
+  (super-save-delete-trailing-whitespace nil)
   (super-save-silent t)
   (super-save-exclude '(".gpg" ".sbt" "project/"))
   (auto-save-default nil)
