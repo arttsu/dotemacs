@@ -138,6 +138,7 @@ FILES is a list of files to collect tasks and projects from."
     (todo "TODO" ((org-agenda-overriding-header "Non-scheduled Tasks")
                   (org-agenda-skip-function 'my-org-day-agenda-skip-task)
                   (org-agenda-files ',files)))
+    (tags-todo "long" ((org-agenda-overriding-header "Long-running Tasks")))
     (tags "project" ((org-agenda-overriding-header "Projects")
                      (org-agenda-sorting-strategy '(priority-down))
                      (org-agenda-skip-function 'my-org-day-agenda-skip-project)

@@ -453,14 +453,14 @@
   (org-outline-path-complete-in-steps nil)
   (org-confirm-babel-evaluate nil)
   (org-refile-targets '((org-agenda-files :tag . "refile")))
-  (org-tags-exclude-from-inheritance '("refile" "agenda" "project" "sort" "checklist" "attachments" "ROAM_EXCLUDE"))
+  (org-tags-exclude-from-inheritance '("refile" "agenda" "project" "sort" "checklist" "attachments" "ROAM_EXCLUDE" "long"))
   (org-attach-id-dir (expand-file-name "local-attachments" my-org-dir))
   (org-attach-use-inheritance t)
   (org-agenda-prefix-format '((agenda . " %i %-20(my-org-agenda-category) %?-12t% s")
                               (todo . " %i %-20(my-org-agenda-category) ")
                               (tags . " %i %-20(my-org-agenda-category) ")
                               (search . " %i %-20(my-org-agenda-category) ")))
-  (org-agenda-hide-tags-regexp (rx (or "project" "ATTACH" "ROAM_EXCLUDE")))
+  (org-agenda-hide-tags-regexp (rx (or "project" "ATTACH" "ROAM_EXCLUDE" "long")))
   (org-habit-graph-column 60)
   (org-habit-show-done-always-green t)
   :init
@@ -527,7 +527,8 @@
                           ("project" :inherit default :height 0.75 :slant normal)
                           ("sort" :inherit default :height 0.75 :slant normal)
                           ("checklist" :inherit default :height 0.75 :slant normal)
-                          ("attachments" :inherit default :height 0.75 :slant normal)))
+                          ("attachments" :inherit default :height 0.75 :slant normal)
+                          ("long" :inherit default :height 0.75 :slant normal)))
   :custom-face
   (org-modern-tag ((t (:background "AntiqueWhite" :foreground "Black" :slant italic))))
   :config
