@@ -107,7 +107,7 @@ Return t as soon as the PREDICATE returns t for one of the notes."
   (when (re-search-forward (rx "Note taken on [" (group (= 4 digit) "-" (= 2 digit) "-" (= 2 digit))) nil t)
     (if (apply predicate (list (match-string-no-properties 1)))
         t
-      (my-org-get-note-today))))
+      (my-org-any-note-date predicate))))
 
 (defun my-org-has-note-today ()
   "Return t if the heading at point has a note from today."
