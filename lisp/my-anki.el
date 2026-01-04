@@ -64,7 +64,8 @@ If called interactively, copy the text to the kill ring instead."
   "Generate audio for a Cloze note at point."
   (interactive)
   (let ((language (org-entry-get nil "ANKI_LANG" t))
-        (note-type (org-entry-get nil "ANKI_NOTE_TYPE")))
+        (note-type (org-entry-get nil "ANKI_NOTE_TYPE"))
+        (note-title (org-entry-get nil "ITEM")))
     (unless language (user-error "ANKI_LANG property is missing"))
     (unless (string= note-type "Cloze") ("ANKI_NOTE_TYPE must be 'Cloze'"))
     (let* ((dir (org-attach-dir-get-create))
@@ -80,13 +81,27 @@ If called interactively, copy the text to the kill ring instead."
             (beginning-of-line)
             (let* ((text (my-anki-region-no-clozes text-start (point)))
                    (shell-text (replace-regexp-in-string "\"" "\\\\\"" text)))
-              (message "Generating audio with %s" voice)
-              (async-shell-command (format "edge-tts --text \"%s\" --write-media \"%s\" --voice %s" shell-text file voice))
+              (message "Generating audio for note '%s' using voice '%s'" note-title voice)
+              (call-process "edge-tts" nil nil nil "--text" shell-text "--write-media" file "--voice" voice)
               (org-end-of-subtree)
               (insert "\n")
               (insert "[[attachment:audio.mp3]]"))))))))
 
-;; TODO: Function to generate audio for many notes.
+(defun anki-editor-tts--skip-over-non-notes ()
+  "Return position to continue from if the entry at point is not an Anki note.
+
+Meant to be used as the \"skip function\" argument for 'org-map-entries'."
+  (let ((org-trust-scanner-tags t))
+    (let ((note-type (cdr (assoc "ANKI_NOTE_TYPE" (org-entry-properties nil "ANKI_NOTE_TYPE")))))
+      (unless note-type
+        (save-excursion (org-end-of-subtree t))))))
+
+(defun anki-editor-tts-generate ()
+  "Generate audio for the Anki note at point or each note in the active region if one is active."
+  (interactive)
+  (if (use-region-p)
+      (org-map-entries #'my-anki-cloze-generate-audio nil 'region #'anki-editor-tts--skip-over-non-notes)
+    (my-anki-cloze-generate-audio)))
 
 ;; TODO: Function to play generated audio for a note via mpv.
 
