@@ -103,6 +103,19 @@ Meant to be used as the \"skip function\" argument for 'org-map-entries'."
       (org-map-entries #'my-anki-cloze-generate-audio nil 'region #'anki-editor-tts--skip-over-non-notes)
     (my-anki-cloze-generate-audio)))
 
+(defun anki-editor-tts-play ()
+  "Play the audio of the note at point."
+  (interactive)
+  (if-let ((dir (org-attach-dir)))
+      (if-let ((file (car (directory-files dir t (rx string-start "audio.mp3" string-end)))))
+          (make-process :name "anki-editor-tts-play"
+                        :buffer nil
+                        :command (list "mpv" "--terminal=no" file)
+                        :noquery t ; Don't ask before exiting Emacs.
+                        :connection-type 'pipe) ; Supposed to be more efficient/cleaner for non-interactive tools.
+        (message "No audio file"))
+    (message "No attach dir")))
+
 ;; TODO: Function to play generated audio for a note via mpv.
 
 (provide 'my-anki)

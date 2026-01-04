@@ -569,7 +569,8 @@
               ("C-c p n" . anki-editor-push-new-notes)
               ("C-c p r" . anki-editor-retry-failure-notes)
               ("C-c M-z" . anki-editor-cloze-dwim)
-              ("C-c v" . anki-editor-tts-generate)))
+              ("C-c v g" . anki-editor-tts-generate)
+              ("C-c v p" . anki-editor-tts-play)))
 
 ;;; AUCTeX
 ;; https://www.gnu.org/software/auctex/
