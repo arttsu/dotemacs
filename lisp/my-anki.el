@@ -116,8 +116,6 @@ Meant to be used as the \"skip function\" argument for 'org-map-entries'."
         (message "No audio file"))
     (message "No attach dir")))
 
-;; TODO: Function to play generated audio for a note via mpv.
-
 (provide 'my-anki)
 
 ;;; my-anki.el ends here.
