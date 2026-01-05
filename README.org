@@ -39,6 +39,9 @@ Requires Microsoft Edge and edge-tts Python module.
   pipx install edge-tts
 #+end_src
 
+**** Playing audio
+Needs =mpv=. Install via a package manager (e.g. Homebrew).
+
 *** LaTeX
 **** macOS
 Install =mactex= via brew.
