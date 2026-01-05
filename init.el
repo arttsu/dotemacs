@@ -32,6 +32,8 @@
   (epg-pinentry-mode 'loopback)
   (disabled-command-function nil)
   (custom-file my-custom-file)
+  (split-width-threshold 160)
+  (split-height-threshold nil)
   :init
   ;; Make right option behave like AltGr, so that EurKEY layout works
   ;; properly.
