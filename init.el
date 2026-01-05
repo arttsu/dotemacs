@@ -593,3 +593,11 @@
 
 (use-package markdown-mode
   :ensure)
+
+;;; Htmlize
+;; https://github.com/emacsorphanage/htmlize
+
+;; Needed it for exporting Anki notes containing source code.
+
+(use-package htmlize
+  :ensure t)
