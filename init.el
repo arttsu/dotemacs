@@ -617,4 +617,5 @@
     (add-hook 'vterm-mode-hook #'my-vterm-unbind-keys)
     :bind (:map global-map
                 ("C-x v" . vterm)
-                ("C-x 4 v" . vterm-other-window))))
+                ("C-x 4 v" . vterm-other-window)
+                ("C-x p v" . my-vterm-project))))
