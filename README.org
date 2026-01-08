@@ -8,6 +8,13 @@
 
 2. Edit =local.el=.
 
+*** Vterm
+**** 1. Install dependencies:
+***** macOS
+Install =cmake= and =libtool= via brew.
+
+**** 2. Set my-use-vterm to t in =local.el=:
+
 *** Jinx
 **** macOS
 1. Install Enchant:
