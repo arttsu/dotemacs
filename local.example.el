@@ -13,3 +13,5 @@
 ;;;; Functionality Variables
 
 (setq my-jinx-languages nil) ; To enable Jinx set it to space-separated string of langues, e.g. "en_US ru".
+
+(setq my-use-vterm nil)

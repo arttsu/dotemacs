@@ -601,3 +601,16 @@
 
 (use-package htmlize
   :ensure t)
+
+;;; Vterm
+;; https://github.com/akermu/emacs-libvterm
+
+(when my-use-vterm
+  (use-package vterm
+    :ensure t
+    :custom
+    (vterm-max-scrollback 50000)
+    (vterm-clear-scrollback-when-clearing t)
+    :bind (:map global-map
+                ("C-x v" . vterm)
+                ("C-x 4 v" . vterm-other-window))))

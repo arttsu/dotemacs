@@ -25,6 +25,8 @@
 
 (defvar my-jinx-languages nil)
 
+(defvar my-use-vterm nil)
+
 ;;;; Load Local Overrides
 
 (let ((file (expand-file-name "local.el" user-emacs-directory)))
