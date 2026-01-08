@@ -182,7 +182,8 @@
               ("<f12> S" . easysession-save-as)
               ("<f12> k" . easysession-delete)
               ("<f12> r" . easysession-rename)
-              ("<f12> x" . my-easysession-reset)))
+              ("<f12> x" . my-easysession-reset)
+              ("<f12> m" . my-easysession-switch-to-main)))
 
 ;;; Smartparens
 ;; https://github.com/Fuco1/smartparens

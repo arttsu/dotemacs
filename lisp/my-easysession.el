@@ -42,6 +42,11 @@ The returned list contains live buffers only."
   (when (yes-or-no-p "Reset the current session?")
     (my-easysession-do-reset)))
 
+(defun my-easysession-switch-to-main ()
+  "Switch to the session 'main'."
+  (interactive)
+  (easysession-switch-to-and-restore-geometry "main"))
+
 (provide 'my-easysession)
 
 ;;; my-easysession.el ends here.
