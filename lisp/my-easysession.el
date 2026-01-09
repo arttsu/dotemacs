@@ -45,7 +45,7 @@ The returned list contains live buffers only."
 (defun my-easysession-switch-to-main ()
   "Switch to the session 'main'."
   (interactive)
-  (easysession-switch-to-and-restore-geometry "main"))
+  (easysession-switch-to "main"))
 
 (provide 'my-easysession)
 
