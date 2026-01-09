@@ -619,3 +619,9 @@
                 ("C-x v" . vterm)
                 ("C-x 4 v" . vterm-other-window)
                 ("C-x p v" . my-vterm-project))))
+
+;;; Life Calendar
+;; https://github.com/vshender/emacs-life-calendar
+
+(use-package life-calendar
+  :ensure (:host github :repo "vshender/emacs-life-calendar"))
