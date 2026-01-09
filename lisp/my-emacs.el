@@ -15,6 +15,11 @@
   (interactive)
   (set-mark-command '(4)))
 
+(defun my-jump-to-custom ()
+  "Find the custom file."
+  (interactive)
+  (find-file my-custom-file))
+
 (provide 'my-emacs)
 
 ;;; my-emacs.el ends here

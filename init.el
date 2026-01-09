@@ -59,6 +59,7 @@
   :bind (:map global-map
               ("C-c j x" . scratch-buffer)
               ("C-c j h" . my-jump-home)
+              ("C-c j c" . my-jump-to-custom)
               ("<f8>" . my-pop-mark)
               ("C-M-; d" . duplicate-dwim)
               ("M-z" . zap-up-to-char)
