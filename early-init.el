@@ -16,7 +16,8 @@
 
 ;;;; UI Variables
 
-(defvar my-ui-default-modus-theme nil)
+(defvar my-ui-default-modus-theme 'modus-operandi)
+(defvar my-ui-other-modus-theme 'modus-vivendi)
 (defvar my-ui-default-font nil)
 (defvar my-ui-default-font-height nil)
 (defvar my-ui-default-emoji-font nil)

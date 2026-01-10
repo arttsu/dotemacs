@@ -14,6 +14,14 @@
   (when my-ui-default-emoji-font
     (set-fontset-font t 'unicode my-ui-default-emoji-font nil 'append)))
 
+(defun my-ui-toggle-modus-theme ()
+  "Toggle between the 'default' and 'other' themes."
+  (interactive)
+  (let ((theme (if (eq (modus-themes-get-current-theme) my-ui-default-modus-theme)
+                   my-ui-other-modus-theme
+                 my-ui-default-modus-theme)))
+    (modus-themes-load-theme theme)))
+
 (provide 'my-ui)
 
 ;;; my-ui.el ends here

@@ -116,6 +116,7 @@
 
 (use-package modus-themes
   :ensure
+  :demand
   :custom
   (modus-themes-italic-constructs t)
   (modus-themes-org-blocks 'gray-background)
@@ -125,7 +126,9 @@
                            (3 . (extrabold 1.3))
                            (4 . (extrabold 1.1))
                            (t . (extrabold))))
-  (modus-themes-variable-pitch-ui t))
+  (modus-themes-variable-pitch-ui t)
+  :bind (:map global-map
+              ("<f9> t" . my-ui-toggle-modus-theme)))
 
 ;;; Transient
 ;; https://github.com/magit/transient
