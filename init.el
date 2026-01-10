@@ -628,4 +628,6 @@
 ;; https://github.com/vshender/emacs-life-calendar
 
 (use-package life-calendar
-  :ensure (:host github :repo "vshender/emacs-life-calendar"))
+  :ensure (:host github :repo "vshender/emacs-life-calendar")
+  :bind (:map global-map
+              ("<f9> l" . life-calendar)))
