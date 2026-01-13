@@ -631,3 +631,38 @@
   :ensure (:host github :repo "vshender/emacs-life-calendar")
   :bind (:map global-map
               ("<f9> l" . life-calendar)))
+
+;;; LSP Mode
+;; https://github.com/emacs-lsp/lsp-mode
+
+(use-package lsp-mode
+  :ensure
+  ;; TODO: Might need to set 'lsp-clojure-custom-server-command'.
+  :custom
+  (lsp-keymap-prefix "<f5>")
+  (lsp-completion-provider :none)
+  :hook
+  (clojure-mode . lsp)
+  :config
+  (require 'my-lsp)
+  (add-hook 'lsp-mode-hook #'my-lsp-setup-corfu)
+  :commands lsp
+  :bind (:map lsp-mode-map
+              ([M-down-mouse-1] . mouse-set-point)
+              ([M-mouse-1] . lsp-find-definition)
+              ([M-mouse-3] . xref-go-back)))
+
+;;; Clojure Mode
+;; https://github.com/clojure-emacs/clojure-mode
+
+(use-package clojure-mode
+  :ensure)
+
+;;; CIDER
+;; https://github.com/clojure-emacs/cider
+
+(use-package cider
+  :ensure
+  :hook (clojure-mode . cider-mode)
+  :custom
+  (cider-save-file-on-load t))
