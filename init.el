@@ -666,3 +666,9 @@
   :hook (clojure-mode . cider-mode)
   :custom
   (cider-save-file-on-load t))
+
+;;; Just Mode
+;; https://github.com/leon-barrett/just-mode.el
+
+(use-package just-mode
+  :ensure)
