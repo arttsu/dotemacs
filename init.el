@@ -648,6 +648,7 @@
   (add-hook 'lsp-mode-hook #'my-lsp-setup-corfu)
   :commands lsp
   :bind (:map lsp-mode-map
+              ("M-." . lsp-find-definition)
               ([M-down-mouse-1] . mouse-set-point)
               ([M-mouse-1] . lsp-find-definition)
               ([M-mouse-3] . xref-go-back)))
