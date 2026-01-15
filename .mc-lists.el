@@ -5,6 +5,7 @@
       '(
         org-beginning-of-line
         org-self-insert-command
+        whole-line-or-region-kill-region
         ))
 
 (setq mc/cmds-to-run-once
