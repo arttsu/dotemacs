@@ -3,8 +3,11 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        forward-sexp
+        iy-go-to-char--command
         org-beginning-of-line
         org-self-insert-command
+        sp-down-sexp
         whole-line-or-region-kill-region
         ))
 
