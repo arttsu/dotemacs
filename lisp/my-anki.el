@@ -71,7 +71,8 @@ If called interactively, copy the text to the kill ring instead."
     (let* ((dir (org-attach-dir-get-create))
            (file (expand-file-name "audio.mp3" dir))
            (voice (my-anki-random-voice language)))
-      (org-node-add-tags-here '("ATTACH" "ROAM_EXCLUDE"))
+      (org-node-add-tags-here '("ATTACH"))
+      (org-set-property "ROAM_EXCLUDE" "t")
       (save-excursion
         (save-restriction
           (org-narrow-to-subtree)
