@@ -340,6 +340,7 @@ PRIORITY is a character representing the priority of the project."
       (unless (file-directory-p archive-dir) (make-directory archive-dir))
       (org-entry-put (point) "PRIORITY" nil)
       (org-entry-put (point) "ARCHIVED" (my-org-now-timestamp))
+      (org-entry-put (point) "ROAM_EXCLUDE" "t")
       (save-buffer)
       (rename-file file-path archive-path)
       (set-visited-file-name archive-path)
