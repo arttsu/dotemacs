@@ -4,6 +4,9 @@
 :ID: %3$s
 :END:
 ** Info
+:PROPERTIES:
+:VISIBILITY: all
+:END:
 - Created on %4$s \\
 ** Tasks :refile:sort:checklist:
 ** Notes :refile:sort:
