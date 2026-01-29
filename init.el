@@ -505,7 +505,8 @@
               ("C-c o C-i" . org-id-get-create)
               ("C-c o x" . my-org-complete-as-wont-do)
               ("C-c L" . my-org-paste-as-link)
-              ("C-c o z" . my-org-archive-project))
+              ("C-c o z" . my-org-archive-project)
+              ("C-c o X" . my-org-exclude-node))
   :bind (:map org-capture-mode-map
               ("C-c C-S-w" . my-org-refile-capture-note)))
 

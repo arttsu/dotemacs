@@ -453,6 +453,12 @@ TITLE is the area title."
   (let ((path (expand-file-name "local/gtd/inbox.org" my-org-dir)))
     (find-file-other-window path)))
 
+(defun my-org-exclude-node ()
+  "Add ROAM_EXCLUDE property to the heading at point."
+  (interactive)
+  (my-org-require-at-heading)
+  (org-set-property "ROAM_EXCLUDE" "t"))
+
 (provide 'my-org)
 
 ;;; my-org.el ends here.
