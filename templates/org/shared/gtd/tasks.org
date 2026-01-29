@@ -1,3 +1,4 @@
+#+STARTUP: content
 * Shared Tasks
 ** Ad-hoc :refile:agenda:sort:
 ** Recurring :refile:agenda:sort:

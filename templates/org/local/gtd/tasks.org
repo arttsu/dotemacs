@@ -1,3 +1,4 @@
+#+STARTUP: content
 * Local Tasks
 ** Ad-hoc :refile:agenda:sort:
 ** Recurring :refile:agenda:sort:

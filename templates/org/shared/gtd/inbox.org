@@ -1,2 +1,3 @@
+#+STARTUP: content
 * Shared Inbox
 ** Items :refile:agenda:sort:

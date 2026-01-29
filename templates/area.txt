@@ -1,3 +1,4 @@
+#+STARTUP: content
 * %1$s
 :PROPERTIES:
 :ID: %2$s

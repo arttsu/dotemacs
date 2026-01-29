@@ -1,2 +1,3 @@
+#+STARTUP: content
 * Local Inbox
 ** Items :refile:agenda:sort:
