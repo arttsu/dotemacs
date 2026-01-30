@@ -86,7 +86,10 @@
 
 (use-package project
   :config
-  (add-to-list 'project-switch-commands '(project-dired "Dired" "<return>") t))
+  (add-to-list 'project-switch-commands '(project-dired "Dired" "<return>") t)
+  :bind (:map global-map
+              ("C-x p g" . rg-dwim-project-dir)
+              ("C-x p G" . rg-project)))
 
 ;;; Imenu
 
@@ -318,7 +321,6 @@
 ;;; Vertico
 ;; https://github.com/minad/vertico
 
-;; TODO: Add multiform categories for Consult Ripgrep.
 (use-package vertico
   :ensure
   :demand
@@ -328,6 +330,7 @@
   (vertico-mode +1)
   (vertico-multiform-mode +1)
   (add-to-list 'vertico-multiform-categories '(jinx grid (vertico-grid-annotate . 20)))
+  (add-to-list 'vertico-multiform-categories '(consult-ripgrep buffer indexed))
   :bind (:map vertico-map
               ("C-;" . vertico-quick-insert)))
 
@@ -362,7 +365,6 @@
 ;;; Consult
 ;; https://github.com/minad/consult
 
-;; TODO: Bind consult-ripgrep.
 (use-package consult
   :ensure
   :config
@@ -381,7 +383,16 @@
               ("M-g o" . consult-outline)
               ("M-s l" . consult-line)
               ("M-s k" . consult-keep-lines)
-              ("M-s f" . consult-focus-lines)))
+              ("M-s f" . consult-focus-lines)
+              ("M-s r" . consult-ripgrep)))
+
+;;; rg.el
+;; https://github.com/dajva/rg.el
+
+(use-package rg
+  :ensure
+  :bind (:map global-map
+              ("M-s R" . rg-menu)))
 
 ;;; Avy
 ;; https://github.com/abo-abo/avy
