@@ -170,7 +170,7 @@
 ;; https://github.com/jamescherti/easysession.el
 
 (use-package easysession
-  :ensure
+  :ensure (:host github :repo "jamescherti/easysession.el")
   :custom
   (easysession-mode-line-misc-info t)
   (easysession-save-interval 60)
@@ -498,6 +498,14 @@
   (add-hook 'org-after-refile-insert-hook #'my-org-format-buffer)
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((shell . t)))
+  (add-to-list 'display-buffer-alist
+               `(,(rx (or "*Org Agenda*" "*Agenda Commands*"))
+                 display-buffer-in-side-window
+                 (side . right)
+                 (slot . 0)
+                 (window-parameters . ((no-delete-other-windows . t)))
+                 (window-width . 100)
+                 (dedicated . t)))
   :bind (:map global-map
               ("C-c c" . org-capture)
               ("C-c a" . org-agenda)
