@@ -47,6 +47,10 @@ The returned list contains live buffers only."
   (interactive)
   (easysession-switch-to "main"))
 
+(defun my-easysession-exists-p (name)
+  "Return t if a session NAME exists."
+  (file-exists-p (expand-file-name (format "easysession/%s" name) user-emacs-directory)))
+
 (provide 'my-easysession)
 
 ;;; my-easysession.el ends here.

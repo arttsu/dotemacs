@@ -350,8 +350,8 @@ PRIORITY is a character representing the priority of the project."
         (cond ((string= (easysession-get-session-name) session-name) (when (yes-or-no-p "Delete the session and switch to 'main'?")
                                                                        (easysession-switch-to-and-restore-geometry "main")
                                                                        (easysession-delete session-name)))
-              ((easysession--exists session-name) (when (yes-or-no-p (format "Delete session '%s'?" session-name))
-                                                    (easysession-delete session-name))))))))
+              ((my-easysession-exists-p session-name) (when (yes-or-no-p (format "Delete session '%s'?" session-name))
+                                                        (easysession-delete session-name))))))))
 
 (defun my-org-create-area-contents (title)
   "Return file contents for a new area.
