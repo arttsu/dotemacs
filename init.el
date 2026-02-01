@@ -34,6 +34,10 @@
   (custom-file my-custom-file)
   (split-width-threshold 160)
   (split-height-threshold nil)
+  (read-process-output-max (* 1024 1024))
+  (process-adaptive-read-buffering nil)
+  (gc-cons-threshold (* 100 1024 1024))
+  (gc-cons-percentage 0.2)
   :init
   ;; Make right option behave like AltGr, so that EurKEY layout works
   ;; properly.
@@ -352,7 +356,8 @@
   :custom
   (corfu-cycle t)
   (corfu-auto t)
-  (corfu-auto-prefix 2)
+  (corfu-auto-prefix 3)
+  (corfu-auto-delay 0.3)
   (corfu-quit-at-boundary 'separator)
   (corfu-quit-no-match t)
   :config
