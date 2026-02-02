@@ -356,7 +356,7 @@
   :custom
   (corfu-cycle t)
   (corfu-auto t)
-  (corfu-auto-prefix 3)
+  (corfu-auto-prefix 2)
   (corfu-auto-delay 0.3)
   (corfu-quit-at-boundary 'separator)
   (corfu-quit-no-match t)
