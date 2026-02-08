@@ -116,7 +116,8 @@
   (use-package exec-path-from-shell
     :ensure
     :config
-    (exec-path-from-shell-initialize)))
+    (exec-path-from-shell-initialize)
+    (exec-path-from-shell-copy-env "JAVA_HOME")))
 
 ;;; Modus Themes
 ;; https://protesilaos.com/emacs/modus-themes
