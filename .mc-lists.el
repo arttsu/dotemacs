@@ -3,11 +3,20 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        backward-sexp
+        electric-newline-and-maybe-indent
         forward-sexp
         iy-go-to-char--command
+        kill-sexp
         org-beginning-of-line
         org-self-insert-command
+        sp-backward-barf-sexp
+        sp-backward-up-sexp
+        sp-beginning-of-sexp
         sp-down-sexp
+        sp-rewrap-sexp
+        sp-up-sexp
+        transpose-sexps
         whole-line-or-region-kill-region
         ))
 
