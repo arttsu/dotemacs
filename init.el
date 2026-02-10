@@ -698,3 +698,12 @@
 
 (use-package just-mode
   :ensure)
+
+;;; Agent Shell
+;; https://github.com/xenodium/agent-shell
+
+(use-package agent-shell
+  :ensure
+  :config
+  (setq agent-shell-openai-authentication
+        (agent-shell-openai-make-authentication :login t)))
