@@ -14,6 +14,7 @@
         sp-backward-up-sexp
         sp-beginning-of-sexp
         sp-down-sexp
+        sp-forward-slurp-sexp
         sp-rewrap-sexp
         sp-up-sexp
         transpose-sexps
