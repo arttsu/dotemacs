@@ -561,7 +561,8 @@
                           ("checklist" :inherit default :height 0.75 :slant normal)
                           ("attachments" :inherit default :height 0.75 :slant normal)
                           ("long" :inherit default :height 0.75 :slant normal)
-                          ("AIChat" :background "MediumPurple1" :foreground "White")))
+                          ("AIChat" :background "MediumPurple1" :foreground "White")
+                          ("favorite" :background "VioletRed1" :foreground "White")))
   :custom-face
   (org-modern-tag ((t (:background "AntiqueWhite" :foreground "Black" :slant italic))))
   :config
