@@ -387,6 +387,7 @@
               ("M-g i" . consult-imenu)
               ("M-g I" . consult-imenu-multi)
               ("M-g o" . consult-outline)
+              ("M-g !" . consult-flymake)
               ("M-s l" . consult-line)
               ("M-s k" . consult-keep-lines)
               ("M-s f" . consult-focus-lines)
