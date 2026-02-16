@@ -711,6 +711,9 @@
   (setq agent-shell-openai-authentication
         (agent-shell-openai-make-authentication :login t)))
 
+;;; Minuet AI
+;; https://github.com/milanglacier/minuet-ai.el
+
 (use-package minuet
   :ensure
   :custom
@@ -723,4 +726,12 @@
   (plist-put minuet-openai-fim-compatible-options :api-key "DEEPSEEK_API_KEY")
   (plist-put minuet-openai-fim-compatible-options :model "deepseek-chat")
   (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 128)
-  (minuet-set-optional-options minuet-openai-fim-compatible-options :temperature 0.0))
+  (minuet-set-optional-options minuet-openai-fim-compatible-options :temperature 0.0)
+  :bind (:map prog-mode-map
+              ("M-C" . minuet-show-suggestion))
+  :bind (:map minuet-active-mode-map
+              ("M-P" . minuet-previous-suggestion)
+              ("M-N" . minuet-next-suggestion)
+              ("M-A" . minuet-accept-suggestion)
+              ("M-E" . minuet-accept-suggestion-line)
+              ("M-X" . minuet-dismiss-suggestion)))
