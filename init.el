@@ -117,7 +117,8 @@
     :ensure
     :config
     (exec-path-from-shell-initialize)
-    (exec-path-from-shell-copy-env "JAVA_HOME")))
+    (exec-path-from-shell-copy-env "JAVA_HOME")
+    (exec-path-from-shell-copy-env "DEEPSEEK_API_KEY")))
 
 ;;; Modus Themes
 ;; https://protesilaos.com/emacs/modus-themes
@@ -709,3 +710,17 @@
   :config
   (setq agent-shell-openai-authentication
         (agent-shell-openai-make-authentication :login t)))
+
+(use-package minuet
+  :ensure
+  :custom
+  (minuet-provider 'openai-fim-compatible)
+  (minuet-n-completions 1)
+  (minuet-context-window 2000)
+  :config
+  (plist-put minuet-openai-fim-compatible-options :end-point "https://api.deepseek.com/beta/completions")
+  (plist-put minuet-openai-fim-compatible-options :name "DeepSeek FIM")
+  (plist-put minuet-openai-fim-compatible-options :api-key "DEEPSEEK_API_KEY")
+  (plist-put minuet-openai-fim-compatible-options :model "deepseek-chat")
+  (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 128)
+  (minuet-set-optional-options minuet-openai-fim-compatible-options :temperature 0.0))
