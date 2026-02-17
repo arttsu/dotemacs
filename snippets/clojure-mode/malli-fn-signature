@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: malli-fn-signature
+# key: m=>
+# --
+(m/=> $1 [:=> [:cat $2] $0])

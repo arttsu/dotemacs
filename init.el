@@ -68,7 +68,8 @@
               ("C-M-; d" . duplicate-dwim)
               ("M-z" . zap-up-to-char)
               ("M-Z" . zap-to-char)
-              ("C-c d h" . erase-buffer)))
+              ("C-c d h" . erase-buffer)
+              ("C-M-<return>" . tab-bar-switch-to-tab)))
 
 ;;; Dired
 
@@ -735,3 +736,11 @@
               ("M-A" . minuet-accept-suggestion)
               ("M-E" . minuet-accept-suggestion-line)
               ("M-X" . minuet-dismiss-suggestion)))
+
+;;; Yasnippet
+;; https://github.com/joaotavora/yasnippet
+
+(use-package yasnippet
+  :ensure t
+  :config
+  (yas-global-mode +1))
