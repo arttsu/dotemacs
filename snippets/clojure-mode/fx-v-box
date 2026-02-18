@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: fx-v-box
+# key: fxv
+# --
+{:fx/type :v-box
+ :children
+ [$0]}

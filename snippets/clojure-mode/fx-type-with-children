@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: fx-type-with-children
+# key: fxtc
+# --
+{:fx/type $1
+ :children $0}

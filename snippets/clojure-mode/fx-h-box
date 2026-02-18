@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: fx-h-box
+# key: fxh
+# --
+{:fx/type :h-box
+ :children
+ [$0]}
