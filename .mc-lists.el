@@ -4,6 +4,7 @@
 (setq mc/cmds-to-run-for-all
       '(
         backward-sexp
+        crux-smart-open-line
         electric-newline-and-maybe-indent
         forward-sexp
         iy-go-to-char--command
@@ -14,8 +15,10 @@
         sp-backward-up-sexp
         sp-beginning-of-sexp
         sp-down-sexp
+        sp-end-of-sexp
         sp-forward-slurp-sexp
         sp-rewrap-sexp
+        sp-unwrap-sexp
         sp-up-sexp
         transpose-sexps
         whole-line-or-region-kill-region
