@@ -30,6 +30,10 @@
 
 (defvar my-custom-file (expand-file-name "custom.el" user-emacs-directory))
 
+;;; Secrets
+
+(defvar my-email nil)
+
 ;;;; Load Local Overrides
 
 (let ((file (expand-file-name "local.el" user-emacs-directory)))

@@ -38,6 +38,7 @@
   (process-adaptive-read-buffering nil)
   (gc-cons-threshold (* 100 1024 1024))
   (gc-cons-percentage 0.2)
+  (epa-file-encrypt-to (list my-email))
   :init
   ;; Make right option behave like AltGr, so that EurKEY layout works
   ;; properly.
