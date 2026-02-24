@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: fx-button
+# key: fxb
+# --
+{:fx/type :button
+ :text $0}
