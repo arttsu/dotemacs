@@ -237,7 +237,8 @@
               ("C-o" . crux-smart-open-line)
               ("C-S-o" . crux-smart-open-line-above)
               ("C-^" . crux-top-join-line)
-              ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region)))
+              ("C-M-; D" . crux-duplicate-and-comment-current-line-or-region)
+              ("C-x 4 !" . crux-delete-file-and-buffer)))
 
 ;;; Whole Line or Region
 ;; https://github.com/purcell/whole-line-or-region
