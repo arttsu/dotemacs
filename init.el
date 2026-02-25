@@ -751,4 +751,8 @@
 ;; https://github.com/karthink/gptel
 
 (use-package gptel
-  :ensure t)
+  :ensure t
+  :bind (:map global-map
+              ("C-c <return>" . gptel-send))
+  :bind (:map gptel-mode-map
+              ("C-c C-c" . gptel-send)))
