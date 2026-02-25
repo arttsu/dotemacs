@@ -745,3 +745,9 @@
   :ensure t
   :config
   (yas-global-mode +1))
+
+;;; Gptel
+;; https://github.com/karthink/gptel
+
+(use-package gptel
+  :ensure t)
