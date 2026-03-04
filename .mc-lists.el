@@ -10,6 +10,9 @@
         iy-go-to-char--command
         kill-sexp
         org-beginning-of-line
+        org-delete-char
+        org-end-of-line
+        org-force-self-insert
         org-self-insert-command
         sp-backward-barf-sexp
         sp-backward-up-sexp
