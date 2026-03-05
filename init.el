@@ -57,6 +57,8 @@
   (tab-bar-history-mode +1)
   (repeat-mode +1)
   (fset 'yes-or-no-p 'y-or-n-p)
+  (when (my-windows-p)
+    (set-language-environment "UTF-8"))
   :hook
   (elpaca-after-init . my-ui-set-theme-and-font)
   (prog-mode . display-line-numbers-mode)
