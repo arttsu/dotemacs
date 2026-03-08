@@ -462,7 +462,13 @@
   (use-package ledger-mode
     :ensure
     :custom
-    (ledger-default-date-format "%Y-%m-%d")))
+    (ledger-default-date-format "%Y-%m-%d")
+    :config
+    (ledger-reports-add "bal-this-month" "%(binary) -f %(ledger-file) --invert --period 'this month' -S amount bal ^Income ^Expenses")
+    (ledger-reports-add "bal-last-month" "%(binary) -f %(ledger-file) --invert --period 'last month' -S amount bal ^Income ^Expenses")
+    (ledger-reports-add "bal-this-week" "%(binary) -f %(ledger-file) --invert --period 'this week' -S amount bal ^Income ^Expenses")
+    (ledger-reports-add "bal-last-week" "%(binary) -f %(ledger-file) --invert --period 'last week' -S amount bal ^Income ^Expenses")
+    (ledger-reports-add "fixed-last-month" "%(binary) -f %(ledger-file) --invert --period 'last month' bal Fixed")))
 
 ;;; Org
 
