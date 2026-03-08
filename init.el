@@ -758,3 +758,8 @@
               ("C-c <return>" . gptel-send))
   :bind (:map gptel-mode-map
               ("C-c C-c" . gptel-send)))
+
+;;; Scala Tree-Sitter Mode
+;; https://github.com/KaranAhlawat/scala-ts-mode
+(use-package scala-ts-mode
+  :ensure t)
