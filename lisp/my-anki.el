@@ -52,7 +52,9 @@ If called interactively, copy the text to the kill ring instead."
                                          "es-ES-AlvaroNeural"
                                          "es-ES-ArnauNeural"
                                          "es-MX-DaliaNeural"
-                                         "es-MX-JorgeNeural"))))
+                                         "es-MX-JorgeNeural"))
+                           ("Romanian" . ("ro-RO-AlinaNeural"
+                                          "ro-RO-EmilNeural"))))
 
 (defun my-anki-random-voice (language)
   "Return random voice from the list defined in 'my-anki-voices' for LANGUAGE."
@@ -81,7 +83,7 @@ If called interactively, copy the text to the kill ring instead."
             (re-search-forward (rx (>= 1 "*") (+ blank) "Back Extra" line-end))
             (beginning-of-line)
             (let* ((text (my-anki-region-no-clozes text-start (point)))
-                   (shell-text (replace-regexp-in-string "\"" "\\\\\"" text)))
+                   (shell-text (shell-quote-argument text)))
               (message "Generating audio for note '%s' using voice '%s'" note-title voice)
               (call-process "edge-tts" nil nil nil "--text" shell-text "--write-media" file "--voice" voice)
               (org-end-of-subtree)
