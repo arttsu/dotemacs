@@ -83,7 +83,7 @@ If called interactively, copy the text to the kill ring instead."
             (re-search-forward (rx (>= 1 "*") (+ blank) "Back Extra" line-end))
             (beginning-of-line)
             (let* ((text (my-anki-region-no-clozes text-start (point)))
-                   (shell-text (shell-quote-argument text)))
+                   (shell-text (replace-regexp-in-string "\"" "\\\\\"" text)))
               (message "Generating audio for note '%s' using voice '%s'" note-title voice)
               (call-process "edge-tts" nil nil nil "--text" shell-text "--write-media" file "--voice" voice)
               (org-end-of-subtree)
