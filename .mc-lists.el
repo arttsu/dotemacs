@@ -7,6 +7,7 @@
         crux-smart-open-line
         electric-newline-and-maybe-indent
         forward-sexp
+        indent-for-tab-command
         iy-go-to-char--command
         kill-sexp
         org-beginning-of-line
