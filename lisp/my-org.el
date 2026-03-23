@@ -37,7 +37,9 @@ PLAN should be either \"A\" or \"B\"."
     ("iT" "shared to-do" entry ,(my-org-inbox-target "shared") (file ,(my-org-template "todo")))
     ("g" "Gym")
     ("ga" "plan A session" entry ,(my-org-gym-log-target "A") (file ,(my-org-template "gym/plan-a")))
-    ("gb" "plan B session" entry ,(my-org-gym-log-target "B") (file ,(my-org-template "gym/plan-b")))))
+    ("gb" "plan B session" entry ,(my-org-gym-log-target "B") (file ,(my-org-template "gym/plan-b")))
+    ("j" "Journal")
+    ("jj" "local entry" entry (file+olp+datetree ,(expand-file-name "local/journals/current-journal.org" my-org-dir)) ,(format "**** %s\n%%?" (format-time-string "%H:%M")))))
 
 (defun my-org-agenda-files (context)
   "Return the list of Org agenda files in the specified context.
