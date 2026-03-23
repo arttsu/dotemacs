@@ -531,6 +531,7 @@
               ("C-c l" . org-store-link)
               ("C-c i" . my-org-capture-note)
               ("C-c I" . my-org-capture-todo)
+              ("C-c J" . my-org-capture-journal-entry)
               ("C-c o c p" . my-org-create-project)
               ("C-c o c a" . my-org-create-area)
               ("C-c j i" . my-org-open-local-inbox))

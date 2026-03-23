@@ -66,6 +66,10 @@ With a PREFIX argument capture to the shared inbox."
         ((equal prefix '(4)) (org-capture nil "iT"))
         (t (user-error "Invalid prefix argument: %s" prefix))))
 
+(defun my-org-capture-journal-entry ()
+  (interactive)
+  (org-capture nil "jj"))
+
 (defun my-org-entry-scheduled-or-deadline-p (point)
   "Return t if the entry at POINT is scheduled or has a deadline."
   (or (org-get-scheduled-time point) (org-get-deadline-time point)))
