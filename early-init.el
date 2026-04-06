@@ -30,6 +30,8 @@
 
 (defvar my-custom-file (expand-file-name "custom.el" user-emacs-directory))
 
+(defvar my-org-symlink-attach-dir nil)
+
 ;;; Secrets
 
 (defvar my-email nil)

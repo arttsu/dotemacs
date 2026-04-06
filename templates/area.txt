@@ -1,14 +1,12 @@
 #+STARTUP: content
-* %1$s
+* %1$s :area:
 :PROPERTIES:
 :ID: %2$s
+:CREATED_AT: %3$s
 :END:
 ** Info
 :PROPERTIES:
 :VISIBILITY: all
 :END:
-- Created on %3$s \\
 ** Tasks :refile:sort:checklist:
-** Notes :refile:sort:
-** Links :refile:
-** Attachments :attachments:
+** Notes :refile:sort:checklist:

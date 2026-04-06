@@ -24,7 +24,7 @@ CONTEXT should be either \"local\" or \"shared\""
   "Return the capture target for a gym plan session.
 
 PLAN should be either \"A\" or \"B\"."
-  (let ((file (expand-file-name "local/gym/gym-log.org" my-org-dir))
+  (let ((file (expand-file-name "local/gtd/gym/gym-log-current.org" my-org-dir))
         (heading (concat "Plan " plan)))
     `(file+headline ,file ,heading)))
 
@@ -39,14 +39,15 @@ PLAN should be either \"A\" or \"B\"."
     ("ga" "plan A session" entry ,(my-org-gym-log-target "A") (file ,(my-org-template "gym/plan-a")))
     ("gb" "plan B session" entry ,(my-org-gym-log-target "B") (file ,(my-org-template "gym/plan-b")))
     ("j" "Journal")
-    ("jj" "local entry" entry (file+olp+datetree ,(expand-file-name "local/journals/current-journal.org" my-org-dir)) (function (lambda () (format "**** %s\n%%?" (format-time-string "%H:%M")))))))
+    ("jj" "local entry" entry (file+olp+datetree ,(expand-file-name "local/journals/current-journal.org" my-org-dir)) "%<%H:%M> %?")))
 
 (defun my-org-agenda-files (context)
   "Return the list of Org agenda files in the specified context.
 
 CONTEXT should be either \"local\" or \"shared\""
   (list (expand-file-name (concat context "/gtd") my-org-dir)
-        (expand-file-name (concat context "/gtd/projects") my-org-dir)))
+        (expand-file-name (concat context "/gtd/projects") my-org-dir)
+        (expand-file-name (concat context "/gtd/areas") my-org-dir)))
 
 (defun my-org-capture-note (&optional prefix)
   "Capture a note to the local inbox.
@@ -149,11 +150,11 @@ Return t as soon as the PREDICATE returns t for one of the notes."
           (buffer-file-name)))
     ""))
 
-(defun my-org-day-agenda-skip-long-running ()
-  "Decide whether or not to display the long-running task at point in the \"Day\" agenda."
-  (let ((subtree-end (save-excursion (org-end-of-subtree t))))
-    (when (my-org-has-note-today)
-      subtree-end)))
+;; (defun my-org-day-agenda-skip-long-running ()
+;;   "Decide whether or not to display the long-running task at point in the \"Day\" agenda."
+;;   (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+;;     (when (my-org-has-note-today)
+;;       subtree-end)))
 
 (defun my-org-day-agenda-command (files)
   "Return \"Day\" agenda command.
@@ -167,9 +168,9 @@ FILES is a list of files to collect tasks and projects from."
     (todo "TODO" ((org-agenda-overriding-header "Non-scheduled Tasks")
                   (org-agenda-skip-function 'my-org-day-agenda-skip-task)
                   (org-agenda-files ',files)))
-    (tags-todo "long" ((org-agenda-overriding-header "Long-running Tasks")
-                       (org-agenda-skip-function 'my-org-day-agenda-skip-long-running)
-                       (org-agenda-files ',files)))
+    ;; (tags-todo "long" ((org-agenda-overriding-header "Long-running Tasks")
+    ;;                    (org-agenda-skip-function 'my-org-day-agenda-skip-long-running)
+    ;;                    (org-agenda-files ',files)))
     (tags "project" ((org-agenda-overriding-header "Projects")
                      (org-agenda-sorting-strategy '(priority-down))
                      (org-agenda-skip-function 'my-org-day-agenda-skip-project)
@@ -238,7 +239,7 @@ logic is inversed."
     (save-restriction
       (org-narrow-to-subtree) ; TODO: Narrow to element.
       (goto-char (point-min))
-      (if (re-search-forward (rx "Created on " (group "[" (1+ (not "]")) "]")) nil t)
+      (if (re-search-forward (rx "CREATED_AT: " (group "[" (1+ (not "]")) "]")) nil t) ; TODO: Get prop instead.
           (match-string-no-properties 1)
         my-org-default-timestamp))))
 
@@ -291,15 +292,16 @@ logic is inversed."
   "Return the current time formatted as Org timestamp."
   (format-time-string "[%Y-%m-%d %a %H:%M]"))
 
-(defun my-org-create-project-contents (title priority)
+(defun my-org-create-project-contents (title priority id)
   "Return file contents for a new project.
 
 TITLE is the project title.
 
+ID is the Org ID for the new project.
+
 PRIORITY is a character representing the priority of the project."
   (let ((template (with-temp-buffer (insert-file-contents (my-org-template "project")) (buffer-string)))
         (priority-cookie (my-org-priority-char-to-cookie priority))
-        (id (org-id-new))
         (timestamp (my-org-now-timestamp)))
     (format template priority-cookie title id timestamp)))
 
@@ -308,6 +310,16 @@ PRIORITY is a character representing the priority of the project."
   (let ((name (file-name-sans-extension (file-name-nondirectory path))))
     (easysession-switch-to-and-restore-geometry name)
     (find-file path)))
+
+(defun my-org-maybe-symlink-attach-dir (parent-dir id filename)
+  (when my-org-symlink-attach-dir
+    (let* ((attach-dir (org-attach-dir-from-id id))
+           (links-dir (expand-file-name (format "~/links/%s" parent-dir)))
+           (link (format "%s/%s" links-dir (file-name-sans-extension filename ))))
+      (mkdir attach-dir t)
+      (unless (file-exists-p links-dir)
+        (mkdir links-dir t))
+      (make-symbolic-link attach-dir link))))
 
 (defun my-org-create-project ()
   "Create a project from the template."
@@ -320,8 +332,10 @@ PRIORITY is a character representing the priority of the project."
     (let ((dir (expand-file-name "gtd/projects" (my-org-context-dir context))))
       (require 'org-node)
       (let* ((filename (org-node-title-to-basename title))
-             (path (expand-file-name filename dir)))
-        (with-temp-buffer (insert (my-org-create-project-contents title priority)) (write-file path))
+             (path (expand-file-name filename dir))
+             (id (org-id-new)))
+        (with-temp-buffer (insert (my-org-create-project-contents title priority id)) (write-file path))
+        (my-org-maybe-symlink-attach-dir "projects" id filename)
         (let ((choice (read-char-choice
                        "Open project in [c]urrent window, [o]ther window, new [t]ab, new [s]ession, [d]on't open: "
                        '(?c ?o ?t ?s ?d))))
@@ -331,6 +345,15 @@ PRIORITY is a character representing the priority of the project."
                 ((eq choice ?s) (my-org-find-file-in-new-session path))
                 ((eq choice ?d) nil)))
         (message "Project created: %s" path)))))
+
+(defun my-org-maybe-move-attach-dir-symlink-to-archive (parent-dir file-name)
+  (when my-org-symlink-attach-dir
+    (let ((link (expand-file-name (format "~/links/%s/%s" parent-dir (file-name-sans-extension file-name)))))
+      (when (file-exists-p link)
+        (let ((archive-dir (expand-file-name (format "~/links/%s/archive/" parent-dir))))
+          (unless (file-exists-p archive-dir)
+            (mkdir archive-dir))
+          (rename-file link archive-dir))))))
 
 (defun my-org-archive-project ()
   "Archive the project in the the current buffer."
@@ -352,6 +375,7 @@ PRIORITY is a character representing the priority of the project."
       (rename-file file-path archive-path)
       (set-visited-file-name archive-path)
       (set-buffer-modified-p nil)
+      (my-org-maybe-move-attach-dir-symlink-to-archive "projects" file-name)
       (message "Project archived to %s" archive-path)
       (let ((session-name (file-name-sans-extension file-name)))
         (cond ((string= (easysession-get-session-name) session-name) (when (yes-or-no-p "Delete the session and switch to 'main'?")
@@ -360,12 +384,13 @@ PRIORITY is a character representing the priority of the project."
               ((my-easysession-exists-p session-name) (when (yes-or-no-p (format "Delete session '%s'?" session-name))
                                                         (easysession-delete session-name))))))))
 
-(defun my-org-create-area-contents (title)
+(defun my-org-create-area-contents (title id)
   "Return file contents for a new area.
 
-TITLE is the area title."
+TITLE is the area title.
+
+ID is the Org ID of the new area."
   (let ((template (with-temp-buffer (insert-file-contents (my-org-template "area")) (buffer-string)))
-        (id (org-id-new))
         (timestamp (my-org-now-timestamp)))
     (format template title id timestamp)))
 
@@ -376,11 +401,14 @@ TITLE is the area title."
         (title (read-string "Title: ")))
     (when (string-empty-p title)
       (user-error "Title cannot be empty"))
-    (let ((dir (expand-file-name "notes" (my-org-context-dir context))))
+    (let ((dir (expand-file-name "gtd/areas" (my-org-context-dir context))))
       (require 'org-node)
-      (let* ((filename (org-node-title-to-basename title))
-             (path (expand-file-name filename dir)))
-        (with-temp-buffer (insert (my-org-create-area-contents title)) (write-file path))
+      (let* ((org-node-file-timestamp-format "")
+             (filename (org-node-title-to-basename title))
+             (path (expand-file-name filename dir))
+             (id (org-id-new)))
+        (with-temp-buffer (insert (my-org-create-area-contents title id)) (write-file path))
+        (my-org-maybe-symlink-attach-dir "areas" id filename)
         (let ((choice (read-char-choice
                        "Open area in [c]urrent window, [o]ther window, new [t]ab, [d]on't open: "
                        '(?c ?o ?t ?d))))

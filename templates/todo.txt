@@ -1,2 +1,4 @@
 * TODO %?
-- Created on %U \\
+:PROPERTIES:
+:CREATED_AT: %U
+:END:
