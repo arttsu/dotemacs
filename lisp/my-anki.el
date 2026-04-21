@@ -62,6 +62,29 @@ If called interactively, copy the text to the kill ring instead."
       (nth (random (length voices)) voices)
     (user-error "Unknown language: %s" language)))
 
+(defun my-anki-safe-slug-unicode (text &optional maxlen)
+  "Slugify TEXT but preserve Unicode letters."
+  (let* ((s (downcase (string-trim text))))
+    ;; Replace anything that's NOT a letter or number with "-"
+    (setq s (replace-regexp-in-string "[^[:alnum:][:nonascii:]]+" "-" s))
+    ;; Collapse multiple "-"
+    (setq s (replace-regexp-in-string "-+" "-" s))
+    ;; Trim "-"
+    (setq s (replace-regexp-in-string "\\`-\\|-\\'" "" s))
+    ;; Fallback
+    (setq s (if (string-empty-p s) "untitled" s))
+    ;; Truncate
+    (when (and maxlen (> (length s) maxlen))
+      (setq s (substring s 0 maxlen))
+      (setq s (replace-regexp-in-string "-+\\'" "" s)))
+    s))
+
+(defun my-anki-audio-filename (text &optional extension)
+  (let* ((hash (substring (secure-hash 'sha256 text) 0 16))
+         (slug (my-anki-safe-slug-unicode text 48))
+         (ext  (or extension "mp3")))
+    (format "audio-%s-%s.%s" hash slug ext)))
+
 (defun my-anki-cloze-generate-audio ()
   "Generate audio for a Cloze note at point."
   (interactive)
@@ -71,7 +94,8 @@ If called interactively, copy the text to the kill ring instead."
     (unless language (user-error "ANKI_LANG property is missing"))
     (unless (string= note-type "Cloze") ("ANKI_NOTE_TYPE must be 'Cloze'"))
     (let* ((dir (org-attach-dir-get-create))
-           (file (expand-file-name "audio.mp3" dir))
+           (filename (my-anki-audio-filename note-title))
+           (file (expand-file-name filename dir))
            (voice (my-anki-random-voice language)))
       (org-node-add-tags-here '("ATTACH"))
       (org-set-property "ROAM_EXCLUDE" "t")
@@ -88,7 +112,7 @@ If called interactively, copy the text to the kill ring instead."
               (call-process "edge-tts" nil nil nil "--text" shell-text "--write-media" file "--voice" voice)
               (org-end-of-subtree)
               (insert "\n")
-              (insert "[[attachment:audio.mp3]]"))))))))
+              (insert (format "[[attachment:%s]]" filename)))))))))
 
 (defun anki-editor-tts--skip-over-non-notes ()
   "Return position to continue from if the entry at point is not an Anki note.
@@ -110,13 +134,15 @@ Meant to be used as the \"skip function\" argument for 'org-map-entries'."
   "Play the audio of the note at point."
   (interactive)
   (if-let ((dir (org-attach-dir)))
-      (if-let ((file (car (directory-files dir t (rx string-start "audio.mp3" string-end)))))
-          (make-process :name "anki-editor-tts-play"
-                        :buffer nil
-                        :command (list "mpv" "--terminal=no" file)
-                        :noquery t ; Don't ask before exiting Emacs.
-                        :connection-type 'pipe) ; Supposed to be more efficient/cleaner for non-interactive tools.
-        (message "No audio file"))
+      (let* ((note-title (org-entry-get nil "ITEM"))
+             (filename (my-anki-audio-filename note-title)))
+        (if-let ((file (car (directory-files dir t filename))))
+            (make-process :name "anki-editor-tts-play"
+                          :buffer nil
+                          :command (list "mpv" "--terminal=no" file)
+                          :noquery t ; Don't ask before exiting Emacs.
+                          :connection-type 'pipe) ; Supposed to be more efficient/cleaner for non-interactive tools.
+          (message "No audio file")))
     (message "No attach dir")))
 
 (provide 'my-anki)
