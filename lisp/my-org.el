@@ -24,7 +24,7 @@ CONTEXT should be either \"local\" or \"shared\""
   "Return the capture target for a gym plan session.
 
 PLAN should be either \"A\" or \"B\"."
-  (let ((file (expand-file-name "local/gtd/gym/gym-log-current.org" my-org-dir))
+  (let ((file (expand-file-name "local/gtd/gym/gym-log.org" my-org-dir))
         (heading (concat "Plan " plan)))
     `(file+headline ,file ,heading)))
 
