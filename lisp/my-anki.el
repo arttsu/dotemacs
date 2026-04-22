@@ -79,22 +79,23 @@ If called interactively, copy the text to the kill ring instead."
       (setq s (replace-regexp-in-string "-+\\'" "" s)))
     s))
 
-(defun my-anki-audio-filename (text &optional extension)
-  (let* ((hash (substring (secure-hash 'sha256 text) 0 16))
-         (slug (my-anki-safe-slug-unicode text 48))
+(defun my-anki-audio-filename (deck title &optional extension)
+  (let* ((deck-and-title (format "%s %s" deck title))
+         (slug (my-anki-safe-slug-unicode deck-and-title 48))
          (ext  (or extension "mp3")))
-    (format "audio-%s-%s.%s" hash slug ext)))
+    (format "%s.%s" slug ext)))
 
 (defun my-anki-cloze-generate-audio ()
   "Generate audio for a Cloze note at point."
   (interactive)
-  (let ((language (org-entry-get nil "ANKI_LANG" t))
+  (let ((deck (org-entry-get nil "ANKI_DECK" t))
+        (language (org-entry-get nil "ANKI_LANG" t))
         (note-type (org-entry-get nil "ANKI_NOTE_TYPE"))
         (note-title (org-entry-get nil "ITEM")))
     (unless language (user-error "ANKI_LANG property is missing"))
     (unless (string= note-type "Cloze") ("ANKI_NOTE_TYPE must be 'Cloze'"))
     (let* ((dir (org-attach-dir-get-create))
-           (filename (my-anki-audio-filename note-title))
+           (filename (my-anki-audio-filename deck note-title))
            (file (expand-file-name filename dir))
            (voice (my-anki-random-voice language)))
       (org-node-add-tags-here '("ATTACH"))
@@ -134,8 +135,9 @@ Meant to be used as the \"skip function\" argument for 'org-map-entries'."
   "Play the audio of the note at point."
   (interactive)
   (if-let ((dir (org-attach-dir)))
-      (let* ((note-title (org-entry-get nil "ITEM"))
-             (filename (my-anki-audio-filename note-title)))
+      (let* ((deck (org-entry-get nil "ANKI_DECK" t))
+             (note-title (org-entry-get nil "ITEM"))
+             (filename (my-anki-audio-filename deck note-title)))
         (if-let ((file (car (directory-files dir t filename))))
             (make-process :name "anki-editor-tts-play"
                           :buffer nil
