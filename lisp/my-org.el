@@ -311,16 +311,6 @@ PRIORITY is a character representing the priority of the project."
     (easysession-switch-to-and-restore-geometry name)
     (find-file path)))
 
-(defun my-org-maybe-symlink-attach-dir (parent-dir id filename)
-  (when my-org-symlink-attach-dir
-    (let* ((attach-dir (org-attach-dir-from-id id))
-           (links-dir (expand-file-name (format "~/links/%s" parent-dir)))
-           (link (format "%s/%s" links-dir (file-name-sans-extension filename ))))
-      (mkdir attach-dir t)
-      (unless (file-exists-p links-dir)
-        (mkdir links-dir t))
-      (make-symbolic-link attach-dir link))))
-
 (defun my-org-create-project ()
   "Create a project from the template."
   (interactive)
@@ -335,7 +325,6 @@ PRIORITY is a character representing the priority of the project."
              (path (expand-file-name filename dir))
              (id (org-id-new)))
         (with-temp-buffer (insert (my-org-create-project-contents title priority id)) (write-file path))
-        (my-org-maybe-symlink-attach-dir "projects" id filename)
         (let ((choice (read-char-choice
                        "Open project in [c]urrent window, [o]ther window, new [t]ab, new [s]ession, [d]on't open: "
                        '(?c ?o ?t ?s ?d))))
@@ -345,15 +334,6 @@ PRIORITY is a character representing the priority of the project."
                 ((eq choice ?s) (my-org-find-file-in-new-session path))
                 ((eq choice ?d) nil)))
         (message "Project created: %s" path)))))
-
-(defun my-org-maybe-move-attach-dir-symlink-to-archive (parent-dir file-name)
-  (when my-org-symlink-attach-dir
-    (let ((link (expand-file-name (format "~/links/%s/%s" parent-dir (file-name-sans-extension file-name)))))
-      (when (file-exists-p link)
-        (let ((archive-dir (expand-file-name (format "~/links/%s/archive/" parent-dir))))
-          (unless (file-exists-p archive-dir)
-            (mkdir archive-dir))
-          (rename-file link archive-dir))))))
 
 (defun my-org-archive-project ()
   "Archive the project in the the current buffer."
@@ -375,7 +355,6 @@ PRIORITY is a character representing the priority of the project."
       (rename-file file-path archive-path)
       (set-visited-file-name archive-path)
       (set-buffer-modified-p nil)
-      (my-org-maybe-move-attach-dir-symlink-to-archive "projects" file-name)
       (message "Project archived to %s" archive-path)
       (let ((session-name (file-name-sans-extension file-name)))
         (cond ((string= (easysession-get-session-name) session-name) (when (yes-or-no-p "Delete the session and switch to 'main'?")
@@ -408,7 +387,6 @@ ID is the Org ID of the new area."
              (path (expand-file-name filename dir))
              (id (org-id-new)))
         (with-temp-buffer (insert (my-org-create-area-contents title id)) (write-file path))
-        (my-org-maybe-symlink-attach-dir "areas" id filename)
         (let ((choice (read-char-choice
                        "Open area in [c]urrent window, [o]ther window, new [t]ab, [d]on't open: "
                        '(?c ?o ?t ?d))))

@@ -15,8 +15,6 @@
 
 (setq my-use-vterm nil)
 
-(setq my-org-symlink-attach-dir nil)
-
 ;;;; Secrets
 
 (setq my-email "artem@example.com")
