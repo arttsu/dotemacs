@@ -1,0 +1,4 @@
+# key: upd
+# name: update
+# --
+Update (format-time-string "%Y-%m-%d"): $0

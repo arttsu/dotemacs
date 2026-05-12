@@ -516,6 +516,7 @@
   (add-hook 'org-after-todo-state-change-hook #'my-org-revert-wont-do -10)
   (add-hook 'org-after-todo-state-change-hook #'my-org-checklist-auto-advance +10)
   (add-hook 'org-after-refile-insert-hook #'my-org-format-buffer)
+  (add-hook 'org-mode-hook #'my-org-font-lock-add-keywords)
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((shell . t)))
   (add-to-list 'display-buffer-alist

@@ -473,6 +473,14 @@ ID is the Org ID of the new area."
   (my-org-require-at-heading)
   (org-set-property "ROAM_EXCLUDE" "t"))
 
+(defface my-org-update-face
+  '((t (:foreground "white" :background "cornflower blue" :weight bold))) "Face for Update timestamp in Org mode.")
+
+(defun my-org-font-lock-add-keywords ()
+  (font-lock-add-keywords
+   'org-mode
+   `((,(rx (group "Update " (= 4 digit) "-" (= 2 digit) "-" (= 2 digit) ":")) 1 'my-org-update-face prepend))))
+
 (provide 'my-org)
 
 ;;; my-org.el ends here.
