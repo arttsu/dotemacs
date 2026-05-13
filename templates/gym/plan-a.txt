@@ -4,6 +4,6 @@
 | Barbell Squat                | %?       |            |          |            |          |            |       |
 | Incline DB Press (bench 30°) |          |            |          |            |          |            |       |
 | Cable Row                    |          |            |          |            |          |            |       |
-| Overhead Rope Extension      |          |            |          |            |          |            |       |
+| Triceps Pushdowns            |          |            |          |            |          |            |       |
 | DB Lateral Raise             |          |            |          |            |          |            |       |
 | Hammer Curl                  |          |            |          |            |          |            |       |
