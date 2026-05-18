@@ -268,8 +268,7 @@ logic is inversed."
 (defun my-org-format-buffer ()
   "Format the current buffer."
   (interactive)
-  (ignore-errors
-    (org-map-entries #'my-org-sort-entries "sort" 'file))
+  (org-map-entries (lambda () (ignore-errors (my-org-sort-entries))) "sort" 'file)
   (org-cycle-set-startup-visibility))
 
 (defconst my-org-contexts '("Local" "Shared"))
