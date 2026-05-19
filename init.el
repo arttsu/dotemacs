@@ -623,6 +623,7 @@
               ("C-c p r" . anki-editor-retry-failure-notes)
               ("C-c M-z" . anki-editor-cloze-dwim)
               ("C-c v g" . anki-editor-tts-generate)
+              ("C-c v G" . my-anki-tts)
               ("C-c v p" . anki-editor-tts-play)))
 
 ;;; AUCTeX
