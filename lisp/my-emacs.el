@@ -20,6 +20,11 @@
   (interactive)
   (find-file my-custom-file))
 
+(defvar-keymap tab-bar-history-repeat-map
+  :repeat t
+  "<left>" #'tab-bar-history-back
+  "<right>" #'tab-bar-history-forward)
+
 (provide 'my-emacs)
 
 ;;; my-emacs.el ends here
