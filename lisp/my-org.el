@@ -162,7 +162,7 @@ Return t as soon as the PREDICATE returns t for one of the notes."
   "Return \"Day\" agenda command.
 
 FILES is a list of files to collect tasks and projects from."
-  `((agenda "" ((org-agenda-span 1)
+  `((agenda "" ((org-agenda-span 3)
                 (org-agenda-skip-scheduled-if-done t)
                 (org-agenda-skip-deadline-if-done t)
                 (org-agenda-skip-timestamp-if-done t)
