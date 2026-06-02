@@ -80,7 +80,7 @@ If called interactively, copy the text to the kill ring instead."
     s))
 
 (defun my-anki-audio-filename (deck-and-title &optional extension)
-  (let ((slug (my-anki-safe-slug-unicode (format "%s" deck-and-title) 48))
+  (let ((slug (my-anki-safe-slug-unicode (format "%s" deck-and-title) 64))
         (ext  (or extension "mp3")))
     (format "%s.%s" slug ext)))
 
