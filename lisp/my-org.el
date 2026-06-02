@@ -41,7 +41,14 @@ PLAN should be either \"A\" or \"B\"."
     ("j" "Journal")
     ("jj" "local entry" entry (file+olp+datetree ,(expand-file-name "local/journals/journal-0.org" my-org-dir)) "%?")
     ("l" "Library")
-    ("ls" "Salsa video" entry (file ,(expand-file-name "local/notes/salsa-videos.org" my-org-dir)) (file ,(my-org-template "salsa-video")))))
+    ("ls" "Salsa video" entry (file ,(expand-file-name "local/notes/salsa-videos.org" my-org-dir)) (file ,(my-org-template "salsa-video")))
+    ("L" "List")
+    ("Lf" "Fiction" entry (file+headline ,(expand-file-name "local/lists.org" my-org-dir) "Fiction") (file ,(my-org-template "todo")))
+    ("Ln" "Non-fiction" entry (file+headline ,(expand-file-name "local/lists.org" my-org-dir) "Non-fiction") (file ,(my-org-template "todo")))
+    ("Lg" "Games" entry (file+headline ,(expand-file-name "local/lists.org" my-org-dir) "Games") (file ,(my-org-template "todo")))
+    ("Lt" "TV" entry (file+headline ,(expand-file-name "local/lists.org" my-org-dir) "TV") (file ,(my-org-template "todo")))
+    ("Lm" "Movies" entry (file+headline ,(expand-file-name "local/lists.org" my-org-dir) "Movies") (file ,(my-org-template "todo")))
+    ("Lp" "Podcasts" entry (file+headline ,(expand-file-name "local/lists.org" my-org-dir) "Podcasts") (file ,(my-org-template "todo")))))
 
 (defun my-org-agenda-files (context)
   "Return the list of Org agenda files in the specified context.
