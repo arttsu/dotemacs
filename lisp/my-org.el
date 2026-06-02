@@ -474,6 +474,12 @@ ID is the Org ID of the new area."
   (my-org-require-at-heading)
   (org-set-property "ROAM_EXCLUDE" "t"))
 
+(defun my-org-set-created-at ()
+  "Add CREATED_AT property to the heading at point."
+  (interactive)
+  (my-org-require-at-heading)
+  (org-set-property "CREATED_AT" (format-time-string "[%Y-%m-%d %a %H:%M]")))
+
 (defface my-org-update-face
   '((t (:foreground "white" :background "cornflower blue" :weight bold))) "Face for Update timestamp in Org mode.")
 
