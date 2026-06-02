@@ -595,7 +595,8 @@
   (org-mem-watch-dirs (list my-org-dir))
   (org-node-file-timestamp-format "%Y%m%dT%H%M%S-")
   (org-node-filter-fn (lambda (node)
-                        (string-search "~/org/" (org-mem-file node))))
+                        (and (string-search "~/org/" (org-mem-file node))
+                             (org-node-filter-no-roam-exclude-p node))))
   :config
   (org-mem-updater-mode)
   (org-node-cache-mode)
