@@ -3,7 +3,7 @@
 |------------------------------+----------+------------+----------+------------+----------+------------+-------|
 | Barbell Squat                | %?       |            |          |            |          |            |       |
 | Incline DB Press (bench 30°) |          |            |          |            |          |            |       |
-| Cable Row                    |          |            |          |            |          |            |       |
-| Triceps Pushdowns            |          |            |          |            |          |            |       |
-| DB Lateral Raise             |          |            |          |            |          |            |       |
-| Hammer Curl                  |          |            |          |            |          |            |       |
+| Chest-supported Row          |          |            |          |            |          |            |       |
+| Triceps Pushdown             |          |            |          |            |          |            |       |
+| Cable Lateral Raise          |          |            |          |            |          |            |       |
+| Farmer's Walk                |          |            |          |            |          |            |       |
