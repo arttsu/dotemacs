@@ -1,8 +1,8 @@
 * %<%Y-%m-%d %a>
 | Exercise                 | Set 1 kg | Set 1 reps | Set 2 kg | Set 2 reps | Set 3 kg | Set 3 reps | Notes |
 |--------------------------+----------+------------+----------+------------+----------+------------+-------|
-| Romanian Deadlift        | %?       |            |          |            |          |            |       |
-| Pull Up                  |          |            |          |            |          |            |       |
+| Pull Up                  | %?       |            |          |            |          |            |       |
+| Romanian Deadlift        |          |            |          |            |          |            |       |
 | Seated DB Overhead Press |          |            |          |            |          |            |       |
 | DB Pullover              |          |            |          |            |          |            |       |
 | Reverse Pec Deck         |          |            |          |            |          |            |       |
