@@ -3,6 +3,7 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        TeX-insert-backslash
         backward-sexp
         crux-smart-open-line
         electric-newline-and-maybe-indent
