@@ -26,6 +26,7 @@
         sp-unwrap-sexp
         sp-up-sexp
         transpose-sexps
+        wdired--self-insert
         whole-line-or-region-kill-region
         ))
 
