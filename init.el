@@ -507,6 +507,7 @@
   (require 'org-id)
   (require 'org-attach)
   (require 'org-habit)
+  (require 'org-mouse)
   (require 'my-org)
   (my-org-setup-gtd-and-knowledge-management)
   (setq org-capture-templates (my-org-capture-templates))
