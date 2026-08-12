@@ -11,13 +11,8 @@
 NAME is the file name w/o the extension."
   (expand-file-name (concat "templates/" name ".txt") user-emacs-directory))
 
-(defun my-org-inbox-target (context)
-  "Return the capture target for the inbox in the specified context.
-
-CONTEXT should be either \"local\" or \"shared\""
-  (let ((file (expand-file-name (concat context "/gtd/inbox.org") my-org-dir)))
-    (unless (file-writable-p file)
-      (error "%s is not writable" file))
+(defun my-org-inbox-target ()
+  (let ((file (expand-file-name "gtd/inbox.org" my-org-dir)))
     `(file+headline ,file "Items")))
 
 (defun my-org-gym-log-target (plan)
@@ -31,32 +26,13 @@ PLAN should be either \"A\" or \"B\"."
 (defun my-org-capture-templates ()
   "Return a list of Org capture templates."
   `(("i" "Inbox")
-    ("in" "local note" entry ,(my-org-inbox-target "local") (file ,(my-org-template "note")))
-    ("iN" "shared note" entry ,(my-org-inbox-target "shared") (file ,(my-org-template "note")))
-    ("it" "local to-do" entry ,(my-org-inbox-target "local") (file ,(my-org-template "todo")))
-    ("iT" "shared to-do" entry ,(my-org-inbox-target "shared") (file ,(my-org-template "todo")))
-    ("g" "Gym")
-    ("ga" "plan A session" entry ,(my-org-gym-log-target "A") (file ,(my-org-template "gym/plan-a")))
-    ("gb" "plan B session" entry ,(my-org-gym-log-target "B") (file ,(my-org-template "gym/plan-b")))
-    ("j" "Journal")
-    ("jj" "local entry" entry (file+olp+datetree ,(expand-file-name "local/journals/journal-0.org" my-org-dir)) "%?")
-    ("l" "Library")
-    ("ls" "Salsa video" entry (file ,(expand-file-name "local/notes/salsa-videos.org" my-org-dir)) (file ,(my-org-template "salsa-video")))
-    ("L" "List")
-    ("Lf" "Fiction" entry (file+headline ,(expand-file-name "local/lists.org" my-org-dir) "Fiction") (file ,(my-org-template "todo")))
-    ("Ln" "Non-fiction" entry (file+headline ,(expand-file-name "local/lists.org" my-org-dir) "Non-fiction") (file ,(my-org-template "todo")))
-    ("Lg" "Games" entry (file+headline ,(expand-file-name "local/lists.org" my-org-dir) "Games") (file ,(my-org-template "todo")))
-    ("Lt" "TV" entry (file+headline ,(expand-file-name "local/lists.org" my-org-dir) "TV") (file ,(my-org-template "todo")))
-    ("Lm" "Movies" entry (file+headline ,(expand-file-name "local/lists.org" my-org-dir) "Movies") (file ,(my-org-template "todo")))
-    ("Lp" "Podcasts" entry (file+headline ,(expand-file-name "local/lists.org" my-org-dir) "Podcasts") (file ,(my-org-template "todo")))))
+    ("in" "note" entry ,(my-org-inbox-target) (file ,(my-org-template "note")))
+    ("it" "to-do" entry ,(my-org-inbox-target) (file ,(my-org-template "todo")))))
 
-(defun my-org-agenda-files (context)
-  "Return the list of Org agenda files in the specified context.
-
-CONTEXT should be either \"local\" or \"shared\""
-  (list (expand-file-name (concat context "/gtd") my-org-dir)
-        (expand-file-name (concat context "/gtd/projects") my-org-dir)
-        (expand-file-name (concat context "/gtd/areas") my-org-dir)))
+(defun my-org-agenda-files ()
+  (list (expand-file-name "gtd" my-org-dir)
+        (expand-file-name "gtd/projects" my-org-dir)
+        (expand-file-name "gtd/areas" my-org-dir)))
 
 (defun my-org-capture-note (&optional prefix)
   "Capture a note to the local inbox.
@@ -192,8 +168,8 @@ If INCLUDE-SHARED-BY-DEFAULT is truthy the \"Day\" command will include
 tasks and projects in the shared directory in addition to the local.
 The second returned command will be \"Day w/o Shared\".  Otherwise, the
 logic is inversed."
-  (let* ((local-files (my-org-agenda-files "local"))
-         (all-files (append local-files (my-org-agenda-files "shared")))
+  (let* ((local-files (my-org-agenda-files))
+         (all-files (append local-files (my-org-agenda-files)))
          (default-files (if include-shared-by-default all-files local-files))
          (secondary-files (if include-shared-by-default local-files all-files))
          (secondary-label (if include-shared-by-default "Day w/o Shared" "Day w/ Shared")))
@@ -300,18 +276,10 @@ logic is inversed."
   "Return the current time formatted as Org timestamp."
   (format-time-string "[%Y-%m-%d %a %H:%M]"))
 
-(defun my-org-create-project-contents (title priority id)
-  "Return file contents for a new project.
-
-TITLE is the project title.
-
-ID is the Org ID for the new project.
-
-PRIORITY is a character representing the priority of the project."
+(defun my-org-create-project-contents (title id)
   (let ((template (with-temp-buffer (insert-file-contents (my-org-template "project")) (buffer-string)))
-        (priority-cookie (my-org-priority-char-to-cookie priority))
         (timestamp (my-org-now-timestamp)))
-    (format template priority-cookie title id timestamp)))
+    (format template title id timestamp)))
 
 (defun my-org-find-file-in-new-session (path)
   "Find file in PATH in a new session."
@@ -322,17 +290,15 @@ PRIORITY is a character representing the priority of the project."
 (defun my-org-create-project ()
   "Create a project from the template."
   (interactive)
-  (let ((context (completing-read "Context: " my-org-contexts nil t))
-        (title (read-string "Title: "))
-        (priority (read-char-choice "Priority [A-E, default D]: " '(?A ?B ?C ?D ?E ?a ?b ?c ?d ?e ?\r ?\n))))
+  (let ((title (read-string "Title: ")))
     (when (string-empty-p title)
       (user-error "Title cannot be empty"))
-    (let ((dir (expand-file-name "gtd/projects" (my-org-context-dir context))))
+    (let ((dir (expand-file-name "gtd/projects" my-org-dir)))
       (require 'org-node)
       (let* ((filename (org-node-title-to-basename title))
              (path (expand-file-name filename dir))
              (id (org-id-new)))
-        (with-temp-buffer (insert (my-org-create-project-contents title priority id)) (write-file path))
+        (with-temp-buffer (insert (my-org-create-project-contents title id)) (write-file path))
         (let ((choice (read-char-choice
                        "Open project in [c]urrent window, [o]ther window, new [t]ab, new [s]ession, [d]on't open: "
                        '(?c ?o ?t ?s ?d))))
@@ -356,7 +322,6 @@ PRIORITY is a character representing the priority of the project."
            (file-name (file-name-nondirectory file-path))
            (archive-path (expand-file-name file-name archive-dir)))
       (unless (file-directory-p archive-dir) (make-directory archive-dir))
-      (org-entry-put (point) "PRIORITY" nil)
       (org-entry-put (point) "ARCHIVED" (my-org-now-timestamp))
       (org-entry-put (point) "ROAM_EXCLUDE" "t")
       (save-buffer)
@@ -384,11 +349,10 @@ ID is the Org ID of the new area."
 (defun my-org-create-area ()
   "Create an area from the template."
   (interactive)
-  (let ((context (completing-read "Context: " my-org-contexts nil t))
-        (title (read-string "Title: ")))
+  (let ((title (read-string "Title: ")))
     (when (string-empty-p title)
       (user-error "Title cannot be empty"))
-    (let ((dir (expand-file-name "gtd/areas" (my-org-context-dir context))))
+    (let ((dir (expand-file-name "gtd/areas" my-org-dir)))
       (require 'org-node)
       (let* ((org-node-file-timestamp-format "")
              (filename (org-node-title-to-basename title))
