@@ -65,22 +65,22 @@ If called interactively, copy the text to the kill ring instead."
 (defun my-anki-safe-slug-unicode (text &optional maxlen)
   "Slugify TEXT but preserve Unicode letters."
   (let* ((s (downcase (string-trim text))))
-    ;; Replace anything that's NOT a letter or number with "-"
-    (setq s (replace-regexp-in-string "[^[:alnum:][:nonascii:]]+" "-" s))
-    ;; Collapse multiple "-"
-    (setq s (replace-regexp-in-string "-+" "-" s))
-    ;; Trim "-"
-    (setq s (replace-regexp-in-string "\\`-\\|-\\'" "" s))
+    ;; Replace anything that's NOT a letter or number with "_"
+    (setq s (replace-regexp-in-string "[^[:alnum:][:nonascii:]]+" "_" s))
+    ;; Collapse multiple "_"
+    (setq s (replace-regexp-in-string "_+" "_" s))
+    ;; Trim "_"
+    (setq s (replace-regexp-in-string "\\`_\\|_\\'" "" s))
     ;; Fallback
     (setq s (if (string-empty-p s) "untitled" s))
     ;; Truncate
     (when (and maxlen (> (length s) maxlen))
       (setq s (substring s 0 maxlen))
-      (setq s (replace-regexp-in-string "-+\\'" "" s)))
+      (setq s (replace-regexp-in-string "_+\\'" "" s)))
     s))
 
-(defun my-anki-audio-filename (deck-and-title &optional extension)
-  (let ((slug (my-anki-safe-slug-unicode (format "%s" deck-and-title) 64))
+(defun my-anki-audio-filename (title &optional extension)
+  (let ((slug (my-anki-safe-slug-unicode (format "%s_%s" (format-time-string "%Y%m%d") title) 64))
         (ext  (or extension "mp3")))
     (format "%s.%s" slug ext)))
 
@@ -88,13 +88,13 @@ If called interactively, copy the text to the kill ring instead."
   "Generate audio for a Cloze note at point."
   (interactive)
   (let ((deck (org-entry-get nil "ANKI_DECK" t))
-        (language (org-entry-get nil "ANKI_LANG" t))
+        (language (org-entry-get nil "TTS_LANG" t))
         (note-type (org-entry-get nil "ANKI_NOTE_TYPE"))
         (note-title (org-entry-get nil "ITEM")))
-    (unless language (user-error "ANKI_LANG property is missing"))
+    (unless language (user-error "TTS_LANG property is missing"))
     (unless (string= note-type "Cloze") ("ANKI_NOTE_TYPE must be 'Cloze'"))
     (let* ((dir (org-attach-dir-get-create))
-           (filename (my-anki-audio-filename (list deck note-title)))
+           (filename (my-anki-audio-filename note-title))
            (file (expand-file-name filename dir))
            (voice (my-anki-random-voice language)))
       (org-node-add-tags-here '("ATTACH"))
@@ -116,10 +116,10 @@ If called interactively, copy the text to the kill ring instead."
 
 (defun my-anki-tts (start end)
   (interactive "r")
-  (let ((title (org-get-outline-path))
+  (let ((title (last (org-get-outline-path)))
         (text (buffer-substring-no-properties start end))
-        (language (org-entry-get nil "ANKI_LANG" t)))
-    (unless language (user-error "ANKI_LANG property is missing"))
+        (language (org-entry-get nil "TTS_LANG" t)))
+    (unless language (user-error "TTS_LANG property is missing"))
     (let* ((dir (org-attach-dir-get-create))
            (file-name (my-anki-audio-filename title))
            (path (expand-file-name file-name dir))
