@@ -433,12 +433,6 @@ ID is the Org ID of the new area."
   (unless (file-directory-p my-org-dir)
     (copy-directory (expand-file-name "templates/org" user-emacs-directory) my-org-dir)))
 
-(defun my-org-open-local-inbox ()
-  "Open the local inbox in other window."
-  (interactive)
-  (let ((path (expand-file-name "local/gtd/inbox.org" my-org-dir)))
-    (find-file-other-window path)))
-
 (defun my-org-exclude-node ()
   "Add ROAM_EXCLUDE property to the heading at point."
   (interactive)

@@ -557,8 +557,7 @@ With prefix arg, find the previous file."
               ("C-c I" . my-org-capture-note)
               ("C-c J" . my-org-capture-journal-entry)
               ("C-c o c p" . my-org-create-project)
-              ("C-c o c a" . my-org-create-area)
-              ("C-c j i" . my-org-open-local-inbox))
+              ("C-c o c a" . my-org-create-area))
   :bind (:map org-mode-map
               ("C-c C-S-w" . my-org-refile-note)
               ("C-c M-W" . my-org-refile-copy-note)
