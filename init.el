@@ -16,6 +16,20 @@
 
 ;;; Emacs
 
+;; https://emacs.stackexchange.com/questions/12153/does-some-command-exist-which-goes-to-the-next-file-of-the-current-directory
+(defun my-find-next-file (&optional backward)
+  "Find the next file (by name) in the current directory.
+
+With prefix arg, find the previous file."
+  (interactive "P")
+  (when buffer-file-name
+    (let* ((file (expand-file-name buffer-file-name))
+           (files (cl-remove-if (lambda (file) (cl-first (file-attributes file)))
+                                (sort (directory-files (file-name-directory file) t nil t) 'string<)))
+           (pos (mod (+ (cl-position file files :test 'equal) (if backward -1 1))
+                     (length files))))
+      (find-file (nth pos files)))))
+
 (use-package emacs
   :custom
   (create-lockfiles nil)
@@ -69,7 +83,8 @@
               ("M-z" . zap-up-to-char)
               ("M-Z" . zap-to-char)
               ("C-c d h" . erase-buffer)
-              ("C-M-<return>" . tab-bar-switch-to-tab)))
+              ("C-M-<return>" . tab-bar-switch-to-tab)
+              ("C-c n" . my-find-next-file)))
 
 ;;; Dired
 
