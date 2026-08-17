@@ -16,4 +16,5 @@
   ("x" scratch-buffer "scratch" :column "Files")
   ("c" (lambda () (interactive) (find-file my-custom-file)) "custom file"))
 
+(provide 'my-hydra)
 ;;; my-hydra.el ends here.

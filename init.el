@@ -141,6 +141,8 @@ With prefix arg, find the previous file."
 
 (use-package hydra
   :ensure
+  :config
+  (require 'my-hydra)
   :bind (:map global-map
               ("C-c j" . my-hydra-jump/body)))
 
