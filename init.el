@@ -486,12 +486,13 @@ With prefix arg, find the previous file."
     :custom
     (ledger-default-date-format "%Y-%m-%d")
     :config
+    (ledger-reports-add "assets" "%(binary) -f %(ledger-file) bal ^Assets --real")
     (ledger-reports-add "bal-this-month" "%(binary) -f %(ledger-file) --invert --period 'this month' -S amount bal ^Income ^Expenses")
     (ledger-reports-add "bal-last-month" "%(binary) -f %(ledger-file) --invert --period 'last month' -S amount bal ^Income ^Expenses")
     (ledger-reports-add "bal-this-week" "%(binary) -f %(ledger-file) --invert --period 'this week' -S amount bal ^Income ^Expenses")
     (ledger-reports-add "bal-last-week" "%(binary) -f %(ledger-file) --invert --period 'last week' -S amount --limit 'account !~ /:(MM|BM|YY)$/' bal ^Income ^Expenses")
-    (ledger-reports-add "fixed-last-month" "%(binary) -f %(ledger-file) --invert --period 'last month' bal \"expr\" \"has_tag('monthly')\"")
-    (ledger-reports-add "fixed-last-year" "%(binary) -f %(ledger-file) --invert --period 'last year' bal \"expr\" \"has_tag('fixed') and not has_tag('monthly')\"")))
+    (ledger-reports-add "fixed-last-month" "%(binary) -f %(ledger-file) --invert --period 'last month' bal ^Expenses and \"expr\" \"has_tag('monthly')\" --depth=2")
+    (ledger-reports-add "fixed-last-year" "%(binary) -f %(ledger-file) --invert --period 'last year' bal ^Expenses and \"expr\" \"has_tag('fixed') and not has_tag('monthly')\" --depth=2")))
 
 ;;; Org
 
