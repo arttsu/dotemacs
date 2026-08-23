@@ -714,8 +714,11 @@ With prefix arg, find the previous file."
   :custom
   (lsp-keymap-prefix "<f5>")
   (lsp-completion-provider :none)
+  (lsp-pylsp-plugins-black-enabled t)
   :hook
   (clojure-mode . lsp)
+  (python-mode . lsp)
+  (python-ts-mode . lsp)
   :config
   (require 'my-lsp)
   (add-hook 'lsp-mode-hook #'my-lsp-setup-corfu)
@@ -740,6 +743,32 @@ With prefix arg, find the previous file."
   :hook (clojure-mode . cider-mode)
   :custom
   (cider-save-file-on-load t))
+
+;;; envrc
+;; https://github.com/purcell/envrc
+
+(use-package envrc
+  :ensure
+  :hook (elpaca-after-init . envrc-global-mode))
+
+;;; Python Pet
+;; https://github.com/wyuenho/emacs-pet
+
+(use-package pet
+  :ensure
+  :after envrc
+  :config
+  (add-hook 'python-base-mode-hook 'pet-mode -10))
+
+;;; LSP Pyright
+;; https://emacs-lsp.github.io/lsp-pyright/
+
+(use-package lsp-pyright
+  :ensure t
+  :custom (lsp-pyright-langserver-command "basedpyright") ;; or basedpyright
+  :hook (python-mode . (lambda ()
+                          (require 'lsp-pyright)
+                          (lsp))))  ; or lsp-deferred
 
 ;;; Just Mode
 ;; https://github.com/leon-barrett/just-mode.el
