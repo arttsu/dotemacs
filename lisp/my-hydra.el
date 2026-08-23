@@ -13,6 +13,8 @@
   ("p" (lambda () (interactive) (find-file "~/org/gtd/projects")) "projects")
   ("a" (lambda () (interactive) (find-file "~/org/gtd/areas")) "areas")
   ("s" (lambda () (interactive) (find-file "~/stash")) "stash")
+  ("d" (lambda () (interactive) (find-file "~/Documents")) "Documents")
+  ("D" (lambda () (interactive) (find-file "~/Downloads")) "Downloads")
   ("x" scratch-buffer "scratch" :column "Files")
   ("c" (lambda () (interactive) (find-file my-custom-file)) "custom file"))
 
