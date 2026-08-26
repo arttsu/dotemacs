@@ -176,16 +176,20 @@ logic is inversed."
     `(("d" "Day" ,(my-org-day-agenda-command default-files))
       ("D" ,secondary-label ,(my-org-day-agenda-command secondary-files)))))
 
-(defun my-org-list-files (dir)
-  "Return the list of all .org files in the directory specified by DIR."
-  (directory-files dir t (rx ".org" string-end)))
+(defun my-org-list-files (dir &optional recursive)
+  "Return the list of all .org files in the directory specified by DIR.
+
+If RECURSIVE is t, include org files in subdirectories."
+  (let ((regex (rx ".org" string-end)))
+    (if recursive
+        (directory-files-recursively dir regex)
+      (directory-files dir t regex))))
 
 (defun my-org-do-refile-note (refile-f)
   "Perform the refiling operation specified by REFILE-F, temporarily overriding refile targets."
   (let ((original-targets org-refile-targets))
     (unwind-protect
-        (let ((targets (append (my-org-list-files (expand-file-name "local/notes" my-org-dir))
-                               (my-org-list-files (expand-file-name "shared/notes" my-org-dir)))))
+        (let ((targets (my-org-list-files (expand-file-name "notes" my-org-dir) t)))
           (setq org-refile-targets `((,targets :tag "refile")))
           (apply refile-f ()))
       (setq org-refile-targets original-targets))))
