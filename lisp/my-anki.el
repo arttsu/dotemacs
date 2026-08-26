@@ -48,9 +48,8 @@ If called interactively, copy the text to the kill ring instead."
                                         "de-DE-ConradNeural"
                                         "de-DE-KillianNeural"))
                            ("Spanish" . ("es-ES-ElviraNeural"
-                                         "es-ES-AbrilNeural"
+                                         "es-ES-XimenaNeural"
                                          "es-ES-AlvaroNeural"
-                                         "es-ES-ArnauNeural"
                                          "es-MX-DaliaNeural"
                                          "es-MX-JorgeNeural"))
                            ("Romanian" . ("ro-RO-AlinaNeural"
