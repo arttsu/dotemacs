@@ -833,3 +833,11 @@ With prefix arg, find the previous file."
 ;; https://github.com/KaranAhlawat/scala-ts-mode
 (use-package scala-ts-mode
   :ensure t)
+
+;;; CSV mode
+;; https://github.com/emacsmirror/csv-mode/blob/master/csv-mode.el
+
+(use-package csv-mode
+  :ensure t
+  (add-hook 'csv-mode-hook 'csv-align-mode)
+  (add-hook 'tsv-mode-hook 'csv-align-mode))
