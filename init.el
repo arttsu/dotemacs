@@ -841,3 +841,9 @@ With prefix arg, find the previous file."
   :ensure t
   (add-hook 'csv-mode-hook 'csv-align-mode)
   (add-hook 'tsv-mode-hook 'csv-align-mode))
+
+;;; Fish mode
+;; https://github.com/wwwjfy/emacs-fish
+
+(use-package fish-mode
+  :ensure t)
