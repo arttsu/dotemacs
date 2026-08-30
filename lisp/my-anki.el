@@ -79,7 +79,7 @@ If called interactively, copy the text to the kill ring instead."
     s))
 
 (defun my-anki-audio-filename (title &optional extension)
-  (let ((slug (my-anki-safe-slug-unicode (format "%s_%s" (format-time-string "%Y%m%d") title) 64))
+  (let ((slug (my-anki-safe-slug-unicode (format "%s_%s" (format-time-string "%Y%m%d%H%M%S") title) 64))
         (ext  (or extension "mp3")))
     (format "%s.%s" slug ext)))
 
