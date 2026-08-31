@@ -8,5 +8,7 @@
 :PROPERTIES:
 :VISIBILITY: all
 :END:
+** Projects :refile:sort:
+** Resources :refile:sort:
 ** Tasks :refile:sort:
 ** Notes :refile:sort:
