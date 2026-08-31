@@ -12,6 +12,7 @@
   ("o" (lambda () (interactive) (find-file "~/org")) "org")
   ("p" (lambda () (interactive) (find-file "~/org/gtd/projects")) "projects")
   ("a" (lambda () (interactive) (find-file "~/org/gtd/areas")) "areas")
+  ("i" (lambda () (interactive) (find-file "~/org/gtd/inbox.org")) "inbox")
   ("n" (lambda () (interactive) (find-file "~/org/notes")) "notes")
   ("s" (lambda () (interactive) (find-file "~/stash")) "stash")
   ("d" (lambda () (interactive) (find-file "~/Documents")) "Documents")
