@@ -1,5 +1,5 @@
 #+STARTUP: content
-* %1$s
+* %1$s :project:
 :PROPERTIES:
 :ID: %2$s
 :CREATED_AT: %3$s
