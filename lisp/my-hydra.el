@@ -1,0 +1,26 @@
+;;; my-hydra.el --- Hydras -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;;
+
+;;; Code:
+
+(defhydra my-hydra-jump (:exit t)
+  "jump"
+  ("h" (lambda () (interactive) (find-file "~/")) "home" :column "Directories")
+  ("l" (lambda () (interactive) (find-file "~/lib")) "lib")
+  ("o" (lambda () (interactive) (find-file "~/org")) "org")
+  ("p" (lambda () (interactive) (find-file "~/org/gtd/projects")) "projects")
+  ("a" (lambda () (interactive) (find-file "~/org/gtd/areas")) "areas")
+  ("n" (lambda () (interactive) (find-file "~/org/notes")) "notes")
+  ("v" (lambda () (interactive) (find-file "~/org/vault")) "vault")
+  ("s" (lambda () (interactive) (find-file "~/stash")) "stash")
+  ("d" (lambda () (interactive) (find-file "~/Documents")) "Documents")
+  ("D" (lambda () (interactive) (find-file "~/Downloads")) "Downloads")
+  ("x" scratch-buffer "scratch" :column "Files & Buffers")
+  ("m" (lambda () (interactive) (switch-to-buffer "*Messages*")) "Messages")
+  ("i" (lambda () (interactive) (find-file "~/org/gtd/inbox.org")) "inbox")
+  ("c" (lambda () (interactive) (find-file my-custom-file)) "custom file"))
+
+(provide 'my-hydra)
+;;; my-hydra.el ends here.

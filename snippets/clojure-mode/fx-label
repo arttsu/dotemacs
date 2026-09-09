@@ -1,0 +1,5 @@
+# key: fxl
+# name: fx-label
+# --
+{:fx/type :label
+ :text $0}
