@@ -281,9 +281,12 @@ If RECURSIVE is t, include org files in subdirectories."
         (timestamp (my-org-now-timestamp)))
     (format template title id timestamp)))
 
+(defun my-org-strip-filename-timestamp (filename)
+  (s-replace-regexp (rx string-start (= 8 digit) "T" (= 6 digit) "-") "" filename))
+
 (defun my-org-find-file-in-new-session (path)
   "Find file in PATH in a new session."
-  (let ((name (file-name-sans-extension (file-name-nondirectory path))))
+  (let ((name (my-org-strip-filename-timestamp (file-name-sans-extension (file-name-nondirectory path)))))
     (easysession-switch-to-and-restore-geometry name)
     (find-file path)))
 
@@ -329,7 +332,7 @@ If RECURSIVE is t, include org files in subdirectories."
       (set-visited-file-name archive-path)
       (set-buffer-modified-p nil)
       (message "Project archived to %s" archive-path)
-      (let ((session-name (file-name-sans-extension file-name)))
+      (let ((session-name (my-org-strip-filename-timestamp (file-name-sans-extension file-name))))
         (cond ((string= (easysession-get-session-name) session-name) (when (yes-or-no-p "Delete the session and switch to 'main'?")
                                                                        (easysession-switch-to-and-restore-geometry "main")
                                                                        (easysession-delete session-name)))
