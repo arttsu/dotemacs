@@ -26,27 +26,20 @@ PLAN should be either \"A\" or \"B\"."
 (defun my-org-capture-templates ()
   "Return a list of Org capture templates."
   `(("i" "Inbox")
+    ("it" "to-do" entry ,(my-org-inbox-target) (file ,(my-org-template "todo")))
     ("in" "note" entry ,(my-org-inbox-target) (file ,(my-org-template "note")))
-    ("it" "to-do" entry ,(my-org-inbox-target) (file ,(my-org-template "todo")))))
+    ("il" "log" entry ,(my-org-inbox-target) (file ,(my-org-template "log")))))
 
 (defun my-org-agenda-files ()
   (list (expand-file-name "gtd" my-org-dir)
         (expand-file-name "gtd/projects" my-org-dir)
         (expand-file-name "gtd/areas" my-org-dir)))
 
-(defun my-org-capture-note (&optional prefix)
-  "Capture a note to the inbox.
-
-PREFIX: See 'org-capture'."
-  (interactive "P")
-  (org-capture prefix "in"))
-
-(defun my-org-capture-todo (&optional prefix)
-  "Capture a to-do to the inbox.
-
-PREFIX: See 'org-capture'."
-  (interactive "P")
-  (org-capture prefix "it"))
+(defhydra my-org-capture-inbox (:exit t)
+  "Capture to inbox"
+  ("t" (lambda (&optional p) (interactive "P") (org-capture p "it")) "to-do")
+  ("n" (lambda (&optional p) (interactive "P") (org-capture p "in")) "note")
+  ("l" (lambda (&optional p) (interactive "P") (org-capture p "il")) "log"))
 
 (defun my-org-capture-journal-entry ()
   (interactive)
