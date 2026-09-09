@@ -35,22 +35,18 @@ PLAN should be either \"A\" or \"B\"."
         (expand-file-name "gtd/areas" my-org-dir)))
 
 (defun my-org-capture-note (&optional prefix)
-  "Capture a note to the local inbox.
+  "Capture a note to the inbox.
 
-With a PREFIX argument capture to the shared inbox."
+PREFIX: See 'org-capture'."
   (interactive "P")
-  (cond ((equal prefix nil) (org-capture nil "in"))
-        ((equal prefix '(4)) (org-capture nil "iN"))
-        (t (user-error "Invalid prefix argument: %s" prefix))))
+  (org-capture prefix "in"))
 
 (defun my-org-capture-todo (&optional prefix)
-  "Capture a to-do to the local inbox.
+  "Capture a to-do to the inbox.
 
-With a PREFIX argument capture to the shared inbox."
+PREFIX: See 'org-capture'."
   (interactive "P")
-  (cond ((equal prefix nil) (org-capture nil "it"))
-        ((equal prefix '(4)) (org-capture nil "iT"))
-        (t (user-error "Invalid prefix argument: %s" prefix))))
+  (org-capture prefix "it"))
 
 (defun my-org-capture-journal-entry ()
   (interactive)
