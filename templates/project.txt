@@ -4,10 +4,7 @@
 :ID: %2$s
 :CREATED_AT: %3$s
 :END:
-** Info
-:PROPERTIES:
-:VISIBILITY: all
-:END:
+** Info :refile:sort:
 ** Sub-projects :refile:sort:
 ** Resources :refile:sort:
 ** Tasks :refile:sort:
