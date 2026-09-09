@@ -495,6 +495,7 @@ With prefix arg, find the previous file."
     :ensure
     :custom
     (ledger-default-date-format "%Y-%m-%d")
+    (ledger-post-amount-alignment-column 80)
     :config
     (ledger-reports-add "assets" "%(binary) -f %(ledger-file) bal ^Assets --real")
     (ledger-reports-add "bal-this-month" "%(binary) -f %(ledger-file) --invert --period 'this month' -S amount bal ^Income ^Expenses")
