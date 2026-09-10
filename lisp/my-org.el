@@ -27,7 +27,9 @@ PLAN should be either \"A\" or \"B\"."
   "Return a list of Org capture templates."
   `(("i" "Inbox")
     ("it" "to-do" entry ,(my-org-inbox-target) (file ,(my-org-template "todo")))
+    ("iT" "to-do w/ link" entry ,(my-org-inbox-target) (file ,(my-org-template "todo-link")))
     ("in" "note" entry ,(my-org-inbox-target) (file ,(my-org-template "note")))
+    ("iN" "note w/ link" entry ,(my-org-inbox-target) (file ,(my-org-template "note-link")))
     ("il" "log" entry ,(my-org-inbox-target) (file ,(my-org-template "log")))))
 
 (defun my-org-agenda-files ()
@@ -38,7 +40,9 @@ PLAN should be either \"A\" or \"B\"."
 (defhydra my-org-capture-inbox (:exit t)
   "Capture to inbox"
   ("t" (lambda (&optional p) (interactive "P") (org-capture p "it")) "to-do")
+  ("T" (lambda (&optional p) (interactive "P") (org-capture p "iT")) "to-do w/ link")
   ("n" (lambda (&optional p) (interactive "P") (org-capture p "in")) "note")
+  ("N" (lambda (&optional p) (interactive "P") (org-capture p "iN")) "note w/ link")
   ("l" (lambda (&optional p) (interactive "P") (org-capture p "il")) "log"))
 
 (defun my-org-capture-journal-entry ()
