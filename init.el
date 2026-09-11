@@ -836,12 +836,29 @@ With prefix arg, find the previous file."
 ;;; Gptel
 ;; https://github.com/karthink/gptel
 
+(define-derived-mode my-gptel-mode org-mode "MyGPT")
+
+(defun my-gptel-mode-setup ()
+  (org-mode)
+  (gptel-mode))
+
 (use-package gptel
-  :ensure t
-  :bind (:map global-map
-              ("C-c <return>" . gptel-send))
-  :bind (:map gptel-mode-map
-              ("C-c C-c" . gptel-send)))
+  :ensure
+  :demand
+  :custom
+  (gptel-model 'gpt-5)
+  (gptel-default-mode 'org-mode)
+  :config
+  (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
+  (add-hook 'gptel-post-response-functions 'gptel-end-of-response)
+  (add-hook 'gptel-mode-hook 'toggle-truncate-lines)
+  (add-hook 'my-gptel-mode-hook 'my-gptel-mode-setup)
+  (add-to-list 'auto-mode-alist '("\\.gpt\\'" . my-gptel-mode))
+  :bind
+  (("C-c SPC" . gptel)
+   ("C-c m" . gptel-menu)
+   :map gptel-mode-map
+   ("C-c C-c" . gptel-send)))
 
 ;;; Scala Tree-Sitter Mode
 ;; https://github.com/KaranAhlawat/scala-ts-mode
@@ -852,7 +869,8 @@ With prefix arg, find the previous file."
 ;; https://github.com/emacsmirror/csv-mode/blob/master/csv-mode.el
 
 (use-package csv-mode
-  :ensure t
+  :ensure
+  :config
   (add-hook 'csv-mode-hook 'csv-align-mode)
   (add-hook 'tsv-mode-hook 'csv-align-mode))
 
