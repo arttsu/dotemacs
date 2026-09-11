@@ -844,11 +844,11 @@ With prefix arg, find the previous file."
 
 (use-package gptel
   :ensure
-  :demand
   :custom
-  (gptel-model 'gpt-5)
+  (gptel-model 'gpt-5.6-terra)
   (gptel-default-mode 'org-mode)
   :config
+  (setq gptel-backend (gptel-make-openai-responses "OpenAI" :key #'gptel-api-key-from-auth-source :stream t))
   (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
   (add-hook 'gptel-post-response-functions 'gptel-end-of-response)
   (add-hook 'gptel-mode-hook 'toggle-truncate-lines)
