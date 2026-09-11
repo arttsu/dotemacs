@@ -498,6 +498,9 @@ With prefix arg, find the previous file."
     (ledger-post-amount-alignment-column 80)
     :config
     (ledger-reports-add "assets" "%(binary) -f %(ledger-file) bal ^Assets --real")
+    (ledger-reports-add "budget" "%(binary) -f %(ledger-file) bal ^Assets ^Envelopes")
+    (ledger-reports-add "commitments" "%(binary) -f %(ledger-file) bal ^Envelopes:Committed --pivot category")
+    (ledger-reports-add "consumables" "%(binary) -f %(ledger-file) bal ^Expenses:Consumables --pivot category")
     (ledger-reports-add "bal-this-month" "%(binary) -f %(ledger-file) --invert --period 'this month' -S amount bal ^Income ^Expenses")
     (ledger-reports-add "bal-last-month" "%(binary) -f %(ledger-file) --invert --period 'last month' -S amount bal ^Income ^Expenses")
     (ledger-reports-add "bal-this-week" "%(binary) -f %(ledger-file) --invert --period 'this week' -S amount bal ^Income ^Expenses")
