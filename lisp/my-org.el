@@ -453,6 +453,10 @@ ID is the Org ID of the new area."
    'org-mode
    `((,(rx (group "Update " (= 4 digit) "-" (= 2 digit) "-" (= 2 digit) ":")) 1 'my-org-update-face prepend))))
 
+(defun my-org-touch-heading ()
+  (interactive)
+  (org-set-property "CREATED_AT" (format-time-string "[%Y-%m-%d %a %H:%M]")))
+
 (provide 'my-org)
 
 ;;; my-org.el ends here.
