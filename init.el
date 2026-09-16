@@ -40,6 +40,33 @@ With prefix arg, find the previous file."
       (find-file (nth pos files))
       (set-transient-map my-find-next-file-repeat-map t))))
 
+(defun my-pop-mark ()
+  "Pop the last mark."
+  (interactive)
+  (set-mark-command '(4)))
+
+(defvar-keymap tab-bar-history-repeat-map
+  :repeat t
+  "<left>" #'tab-bar-history-back
+  "<right>" #'tab-bar-history-forward)
+
+(defun my-ui-set-theme-and-font ()
+  "Set Modus theme and font on startup."
+  (and my-ui-default-modus-theme (modus-themes-load-theme my-ui-default-modus-theme))
+  (when (and my-ui-default-font my-ui-default-font-height)
+    (set-face-attribute 'default nil :font my-ui-default-font :height my-ui-default-font-height)
+    (set-frame-font my-ui-default-font nil t))
+  (when my-ui-default-emoji-font
+    (set-fontset-font t 'unicode my-ui-default-emoji-font nil 'append)))
+
+(defun my-ui-toggle-modus-theme ()
+  "Toggle between the 'default' and 'other' themes."
+  (interactive)
+  (let ((theme (if (eq (modus-themes-get-current-theme) my-ui-default-modus-theme)
+                   my-ui-other-modus-theme
+                 my-ui-default-modus-theme)))
+    (modus-themes-load-theme theme)))
+
 (use-package emacs
   :custom
   (create-lockfiles nil)
@@ -69,8 +96,6 @@ With prefix arg, find the previous file."
   (when (my-macos-p)
     (setq mac-right-option-modifier 'none))
   :config
-  (require 'my-emacs)
-  (require 'my-ui)
   (scroll-bar-mode -1)
   (tool-bar-mode -1)
   (menu-bar-mode -1)
