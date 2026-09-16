@@ -152,7 +152,22 @@ With prefix arg, find the previous file."
 (use-package hydra
   :ensure
   :config
-  (require 'my-hydra)
+  (defhydra my-hydra-jump (:exit t)
+    "jump"
+    ("h" (find-file "~/") "home" :column "Directories")
+    ("l" (find-file "~/lib") "lib")
+    ("o" (find-file "~/org") "org")
+    ("S" (find-file "~/stash") "stash")
+    ("d" (find-file "~/Documents") "Documents")
+    ("D" (find-file "~/Downloads") "Downloads")
+    ("p" (find-file "~/org/gtd/projects") "projects" :column "Org")
+    ("n" (find-file "~/org/notes") "notes")
+    ("s" (find-file "~/org/gtd/someday.org") "someday")
+    ("i" (find-file "~/org/gtd/inbox.org") "inbox")
+    ("x" scratch-buffer "scratch" :column "Emacs")
+    ("c" (find-file "~/.emacs.d/init.el") "config")
+    ("m" (switch-to-buffer "*Messages*") "Messages")
+    ("C" (find-file my-custom-file) "custom file"))
   :bind (:map global-map
               ("C-c j" . my-hydra-jump/body)))
 
