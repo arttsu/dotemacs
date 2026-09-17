@@ -552,6 +552,22 @@ With prefix arg, find the previous file."
 
 ;;; Org
 
+(defun my-org-play-mp3-attachment ()
+  (interactive)
+  (let ((element (org-element-context)))
+    (if (org-element-type-p element 'link)
+        (let ((type (org-element-property :type element))
+              (path (org-element-property :path element)))
+          (cond ((not (string= type "attachment")) (user-error "Not an attachment"))
+                ((not (string= (file-name-extension path) "mp3")) (user-error "Not an mp3"))
+                (t (let ((full-path (org-attach-expand path)))
+                     (make-process :name "org-play-mp3-attachment"
+                                   :buffer nil
+                                   :command (list "mpv" "--terminal=no" full-path)
+                                   :noquery t
+                                   :connection-type 'pipe)))))
+      (user-error "No link"))))
+
 (use-package org
   :ensure
   :custom
