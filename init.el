@@ -105,6 +105,7 @@ With prefix arg, find the previous file."
   (tab-bar-mode +1)
   (tab-bar-history-mode +1)
   (repeat-mode +1)
+  (delete-selection-mode +1)
   (fset 'yes-or-no-p 'y-or-n-p)
   (when (my-windows-p)
     (set-language-environment "UTF-8"))
