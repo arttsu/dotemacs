@@ -113,8 +113,8 @@ If called interactively, copy the text to the kill ring instead."
               (insert "\n")
               (insert (format "[[attachment:%s]]" filename)))))))))
 
-(defun my-anki-tts (start end)
-  (interactive "r")
+(defun my-anki-tts (start end &optional prefix)
+  (interactive "r\nP")
   (let ((title (last (org-get-outline-path)))
         (text (buffer-substring-no-properties start end))
         (language (org-entry-get nil "TTS_LANG" t)))
@@ -126,8 +126,13 @@ If called interactively, copy the text to the kill ring instead."
            (clean-text (replace-regexp-in-string "\"" "\\\\\"" text)))
       (message "Generating audio for note '%s' using voice '%s'" title voice)
       (call-process "edge-tts" nil nil nil"--write-media" path "--voice" voice "--text" clean-text)
-      (kill-new (format "[[attachment:%s]]" path))
-      (message "Added the attachment link to the kill-ring"))))
+      (let ((attachment-link (format "[[attachment:%s]]" path)))
+        (if prefix
+            (progn
+              (insert (format "\n\n%s" attachment-link))
+              (my-org-play-mp3-attachment))
+          (kill-new attachment-link)
+          (message "Added the attachment link to the kill-ring"))))))
 
 (defun anki-editor-tts--skip-over-non-notes ()
   "Return position to continue from if the entry at point is not an Anki note.
