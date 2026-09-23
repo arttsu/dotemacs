@@ -568,6 +568,15 @@ With prefix arg, find the previous file."
                                    :connection-type 'pipe)))))
       (user-error "No link"))))
 
+(defun my-org-copy-src-block ()
+  (interactive)
+  (let ((element (org-element-context)))
+    (if (org-element-type-p element 'src-block)
+        (let ((info (org-babel-get-src-block-info)))
+          (kill-new (nth 1 info))
+          (message "Source block copied"))
+      (user-error "No src block"))))
+
 (use-package org
   :ensure
   :custom
