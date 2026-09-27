@@ -948,5 +948,17 @@ With prefix arg, find the previous file."
   :ensure t)
 
 (when (my-macos-p)
+  (defun my-reveal-attachment-in-osx-finder ()
+    (interactive)
+    (let ((element (org-element-context)))
+      (if (and (org-element-type-p element 'link) (string= (org-element-property :type element) "attachment"))
+          (progn
+            (message "Revealing attachment")
+            (reveal-in-osx-finder-as (org-attach-dir) (org-element-property :path element)))
+        (let ((dir (org-attach-dir)))
+          (when dir
+            ("Revealing attachment dir")
+            (reveal-in-osx-finder-as dir nil))))))
+
   (use-package reveal-in-osx-finder
     :ensure))
