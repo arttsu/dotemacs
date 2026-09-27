@@ -946,3 +946,7 @@ With prefix arg, find the previous file."
 
 (use-package fish-mode
   :ensure t)
+
+(when (my-macos-p)
+  (use-package reveal-in-osx-finder
+    :ensure))
