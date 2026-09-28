@@ -577,6 +577,123 @@ With prefix arg, find the previous file."
           (message "Source block copied"))
       (user-error "No src block"))))
 
+;;;; MPV
+
+(defvar my-mpv-control-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "q")   #'my-mpv-quit)
+    (define-key map (kbd "n")   #'my-mpv-next)
+    (define-key map (kbd "p")   #'my-mpv-prev)
+    (define-key map (kbd "SPC") #'my-mpv-pause)
+    map))
+
+(define-minor-mode my-mpv-control-mode
+  "Simple controls for an mpv terminal buffer."
+  :lighter " MPV"
+  :keymap my-mpv-control-mode-map
+
+  (setq-local
+   header-line-format
+   " MPV   q quit   SPC pause   n next   p previous"))
+
+(defun my-mpv-send (key)
+  (let ((proc (get-buffer-process (current-buffer))))
+    (unless (and proc (process-live-p proc))
+      (user-error "mpv is not running"))
+    (process-send-string proc key)))
+
+(defun my-mpv-pause ()
+  (interactive)
+  (my-mpv-send " "))
+
+(defun my-mpv-next ()
+  (interactive)
+  ;; mpv's normal next-playlist-entry key
+  (my-mpv-send ">"))
+
+(defun my-mpv-prev ()
+  (interactive)
+  ;; mpv's normal previous-playlist-entry key
+  (my-mpv-send "<"))
+
+(defun my-mpv-quit ()
+  (interactive)
+  (let ((proc (get-buffer-process (current-buffer))))
+    ;; Ask mpv to quit cleanly.
+    (when (and proc (process-live-p proc))
+      (process-send-string proc "q"))
+
+    ;; Immediately get this window out of the way.
+    (quit-window)))
+
+(require 'term)
+
+(defun my-mpv-executable ()
+  (or (executable-find "mpv")
+      (and (file-executable-p "/opt/homebrew/bin/mpv")
+           "/opt/homebrew/bin/mpv")
+      (and (file-executable-p "/usr/local/bin/mpv")
+           "/usr/local/bin/mpv")
+      (user-error "Could not find mpv")))
+
+(defun my-org-mpv-shuffle (path)
+  "Play all media in PATH shuffled in a dedicated Emacs buffer."
+  (interactive "DDirectory: ")
+
+  (let* ((dir (expand-file-name path))
+
+         (files
+          (directory-files
+           dir t
+           "\\.\\(mp3\\|flac\\|m4a\\|ogg\\|opus\\|wav\\|mp4\\|mkv\\|webm\\)$"))
+
+         (name
+          (format "mpv: %s"
+                  (file-name-nondirectory
+                   (directory-file-name dir))))
+
+         (buffer
+          (apply
+           #'make-term
+           name
+           (my-mpv-executable)
+           nil
+           (append
+            '("--shuffle"
+              "--no-video"
+              "--term-osd=force"
+
+              ;; Our custom live status line:
+              "--term-status-msg=♫ [${playlist-pos-1}/${playlist-count}] ${filename}   ${playback-time} / ${duration}  (${percent-pos}%)")
+            files))))
+
+    (unless files
+      (user-error "No media files found in %s" dir))
+
+    (with-current-buffer buffer
+      (term-mode)
+      (term-char-mode)
+      (my-mpv-control-mode 1)
+
+      ;; Clean up the Emacs buffer when mpv exits.
+      (let ((proc (get-buffer-process buffer)))
+        (process-put proc 'my-mpv-buffer buffer)
+
+        (set-process-sentinel
+         proc
+         (lambda (process _event)
+           (unless (process-live-p process)
+             (let ((buf (process-get process 'my-mpv-buffer)))
+               (when (buffer-live-p buf)
+                 (kill-buffer buf))))))))
+
+    ;; Show controller in another window.
+    (display-buffer buffer)
+
+    buffer))
+
+;;;; Org Config
+
 (use-package org
   :ensure
   :custom
@@ -634,6 +751,9 @@ With prefix arg, find the previous file."
                  (window-parameters . ((no-delete-other-windows . t)))
                  (window-width . 100)
                  (dedicated . t)))
+  (org-link-set-parameters
+   "mpv-shuffle"
+   :follow #'my-org-mpv-shuffle)
   :bind (:map global-map
               ("C-c c" . org-capture)
               ("C-c a" . org-agenda)
