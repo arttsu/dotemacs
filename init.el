@@ -1067,6 +1067,9 @@ With prefix arg, find the previous file."
 (use-package fish-mode
   :ensure t)
 
+;;; reveal-in-osx-finder
+;; https://github.com/kaz-yos/reveal-in-osx-finder
+
 (when (my-macos-p)
   (defun my-reveal-attachment-in-osx-finder ()
     (interactive)
@@ -1082,6 +1085,9 @@ With prefix arg, find the previous file."
 
   (use-package reveal-in-osx-finder
     :ensure))
+
+;;; reverse-im
+;; https://github.com/a13/reverse-im.el
 
 (use-package reverse-im
   :ensure
