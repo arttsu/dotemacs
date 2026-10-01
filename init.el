@@ -1082,3 +1082,11 @@ With prefix arg, find the previous file."
 
   (use-package reveal-in-osx-finder
     :ensure))
+
+(use-package reverse-im
+  :ensure
+  :demand
+  :custom
+  (reverse-im-input-methods '("ukrainian-computer" "russian-computer"))
+  :config
+  (reverse-im-mode +1))
