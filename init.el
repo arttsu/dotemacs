@@ -178,22 +178,24 @@ With prefix arg, find the previous file."
 (use-package hydra
   :ensure
   :config
+;;;; Jump hydra
   (defhydra my-hydra-jump (:exit t)
     "jump"
     ("h" (find-file "~/") "home" :column "Directories")
-    ("l" (find-file "~/lib") "lib")
-    ("o" (find-file "~/org") "org")
-    ("S" (find-file "~/stash") "stash")
+    ("l" (find-file "~/lib") "Lib")
+    ("M" (find-file "~/media-lib") "Media Lib")
+    ("o" (find-file "~/org") "Org")
+    ("S" (find-file "~/stash") "Stash")
     ("d" (find-file "~/Documents") "Documents")
     ("D" (find-file "~/Downloads") "Downloads")
-    ("p" (find-file "~/org/gtd/projects") "projects" :column "Org")
-    ("n" (find-file "~/org/notes") "notes")
-    ("s" (find-file "~/org/gtd/someday.org") "someday")
-    ("i" (find-file "~/org/gtd/inbox.org") "inbox")
+    ("p" (find-file "~/org/gtd/projects") "Projects" :column "Org")
+    ("n" (find-file "~/org/notes") "Notes")
+    ("s" (find-file "~/org/gtd/someday.org") "Someday")
+    ("i" (find-file "~/org/gtd/inbox.org") "Inbox")
     ("x" scratch-buffer "scratch" :column "Emacs")
-    ("c" (find-file "~/.emacs.d/init.el") "config")
+    ("c" (find-file "~/.emacs.d/init.el") "Config")
     ("m" (switch-to-buffer "*Messages*") "Messages")
-    ("C" (find-file my-custom-file) "custom file"))
+    ("C" (find-file my-custom-file) "Custom File"))
   :bind (:map global-map
               ("C-c j" . my-hydra-jump/body)))
 
