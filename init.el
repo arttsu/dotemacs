@@ -539,7 +539,7 @@ With prefix arg, find the previous file."
     (ledger-post-amount-alignment-column 80)
     :config
     (ledger-reports-add "assets" "%(binary) -f %(ledger-file) bal ^Assets --real")
-    (ledger-reports-add "budget" "%(binary) -f %(ledger-file) bal ^Assets ^Envelopes")
+    (ledger-reports-add "budget" "%(binary) -f %(ledger-file) bal ^Envelopes:Budget ^Envelopes:Funds")
     (ledger-reports-add "commitments" "%(binary) -f %(ledger-file) bal ^Envelopes:Committed --pivot category")
     (ledger-reports-add "consumables" "%(binary) -f %(ledger-file) bal ^Expenses:Consumables --pivot category")
     (ledger-reports-add "bal-this-month" "%(binary) -f %(ledger-file) --invert --period 'this month' -S amount bal ^Income ^Expenses")
@@ -548,7 +548,9 @@ With prefix arg, find the previous file."
     (ledger-reports-add "bal-last-week" "%(binary) -f %(ledger-file) --invert --period 'last week' -S amount --limit 'account !~ /:(MM|BM|YY)$/' bal ^Income ^Expenses")
     (ledger-reports-add "fixed-last-month" "%(binary) -f %(ledger-file) --invert --period 'last month' bal ^Expenses and \"expr\" \"has_tag('monthly')\" --depth=2")
     (ledger-reports-add "fixed-last-year" "%(binary) -f %(ledger-file) --invert --period 'last year' bal ^Expenses and \"expr\" \"has_tag('fixed') and not has_tag('monthly')\" --depth=2")
-    (ledger-reports-add "time-today" "%(binary) -f %(ledger-file) bal --time-colon")))
+    (ledger-reports-add "time-today" "%(binary) -f %(ledger-file) bal --time-colon")
+    (ledger-reports-add "last-month-expenses" "%(binary) -f %(ledger-file) --invert --period 'last month' --sort display_total bal ^Expenses")
+    (ledger-reports-add "last-month-surprises" "%(binary) -f %(ledger-file) reg -p 'last month' -S amount Unbudgeted")))
 
 ;;; Org
 
