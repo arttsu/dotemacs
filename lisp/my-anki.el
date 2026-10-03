@@ -61,6 +61,11 @@ If called interactively, copy the text to the kill ring instead."
       (nth (random (length voices)) voices)
     (user-error "Unknown language: %s" language)))
 
+(defun my-anki-voice (language)
+  (if-let ((voice (org-entry-get-with-inheritance "TTS_VOICE")))
+      voice
+    (my-anki-random-voice language)))
+
 (defun my-anki-safe-slug-unicode (text &optional maxlen)
   "Slugify TEXT but preserve Unicode letters."
   (let* ((s (downcase (string-trim text))))
@@ -95,7 +100,7 @@ If called interactively, copy the text to the kill ring instead."
     (let* ((dir (org-attach-dir-get-create))
            (filename (my-anki-audio-filename note-title))
            (file (expand-file-name filename dir))
-           (voice (my-anki-random-voice language)))
+           (voice (my-anki-voice language)))
       (org-node-add-tags-here '("ATTACH"))
       (org-set-property "ROAM_EXCLUDE" "t")
       (save-excursion
@@ -122,7 +127,7 @@ If called interactively, copy the text to the kill ring instead."
     (let* ((dir (org-attach-dir-get-create))
            (file-name (my-anki-audio-filename title))
            (path (expand-file-name file-name dir))
-           (voice (my-anki-random-voice language))
+           (voice (my-anki-voice language))
            (clean-text (replace-regexp-in-string "\"" "\\\\\"" text)))
       (message "Generating audio for note '%s' using voice '%s'" title voice)
       (call-process "edge-tts" nil nil nil"--write-media" path "--voice" voice "--text" clean-text)
