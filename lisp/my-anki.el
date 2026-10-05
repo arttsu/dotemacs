@@ -51,7 +51,11 @@ If called interactively, copy the text to the kill ring instead."
                                          "es-ES-XimenaNeural"
                                          "es-ES-AlvaroNeural"
                                          "es-MX-DaliaNeural"
-                                         "es-MX-JorgeNeural"))
+                                         "es-MX-JorgeNeural"
+                                         "es-US-PalomaNeural"
+                                         "es-PE-CamilaNeural"
+                                         "es-CU-BelkysNeural"
+                                         "es-CU-ManuelNeural"))
                            ("Romanian" . ("ro-RO-AlinaNeural"
                                           "ro-RO-EmilNeural"))))
 
