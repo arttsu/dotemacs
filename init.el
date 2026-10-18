@@ -702,6 +702,7 @@ With prefix arg, find the previous file."
   :ensure
   :custom
   (org-startup-indented t)
+  (org-startup-with-link-previews t)
   (org-hide-emphasis-markers t)
   (org-pretty-entities t)
   (org-use-sub-superscripts '{})
@@ -745,8 +746,10 @@ With prefix arg, find the previous file."
   (add-hook 'org-after-todo-state-change-hook #'my-org-checklist-auto-advance +10)
   (add-hook 'org-after-refile-insert-hook #'my-org-format-buffer)
   (add-hook 'org-mode-hook #'my-org-font-lock-add-keywords)
+  (add-hook 'org-babel-after-execute-hook #'org-link-preview-refresh)
   (org-babel-do-load-languages 'org-babel-load-languages
-                               '((shell . t)))
+                               '((shell . t)
+                                 (gnuplot . t)))
   (add-to-list 'display-buffer-alist
                `(,(rx (or "*Org Agenda*" "*Agenda Commands*"))
                  display-buffer-in-side-window
@@ -1100,3 +1103,6 @@ With prefix arg, find the previous file."
   (reverse-im-input-methods '("ukrainian-computer" "russian-computer"))
   :config
   (reverse-im-mode +1))
+
+(use-package gnuplot
+  :ensure t)
