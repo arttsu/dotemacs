@@ -1,4 +1,4 @@
-* %<%m/%d> %?
+* %<%d %b>: %?
 :PROPERTIES:
 :CREATED_AT: %U
 :END:
