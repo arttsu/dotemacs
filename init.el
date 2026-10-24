@@ -1031,29 +1031,181 @@ With prefix arg, find the previous file."
 ;;; Gptel
 ;; https://github.com/karthink/gptel
 
-(define-derived-mode my-gptel-mode org-mode "MyGPT")
+(defface my-gptel-prompt-prefix
+  '((t :foreground "#39ff14"
+       :background "#102010"
+       :weight bold
+       :box (:line-width 1 :color "#39ff14")))
+  "Face for gptel user prefixes."
+  :group 'faces)
+
+(defface my-gptel-response-prefix
+  '((t :inherit my-gptel-prompt-prefix
+       :foreground "#c792ea"
+       :background "#211529"
+       :box (:line-width 1 :color "#c792ea")))
+  "Face for gptel assistant prefixes."
+  :group 'faces)
+
+;;; Chat mode
+
+(define-derived-mode my-gptel-mode markdown-mode "MyGPT"
+  "Org-based mode for gptel conversations.")
 
 (defun my-gptel-mode-setup ()
-  (org-mode)
-  (gptel-mode))
+  "Enable gptel and style conversation prefixes."
+  (require 'gptel)
+  (gptel-mode 1)
+  (visual-line-mode 1)
+  (setq-local word-wrap t)
+  (font-lock-add-keywords
+   nil
+   '(("\\(^user>\\)\\(?:[ \t]\\|$\\)"
+      (1 'my-gptel-prompt-prefix prepend))
+     ("\\(^assistant>\\)\\(?:[ \t]\\|$\\)"
+      (1 'my-gptel-response-prefix prepend)))
+   'append)
+  (font-lock-flush))
+
+(defun my-gptel-truncate-lines ()
+  "Enable line truncation in gptel chat buffers."
+  (when gptel-mode
+    (setq-local truncate-lines t)))
+
+;;; Sending and response cleanup
+
+(defun my-gptel-show-current-prompt-at-top ()
+  "Show the most recent `user>` prompt at the top of the selected window.
+Does not move point."
+  (let ((case-fold-search nil)
+        (window (selected-window))
+        prompt-position)
+    (save-excursion
+      (goto-char (point-max))
+      (when (re-search-backward my-gptel--user-prefix-regexp nil t)
+        (setq prompt-position (match-beginning 0))))
+    (when prompt-position
+      ;; The non-nil FORCE argument makes this take effect immediately.
+      (set-window-start window prompt-position t))))
+
+(defun my-gptel-send-at-end ()
+  "Send from the buffer end, showing the current prompt at window top."
+  (interactive)
+  (deactivate-mark)
+  (goto-char (point-max))
+  (my-gptel-show-current-prompt-at-top)
+  (gptel-send))
+
+(defun my-gptel-separate-web-search-notices (beg end)
+  "Ensure one blank line follows web-search notices between BEG and END."
+  (when (and beg end)
+    (save-excursion
+      (let ((limit (copy-marker end t)))
+        (goto-char beg)
+        (while (re-search-forward
+                "\\[Web search completed\\][ \t]*"
+                limit t)
+          ;; Point is immediately after the notice (and horizontal space).
+          (cond
+           ;; Already followed by a blank line.
+           ((looking-at "\n\n"))
+
+           ;; One newline: add one more to make a blank line.
+           ((looking-at "\n")
+            (forward-char 1)
+            (insert "\n"))
+
+           ;; Response text starts immediately after the notice.
+           (t
+            (insert "\n\n"))))
+        (set-marker limit nil)))))
+
+;;; Prompt navigation
+
+(defconst my-gptel--user-prefix-regexp
+  "^user>\\(?:[ \t]\\|$\\)")
+
+(defconst my-gptel--assistant-prefix-regexp
+  "^assistant>\\(?:[ \t]\\|$\\)")
+
+(defun my-gptel--goto-user-prompt (position)
+  "Go to user prompt at POSITION.
+For an empty prompt, place point at end of its line."
+  (goto-char position)
+  (if (looking-at "^user>[ \t]*$")
+      (end-of-line)
+    (goto-char (match-beginning 0))))
+
+(defun my-gptel-next-user-prompt ()
+  "Move point to the next `user>` prompt."
+  (interactive)
+  ;; Do not rediscover the prompt point is already on.
+  (when (looking-at my-gptel--user-prefix-regexp)
+    (goto-char (match-end 0)))
+  (if (re-search-forward my-gptel--user-prefix-regexp nil t)
+      (my-gptel--goto-user-prompt (match-beginning 0))
+    (user-error "No next user prompt")))
+
+(defun my-gptel-previous-user-prompt ()
+  "Move point to the previous `user>` prompt."
+  (interactive)
+  (beginning-of-line)
+  ;; If already at a prompt, search for the one before it.
+  (when (looking-at my-gptel--user-prefix-regexp)
+    (unless (= (point) (point-min))
+      (backward-char 1)))
+  (if (re-search-backward my-gptel--user-prefix-regexp nil t)
+      (my-gptel--goto-user-prompt (match-beginning 0))
+    (user-error "No previous user prompt")))
+
+;;; Configuration
 
 (use-package gptel
-  :ensure
+  :ensure t
+
   :custom
   (gptel-model 'gpt-5.6-terra)
-  (gptel-default-mode 'org-mode)
-  :config
-  (setq gptel-backend (gptel-make-openai-responses "OpenAI" :key #'gptel-api-key-from-auth-source :stream t))
-  (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
-  (add-hook 'gptel-post-response-functions 'gptel-end-of-response)
-  (add-hook 'gptel-mode-hook 'toggle-truncate-lines)
-  (add-hook 'my-gptel-mode-hook 'my-gptel-mode-setup)
+  (gptel-default-mode 'my-gptel-mode)
+
+  (gptel-prompt-prefix-alist
+   '((my-gptel-mode . "user> ")
+     (org-mode . "user> ")
+     (markdown-mode . "user> ")
+     (text-mode . "user> ")))
+
+  (gptel-response-prefix-alist
+   '((my-gptel-mode . "assistant>\n\n")
+     (org-mode . "assistant>\n\n")
+     (markdown-mode . "assistant>\n\n")
+     (text-mode . "assistant>\n\n")))
+
+  (gptel-response-separator "\n\n")
+
+  :init
   (add-to-list 'auto-mode-alist '("\\.gpt\\'" . my-gptel-mode))
+
+  :hook
+  ((my-gptel-mode . my-gptel-mode-setup)
+   (gptel-mode . my-gptel-truncate-lines))
+
+  :config
+  (setq gptel-backend
+        (gptel-make-openai-responses
+         "OpenAI"
+         :key #'gptel-api-key-from-auth-source
+         :stream t
+         :request-params '(:tools [(:type "web_search")])))
+
+  (add-hook 'gptel-post-response-functions
+            #'my-gptel-separate-web-search-notices)
+
   :bind
   (("C-c SPC" . gptel)
    ("C-c m" . gptel-menu)
    :map gptel-mode-map
-   ("C-c C-c" . gptel-send)))
+   ("C-c C-c" . my-gptel-send-at-end)
+   ("M-n" . my-gptel-next-user-prompt)
+   ("M-p" . my-gptel-previous-user-prompt)))
 
 ;;; Scala Tree-Sitter Mode
 ;; https://github.com/KaranAhlawat/scala-ts-mode
