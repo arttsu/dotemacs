@@ -719,7 +719,7 @@ With prefix arg, find the previous file."
   (org-confirm-babel-evaluate nil)
   (org-refile-targets '((org-agenda-files :tag . "refile")))
   (org-tags-exclude-from-inheritance '("refile" "agenda" "project" "area" "sort" "checklist" "attachments" "long"))
-  (org-attach-id-dir (expand-file-name "attachments" my-org-dir))
+  (org-attach-id-dir (expand-file-name "lib/attachments"))
   (org-attach-auto-tag nil)
   (org-attach-use-inheritance t)
   (org-agenda-prefix-format '((agenda . " %i %-20(my-org-agenda-category) %?-12t% s")
