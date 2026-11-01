@@ -1,0 +1,5 @@
+# key: fxt
+# name: fx-type
+# --
+{:fx/type $1
+ $0}

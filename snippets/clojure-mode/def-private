@@ -1,0 +1,4 @@
+# key: defp
+# name: def-private
+# --
+(def ^:private $0)

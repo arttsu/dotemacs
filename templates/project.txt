@@ -1,0 +1,11 @@
+#+STARTUP: content
+* %1$s :project:
+:PROPERTIES:
+:ID: %2$s
+:CREATED_AT: %3$s
+:END:
+** Info :sort:
+** Sub-projects :sort:
+** Resources :refile:sort:
+** Tasks :refile:sort:
+** Notes :refile:sort:
