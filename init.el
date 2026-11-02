@@ -782,7 +782,8 @@ With prefix arg, find the previous file."
               ("C-c o x" . my-org-complete-as-wont-do)
               ("C-c L" . my-org-paste-as-link)
               ("C-c o z" . my-org-archive-project)
-              ("C-c o X" . my-org-exclude-node))
+              ("C-c o X" . my-org-exclude-node)
+              ("<f5>" . (lambda () (interactive) (setq prefix-arg 0))))
   :bind (:map org-capture-mode-map
               ("C-c C-S-w" . my-org-refile-capture-note)))
 
