@@ -30,7 +30,8 @@ PLAN should be either \"A\" or \"B\"."
     ("iT" "to-do w/ link" entry ,(my-org-inbox-target) (file ,(my-org-template "todo-link")))
     ("in" "note" entry ,(my-org-inbox-target) (file ,(my-org-template "note")))
     ("iN" "note w/ link" entry ,(my-org-inbox-target) (file ,(my-org-template "note-link")))
-    ("il" "log" entry ,(my-org-inbox-target) (file ,(my-org-template "log")))))
+    ("il" "log" entry ,(my-org-inbox-target) (file ,(my-org-template "log")))
+    ("iL" "log (including year)" entry ,(my-org-inbox-target) (file ,(my-org-template "log-2")))))
 
 (defun my-org-agenda-files ()
   (list (expand-file-name "agenda" my-org-dir)
@@ -43,7 +44,8 @@ PLAN should be either \"A\" or \"B\"."
   ("T" (lambda (&optional p) (interactive "P") (org-capture p "iT")) "to-do w/ link")
   ("n" (lambda (&optional p) (interactive "P") (org-capture p "in")) "note")
   ("N" (lambda (&optional p) (interactive "P") (org-capture p "iN")) "note w/ link")
-  ("l" (lambda (&optional p) (interactive "P") (org-capture p "il")) "log"))
+  ("l" (lambda (&optional p) (interactive "P") (org-capture p "il")) "log")
+  ("L" (lambda (&optional p) (interactive "P") (org-capture p "iL")) "log (including year)"))
 
 (defun my-org-capture-journal-entry ()
   (interactive)
