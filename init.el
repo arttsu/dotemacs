@@ -812,6 +812,7 @@ With prefix arg, find the previous file."
                           ("project" :inherit default :height 0.75 :slant normal)
                           ("area" :inherit default :height 0.75 :slant normal)
                           ("sort" :inherit default :height 0.75 :slant normal)
+                          ("log" :inherit default :height 0.75 :slant normal)
                           ("checklist" :inherit default :height 0.75 :slant normal)
                           ("attachments" :inherit default :height 0.75 :slant normal)
                           ("long" :inherit default :height 0.75 :slant normal)
