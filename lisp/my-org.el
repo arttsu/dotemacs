@@ -370,6 +370,34 @@ ID is the Org ID of the new area."
                 ((eq choice ?d) nil)))
         (message "Area created: %s" path)))))
 
+(defun my-org-create-notes ()
+  (interactive)
+  (let ((title (read-string "Title: ")))
+    (when (string-empty-p title)
+      (user-error "Title cannot be empty"))
+    (require 'org-node)
+    (let* ((dir (expand-file-name "notes" my-org-dir))
+           (org-node-file-timestamp-format "")
+           (filename (org-node-title-to-basename title))
+           (path (expand-file-name filename dir))
+           (id (org-id-new))
+           (timestamp (my-org-now-timestamp))
+           (template (with-temp-buffer
+                       (insert-file-contents (my-org-template "notes"))
+                       (buffer-string)))
+           (content (format template title id timestamp)))
+      (with-temp-buffer
+        (insert content)
+        (write-file path))
+      (let ((choice (read-char-choice
+                     "Open notes in [c]urrent window, [o]ther window, new [t]ab, [d]on't open: "
+                     '(?c ?o ?t ?d))))
+        (cond ((eq choice ?c) (find-file path))
+              ((eq choice ?o) (find-file-other-window path))
+              ((eq choice ?t) (find-file-other-tab path))
+              ((eq choice ?d) nil)))
+      (message "Notes created: %s" path))))
+
 (defun my-org-checklist-do-auto-advance ()
   "Move to the next task in a checklist, or jump to the parent if there are no more tasks."
   (let ((point-before (point)))
