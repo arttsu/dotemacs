@@ -745,6 +745,7 @@ With prefix arg, find the previous file."
   (add-hook 'org-after-todo-state-change-hook #'my-org-checklist-auto-advance +10)
   (add-hook 'org-after-refile-insert-hook #'my-org-format-buffer)
   (add-hook 'org-mode-hook #'my-org-font-lock-add-keywords)
+  (add-hook 'org-mode-hook #'visual-line-mode)
   (add-hook 'org-babel-after-execute-hook #'org-link-preview-refresh)
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((shell . t)
