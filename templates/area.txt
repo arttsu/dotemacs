@@ -4,8 +4,5 @@
 :ID: %2$s
 :CREATED_AT: %3$s
 :END:
-** Info :sort:
-** Projects :sort:
-** Resources :refile:sort:
+** Projects :refile:sort:
 ** Tasks :refile:sort:
-** Notes :refile:sort:
