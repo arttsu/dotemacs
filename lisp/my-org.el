@@ -242,13 +242,14 @@ If RECURSIVE is t, include org files in subdirectories."
   "Sort entries of the subtree at point."
   (interactive)
   (my-org-require-at-heading)
-  (let ((compare-func (if (my-org-has-tag "log") 'org-string> 'org-string<)))
-    (org-sort-entries nil ?f 'my-org-extract-created-timestamp compare-func)
-    (org-sort-entries nil ?f 'my-org-extract-closed-timestamp compare-func))
-  ;; By priority.
-  (org-sort-entries nil ?p)
-  ;; By to-do state.
-  (org-sort-entries nil ?o))
+  (let ((log (my-org-has-tag "log")))
+    (let ((compare-func (if log 'org-string> 'org-string<)))
+      (org-sort-entries nil ?f 'my-org-extract-created-timestamp compare-func)
+      (org-sort-entries nil ?f 'my-org-extract-closed-timestamp compare-func))
+    ;; By priority.
+    (unless log (org-sort-entries nil ?p))
+    ;; By to-do state.
+    (unless log (org-sort-entries nil ?o))))
 
 (defun my-org-format-buffer ()
   "Format the current buffer."
