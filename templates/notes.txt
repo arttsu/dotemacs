@@ -5,3 +5,4 @@
 :CREATED_AT: %3$s
 :END:
 ** Resources :refile:sort:
+** Journal :refile:sort:log:
