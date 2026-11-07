@@ -188,6 +188,7 @@ With prefix arg, find the previous file."
     ("M" (find-file "~/media") "Media")
     ("o" (find-file "~/org") "Org" :column "Org")
     ("I" (find-file "~/org/index.org") "Index")
+    ("j" (find-file "~/org/journals") "Journals")
     ("n" (find-file "~/org/notes") "Notes")
     ("p" (find-file "~/org/agenda/projects") "Projects")
     ("a" (find-file "~/org/agenda/areas") "Areas")
@@ -770,10 +771,10 @@ With prefix arg, find the previous file."
               ("C-c J" . my-org-capture-journal-entry)
               ("C-c o c p" . my-org-create-project)
               ("C-c o c a" . my-org-create-area)
-              ("C-c o c n" . my-org-create-notes))
+              ("C-c o c j" . my-org-create-journal))
   :bind (:map org-mode-map
-              ("C-c C-S-w" . my-org-refile-note)
-              ("C-c M-W" . my-org-refile-copy-note)
+              ("C-c C-S-w" . my-org-refile-journal)
+              ("C-c M-W" . my-org-refile-copy-journal)
               ("C-c o f" . my-org-format-buffer)
               ("C-c o s" . my-org-sort-entries)
               ("C-c o r" . my-org-checklist-reset)
@@ -785,7 +786,7 @@ With prefix arg, find the previous file."
               ("C-c o X" . my-org-exclude-node)
               ("<f5>" . (lambda () (interactive) (setq prefix-arg 0))))
   :bind (:map org-capture-mode-map
-              ("C-c C-S-w" . my-org-refile-capture-note)))
+              ("C-c C-S-w" . my-org-refile-capture-journal)))
 
 ;;;; Org Modern
 ;; https://github.com/minad/org-modern

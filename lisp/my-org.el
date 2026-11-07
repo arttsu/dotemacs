@@ -180,30 +180,30 @@ If RECURSIVE is t, include org files in subdirectories."
         (directory-files-recursively dir regex)
       (directory-files dir t regex))))
 
-(defun my-org-do-refile-note (refile-f)
+(defun my-org-do-refile-journal (refile-f)
   "Perform the refiling operation specified by REFILE-F, temporarily overriding refile targets."
   (let ((original-targets org-refile-targets))
     (unwind-protect
-        (let ((targets (my-org-list-files (expand-file-name "notes" my-org-dir) t)))
+        (let ((targets (my-org-list-files (expand-file-name "journals" my-org-dir) t)))
           (setq org-refile-targets `((,targets :tag "refile")))
           (apply refile-f ()))
       (setq org-refile-targets original-targets))))
 
-(defun my-org-refile-note ()
-  "Refile a tree to notes via move."
+(defun my-org-refile-journal ()
+  "Refile a tree to journal via move."
   (interactive)
-  (my-org-do-refile-note 'org-refile))
+  (my-org-do-refile-journal 'org-refile))
 
-(defun my-org-refile-capture-note ()
-  "Refile a tree to notes from Org capture buffer."
+(defun my-org-refile-capture-journal ()
+  "Refile a tree to journal from Org capture buffer."
   (interactive)
-  (my-org-do-refile-note 'org-refile)
+  (my-org-do-refile-journal 'org-refile)
   (org-capture-finalize))
 
-(defun my-org-refile-copy-note ()
-  "Refile a tree to notes via copy."
+(defun my-org-refile-copy-journal ()
+  "Refile a tree to journal via copy."
   (interactive)
-  (my-org-do-refile-note 'org-refile-copy))
+  (my-org-do-refile-journal 'org-refile-copy))
 
 (defun my-org-remove-priority-when-done ()
   "Remove priority from the entry at point if its to-do state changed to \"DONE\"."
@@ -372,33 +372,33 @@ ID is the Org ID of the new area."
                 ((eq choice ?d) nil)))
         (message "Area created: %s" path)))))
 
-(defun my-org-create-notes ()
+(defun my-org-create-journal ()
   (interactive)
   (let ((title (read-string "Title: ")))
     (when (string-empty-p title)
       (user-error "Title cannot be empty"))
     (require 'org-node)
-    (let* ((dir (expand-file-name "notes" my-org-dir))
+    (let* ((dir (expand-file-name "journals" my-org-dir))
            (org-node-file-timestamp-format "")
-           (filename (org-node-title-to-basename title))
+           (filename (org-node-title-to-basename (format "%s Journal" title)))
            (path (expand-file-name filename dir))
            (id (org-id-new))
            (timestamp (my-org-now-timestamp))
            (template (with-temp-buffer
-                       (insert-file-contents (my-org-template "notes"))
+                       (insert-file-contents (my-org-template "journal"))
                        (buffer-string)))
            (content (format template title id timestamp)))
       (with-temp-buffer
         (insert content)
         (write-file path))
       (let ((choice (read-char-choice
-                     "Open notes in [c]urrent window, [o]ther window, new [t]ab, [d]on't open: "
+                     "Open journal in [c]urrent window, [o]ther window, new [t]ab, [d]on't open: "
                      '(?c ?o ?t ?d))))
         (cond ((eq choice ?c) (find-file path))
               ((eq choice ?o) (find-file-other-window path))
               ((eq choice ?t) (find-file-other-tab path))
               ((eq choice ?d) nil)))
-      (message "Notes created: %s" path))))
+      (message "Journal created: %s" path))))
 
 (defun my-org-checklist-do-auto-advance ()
   "Move to the next task in a checklist, or jump to the parent if there are no more tasks."

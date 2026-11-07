@@ -1,8 +1,8 @@
 #+STARTUP: content
-* %1$s
+* %1$s Journal
 :PROPERTIES:
 :ID: %2$s
 :CREATED_AT: %3$s
 :END:
 ** Resources :refile:sort:
-** Journal :refile:sort:log:
+** Log :refile:sort:log:
