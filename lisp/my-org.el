@@ -31,7 +31,9 @@ PLAN should be either \"A\" or \"B\"."
     ("in" "note" entry ,(my-org-inbox-target) (file ,(my-org-template "note")))
     ("iN" "note w/ link" entry ,(my-org-inbox-target) (file ,(my-org-template "note-link")))
     ("il" "log" entry ,(my-org-inbox-target) (file ,(my-org-template "log")))
-    ("iL" "log (including year)" entry ,(my-org-inbox-target) (file ,(my-org-template "log-2")))))
+    ("iL" "log (including year)" entry ,(my-org-inbox-target) (file ,(my-org-template "log-2")))
+    ("j" "Journal")
+    ("jj" "Basic entry" entry (file+olp+datetree ,(expand-file-name "journals/current.org" my-org-dir)) "* %?")))
 
 (defun my-org-agenda-files ()
   (list (expand-file-name "agenda" my-org-dir)
