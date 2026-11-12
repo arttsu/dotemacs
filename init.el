@@ -115,6 +115,7 @@ With prefix arg, find the previous file."
   (emacs-lisp-mode . flymake-mode)
   :bind (:map global-map
               ("<f8>" . my-pop-mark)
+              ("<f5>" . (lambda () (interactive) (setq prefix-arg 0)))
               ("C-M-; d" . duplicate-dwim)
               ("M-z" . zap-up-to-char)
               ("M-Z" . zap-to-char)
@@ -782,8 +783,7 @@ With prefix arg, find the previous file."
               ("C-c o x" . my-org-complete-as-wont-do)
               ("C-c L" . my-org-paste-as-link)
               ("C-c o z" . my-org-archive-project)
-              ("C-c o X" . my-org-exclude-node)
-              ("<f5>" . (lambda () (interactive) (setq prefix-arg 0))))
+              ("C-c o X" . my-org-exclude-node))
   :bind (:map org-capture-mode-map
               ("C-c C-S-w" . my-org-refile-capture-note)))
 
