@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: fx-all-width
+# key: fxaw
+# --
+:min-width $1
+:pref-width $1
+:max-width $1

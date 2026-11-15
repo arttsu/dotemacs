@@ -1,0 +1,4 @@
+# key: fxsc
+# name: fx-style-class
+# --
+:style-class ["$0"]

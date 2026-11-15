@@ -1,0 +1,6 @@
+# key: m=>ma
+# name: malli-multi-arity-fn-signature
+# --
+(m/=> $1 [:function
+          [:=> [:cat $2] $3]
+          [:=> [:cat $0] $3]])
