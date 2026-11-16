@@ -4,5 +4,6 @@
 :ID: %2$s
 :CREATED_AT: %3$s
 :END:
-** Projects :refile:sort:
+** Projects :sort:
+** Commitments :sort:
 ** Tasks :refile:sort:
