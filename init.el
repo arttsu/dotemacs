@@ -871,7 +871,9 @@ With prefix arg, find the previous file."
 ;; https://www.gnu.org/software/auctex/
 
 (use-package auctex
-  :ensure)
+  :ensure
+  :config
+  (add-hook 'LaTeX-mode-hook #'visual-line-mode))
 
 ;;; PDF Tools
 ;; https://github.com/vedang/pdf-tools
