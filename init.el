@@ -3,15 +3,12 @@
 ;;; System Type Helpers
 
 (defun my-macos-p ()
-  "Return t if the host system is macOS."
   (eq system-type 'darwin))
 
 (defun my-linux-p ()
-  "Return t if the host system is GNU/Linux."
   (eq system-type 'gnu/linux))
 
 (defun my-windows-p ()
-  "Return t if the host system is Windows."
   (eq system-type 'windows-nt))
 
 ;;; Emacs
