@@ -89,6 +89,11 @@ PLAN should be either \"A\" or \"B\"."
     (when (= priority 0)
       subtree-end)))
 
+(defun my-org-day-agenda-skip-commitment ()
+  (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+    (unless (my-org-direct-parent-has-tag "commit")
+      subtree-end)))
+
 (defun my-org-any-note-date (predicate)
   "Call the PREDICATE on each note date until the end of the buffer.
 
@@ -156,7 +161,10 @@ FILES is a list of files to collect tasks and projects from."
     (tags "project" ((org-agenda-overriding-header "Projects")
                      (org-agenda-sorting-strategy '(priority-down))
                      (org-agenda-skip-function 'my-org-day-agenda-skip-project)
-                     (org-agenda-files ',files)))))
+                     (org-agenda-files ',files)))
+    (todo "TODO" ((org-agenda-overriding-header "Commitments")
+                  (org-agenda-files ',files)
+                  (org-agenda-skip-function 'my-org-day-agenda-skip-commitment)))))
 
 (defun my-org-day-agenda-commands (&optional include-shared-by-default)
   "Return \"Day\" and \"Day w/ or w/o Shared\" agenda commands.
