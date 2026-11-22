@@ -79,7 +79,8 @@ PLAN should be either \"A\" or \"B\"."
   "Decide whether or not to display the task at point in the \"Day\" agenda."
   (let ((subtree-end (save-excursion (org-end-of-subtree t))))
     (when (or (my-org-entry-scheduled-or-deadline-p (point))
-              (my-org-day-agenda-task-priority-too-low-p))
+              (my-org-day-agenda-task-priority-too-low-p)
+              (my-org-direct-parent-has-tag "commit"))
       subtree-end)))
 
 (defun my-org-day-agenda-skip-project ()
@@ -91,7 +92,8 @@ PLAN should be either \"A\" or \"B\"."
 
 (defun my-org-day-agenda-skip-commitment ()
   (let ((subtree-end (save-excursion (org-end-of-subtree t))))
-    (unless (my-org-direct-parent-has-tag "commit")
+    (when (or (not (my-org-direct-parent-has-tag "commit"))
+              (my-org-day-agenda-task-priority-too-low-p))
       subtree-end)))
 
 (defun my-org-any-note-date (predicate)
