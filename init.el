@@ -1170,7 +1170,7 @@ For an empty prompt, place point at end of its line."
   :ensure t
 
   :custom
-  (gptel-model 'gpt-5.6-terra)
+  (gptel-model 'gpt-6.1-terra)
   (gptel-default-mode 'my-gptel-mode)
 
   (gptel-prompt-prefix-alist
