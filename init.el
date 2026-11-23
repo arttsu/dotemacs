@@ -831,10 +831,10 @@ With prefix arg, find the previous file."
   :ensure
   :custom
   (org-mem-do-sync-with-org-id t)
-  (org-mem-watch-dirs (list my-org-dir))
+  (org-mem-watch-dirs (list my-org-dir "~/stash"))
   (org-node-file-timestamp-format "%Y%m%dT%H%M%S-")
   (org-node-filter-fn (lambda (node)
-                        (and (string-search "~/org/" (org-mem-file node))
+                        (and (string-match-p (rx line-start "~/" (or "org" "stash") "/") (org-mem-file node))
                              (org-node-filter-no-roam-exclude-p node))))
   :config
   (org-mem-updater-mode)
