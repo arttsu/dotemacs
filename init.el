@@ -118,7 +118,9 @@ With prefix arg, find the previous file."
               ("M-Z" . zap-to-char)
               ("C-c d h" . erase-buffer)
               ("C-M-<return>" . tab-bar-switch-to-tab)
-              ("C-c n" . my-find-next-file)))
+              ("C-c n" . my-find-next-file)
+              ("M-g w" . forward-to-word)
+              ("M-g W" . backward-to-word)))
 
 ;;; Dired
 
